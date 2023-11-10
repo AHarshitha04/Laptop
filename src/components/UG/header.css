@@ -1,0 +1,103 @@
+
+*{
+    text-decoration: none;
+}
+header {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 3vmax;
+    align-items: center;
+    height: 5rem;
+    background: #1a2025;
+    width: 95%;
+    margin: 0 auto;
+    border-radius: 0 40px 0 40px;
+    top: 1rem;
+    position: sticky;
+    z-index: 10;
+      color:white;
+      margin-bottom: 2rem;
+  
+}
+
+header .navlogo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 10rem;
+    /* // background:#ffffff; */
+    /* // border-radius: 50%; */
+    /* // border: 0.1rem solid $main; */
+    padding: 0.1vmax 0;
+    background: #fff;
+    /* padding: 1rem; */
+    padding: 0 0.8rem;
+    /* border-radius: 8px; */
+    border: 2px solid #01c3ff;
+    
+}
+
+header .navlogo img {
+    width: 100%;
+    /* animation: navlogo 1s infinite alternate; */
+}
+
+header nav ul {
+    display: flex;
+    justify-content: space-evenly;
+    width: 35vmax;
+    color:white;
+}
+
+header nav ul a {
+    /* font: 400 1vmax; */
+    color:white;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+header nav ul a :hover {
+    text-shadow: PX 0PX 0PX rgba(#000000);
+   
+}
+
+header nav .login-btn {
+    position: absolute;
+    right: 3rem;
+}
+
+header  .login-btn button {
+    width: 13vmax;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 2vmax;
+    border-radius: 18px;
+    animation: login-btn 1s infinite alternate;
+    background-color: #000000;
+    border: none;
+}
+
+
+header  .login-btn button a {
+font-size: 1vmax;
+    color: #fff;
+}
+
+
+
+@keyframes login-btn {
+    to {
+        transform: scale(1.1);
+    }
+
+
+}
+
+@keyframes navlogo {
+    to {
+        transform: scale(1.1);
+    }
+
+
+}

@@ -1,0 +1,349 @@
+
+
+.CoursesTitle h1{
+    font-size: 3rem;
+    color: #00a3ff;
+    cursor: pointer;
+    margin-bottom: 0.5rem;
+    text-align: center;
+}
+.Courses-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+.OurCourses_contant {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 4rem;
+}
+.OTScourses-contant, .OVLcourses-contant, .OQB-courses-contant{
+    display: flex;
+    justify-content: space-around;
+    /* align-items: center; */
+    /* gap: 4rem; */
+    /* background: rgb(255, 233, 233); */
+    border-radius: 10px;
+    /* background: linear-gradient(25grg, red, green); */
+    background: linear-gradient(45deg, #c3fffb, #ffffff);
+    padding: 1rem;
+   
+}
+/* .OVLcourses-contant{
+    flex-direction: row-reverse;
+} */
+ 
+
+
+
+.courses-images, .coursesList{
+    /* width: 33.33%; */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+
+
+ul.coursesList {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    /* white-space: nowrap; */
+    gap: 20px;
+}
+ul.courses-list li {
+    list-style: disc;
+    list-style-image: rebeccapurple;
+    padding: 5px 9px 5px 0px;
+
+}
+.coursesList li a{
+    font-size: 14px;
+}
+.courses-images {
+    /* position: relative;
+    top: -91px; */
+    /* background-color: rgba(132, 186, 116,0.5); */
+    display: flex;
+    /* justify-content: center; */
+    /* align-items: center; */
+    
+}
+.courses-images {
+    /* background-color: rgb(255 231 231 / 50%); */
+    display: flex;
+    /* justify-content: right;
+    align-items: center; */
+    
+    
+}
+li.Courses1 {
+    list-style: disc;
+    /* background-color: rgb(113, 173, 222); */
+    background-color: #00a3ff;
+    width: 156px;
+    padding: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: rgb(255, 255, 255);
+}
+.Courses1:hover{
+    /* background-color:#ff5500; */
+    padding: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: rgb(255, 255, 255);
+    /* font-weight: 500; */
+}
+li.Courses2:hover {
+    background: #ff5500;
+}
+
+.Courses2::nth-child(1):hover{    
+    background-color:#ff5500;
+}
+.Courses3:hover{    
+    background-color:#ff5500;
+}
+.OVLcourses-contant:hover.Courses1{
+    background: white;
+    color: red;
+}
+.Courses2:nth-child(1){
+    list-style: disc;
+    background-color: #00a3ff;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: rgb(255, 255, 255);
+    width: 156px;
+
+
+}  
+.Courses2:nth-child(2){
+    list-style: disc;
+    background-color: #00a3ff;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: rgb(255, 255, 255);
+    width: 156px;
+
+
+}    
+
+.Courses3:nth-child(1){
+    list-style: disc;
+    background-color: #00a3ff;;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: rgb(255, 255, 255);
+    width: 156px;
+
+}
+.Courses3:nth-child(2){
+    list-style: disc;
+    background-color: #00a3ff;;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: rgb(255, 255, 255);
+    width: 156px;
+
+}
+.courses-images img{
+    max-width: 200px;
+}
+
+
+
+
+/* .coursesList li {
+    font-size: 21px;
+    list-style: disc;
+} */
+/* .OTScourses-contant::before
+    {
+        content: '';
+        width: 100px;
+        height: 100px;
+        background-color: red;
+        position: relative;
+        animation-name: example;
+        animation-duration: 4s;
+        animation-direction: infinity;  
+      }
+      
+      @keyframes example {
+        0%   {background-color:red; left:0px; top:0px;}
+        25%  {background-color:yellow; left:200px; top:0px;}
+        50%  {background-color:blue; left:200px; top:200px;}
+        75%  {background-color:green; left:0px; top:200px;}
+        100% {background-color:red; left:0px; top:0px;}
+      } */
+
+
+
+      /* .OTScourses-contant, .OVLcourses-contant, .OQB-courses-contant
+        {
+        background-image: linear-gradient ( 45deg,red, green);
+        background-position: left;
+        transition: background-position 1s;
+    
+    }
+
+      .OTScourses-contant, .OVLcourses-contant, .OQB-courses-contant
+        :hover,
+        .OTScourses-contant, .OVLcourses-contant, .OQB-courses-contant
+            :focus{
+        background: right;
+      } */
+   
+.OVLcourses-contant:hover{
+    background-image: linear-gradient(45deg, #76f7d0, #eafdd1, rgb(201, 220, 241), rgb(197 255 251));
+    background-size: 400%;
+    animation: bg-animation 5s infinite;
+}
+      .OTScourses-contant:hover{
+        /* background-image: linear-gradient(45deg, rgb(208, 251, 187), rgb(203, 255, 203), rgb(255, 255, 255)); */
+        background-image: linear-gradient(45deg, #76f7d0, #eafdd1, rgb(201, 220, 241), rgb(197 255 251));
+        background-size: 400%;
+        animation: bg-animation 5s infinite;
+      }
+
+.OQB-courses-contant:hover{
+    /* background-image: linear-gradient(45deg, rgb(255, 208, 208), rgb(255 211 253), rgb(255 221 138), rgb(197 255 251)); */
+    background-image: linear-gradient(45deg, #76f7d0, #eafdd1, rgb(201, 220, 241), rgb(197 255 251));
+    background-size: 400%;
+    animation: bg-animation 5s infinite;
+}
+
+      @keyframes bg-animation{
+        0%{
+            background-position: left;
+        }
+        100%{
+            background-position: right;
+        }
+      }
+
+
+      @media (max-width: 1020px) {
+
+        .OTScourses-contant, .OVLcourses-contant, .OQB-courses-contant{
+            display: flex;
+            /* flex-direction: column; */
+            padding: 10px;
+
+      }
+      .courses-contant {
+        width: 100%;
+        padding-left: 0rem;
+    }
+
+/* images style */
+.courses-images img {
+    width: 257px;
+}
+.courses-images {
+    display: none;
+}
+ul.coursesList {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    white-space: nowrap;
+    gap: 20px;
+}
+.courses-contant {
+    padding-left: 0rem;
+    display: flex;
+    flex-direction: column;
+    /* justify-content: center; */
+    /* align-items: center; */
+    width: 50%;
+}
+.courses-images, .coursesList {
+    width: 42.33%;
+ 
+}
+    /* .courses-contant {
+        padding-left: 0rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    } */
+    
+    ul.coursesList {
+      
+        gap: 10px;
+    }
+    }
+
+    @media only screen and (min-width: 1023px) and (max-width: 1200px) {
+       
+       .container {
+            padding: 0 4rem 0 4rem;
+        }
+        .OTScourses-contant  ul.coursesList:nth-child(1){
+            display: grid;
+            grid-template-columns: repeat(2,1fr);
+        }
+        
+     
+    
+        .courses-images {
+            /* background-color: rgb(255 231 231 / 50%); */
+            
+            align-items: baseline;
+            
+        }
+        .courses-contant {
+            width: 35%;
+            /* padding-left: 4rem; */
+            margin-right: 3rem;
+        }
+     
+    }
+    @media (max-width: 1020px) {
+        ul.coursesList {
+      
+            gap: 5px;
+        }
+       
+    }
+
+    @media (max-width: 768px) {
+        .courses-images {
+            display: flex;
+            
+        }
+    .courses-contant {
+        padding-left: 0rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    .OTScourses-contant, .OVLcourses-contant, .OQB-courses-contant{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 10px;
+
+  }
+  .courses-contant {
+    
+    width: 92%;
+
+}
+    }

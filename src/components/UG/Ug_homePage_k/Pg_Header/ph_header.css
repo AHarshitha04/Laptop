@@ -1,0 +1,62 @@
+/* .Pg_header_bg{
+    background: url(../Pg_Header/images/bg2.png) center no-repeat rgba(255, 255, 255, 0.9);
+
+    width: 100%;
+    height: 500px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-size: 30% 100%;
+    background-position: 90% 0%;
+} */
+.boxShadow_pg{
+
+}
+
+.Pg_header_bg{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0px 1px 18px 1px;
+    background: #fff2f2;
+    padding-bottom: 5rem;
+    padding-top: 2rem;
+}
+.Pg_nextImg img{
+    max-width: 80%;
+}
+.boxShadow_pg {
+    /* box-shadow: -4px 6px 20px 33px; */
+    /* border-bottom: 1px solid; */
+    /* border-top: 1px solid; */
+}
+.Pg_header_content{
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+   
+
+}
+.Pg_welcomePage{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.Pg_welcomePage img{
+    max-width: 300px;
+}
+
+
+
+.eGRADTutor {
+    color: #ffbc58;
+}
+
+.Pg_header_content p{
+   max-width: 70rem;
+   /* padding-left: 7rem; */
+   line-height: 30px;
+   font-weight: 600;
+   font-size: 22px;
+   color: rgb(97, 97, 97);
+}

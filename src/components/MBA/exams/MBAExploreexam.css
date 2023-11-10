@@ -1,0 +1,106 @@
+.mbaexplore-container {
+    background: #51f77321;
+}
+
+.mbaExams-container {
+    display: flex;
+    gap: 3rem;
+    flex-wrap: wrap-reverse;
+    align-items: baseline;
+    justify-content: center;
+}
+
+.mbaexplore-contantText h1 {
+    color: #2d8a40;
+}
+
+.Examposter {
+    width: 500px;
+}
+
+.Examposter img {
+    width: 100%;
+}
+
+.mbaugcards-container {
+    width: 800px;
+    margin: 0 auto;
+    /* display: flex;
+    flex-wrap: wrap; */
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    justify-content: center;
+
+}
+
+.cardsContant .mbacardFlex {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    text-align: justify;
+    align-items: center;
+    background: #51f77321;
+    padding: 1rem;
+    box-shadow: 0px 0px 15px 0px rgb(155 144 144)
+}
+
+.cardsContant .mbacardFlex:hover {
+    transform: scale(1.09);
+    transition: 0.3s ease-in-out;
+}
+
+
+
+.mbahand-div {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.mbahand {
+    color: red;
+    display: none;
+}
+
+.mbacardFlex:hover .mbahand {
+    display: flex;
+}
+
+.mbahand-div h4 {
+    color: #000;
+    background: #fff;
+    padding: 0.5rem;
+    box-shadow: 0px 0px 15px 0px rgb(155 144 144);
+}
+
+.mbaCoursesTextIcons {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.mbaCoursesTextIcons h5 {
+    font-size: 15px;
+}
+
+.mbaCoursesTextIcons h5:hover {
+    text-decoration: underline;
+}
+
+
+@media only screen and (min-width:550px) and (max-width: 992px) {
+    .mbaugcards-container {
+        grid-template-columns: repeat(2, 1fr);
+
+    }
+
+}
+
+@media only screen and (min-width:300px) and (max-width: 549px) {
+    .mbaugcards-container {
+        grid-template-columns: repeat(1, 1fr);
+
+    }
+
+}

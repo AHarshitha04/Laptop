@@ -1,0 +1,147 @@
+.Pg_OurCourses{
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}
+
+.CoursesTitle h1{
+    color:rgb(231 144 144);
+}
+
+.Pg_courses-images img{
+    max-width: 300px;
+}
+
+.Pg_Courses-list {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+    /* justify-content: center;
+    align-items: center; */
+}
+.Pg_OTScourses-contant, .Pg_OVLcourses-contant, .Pg_OQB-courses-contant{
+    display: flex;
+    /* justify-content: center;
+    align-items: center; */
+    box-shadow: 0px 0px 12px 0px rgb(231 144 144);
+    /* flex-direction: column; */
+    gap: 2rem;
+    justify-content: space-evenly;
+    align-items: center;
+    padding: 1rem;
+}
+.Pg_OVLcourses-contant {
+    flex-direction: row-reverse;
+}
+
+.Pg_courses-list{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+ul.Pg_courses-list li {
+    font-size: 20px;
+    list-style: disc;
+    list-style: inside;
+    color: rgb(97, 97, 97);
+}
+.Pg_Courses a{
+    color: red;
+}
+.Pg_courses-contant h3{
+    background: rgb(255, 236, 236);
+    color: rgb(97, 97, 97);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+/* CSS */
+.Pg_Courses a {
+  margin: 10px;
+  padding: 15px 30px;
+  text-align: center;
+  text-transform: uppercase;
+  transition: 0.5s;
+  background-size: 200% auto;
+  color: white;
+  border-radius: 10px;
+  display: block;
+  border: 0px;
+  font-weight: 700;
+  box-shadow: 0px 0px 14px -7px #f09819;
+  background-image: linear-gradient(45deg, rgb(231 144 144) 0%, #F09819  51%, rgb(231 144 144)  100%);
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.Pg_Courses a:hover {
+  background-position: right center;
+  /* change the direction of the change here */
+  color: #fff;
+  text-decoration: none;
+}
+.Pg_courses-list:active{
+    transform: scale(1);
+}
+.Pg_Courses a:active {
+  transform: scale(0.95);
+}
+
+/* ---------- */
+@media only screen and (min-width:1023px) and (max-width: 1280px) {
+    .Pg_courses-images img{
+        max-width: 200px;
+    }
+}
+
+@media only screen and (min-width: 600px) and (max-width: 1023px) {
+    .Pg_OTScourses-contant, .Pg_OVLcourses-contant, .Pg_OQB-courses-contant{
+     
+        flex-direction: column;
+       
+    }
+    #Pg_Container{
+        width: 70%;
+    }
+}
+
+
+@media only screen and (max-width: 400px) {
+    .Pg_OTScourses-contant, .Pg_OVLcourses-contant, .Pg_OQB-courses-contant{
+     
+        flex-direction: column;
+       
+    }
+    /* #Pg_Container{
+        width: 100%;
+    } */
+    ul.Pg_courses-list li {
+        font-size: 11px;
+       
+    }
+    .Pg_courses-contant h3{
+      font-size: 18px;
+    }
+}
+@media only screen and (min-width: 400px) and (max-width: 600px) {
+    .Pg_OTScourses-contant, .Pg_OVLcourses-contant, .Pg_OQB-courses-contant{
+     
+        flex-direction: column;
+       
+    }
+    #Pg_Container{
+        width: 80%;
+    }
+    ul.Pg_courses-list li {
+        font-size: 15px;
+
+    }
+    .Pg_courses-contant h3{
+        font-size: 20px;
+      }
+}
+

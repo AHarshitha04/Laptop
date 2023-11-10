@@ -1,0 +1,121 @@
+
+.mba_faq{
+    background-color: #ffffff;
+}
+.mba_faqheading h1{
+    color: #2d8a40;
+}
+.mba_wrapper-3{
+    padding-bottom: 3rem;
+    padding-top: 3rem;
+}
+.mba_accordion2 {
+    display: grid;
+      grid-template-columns: repeat(2 ,1fr);
+}
+.wrapper-2 {
+    display: flex;
+    flex-direction: column;
+   
+    justify-content: center;
+    align-items: center;
+}
+.wrapper-2 h3 {
+        margin: 5vmax auto;
+        font-size: 100 3vmax #fff;
+        color: #fff;
+    }
+
+    .item1 {
+          
+            margin-bottom: 5px;
+            padding: 10px 20px;
+            width: 35vmax;
+        }
+            .title {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                color: rgb(0, 0, 0);
+                cursor: pointer;
+            }
+
+            .pg_content {
+                max-height: 0;
+                overflow: hidden;
+                transition: all 0.8s ease-in-out;
+                color: #fff;
+            }
+
+            .content-show {
+                height: auto;
+                color: #fff;
+                max-height: 999999;
+                transition: all 5s;
+            }
+
+
+
+        .item2 {
+         
+            margin-bottom: 5px;
+            padding: 10px 20px;
+            /* width: 35vmax; */
+        }
+            .mba_faqtitle {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                color: rgb(0, 0, 0);
+                background: #51f77321;
+                padding: 18px;
+                
+            }
+             .mba_faqtitle{
+                cursor: pointer;
+            }
+                h2{
+                   font-size:1rem ; 
+                }
+         
+
+            /* .pg_content2 {
+                max-height: 0;
+                overflow: hidden;
+                transition: all 0.8s ease-in-out;
+                color: rgb(255, 255, 255);
+            } */
+
+            .mba_content-show2 {
+                height: auto;
+                color:rgb(97, 97, 97);
+                transition: all 1s;
+                background: #51f77321;
+                padding: 10px 10px;
+                margin-top: 10px;
+            
+            }
+
+            .mba_faqtitle{
+                background: #51f77321;
+                color: rgb(97, 97, 97);
+            }
+
+            /* @media only screen and (min-width:992px) and (max-width: 1023px) {}
+            @media only screen and (min-width: 767px) and (max-width: 991px) {}
+            @media only screen and (max-width: 768px) {} */
+    /* ==================== TABLET RESPONSIVE ================ */
+    @media only screen and (min-width: 767px) and (max-width: 991px) {
+       
+        .mba_accordion2 {
+            display: flex;
+            flex-direction: column;
+        }
+    }
+
+    @media only screen and (max-width: 768px) {
+        .mba_accordion2 {
+            display: flex;
+            flex-direction: column;
+        }
+    }

@@ -1,0 +1,87 @@
+.mba_contact_bg{
+    background:#51f77321 !important;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}
+
+
+.mba_contacttUs h1{
+    color: #2d8a40;
+}
+
+.mba_Countact-contant{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    align-items: center;
+    gap: 1rem;
+}
+.mba_Addres{
+    box-shadow: 0px 0px 8px -3px;
+    width: 345px;
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: #fff;
+}
+
+form .mba_contact_inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+
+.mba_contact_inputs input{
+   
+    width: 345px;
+    height: 2rem;
+    box-shadow: 0px 0px 8px -3px;
+}
+.mba_contact_inputs textarea{
+    width: 345px;
+    height: 200px;
+    box-shadow: 0px 0px 8px -3px;
+}
+
+.mba_map iframe.text1 {
+    width: 345px;
+    height: 400px;
+}
+
+
+.mba_contact_inputs {
+    /* width: 345px; */
+    /* height: auto; */
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
+}
+.mba_contact_inputs input{
+    padding: 0 0.5rem;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+
+}
+.mba_contact_inputs textarea{
+    padding: 1rem 0.5rem;
+    border-radius: 12px;
+}
+.mba_Addres_ulList{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+.mba_Addres_ulList li{
+    font-size: 20px;
+    color: rgb(97, 97, 97);
+}
+
+.mbasubmitbtn{
+    cursor: pointer;
+}
