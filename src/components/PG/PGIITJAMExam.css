@@ -1,0 +1,43 @@
+/* 
+ul.GUWAHATI:nth-child(2){
+    display: none;
+} */
+
+.imagessg .GUWAHATI:nth-child(1){
+    /* display: none; */
+    background: red;
+    height: 40px;
+    /* width: 100px; */
+}
+
+
+/* .imagessg .imagessg2:nth-child(1){
+    display: none;
+    background: red;
+    height: 40px;
+} */
+
+
+/* .imagessg2:nth-child(1) {
+    display: none;
+
+} */
+
+
+
+.imagessg2:nth-child(2) {
+    display: block;
+    max-width: 100%;
+}
+
+/* ul.GUWAHATI:nth-child(2){
+    display: none;
+}
+
+ul.GUWAHATI:nth-child(2){
+    display: none;
+}
+
+ul.GUWAHATI:nth-child(){
+    display: none;
+} */

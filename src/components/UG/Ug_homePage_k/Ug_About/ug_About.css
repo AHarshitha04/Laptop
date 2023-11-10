@@ -1,0 +1,342 @@
+/* ug */
+
+.Ug_ABout_Section {
+    background: #56565721;
+
+}
+
+
+
+.Ug_ABout_Section {
+    padding: 1rem;
+}
+
+.UG_ABOUT_US h1 {
+    color: rgb(87, 140, 231);
+}
+
+.Pg_Container {
+    max-width: 89%;
+    margin: 0 auto;
+}
+
+.Ug_About {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+}
+
+.Ug_About img {
+    max-width: 300px;
+    background: #fff;
+    /* height: 200px; */
+    box-shadow: 0px 8px 12px -1px rgba(0, 0, 0, 0.363);
+
+}
+
+.vistionMoissionClass_Pg img {
+    max-width: 150px;
+}
+
+.aboutContant_Ug {
+    max-width: 60%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* font styles----------------- */
+.aboutContant_Ug p {
+    font-weight: 600;
+    font-size: 22px;
+    word-spacing: 2px;
+    line-height: 37px;
+    color: rgb(0, 0, 0);
+
+}
+
+.contant_Ug_text h3 {
+    font-size: 2.5rem;
+    color: rgb(87, 140, 231);
+
+}
+
+.contant_Ug_text p {
+    /* font-weight: 600; */
+    font-size: 18px;
+    line-height: 30px;
+    text-align: justify;
+    color: rgb(0, 0, 0);
+}
+
+.ulList_Ug p {
+    font-size: 18px;
+    line-height: 37px;
+    color: rgb(0, 0, 0);
+
+}
+
+.ulList_Ug .Ug_About_LI {
+    list-style: disc;
+    /* font-weight: 600; */
+    font-size: 17px;
+    line-height: 30px;
+    text-align: justify;
+    color: rgb(0, 0, 0);
+    list-style: inside;
+}
+
+.vistionMission-section_Ug {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    padding-top: 3rem;
+    padding-bottom: 2rem;
+}
+
+.vistionMoissionClass_Pg {
+    padding-top: 3rem;
+}
+
+.contant_Ug {
+    background: #ffffff;
+    /* width: 40%; */
+    min-height: 20rem;
+    box-shadow: 0px 0px 16px -5px #fff;
+    border-radius: 4px;
+    padding: 1.5rem;
+    display: flex;
+    justify-content: center;
+
+}
+
+.contant_Ug_text {
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* .mission-contant_Pg { */
+
+
+.vision-contant_Ug {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 45%;
+}
+
+.mission-contant_Ug {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 45%;
+}
+
+@media only screen and (min-width:1023px) and (max-width: 1680px) {
+    .Pg_Container {
+        max-width: 95%;
+        margin: 0 auto;
+    }
+
+    .contant_Pg {
+        background: rgb(255, 255, 255);
+        /* width: 40%; */
+        height: auto;
+        box-shadow: 0px 0px 16px -5px;
+        border-radius: 4px;
+        padding: 1.5rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+    }
+
+    /* font styles----------------- */
+    .aboutContant_Ug p {
+
+        font-size: 20px;
+        line-height: 37px;
+
+
+    }
+
+
+    .contant_Pg_text p {
+        /* font-weight: 600; */
+        font-size: 20px;
+        line-height: 30px;
+
+    }
+
+    .ulList_Ug p {
+        font-size: 20px;
+
+
+    }
+
+    .ulList_Ug .Ug_About_LI {
+        list-style: disc;
+        /* font-weight: 600; */
+        font-size: 20px;
+        line-height: 30px;
+        list-style: inside;
+
+    }
+}
+
+
+@media only screen and (min-width: 600px) and (max-width: 1023px) {
+    .vistionMission-section_Ug {
+        flex-direction: column;
+    }
+
+
+
+    .contant_Ug {
+        height: auto;
+    }
+
+    .vision-contant_Ug,
+    .mission-contant_Ug {
+
+        width: 100%;
+    }
+
+    .aboutContant_Ug {
+        max-width: 100%;
+    }
+}
+
+@media only screen and (min-width: 400px) and (max-width: 600px) {
+
+    .contant_Ug {
+        height: auto;
+    }
+
+    .vistionMission-section_Ug {
+        flex-direction: column;
+    }
+
+    .vistionMission-section_Ug {
+        padding-top: 1rem;
+    }
+
+    .vision-contant_Ug,
+    .mission-contant_Ug {
+
+        width: 100%;
+    }
+
+    .aboutContant_Ug {
+        max-width: 100%;
+    }
+
+    .contant_Pg {
+        height: auto;
+    }
+
+    .aboutContant_Ug p {
+
+        font-size: 15px;
+        line-height: 37px;
+
+
+    }
+
+
+
+    .contant_Pg_text p {
+        /* font-weight: 600; */
+        font-size: 15px;
+        line-height: 30px;
+
+    }
+
+    .ulList_Ug p {
+        font-size: 15px;
+
+
+    }
+
+    .contant_Ug_text p {
+        font-size: 16px;
+    }
+
+    .ulList_Ug .Ug_About_LI {
+        list-style: disc;
+        /* font-weight: 600; */
+        font-size: 14px;
+        line-height: 30px;
+        list-style: inside;
+
+    }
+}
+
+
+@media only screen and (max-width: 400px) {
+    .vistionMission-section_Ug {
+        flex-direction: column;
+    }
+
+    .vistionMission-section_Ug {
+        padding-top: 1rem;
+    }
+
+    .vision-contant_Ug,
+    .mission-contant_Ug {
+
+        width: 100%;
+    }
+
+    .aboutContant_Pg {
+        max-width: 100%;
+    }
+
+    .contant_Pg {
+        height: auto;
+    }
+
+    .aboutContant_Ug p {
+
+        font-size: 11px;
+        line-height: 37px;
+
+
+    }
+
+    .contant_Ug_text h3 {
+        color: rgb(231 144 144);
+
+    }
+
+    .contant_Ug_text p {
+        /* font-weight: 600; */
+        font-size: 11px;
+        line-height: 30px;
+
+    }
+
+    .ulList_Ug p {
+        font-size: 11px;
+
+
+    }
+
+    .ulList_Ug .Ug_About_LI {
+        list-style: disc;
+        /* font-weight: 600; */
+        font-size: 11px;
+        line-height: 30px;
+        list-style: inside;
+
+    }
+}

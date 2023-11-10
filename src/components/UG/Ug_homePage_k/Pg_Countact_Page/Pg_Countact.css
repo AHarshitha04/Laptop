@@ -1,0 +1,58 @@
+.Pg_contact_bg{
+    background:rgb(255, 247, 247);
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}
+
+
+.Pg_contacttUs h1{
+    color: rgb(231 144 144);
+}
+
+.Pg_Countact-contant{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    align-items: center;
+    gap: 1rem;
+}
+.Pg_Addres{
+    box-shadow: 0px 0px 8px -3px;
+    width: 345px;
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: #fff;
+}
+.Pg_contact_inputs input{
+   
+    width: 345px;
+    height: 2rem;
+    box-shadow: 0px 0px 8px -3px;
+}
+.Pg_contact_inputs textarea{
+    width: 345px;
+    height: 200px;
+    box-shadow: 0px 0px 8px -3px;
+}
+
+.Pg_map iframe.text1 {
+    width: 345px;
+    height: 400px;
+}
+
+.Pg_contact_inputs{
+    width: 345px;
+    height: auto;
+}
+.Pg_Addres_ulList{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+.Pg_Addres_ulList li{
+    font-size: 20px;
+    color: rgb(97, 97, 97);
+}

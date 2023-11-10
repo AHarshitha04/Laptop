@@ -1,0 +1,247 @@
+
+footer {
+    margin-top: 60px;
+    background-color: #000;
+    width: 100%;
+    bottom: 0;
+    /* padding: 1rem; */
+}
+
+.footer-container {
+    /* padding: 0 5rem; */
+    width: 80%;
+    height:25vh;
+    margin: 0px auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+   
+
+}
+
+.footer-container p {
+    font-size: 0.9vmax;
+    color: white;
+    text-align: justify;
+    margin: 0.5rem auto;
+    /* margin-top:10px; */
+    text-transform: none;
+
+}
+
+.col-1,
+.col-2,
+.col-3,
+.col-4 {
+    color: #ffff;
+
+}
+
+.col-2 a {
+    color: #fff;
+    font-size: 0.9vmax;
+    display: flex;
+    flex-direction: column;
+    text-decoration-line: none;
+    width: 55px;
+}
+
+.col-3 a {
+    color: #fff;
+    font-size: 0.9vmax;
+    display: flex;
+    flex-direction: column;
+    text-decoration-line: none;
+}
+
+.foot-logo img {
+    width: 36%;
+    background-color: #fff;
+    border-radius: 5px;
+    border: 2px solid #01c3ff;
+}
+
+.col-1 {
+    width: 22vmax;
+}
+
+.col-4 {
+    width: 25vmax;
+    font-size: 0.9vmax;
+}
+
+h6 {
+    font-size: 1.2vmax;
+    color: white;
+    margin: 0;
+
+}
+
+footer a:hover {
+    border-bottom: 4px solid rgb(129, 5, 5);
+}
+
+.fot-navlist {
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+
+}
+
+ins h6 {
+    margin-top: 20%;
+}
+
+ footer h6:hover {
+    color: #01c3ff;
+}
+
+.fot-navlist1 p i {
+    color: white;
+    font-size: 0.8vmax;
+    margin-right: 0.5rem;
+    text-transform: none;
+}
+
+.fot-navlist1 p i:hover {
+    color: #01c3ff;
+    
+    transform: rotateZ(45deg);
+}
+
+.fot-icons {
+    width: 50%;
+    display: flex;
+    font-size: 1vmax;
+    margin-top: 0vmax;
+
+    /* justify-content: space-around; */
+    color: #fff;
+}
+
+.fot-icons i {
+    display: flex;
+    /* justify-content: center;
+    align-items: center; */
+    height: 3vmax;
+    width: 3vmax;
+    margin-right: 0.5vmax;
+    border-radius: 50%;
+
+}
+
+.fot-icons i:hover {
+    transform: rotateZ(45deg);
+    color: #01c3ff;
+}
+
+.copy {
+    width: 90%;
+    margin-top: 10px;
+    border-top: 2px solid #fff;
+}
+
+.copy P {
+    font-size: 0.8vmax;
+    color: white;
+    text-align: center;
+    margin-top: 15px;
+    text-transform: none;
+}
+
+.copy P:hover {
+    color: #01c3ff;
+}
+
+/* 
+.col-1{
+    width: 22%;
+}
+.foot-logo {
+    width: 50%;
+}
+.foot-logo   img {
+        width:80%;
+    }
+
+
+    .col-2{
+        width: 21%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .col-3{
+        width: 23%;
+        display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+    
+    }
+
+    .col-4{
+        width: 22%;
+        display: flex;
+     flex-direction: column;
+    }
+    
+ .fot-navlist{
+    display: flex;
+    flex-direction: column;
+ 
+} 
+
+ .fot-navlist a{
+    color: aliceblue;
+    font-size: 1.5re;
+    font-family:'poppinis';
+}
+
+.fot-navlist a:hover{
+    width:35%;
+    border-bottom:5px solid rgb(129, 5, 5) ;
+}
+.fot-icons {
+    margin: 2rem 0;
+    width: 50%;
+    display: flex;
+    font-size: 30px;
+    margin-top: 10px;
+    justify-content: space-around;
+    color:#fff;
+}
+.fot-icons i{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 5rem;
+    width: 5rem;
+    border-radius: 50%;
+   
+}
+.fot-icons i:hover{
+    transform: rotateZ(45deg);
+    color:#01c3ff;
+}
+h6{
+    font-size: 25px;
+    color:white;
+    margin:0;
+}
+.fot-navlist1 p{
+    font-size:1.5rem;
+    color:white;
+    margin:0;
+} 
+.copy {
+    width: 90%;
+    margin: 1rem auto;
+    margin-top: 10px;
+    border-top: 2px solid #fff;
+}
+.copy P {
+        font-size: 1.5rem;
+        color:white;
+        text-align: center;
+        margin-top: 15px;
+    } */

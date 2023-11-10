@@ -1,0 +1,121 @@
+*{
+    padding:0;
+    margin:0;
+}
+
+ .navlogo img {
+    /* animation: navlogo 1s infinite alternate; */
+}
+.container_navlogo{
+    /* padding: 1rem 2rem 0rem 4rem; */
+    display: flex;
+    justify-content: space-between;
+
+}
+.ots-conatinerHead{
+    padding: 2rem 8rem 2rem 8rem;
+}
+.coursebrochure{
+    display: flex;
+    justify-content: space-between;
+}
+.coursename{
+    background: rgb(243, 240, 240);
+}
+.gif-BROCHURE{
+    display: flex;
+}
+.login-btn{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* .eAnimation {
+    box-shadow: 0px 0px  7px 2px rgb(0 0 0);
+    animation: navlogo 1s infinite alternate;
+
+} */
+.links{
+    display: flex;
+    gap: 0.5rem;
+    text-align: center;
+}
+/* .otsNavLinks{
+    color: rgb(255, 255, 255);
+    padding: 0.5rem;
+    background: red;
+    text-align: center;
+    border-radius: 10px;
+
+
+} */
+
+.ots-conatiner{
+    padding: 1rem 8rem 1rem 8rem;
+
+}
+h3{
+    /* font-family: 'Righteous', cursive; */
+    color:#00a3ff;
+    /* text-shadow: 5px 4px 6px black; */
+    font-size: 1.5rem;
+    padding-bottom: 5px;
+}
+
+table#customers {
+    border-collapse: collapse;
+    overflow: scroll;
+}
+#customers tr td{
+    border: 1px solid rgb(138, 123, 123);
+    padding: 1rem;
+}
+.btn-primary{
+    background: linear-gradient(180deg, rgb(33 151 241), rgb(255, 255, 255));
+    color: #000000;
+    padding: 20px;
+    border-radius: 10px;
+    border: none;
+}
+#customers th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: center;
+    background: linear-gradient(180deg, rgb(33 151 241), rgb(255, 255, 255));
+    color: rgb(0, 0, 0);
+    border: 1px solid rgb(138, 123, 123);
+
+}
+.button-contant-ug{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 35%;
+    margin-top: 15px;
+}
+.button2{
+    border: none;
+    background: linear-gradient(180deg, rgb(33 151 241), rgb(51, 59, 94));
+
+}
+.Features ul li{
+    list-style: disc;
+}
+.Features ul {
+    padding-left: 15px;
+}
+.WHYOTS ul li{
+    list-style: disc;
+}
+.WHYOTS ul{
+    padding-left: 15px;
+
+}
+/* .faq-content{
+    display: flex;
+    
+    justify-content: center;
+    width: 80%;
+    margin: 0 auto;
+} */

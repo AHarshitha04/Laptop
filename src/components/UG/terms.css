@@ -1,0 +1,11 @@
+.termsul li{
+    list-style: disc;
+    margin: 1rem;
+} 
+div#terms p {
+    margin: 1rem;
+}
+
+div#policy p {
+    margin: 1rem;
+}

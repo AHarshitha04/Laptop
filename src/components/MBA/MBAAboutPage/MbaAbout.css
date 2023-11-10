@@ -1,0 +1,119 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Libre+Baskerville:ital@0;1&family=Righteous&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Libre+Baskerville:ital@0;1&family=Righteous&display=swap');
+
+/* new fonts  */
+  @import url('https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Cinzel:wght@500;600;700&family=Libre+Baskerville:ital@0;1&family=Righteous&display=swap');
+
+
+  .mbaabout{
+    background: #fff !important;
+  }
+
+
+.mbaAbout-bg{
+    width: 80%;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.mba_Container {
+    max-width: 89%;
+    margin: 0 auto;  
+ }
+
+.mbaAbout-bg h1{
+    text-align: center;
+    font-size: 3rem;
+    color: #2d8a40;
+}
+
+.MbaAbout{
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.mbaAboutSection{
+    display: flex;
+    gap: 2rem;
+}
+
+.mbalogoimage{
+    width: 100%;
+    box-shadow: 0px 0px 12px 8px #51f77321;
+}
+
+.mbaAboutSection img{
+    width: 100%;
+}
+
+.mbaaboutContant p{
+    width: 90%;
+    margin: 0 auto;
+    text-align: justify;
+    font-size: 1.5rem;
+}
+
+.mbavistionMission-section{
+    display: flex;
+    gap: 2rem;
+}
+
+.vision-contant_mba{
+    box-shadow: 0px 0px 12px -1px #000;
+    padding: 1rem;
+}
+
+.mission-contant_mba{
+    box-shadow: 0px 0px 12px -1px #000;
+    padding: 1rem;
+}
+
+.contant_mba h3{
+    text-align: center;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #2d8a40;
+}
+
+.contant_mba p{
+    font-size: 20px;
+}
+
+.Ul-list2{
+    list-style: none;
+}
+
+.ulList li{
+    font-size: 20px;
+}
+
+.mba_About_LI{
+    list-style: disc;
+    list-style-position: inside;
+}
+.About-bg .vision_value{
+    margin: 0.5rem auto;
+}
+@media (min-width:300px) and (max-width:1024px){
+    /* .vistionMission-section {
+        gap: 0.8rem;
+    } */
+    .mbaaboutContant p {
+    font-size: 0.53rem;
+}
+.contant_mba h3 {
+    font-size: 1.5rem;
+}
+.contant_mba p {
+    font-size: 0.5rem;
+}
+.ulList {
+    padding: 0.5rem;
+}
+.ulList li {
+    list-style-position: outside;
+    font-size: 0.5rem;
+}
+}
