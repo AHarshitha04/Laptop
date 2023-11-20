@@ -10,7 +10,8 @@
     
 }
 
-.examtbl th{
-    padding: 5px;
-    text-align: center;
+.examtbl th {
+    padding: 5px 3px;
+   
+    font-size: 10px;
 }

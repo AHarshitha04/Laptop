@@ -125,6 +125,8 @@
             flex-direction: column;
         }
     }
+      
+
 
     @media only screen and (max-width: 768px) {
         .UG_accordion2 {
@@ -135,4 +137,5 @@
         .ug_faq_container{
             width: 95%;
         }
+  
     }

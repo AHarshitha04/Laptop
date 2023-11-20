@@ -18,6 +18,8 @@ import IITJAMEligibility from './ExamPageComponent/IITJAMExamPage/IITJAMEligibil
 import IITJAMSyllabus from './ExamPageComponent/IITJAMExamPage/IITJAMSyllabus'
 import IITJAMImportantDates from './ExamPageComponent/IITJAMExamPage/IITJAMImportantDates'
 import { Link } from 'react-router-dom'
+import Footer from '../UG/Footer'
+
 
 export const PGIITJAMExam = () => {
     const [selected, setSelected] = useState(null)
@@ -30,7 +32,7 @@ export const PGIITJAMExam = () => {
         setSelected(i1)
     }
     return (
-        <div className='' style={{ margin: '2rem' }}>
+        <div className=''>
             {/*import logo from '../../logo2.jpeg' */}
             <nav>
                 <div className="container nav__container">
@@ -135,6 +137,7 @@ export const PGIITJAMExam = () => {
                         </div>
                     </div>
             </div>
+            <Footer />
         </div>
     )
 }

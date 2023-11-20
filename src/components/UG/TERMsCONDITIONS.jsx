@@ -1,6 +1,8 @@
 import React from 'react'
 import Header from './Header'
 import '../UG/terms.css'
+import Footer from './Footer'
+
 
 export const TERMsCONDITIONS = () => {
   const termsul={
@@ -156,6 +158,7 @@ export const TERMsCONDITIONS = () => {
             </p>
 
         </div>
+        <Footer />
     </div>
   )
 }

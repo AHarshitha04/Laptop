@@ -92,7 +92,7 @@ export const Pg_home_page = () => {
 {/* <Faq/> */}
 
 <Pg_Fax/>
-{/* <Footer/> */}
+<Footer/>
 
     </>
   )

@@ -1,6 +1,7 @@
-import React from 'react'
+import React, { useState, useEffect } from "react";
+import { Carousel } from "react-responsive-carousel";
 import Header from './Header'
-import { useState } from 'react'
+// import { useState } from 'react'
 import './IITjee.css'
 import table1 from '../UG/Images/bitsattableimg1.png'
 import tabimg from './Images/bitsattableimg2.png'
@@ -19,9 +20,25 @@ import { Bitsat_eligibility } from './UGExamPages/bitsat/Bitsat_eligibility'
 import { Bistat_Syllabus } from './UGExamPages/bitsat/Bistat_Syllabus'
 import { Bitsat_ImpDates } from './UGExamPages/bitsat/Bitsat_ImpDates'
 import Bitsat_Banner from './Ug_Carousel/BITSAT/Bitsat_Banner'
+import Footer from './Footer'
+import Examheader from './Examheader'
+import axios from "axios";
+
 
 
 export const BitsatExam = () => {
+
+  const [imageDataList1, setImageDataList1] = useState([]);
+  useEffect(() => {
+    axios
+      .get("http://localhost:5001/BitsatExamBanners")
+      .then((response) => {
+        setImageDataList1(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching images:", error);
+      });
+  }, []);
     const [selected, setSelected] = useState(null)
     const toggle2 = (i1) => {
         // return i
@@ -34,21 +51,23 @@ export const BitsatExam = () => {
   return (
     <div className='iitjeebody'>
         {/* import logo from './logo2.jpg' */}
-    <nav>
-             <div className="container nav__container">          
-                <div className="pic">
-                    <a href="/"><img src={logo} alt=""/></a>
-                </div>    
-                <ul className="nav__menu">
-                    <li><Link to='/home'>Home</Link>   </li>
-                    <li><a href="https://online-ug.egradtutor.in/" target='_blank' className="login1" >Login/User Registration </a></li>
-                </ul>           
-                 <button id="open-menu-btn"><i className="uil uil-bars"></i></button>
-                 <button id="close-menu-btn"><i className="uil uil-multiply"></i></button>
-             </div>   
-           </nav>
+        <Examheader/>
+
            <div className='jee_Carousal' style={{paddingBottom:'1rem'}}>
-                <Bitsat_Banner/>
+                {/* <Bitsat_Banner/> */}
+                <Carousel
+            autoPlay
+            infiniteLoop
+            showArrows={false}
+            interval={4600}
+            showThumbs={false}
+            // showIndicators={false}
+            showStatus={false}
+          >
+            {imageDataList1.map((imageData, index) => (
+              <img key={index} src={imageData} alt={`Image ${index + 1}`} />
+            ))}
+          </Carousel>
             </div>
         <div className='FAQCONTENT' id='faq'>
             <div className="wrapper-3 container">
@@ -147,7 +166,7 @@ export const BitsatExam = () => {
 
 
 
-
+<Footer />
         </div>
   )
 }

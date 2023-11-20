@@ -2,7 +2,7 @@
     width: 100%;
     /* background: #ff2a0b0a; */
     /* border-radius: 0 30% 30% 0; */
-    padding: 1rem 0;
+    padding: 0.5rem 0;
 
 }
 
@@ -21,9 +21,9 @@
 .contact_box {
    display: flex;
    flex-wrap: wrap;
-    gap: 3rem;
+    gap: 2rem;
     justify-content: center;
-    /* align-items: center; */
+    align-items: center;
 }
 
 
@@ -53,7 +53,7 @@
     width: 24rem;
    height: 27rem;
    justify-content: center;
-   align-items: center;
+   
 
 }
 
@@ -72,11 +72,14 @@
     align-items: center;
     justify-content: center;
     gap: 1rem; */
+
+
     display: grid;
     grid-template-columns: repeat(auto-fit,minmax(350px,1fr));
     gap: 1rem;
     justify-content: center;
     align-items: center;
+
 
 }
 
@@ -84,7 +87,7 @@
 
 .contact_box .ug_from  .ug_input,
 .contact_box .ug_from select {
-    width:100%;
+    width:90%;
     height: 50px;
     padding:0.1rem 0.5rem;
     border-radius: 10px;
@@ -96,7 +99,7 @@
 .contact_box .ug_from textarea {
     text-transform: uppercase;
     padding: 0.5rem;
-    width: 100%;
+    width: 90%;
     min-height: 100px;
     border-radius: 10px;
     height: auto;
@@ -104,11 +107,26 @@
 
 }
 
+
 .contact_box .ug_from input[type=submit] {
-    background: #d31a1a;
+    /* background: #d31a1a; */
+    background: #279EFF;
+   cursor: pointer;
     color: #fff;
-    font-size: 1.8rem;
-    width: 200px;
+    font-size: 1rem;
+    width: 100px;
+    height: 40px;
+    border: 0;
+   
+    font-weight: bold;
+    /* justify-content: center; */
+    transition: 0.5s all;
+    justify-self: end;
+    margin-right: 2.5rem;
+    &:hover{
+        transform: scale(1.1);
+        box-shadow: 0 0 8px rgba(0,0,0,0.5);
+    }
 
 }
 /* 
@@ -136,11 +154,33 @@
     /* height: 15rem; */
  }
  .mpa_adresss p{ 
-    font-size: 1.5rem;
+    font-size: 1.3rem;
+    line-height: 30px;
     text-align: left;
+    text-align: justify;
+
 
  }
  .ug_from {
     width: 300px;
  }
+ .contact_box .ug_from input[type=submit] {
+    width: 100px;font-size: 0.9rem;
+height: 35px;
+ }
+ 
+.contact_box .ug_from  .ug_input,
+.contact_box .ug_from select {
+    width:80%;
+  
+    margin: 0 auto;
+
+}
+
+.contact_box .ug_from textarea {
+    text-transform: uppercase;
+    padding: 0.5rem;
+   width: 80%;
+    margin: 0 auto;
+}
 }

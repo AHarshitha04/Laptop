@@ -1,5 +1,7 @@
 import React from 'react'
 import Header from './Header'
+import Footer from './Footer'
+
 
 export const Privacypolicy = () => {
   return (
@@ -81,6 +83,7 @@ export const Privacypolicy = () => {
     </ul>
     </p>
     </div>
+    <Footer />
     </div>
   )
 }

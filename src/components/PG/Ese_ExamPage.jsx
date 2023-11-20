@@ -20,6 +20,8 @@ import { EseExamPateern } from './ExamPageComponent/EseExamPage/EseExamPateern'
 import EseEligibility from './ExamPageComponent/EseExamPage/EseEligibility'
 import { EseSyllabus } from './ExamPageComponent/EseExamPage/EseSyllabus'
 import EseImportantDates from './ExamPageComponent/EseExamPage/EseImportantDates'
+import Footer from '../UG/Footer'
+
 
 
 
@@ -40,7 +42,7 @@ export const Ese_ExamPage = () => {
         setSelected(i1)
     }
   return (
-    <div className='' style={{margin: '2rem'}}>
+    <div className=''>
         
         {/* import logo from '../../logo2.jpeg' */}
         <nav>
@@ -135,6 +137,7 @@ export const Ese_ExamPage = () => {
                         </div>
                     </div>
         </div>
+        <Footer />
         </div>
   )
 }

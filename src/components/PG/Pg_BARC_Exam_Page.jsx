@@ -9,6 +9,8 @@ import BARCImportantDates from './ExamPageComponent/BARCExamPage/BARCImportantDa
 import onlinets from '../UG/Images/online test seires.png'
 import recordedmc from '../UG/Images/recorded mini class.png'
 import livecls from '../UG/Images/live class.png'
+import Footer from '../UG/Footer'
+
 
 
 
@@ -134,6 +136,7 @@ export const Pg_BARC_Exam_Page = () => {
                         </div>
                     </div>
      </div>
+     <Footer />
     </div>
   )
 }

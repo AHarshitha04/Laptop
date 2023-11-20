@@ -1,4 +1,6 @@
-import logo from "./logo/egradtutor_logo.png";
+// import logo from "./logo/egradtutor_logo.png";
+import logo from "./logo/cap.jpeg";
+
 import vision from "./logo/vision.png";
 import mision from "./logo/mission.png";
 
