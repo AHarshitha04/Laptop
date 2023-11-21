@@ -326,7 +326,7 @@ const Register = () => {
       });
 
       if (response.data) {
-        localStorage.setItem('isLoggedIn', 'true');
+        // localStorage.setItem('isLoggedIn', 'true');
         // localStorage.setItem('userRole', response.data.user.role);
         setIsRegistered(true);
       } else {
