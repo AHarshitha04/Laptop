@@ -4,25 +4,16 @@ import logo from './Images/logo2.jpeg'
 import Faq from './Faq'
 import { Link } from 'react-router-dom'
 import jeeposter from './posters/jee_poster_2023-9-1.pdf'
+import Footer from './Footer'
+import Examheader from './Examheader'
+
 
 const IITJEE_OLVC = () => {
   return (
   <>
     {/* import logo from './logo2.jpg' */}
-    <nav>
-        <div className="container nav__container">
-            <div className="pic">
-              <a href="/"><img src={logo} alt=""/></a>
-            </div>
-              <ul className="nav__menu">
-                  <li><Link to='/home'>Home</Link>                   
-                  </li>
-                  <li><a href="https://online-ug.egradtutor.in/" target='_blank' className="login1" >Login/User Registration </a></li>
-                </ul>          
-                <button id="open-menu-btn"><i className="uil uil-bars"></i></button>
-                <button id="close-menu-btn"><i className="uil uil-multiply"></i></button>   
-          </div>
-       </nav> 
+    <Examheader/>
+ 
             <div className="otsh1">
                 <h1 className='iit-heading'>IITJEE ONLINE LIVE VIDEO CLASSES</h1>
             </div>
@@ -153,6 +144,7 @@ const IITJEE_OLVC = () => {
                 </div>
             </section>
             <Faq />
+            <Footer />
         </>
     )
 }

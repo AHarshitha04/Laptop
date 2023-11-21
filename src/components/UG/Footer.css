@@ -42,17 +42,17 @@ footer.footer {
 
 .footerContant1 p {
     line-height: 2;
-    color:rgb(173 173 173);
+    color:rgb(255, 255, 255);
 }
 
 .Footer_Ul_links a{
-    color: rgb(173 173 173);
+    color: rgb(255, 255, 255);
 }
 .footerContant2 ul {
     display: flex;
     flex-direction: column;
     gap: 0.8rem;
-    color: rgb(253, 251, 249);
+    color: rgb(255, 255, 255);
     text-align: center;
 
 

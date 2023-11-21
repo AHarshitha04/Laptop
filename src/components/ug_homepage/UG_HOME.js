@@ -10,7 +10,8 @@ import Contact from "./components/Contact/Contact";
 import Faq from "./components/Faqs/Faq";
 
 import { Ug_About } from "../UG/Ug_homePage_k/Ug_About/Ug_About";
-// import Footer from './components/Footer/Footer'
+import Footer from './components/Footer/Footer'
+import HomeBackend from "./components/Home_Section/HomeBackend";
 //  ----------------------commmon css-------------------
 // import "./app.css"
 
@@ -18,14 +19,15 @@ const UG_HOME = () => {
   return (
     <>
       <Header />
-      <Home />
-      <About />
-      {/* <Ug_About /> */}
+      {/* <Home />       */}
+      <HomeBackend />      
+  
       <Exam_Explore />
       <Course />
+      <About />
       <Contact />
       <Faq />
-      {/* <Footer /> */}
+      <Footer />
     </>
   );
 };

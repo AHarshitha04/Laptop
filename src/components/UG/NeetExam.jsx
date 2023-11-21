@@ -1,6 +1,9 @@
-import React from 'react'
+
 import Header from './Header'
-import { useState } from 'react'
+import React, { useState, useEffect } from "react";
+import { Carousel } from "react-responsive-carousel";
+import "react-responsive-carousel/lib/styles/carousel.min.css";
+import axios from "axios";
 import './IITjee.css'
 import table1 from '../UG/Images/neettableimg1.png'
 import tabimg from './Images/neettableimg2.png'
@@ -22,8 +25,23 @@ import { Neet_Eligibility } from './UGExamPages/neet/Neet_Eligibility'
 import { Neet_Syllabus } from './UGExamPages/neet/Neet_Syllabus'
 import { Neet_ImportantDates } from './UGExamPages/neet/Neet_ImportantDates'
 import Neet_banners from './Ug_Carousel/Neet_Banner/Neet_banners'
+import Footer from './Footer'
+import Examheader from './Examheader'
+
 
 export const NeetExam = () => {
+
+  const [imageDataList1, setImageDataList1] = useState([]);
+  useEffect(() => {
+    axios
+      .get("http://localhost:5001/NeetExamBanners")
+      .then((response) => {
+        setImageDataList1(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching images:", error);
+      });
+  }, []);
     const [selected, setSelected] = useState(null)
     const toggle2 = (i1) => {
         // return i
@@ -37,21 +55,23 @@ export const NeetExam = () => {
     <div className='iitjeebody'>
 
          {/* import logo from './logo2.jpg' */}
-          <nav>
-             <div className="container nav__container">          
-                <div className="pic">
-                    <a href="/"><img src={logo} alt=""/></a>
-                </div>    
-                <ul className="nav__menu">
-                    <li><Link to='/home'>Home</Link>   </li>
-                    <li><a href="https://online-ug.egradtutor.in/" target='_blank' className="login1" >Login/User Registration </a></li>
-                </ul>           
-                 <button id="open-menu-btn"><i className="uil uil-bars"></i></button>
-                 <button id="close-menu-btn"><i className="uil uil-multiply"></i></button>
-             </div>   
-           </nav> 
+         <Examheader/>
+
            <div className='jee_Carousal' style={{paddingBottom:'1rem'}}>
-                <Neet_banners/>
+                {/* <Neet_banners/> */}
+                <Carousel
+            autoPlay
+            infiniteLoop
+            showArrows={false}
+            interval={4600}
+            showThumbs={false}
+            // showIndicators={false}
+            showStatus={false}
+          >
+            {imageDataList1.map((imageData, index) => (
+              <img key={index} src={imageData} alt={`Image ${index + 1}`} />
+            ))}
+          </Carousel>
             </div>
         <div className='FAQCONTENT' id='faq'>
             <div className="wrapper-3 container">
@@ -149,7 +169,7 @@ export const NeetExam = () => {
 
 
 
-
+<Footer />
         </div>
   )
 }

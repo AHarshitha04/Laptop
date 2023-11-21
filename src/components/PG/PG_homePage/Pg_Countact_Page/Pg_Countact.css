@@ -12,9 +12,10 @@
 .Pg_Countact-contant{
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-evenly;
+    /* justify-content: space-evenly; */
+    justify-content: center;
     align-items: center;
-    gap: 1rem;
+    gap: 3rem;
 }
 .Pg_Addres{
     box-shadow: 0px 0px 8px -3px;
@@ -31,12 +32,60 @@ form.Pg_contact_inputs {
     flex-direction: column;
     gap: 1.5rem;
 }
-.Pg_contact_inputs input{
+form.Pg_contact_inputs  input{
+    width: 100%;
+    height: 40px;
+    padding: 0.8rem;
+    border: 1px solid #0000003d;
+    border-radius: 18px;
+}
+form.Pg_contact_inputs  select{
+    border-radius: 18px;
+    padding: 0 0.8rem;
+
+
+}
+
+form.Pg_contact_inputs  textarea{
+    border-radius: 18px;
+    padding:  0.8rem;
+
+
+}
+
+form.Pg_contact_inputs  input[type=submit]{
+    width: 150px;
+    margin: 10px;
+    /* padding: 15px 30px; */
+
+    text-transform: uppercase;
+    transition: 0.5s;
+   
+    color: white;
+    border-radius: 10px;
+
+    border: 0px;
+    font-weight: 700;
+    box-shadow: 0px 0px 14px -7px #f09819;
+    background-image: linear-gradient(45deg, rgb(231 144 144) 0%, #F09819 51%, rgb(231 144 144) 100%);
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    margin: 0 auto;
+    margin-right: 0;
+    /* margin-left: 0; */
+    
+    /* align-items: flex-end; */
+}
+
+
+/* .Pg_contact_inputs input{
    
     width: 345px;
     height: 2rem;
     box-shadow: 0px 0px 8px -3px;
-}
+} */
 .Pg_contact_inputs select{
    
     width: 345px;

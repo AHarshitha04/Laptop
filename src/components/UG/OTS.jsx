@@ -9,6 +9,7 @@ import './Footer.css'
 import gif from './Images/hand-scroll-bar.gif'
 import { useState } from 'react'
 import './Faq.css'
+import Examheader from './Examheader'
 
 const OTS = () => {
     const [selected, setSelected] = useState(null)
@@ -121,7 +122,7 @@ const OTS = () => {
 {/* nav header */}
 <div className='container'>
 
-<Header/>
+<Examheader/>
 </div>
 
 <div className='coursename ots-conatiner'>

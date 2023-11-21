@@ -1,4 +1,4 @@
-import {React,useState} from "react";
+import { React, useState } from "react";
 import { Link } from "react-router-dom";
 
 // ----------------header css------------------------
@@ -9,7 +9,7 @@ import "./header.css";
 import { NavData } from "./NavData";
 
 const Header = () => {
-  const[showMenu, setshowMenu] = useState(0);
+  const [showMenu, setshowMenu] = useState(0);
   return (
     <>
       <div className="ug_header">
@@ -22,7 +22,7 @@ const Header = () => {
                   <img src={NavData.logo} alt="" />
                 </Link>
               </div>
-              <div  className={showMenu ? "navbox  mobile-menu" :"navbox "}>
+              <div className={showMenu ? "navbox  mobile-menu" : "navbox "}>
                 <ul className={NavData.navbar}>
                   <li>
                     <a href="#home" className={NavData.navlist}>
@@ -56,28 +56,33 @@ const Header = () => {
                   </li>
                 </ul>
               </div>
-             
-                <div className="login_menu">
-              
-                  <a
+
+              <div className="login_menu">
+                {/* <a
                     href="https://online-ug.egradtutor.in"
                     className={NavData.login}
                   >
                     {NavData.btn1}
-                  </a>
-                  <div className="mobile_menu mobile_menu_non"onClick={() => setshowMenu(!showMenu)}  >
-                  <div className={showMenu ? "rotate_right  " :"lines "}></div>
-                  <div className={showMenu ? "no_lines  " :"lines "}></div>
-                  <div className={showMenu ? "rotate_left  " :"lines "}></div>
-                  </div>
-                  {/* <a href="#"><AiOutlineMenu/></a> */}{" "}
+                  </a> */}
+                <Link
+                  to='/uglogin'
+                  className={NavData.login}
+                >
+                  {NavData.btn1}
+                </Link>
+                <div
+                  className="mobile_menu mobile_menu_non"
+                  onClick={() => setshowMenu(!showMenu)}
+                >
+                  <div className={showMenu ? "rotate_right  " : "lines "}></div>
+                  <div className={showMenu ? "no_lines  " : "lines "}></div>
+                  <div className={showMenu ? "rotate_left  " : "lines "}></div>
                 </div>
+                {/* <a href="#"><AiOutlineMenu/></a> */}{" "}
               </div>
-           
+            </div>
           );
         })}
-
-        
       </div>
 
       {/* <div className="mobile_nav">
@@ -120,12 +125,10 @@ const Header = () => {
   );
 };
 
-
 export default Header;
 
-
-
-{/* <nav className="pulication-nav">
+{
+  /* <nav className="pulication-nav">
 <div className="logo">
     <img src={logo} alt="" />
 </div>
@@ -152,4 +155,5 @@ export default Header;
     </div>
 </div>
 
-</nav> */}
+</nav> */
+}

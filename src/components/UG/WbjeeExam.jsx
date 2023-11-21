@@ -15,6 +15,9 @@ import WBJEEImportantDates from './UGExamPages/WBJEEExamPage/WBJEEImportantDates
 import livecls from './Images/live class.png'
 import onlinets from './Images/online test seires.png'
 import recordedmc from './Images/recorded mini class.png'
+import Footer from './Footer'
+import Examheader from './Examheader'
+
 
 export const WbjeeExam = () => {
     const [selected, setSelected] = useState(null)
@@ -29,19 +32,8 @@ export const WbjeeExam = () => {
   return (
     <div className='iitjeebody'>
          {/* import logo from './logo2.jpg' */}
-    <nav>
-             <div className="container nav__container">          
-                <div className="pic">
-                    <a href="/"><img src={logo} alt=""/></a>
-                </div>    
-                <ul className="nav__menu">
-                    <li><Link to='/home'>Home</Link>   </li>
-                    <li><a href="https://online-ug.egradtutor.in/" target='_blank' className="login1" >Login/User Registration </a></li>
-                </ul>           
-                 <button id="open-menu-btn"><i className="uil uil-bars"></i></button>
-                 <button id="close-menu-btn"><i className="uil uil-multiply"></i></button>
-             </div>   
-           </nav>
+         <Examheader/>
+
         <div className='FAQCONTENT' id='faq'>
             <div className="wrapper-3 container">
             
@@ -134,7 +126,7 @@ export const WbjeeExam = () => {
 
 
 
-
+<Footer />
         </div>
   )
 }

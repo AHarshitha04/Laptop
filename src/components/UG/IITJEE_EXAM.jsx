@@ -1,6 +1,7 @@
-import React from 'react'
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import Header from './Header'
-import { useState } from 'react'
+// import { useState } from 'react'
 import './IITjee.css'
 import table1 from '../UG/Images/table1.png'
 import tabimg from './Images/tabimg1.png'
@@ -11,6 +12,8 @@ import { Link } from 'react-router-dom'
 import livecls from './Images/live class.png'
 import onlinets from './Images/online test seires.png'
 import recordedmc from './Images/recorded mini class.png'
+import { Carousel } from "react-responsive-carousel";
+import "react-responsive-carousel/lib/styles/carousel.min.css";
 
 // exam components
 import { Iit_jee_ExamPattren } from './UGExamPages/iitjee/Iit_jee_ExamPattren'
@@ -18,9 +21,25 @@ import { Iitjee_Eligibility } from './UGExamPages/iitjee/Iitjee_Eligibility'
 import { Iitjee_Syllabus } from './UGExamPages/iitjee/Iitjee_Syllabus'
 import { Iitjee_Important } from './UGExamPages/iitjee/Iitjee_Important'
 import Iitjee_banners from './Ug_Carousel/iitjee/Iitjee_banners'
+import Footer from './Footer'
+import Examheader from './Examheader'
+
 
 
 export const IITJEE_EXAM = () => {
+
+  const [imageDataList1, setImageDataList1] = useState([]);
+  useEffect(() => {
+    axios
+      .get("http://localhost:5001/ExamBanners")
+      .then((response) => {
+        setImageDataList1(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching images:", error);
+      });
+  }, []);
+
     const [selected, setSelected] = useState(null)
     const toggle2 = (i1) => {
         // return i
@@ -30,26 +49,29 @@ export const IITJEE_EXAM = () => {
         }
         setSelected(i1)
     }
+  // const[showMenu, setshowMenu] = useState(0);
+
   return (
     <div className='iitjeebody' >
         {/* import logo from './logo2.jpg' */}
-       <nav>
-        <div className="container nav__container">
-            <div className="pic">
-              <a href="/"><img src={logo} alt=""/></a>
-            </div>
-              <ul className="nav__menu">
-                  <li><Link to='/home'>Home</Link>                   
-                  </li>
-                  <li><a href="https://online-ug.egradtutor.in/" target='_blank' className="login1" >Login/User Registration </a></li>
-                </ul>          
-                <button id="open-menu-btn"><i className="uil uil-bars"></i></button>
-                <button id="close-menu-btn"><i className="uil uil-multiply"></i></button>   
-          </div>
-       </nav> 
+      
+<Examheader/>
 
             <div className='jee_Carousal' style={{paddingBottom:'1rem'}}>
-                <Iitjee_banners/>
+                {/* <Iitjee_banners/> */}
+                <Carousel
+            autoPlay
+            infiniteLoop
+            showArrows={false}
+            interval={4600}
+            showThumbs={false}
+            // showIndicators={false}
+            showStatus={false}
+          >
+            {imageDataList1.map((imageData, index) => (
+              <img key={index} src={imageData} alt={`Image ${index + 1}`} />
+            ))}
+          </Carousel>
             </div>
         <div className='FAQCONTENT' id='faq'>
             <div className="wrapper-3 container">
@@ -143,7 +165,7 @@ export const IITJEE_EXAM = () => {
 
 
 
-
+<Footer />
 
         </div>
     )

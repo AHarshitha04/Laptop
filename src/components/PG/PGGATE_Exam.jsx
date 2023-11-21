@@ -21,6 +21,8 @@ import GateEligibility from './ExamPageComponent/GateExamPage/GateEligibility'
 import GateSyllabus from './ExamPageComponent/GateExamPage/GateSyllabus'
 import GateImportantDates from './ExamPageComponent/GateExamPage/GateImportantDates'
 import { Link } from 'react-router-dom'
+import Footer from '../UG/Footer'
+
 
 export const PGGATE_Exam = () => {
     const [selected, setSelected] = useState(null)
@@ -33,7 +35,7 @@ export const PGGATE_Exam = () => {
         setSelected(i1)
     }
   return (
-    <div className='' style={{margin: '2rem'}}>
+    <div className=''>
         {/* import logo from '../../logo2.jpeg' */}
         <nav>
              <div className="container nav__container">          
@@ -125,6 +127,7 @@ export const PGGATE_Exam = () => {
     </div>
   </div>
         </div>
+        <Footer /> 
         </div>
   )
 }

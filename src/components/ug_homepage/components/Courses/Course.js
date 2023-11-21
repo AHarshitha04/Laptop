@@ -26,7 +26,7 @@ const Course = () => {
                 <li>{Course_data1.course_pont4_1}</li>
               </ul>
               <div className={Course_data1.course_bttons_list1}>
-                <Link to={Course_data1.otsiitlink}>{Course_data1.c_btn1} <small className="ug_small_1">{Course_data1.small1}</small></Link>
+                <Link to={Course_data1.otsiitlink}>{Course_data1.c_btn1} <br/> <small className="ug_small_1">{Course_data1.small1}</small></Link>
                 <Link to={Course_data1.otslinkneet}>{Course_data1.c_btn2}</Link>
                 <Link to={Course_data1.otslinkbitsat}>{Course_data1.c_btn3}</Link>
                 <Link to={""}>{Course_data1.c_btn4}</Link>
@@ -57,7 +57,7 @@ const Course = () => {
                 <li>{Course_data2.course_pont4_2}</li>
               </ul>
               <div className={Course_data2.course_bttons_list2}>
-              <Link to={Course_data2.olvclinkiit}>{Course_data2.c_btn2_1}<small className="ug_small_2">{Course_data2.small2}</small></Link>
+              <Link to={Course_data2.olvclinkiit}>{Course_data2.c_btn2_1} <br/> <small className="ug_small_2">{Course_data2.small2}</small></Link>
                 <Link to={Course_data2.olvclinkneet}>{Course_data2.c_btn2_2}</Link>
 
               </div>
@@ -82,7 +82,7 @@ const Course = () => {
 
                 </ul>
                 <div className={Course_data3.course_bttons_list3}>
-                <Link to={''}>{Course_data3.c_btn3_1}<small className="ug_small_3">{Course_data3.small3}</small></Link>
+                <Link to={''}>{Course_data3.c_btn3_1} <br/> <small className="ug_small_3">{Course_data3.small3}</small></Link>
                 <Link to={''}>{Course_data3.c_btn3_2}</Link>
 
                 </div>

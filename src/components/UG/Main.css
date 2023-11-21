@@ -64,12 +64,18 @@ tr td{
 tr th{
     border: 1px solid;
 }
-
+.ExamsUl_list{
+    padding: 0 15px;
+}
 .ExamsUl_list li{
     list-style: disc;
-    list-style-position: inside;
+    /* list-style-position: inside; */
     padding-left: 10px;
     text-align: justify;
+    line-height: 20px;
+    font-size: 11px;
+word-spacing: 2px;
+letter-spacing: 0.1px;
 }
 .SExamsUl_list li{
     list-style:lower-alpha;

@@ -5,6 +5,8 @@ import { Link } from 'react-router-dom'
 import logo from '../../logo.png'
 import gif from './Images/hand-scroll-bar.gif'
 import OtsNavHeader from '../UG/OtsNavHeader'
+import Footer from '../UG/Footer'
+
 
 
 export const GateOts = () => {
@@ -347,6 +349,7 @@ export const GateOts = () => {
 
 
 </div>
+<Footer />
     </div>
   )
 }

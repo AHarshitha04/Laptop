@@ -4,25 +4,17 @@ import logo from './logo2.jpg'
 import Faq from './Faq'
 import neetposter from './posters/NEET_POSTER.png'
 import { Link } from 'react-router-dom'
+import Footer from './Footer'
+import Examheader from './Examheader'
+
 
 
 export const NeetOLVC = () => {
   return (
    <>
     {/* import logo from './logo2.jpg' */}
-    <nav>
-             <div className="container nav__container">          
-                <div className="pic">
-                    <a href="/"><img src={logo} alt=""/></a>
-                </div>    
-                <ul className="nav__menu">
-                    <li><Link to='/home'>Home</Link>   </li>
-                    <li><a href="https://online-ug.egradtutor.in/" target='_blank' className="login1" >Login/User Registration </a></li>
-                </ul>           
-                 <button id="open-menu-btn"><i className="uil uil-bars"></i></button>
-                 <button id="close-menu-btn"><i className="uil uil-multiply"></i></button>
-             </div>   
-           </nav> 
+    <Examheader/>
+
             <div className="otsh1">
                 <h1 className='iit-heading'>NEET - ONLINE LIVE VIDEO CLASSES</h1>
             </div>
@@ -142,6 +134,7 @@ export const NeetOLVC = () => {
                 </div>
             </section>
             <Faq />
+            <Footer />
         </>
     )
 }

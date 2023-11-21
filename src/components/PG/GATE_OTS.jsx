@@ -7,6 +7,8 @@ import React from 'react'
 // import { FooterData } from './FooterData'
 // import './Footer.css'
 import gif from './Images/hand-scroll-bar.gif'
+import Footer from '../UG/Footer'
+
 
 
 const GATE_OTS = () => {
@@ -346,7 +348,7 @@ const GATE_OTS = () => {
 
 
 
-
+<Footer />
 </div>
  
   )

@@ -19,7 +19,7 @@ const Pg_header = () => {
         <Marquee pauseOnHover={true}>
           <div>
             <div className="marquee_PgUp">
-              <span className="fast-flicker">U</span>pdate<span className="flicker">e</span>
+              <span className="fast-flicker">U</span>pdat<span className="flicker">e</span>
             </div>
           </div>
           All tests will be LIVE according to the detailed schedule given. Do not confuse to the Total No. of tests in the test cards while buying as they show the number of tests LIVE at the moment..

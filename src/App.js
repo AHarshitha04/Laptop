@@ -1,5 +1,7 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import "./App.css"
+// import ScrollToTop from 'react-router-scroll-top';
 import Footer from '../src/components/UG/Footer';
 import GATE_OTS from './components/PG/GATE_OTS';
 import { GateOts } from './components/PG/GateOts';
@@ -57,6 +59,19 @@ import { Landing } from './Landing';
 import { Ug_About } from './components/UG/Ug_homePage_k/Ug_About/Ug_About';
 import { Jee_ots } from './components/UG/Ug ots pages/jee ots olvc/jee ots/Jee_ots';
 import { PgHome } from './components/PG/PgHome';
+import LandingPage from './NewLanding_Page/LandingPage.jsx';
+import ScrollToTop from './Landing_PAGE/ScrollToTop.js';
+import Examheader from './components/UG/Examheader.jsx';
+
+// ========================================================= uglogin ===========================================================
+ 
+        import Login from './components/ug_homepage/UGadmin/login/Login.js';
+import UgadminHome from './components/ug_homepage/UGadmin/UgadminHome.js';
+import Quiz_dashboard from './components/ug_homepage/UGadmin/eaxm_portal_/Quiz_dashboard.js';
+import Register from './components/ug_homepage/UGadmin/login/Register.js';
+        
+
+
 
 
 
@@ -66,12 +81,13 @@ import { PgHome } from './components/PG/PgHome';
 const App = () => {
   return (
     <Router>
+       <ScrollToTop  />
       <Routes>
 
-
+      <Route path='/' element={< Egate />} />
 {/* ======================================================== LANDING PAGE ================================================================ */}
         {/* This is a link for landing page */}
-        <Route path='/' element={< Egate />} />
+      
 
 {/* ======================================================== ALL HOME PAGES ================================================================ */}
 
@@ -91,8 +107,9 @@ const App = () => {
 
         {/* This is the EXAM page OTS Page and OLVC page for IIT-JEE */}
 
-        {/* This is the EXAM page for IIT-JEE */}
-        <Route path='/iitjeeExam' element={<IITJEE_EXAM />} />
+
+ {/* This is the EXAM page for IIT-JEE */}
+ <Route path='/iitjeeExam' element={<IITJEE_EXAM />} />
         {/* This is the OTS page for IIT-JEE */}
         <Route path='/iitjee' element={<OTS />} />
         <Route path='/iitjee_otc' element={<JeeOts />} />
@@ -134,6 +151,7 @@ const App = () => {
         {/* This is the EXAM page for SRMJEE */}
         <Route path='/srmjeeexam' element={<SrmJeeExam />} />
 
+       
         {/* ========================================================= END OF UG EXAM LINKS ====================================================================== */}
 
 
@@ -168,10 +186,30 @@ const App = () => {
         <Route path='/terms' element={<TERMsCONDITIONS />} />
         <Route path='/policy' element={<Privacypolicy />} />
 
+
+        {/* -------------------------------------- uglogin ----------------------------- */}
+        <Route path='/Register' element={<Register />} />
+        <Route path='/uglogin' element={<Login />} />
+
+        <Route path="/UgadminHome" element={<PrivateRoute />} />
+        {/* Remove the following line, as it always redirects to the login page */}
+   <Route path='/uglogin' element={<Login />} />
+
+   
+   {/* -------------------------------------- ugdashboard ----------------------------- */}
+   <Route path='/Quiz_dashboard' element={<Quiz_dashboard />} />
+
+
+
       </Routes>
-      <Footer />
+      {/* <Footer /> */}
+      {/* <LandingPage /> */}
     </Router>
   );
 }
 
+const PrivateRoute = () => {
+        const isAuthenticated = localStorage.getItem('isLoggedIn');
+        return isAuthenticated ? <UgadminHome /> : <Navigate to="/login" />;
+      };
 export default App;

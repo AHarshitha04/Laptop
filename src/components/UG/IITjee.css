@@ -2,6 +2,22 @@
     background-color: #c8e7f9;
 } */
 
+
+
+.ug_exam_header {
+    margin-bottom: 1rem;
+}
+.ugexam_header{
+    position: sticky;
+    top: 0.5rem;
+    z-index: 10;
+    background:#fff;
+
+}
+.exam_login_menu {
+    display: flex;
+    align-items: center;
+}
 .iitjeebody{
     background-color: #c8e7f9;
 }
@@ -216,4 +232,12 @@
                 color: #000;
             }
 
-       
+            @media(min-width:300px) and (max-width:1150px) {
+                .ugexam_header {
+                    position: sticky;
+                    top: 0rem;
+                    background: rgba(0, 0, 0, 0.199);
+                    z-index: 10;
+                    padding: 0 1rem;
+                }
+            }

@@ -172,7 +172,7 @@
 // export default Home;
 
 // ------------------------------------------------------------------- new  design  home page-------------------------------------------------------------------
-import React from "react";
+import React from "react"; 
 
 import { AiFillDownCircle } from "react-icons/ai";
 // ----------------------------Typewriter------------------------------------
@@ -185,6 +185,7 @@ import { HomeDATA } from "./HomeData";
 
 // ------------------------------ home css--------------------------------
 import "./home.css";
+import Marquee from "react-fast-marquee";
 
 const Home = () => {
   return (
@@ -193,9 +194,9 @@ const Home = () => {
         {HomeDATA.map((HomeDATA, index) => {
           return (
             <div className={HomeDATA.home} key={index}>
-              <marquee behavior="" direction="" className="marquee">
+             < Marquee pauseOnHover={true} className="marquee">              {/* <marquee behavior="" direction="" className="marquee"> */}
                 <p>{HomeDATA.scrollbar}</p>
-              </marquee>
+              </Marquee>
               <div className={HomeDATA.banner_container}>
                 <Carousel
                   autoPlay
