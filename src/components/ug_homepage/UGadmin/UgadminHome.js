@@ -35,7 +35,7 @@ const UgadminHome = () => {
         </div>
       )}
 
-<button onClick={handleLogout}>Logout</button>
+
     </div>
   );
 };

@@ -4,7 +4,8 @@ import axios from "axios";
 
 import { Link, useParams } from "react-router-dom";
 import { Carousel } from "react-responsive-carousel";
-import { AiOutlineForm,AiFillDelete } from 'react-icons/ai';
+import { AiOutlineForm, AiFillDelete } from "react-icons/ai";
+
 // ------------------------------------------------------------------------- data ---------------------------------------------
 
 import {
@@ -38,7 +39,6 @@ const Exam_portal_home_page = () => {
   }, []);
   return (
     <>
-   
       <Header />
       <Home_section />
       <Quiz_Courses />
@@ -56,8 +56,8 @@ export const Header = () => {
   const [showloginQuiz, setShowloginQuiz] = useState(false);
   const [showRegisterQuiz, setShowRegisterQuiz] = useState(false);
   const [email, setEmail] = useState("");
-  
-  const [password,setPassword]=useState("")
+
+  const [password, setPassword] = useState("");
   const [user, setUser] = useState("");
 
   const Quiz_login = () => {
@@ -116,7 +116,7 @@ export const Header = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3090/examsug")
+      .get("http://localhost:5001/examsug")
       .then((res) => {
         setExamsug(res.data);
         console.log(res.data);
@@ -143,7 +143,7 @@ export const Header = () => {
     window.location.href = "/uglogin";
   };
 
-// ----------------- dashborad ---------------------/
+  // ----------------- dashborad ---------------------/
   const userRole = localStorage.getItem("userRole");
   return (
     <>
@@ -164,11 +164,11 @@ export const Header = () => {
                 }
               >
                 <ul>
-                  <li>
+                  <button style={{background:"none"}}>
                     <a href="#" className="Quiz__home">
                       Home
                     </a>
-                  </li>
+                  </button>
                   <li className="courses_btn_continer">
                     <button
                       className="courses_btn"
@@ -198,23 +198,29 @@ export const Header = () => {
                    Login
                   </button></Link> */}
 
-{userRole === "admin" && (
-        <>
-
-<button > <Link to='/Quiz_dashboard'>ADMIN</Link> </button>
-                  <br />
-        </>
-                  )}
-                  
+                    {userRole === "admin" && (
+                      <>
+                        <li>
+                          <button>
+                            <Link to="/Quiz_dashboard">ADMIN</Link>
+                          </button>
+                        </li>
+                      </>
+                    )}
                   </div>
                   <div>
+                    <button  id="dropdownmenu_foradim_page_btn" >
+                       settings 
+                    
+                    <div className="dropdownmenu_foradim_page">
+                     
+                      <Link to='/Account_info'>Acount-info</Link>
 
+                      <Link to='/'>General settings</Link>
+                    <Link onClick={handleLogout}>Logout</Link>
 
-
-
-               
-              
-                    <button onClick={handleLogout}>Logout</button>
+                    </div>
+                    </button>
                   </div>
                 </ul>
               </div>
@@ -232,411 +238,7 @@ export const Header = () => {
 };
 
 // ------------------------------------------------------------------------- header end ---------------------------------------------
-// ------------------------------------------------------------------------- Dashboard  start- --------------------------------------------------------------------------------------------------
 
-
-{
-  /* ------------------------------------- Exam_creation_section component --------------------------------- */
-}
-
-const Create_exam = () => {
-        {/* -------------------- creating data------------------------- */}
-
-  const [exam_creation, setExam_creation] = useState({
-    exam_name: "",
-    start_date: "",
-    end_date: "",
-    Mathematics: "",
-    Chemistry: "",
-    biology: "",
-    english: "",
-    logical_reasoning: "",
-  });
-
-  const handle_exam_creation_fromsubmit = (e) => {
-    e.preventDefault();
-    axios
-      .post("http://localhost:3090/exam_creation", exam_creation)
-      .then((res) => console.log(res))
-      .catch((err) => console.log(err));
-  };
-        {/* -------------------- reading data------------------------- */}
-
-  const [createexamData, setCreateexamData] = useState([]);
-
-  useEffect(() => {
-    // Fetch data when the component mounts
-    axios
-      .get("http://localhost:3090/exam_creation")
-      .then((response) => {
-        setCreateexamData(response.data);
-      })
-      .catch((error) => {
-        // Handle error
-        console.error("Error fetching data:", error);
-      });
-  }, []); // Empty dependency array to run the effect only once
-        {/* -------------------- update data------------------------- */}
-
-        
-        {/* -------------------- delelte data------------------------- */}
-
-        const delete_exam_data=()=>{
-          
-        }
-
-  return (
-    <>
-      <div className="Exam_creation_section">
-
-        {/* -------------------- creating data------------------------- */}
-
-      <form className="exam_creation_from">
-          <div className="input_content">
-            <label htmlFor="exam">Exam Name:</label>
-            <input
-              type="text"
-              id="exam"
-              placeholder="enter exam name"
-              name="exam_name"
-              onChange={(e) =>
-                setExam_creation({
-                  ...exam_creation,
-                  exam_name: e.target.value,
-                })
-              }
-            />
-          </div>
-
-          <div className="input_content">
-            <label htmlFor="date">Validity:</label>
-            <div>
-              <input
-                type="date"
-                id="date"
-                name="start_date"
-                onChange={(e) =>
-                  setExam_creation({
-                    ...exam_creation,
-                    start_date: e.target.value,
-                  })
-                }
-              />{" "}
-              to
-              <input
-                type="date"
-                id="date"
-                name="end_date"
-                onChange={(e) =>
-                  setExam_creation({
-                    ...exam_creation,
-                    end_date: e.target.value,
-                  })
-                }
-              />
-            </div>
-          </div>
-          <div className=" input_content input_content_subject">
-            <label htmlFor="Subject">Subject:</label>
-            <div className="input_content_check_box">
-              <div className="input_content_check_box_subpart">
-                <div>
-                  <input
-                    type="checkbox"
-                    id="Mathematics "
-                    name="Mathematics"
-                    value="Mathematics"
-                    onChange={(e) =>
-                      setExam_creation({
-                        ...exam_creation,
-                        Mathematics: e.target.value,
-                      })
-                    }
-                  />
-                  <label htmlFor="Mathematics">Mathematics</label>
-                </div>
-                <div>
-                  <input
-                    type="checkbox"
-                    id="Chemistry "
-                    name="Chemistry"
-                    value="Chemistry"
-                    onChange={(e) =>
-                      setExam_creation({
-                        ...exam_creation,
-                        Chemistry: e.target.value,
-                      })
-                    }
-                  />
-                  <label htmlFor="Chemistry">Chemistry</label>
-                </div>
-                <div>
-                  <input
-                    type="checkbox"
-                    id="biology "
-                    name="biology"
-                    value="Biology"
-                    onChange={(e) =>
-                      setExam_creation({
-                        ...exam_creation,
-                        biology: e.target.value,
-                      })
-                    }
-                  />
-                  <label htmlFor="biology">Biology</label>
-                </div>
-              </div>
-
-              <div className="input_content_check_box_subpart">
-                <div>
-                  <input
-                    type="checkbox"
-                    id="english "
-                    name="english"
-                    value="English"
-                    onChange={(e) =>
-                      setExam_creation({
-                        ...exam_creation,
-                        english: e.target.value,
-                      })
-                    }
-                  />
-                  <label htmlFor="english">English</label>
-                </div>
-                <div>
-                  <input
-                    type="checkbox"
-                    id="logical_reasoning "
-                    name="logical_reasoning"
-                    value="Logical & Reasoning"
-                    onChange={(e) =>
-                      setExam_creation({
-                        ...exam_creation,
-                        logical_reasoning: e.target.value,
-                      })
-                    }
-                  />
-                  <label htmlFor="logical_reasoning">Logical & Reasoning</label>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div>
-            <button type="submit" onClick={handle_exam_creation_fromsubmit}>
-              submit
-            </button>
-          </div>
-        </form>
-        {/* -------------------- reading data------------------------- */}
-        <div>
-          <h2>Exam Data</h2>
-          <table>
-            <tr>
-              <th>Exam Name</th>
-              <th>Start Date</th>
-              <th>End Date</th>
-              <th>Subjects</th>
-            </tr>
-
-            {createexamData.map((createexamData, index) => (
-              <tr key={index}>
-                <td>{createexamData["Exam Name"]}</td>
-                <td>{createexamData["Start Date"]}</td>
-                <td>{createexamData["End_Date"]}</td>
-                <td>
-                  <span>{createexamData["Mathematics"]}</span> ,
-                  <span>
-                    {createexamData["Chemistry"]}                  
-                  </span> ,
-                  <span>
-                  {createexamData["Biology"]}               
-                  </span> ,
-                  <span>
-                  {createexamData["English"]}               
-                  </span> <span> ,
-                  {createexamData["Logical_Reasoning"]}               
-                  </span>
-                </td>
-              <td>
-                <button>
-                <AiOutlineForm/>
-                  Edit
-                </button>
-              </td>
-              <td>
-                <button>
-                <AiFillDelete/>
-                  Delete
-                </button>
-              </td>
-              </tr>
-            ))}
-          </table>
-        </div>
-
-        {/* -------------------- update data------------------------- */}
-
-        {/* <form className="exam_creation_from">
-          <div className="input_content">
-            <label htmlFor="exam">Exam Name:</label>
-            <input
-              type="text"
-              id="exam"
-              placeholder="enter exam name"
-              name="exam_name"
-              value={exam_creation.exam_name}
-              onChange={(e) =>
-                setExam_creation({
-                  ...exam_creation,
-                  exam_name: e.target.value,
-                })
-                
-              }
-            />
-          </div>
-
-          <div className="input_content">
-            <label htmlFor="date">Validity:</label>
-            <div>
-              <input
-                type="date"
-                id="date"
-                name="start_date"
-              value={exam_creation.exam_name}
-
-                onChange={(e) =>
-                  setExam_creation({
-                    ...exam_creation,
-                    start_date: e.target.value,
-                  })
-                }
-              />{" "}
-              to
-              <input
-                type="date"
-                id="date"
-                name="end_date"
-              value={exam_creation.exam_name}
-
-                onChange={(e) =>
-                  
-                  setExam_creation({
-                    ...exam_creation,
-                    end_date: e.target.value,
-                  })
-                }
-              />
-            </div>
-          </div>
-          <div className=" input_content input_content_subject">
-            <label htmlFor="Subject">Subject:</label>
-            <div className="input_content_check_box">
-              <div className="input_content_check_box_subpart">
-                <div>
-                  <input
-                    type="checkbox"
-                    id="Mathematics "
-                    name="Mathematics"
-                    value={exam_creation.exam_name}
-
-                    onChange={(e) =>
-                      setExam_creation({
-                        ...exam_creation,
-                        Mathematics: e.target.value,
-                      })
-                    }
-                  />
-                  <label htmlFor="Mathematics">Mathematics</label>
-                </div>
-                <div>
-                  <input
-                    type="checkbox"
-                    id="Chemistry "
-                    name="Chemistry"
-                    value={exam_creation.exam_name}
-
-                    onChange={(e) =>
-                      setExam_creation({
-                        ...exam_creation,
-                        Chemistry: e.target.value,
-                      })
-                    }
-                  />
-                  <label htmlFor="Chemistry">Chemistry</label>
-                </div>
-                <div>
-                  <input
-                    type="checkbox"
-                    id="biology "
-                    name="biology"
-                    value={exam_creation.exam_name}
-
-                    onChange={(e) =>
-                      setExam_creation({
-                        ...exam_creation,
-                        biology: e.target.value,
-                      })
-                    }
-                  />
-                  <label htmlFor="biology">Biology</label>
-                </div>
-              </div>
-
-              <div className="input_content_check_box_subpart">
-                <div>
-                  <input
-                    type="checkbox"
-                    id="english "
-                    name="english"
-                    value={exam_creation.exam_name}
-
-                    onChange={(e) =>
-                      setExam_creation({
-                        ...exam_creation,
-                        english: e.target.value,
-                      })
-                    }
-                  />
-                  <label htmlFor="english">English</label>
-                </div>
-                <div>
-                  <input
-                    type="checkbox"
-                    id="logical_reasoning "
-                    name="logical_reasoning"
-                    value={exam_creation.exam_name}
-
-                    onChange={(e) =>
-                      setExam_creation({
-                        ...exam_creation,
-                        logical_reasoning: e.target.value,
-                      })
-                    }
-                  />
-                  <label htmlFor="logical_reasoning">Logical & Reasoning</label>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div>
-            <button type="submit" >
-              submit
-            </button>
-          </div>
-        </form> */}
-
-
-   
-   
-      </div>
-    </>
-  );
-};
-
-
-  /* ------------------------------------- Exam_creation_section component end --------------------------------- */
-
-// ------------------------------------------------------------------------- Dashboard  end- --------------------------------------------------------------------------------------------------
 
 // ------------------------------------------------------------------------- home section ---------------------------------------------
 
@@ -719,7 +321,7 @@ export const Quiz_Courses = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3090/coursesug")
+      .get("http://localhost:5001/coursesug")
       .then((res) => {
         setCoursesug(res.data);
         console.log(coursesug);
@@ -732,7 +334,7 @@ export const Quiz_Courses = () => {
   // ----------------------------------------------------------currentcourses function--------------------------------------------------------
   useEffect(() => {
     axios
-      .get("http://localhost:3090/coursescurrentug")
+      .get("http://localhost:5001/coursescurrentug")
       .then((res) => {
         setCoursescurrentug(res.data);
         console.log(coursesug);
@@ -746,7 +348,7 @@ export const Quiz_Courses = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3090/examsug")
+      .get("http://localhost:5001/examsug")
       .then((res) => {
         setExamsug(res.data);
         console.log(setExamsug);
@@ -758,7 +360,7 @@ export const Quiz_Courses = () => {
   // ----------------------------------------------------------examexamscurrentugsug function--------------------------------------------------------
   useEffect(() => {
     axios
-      .get("http://localhost:3090/examsug")
+      .get("http://localhost:5001/examsug")
       .then((res) => {
         setExamsug(res.data);
         console.log(setExamsug);
@@ -821,11 +423,9 @@ export const Quiz_Courses = () => {
               );
             })}
           </div>
-          
         </div>
         <div>
           {/* ------------------------ ug cards----------------------------- */}
-
 
           {showcard2 ? (
             <div className="Quiz_cards_cantainer_contain">
@@ -833,7 +433,7 @@ export const Quiz_Courses = () => {
                 return (
                   <div key={examsug.exam_id}>
                     {/* <a href=""><h1>{e.exam_name}</h1> </a>  */}
-                  coming soon
+                    coming soon
                   </div>
                 );
               })}
@@ -845,15 +445,13 @@ export const Quiz_Courses = () => {
                 return (
                   <div key={examsug.exam_id}>
                     <a href="">
-                      <h1>{e.exam_name}</h1>{" "}
+                      <h2>{e.exam_name}</h2>
                     </a>
                   </div>
                 );
               })}
             </div>
           ) : null}
-
-         
         </div>
       </div>
     </>

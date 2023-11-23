@@ -22,7 +22,7 @@ const db = mysql.createConnection({
   host: "localhost",
   user: "root",
   password: "",
-  database: "egrad_tutor_main_admin",
+  database: "egrad_quiz",
 });
 app.use(bodyParser.json());
 // app.use(cors(corsOptions));
@@ -354,14 +354,166 @@ app.get("/TsEamcetBanners", (req, res) => {
 
 
 
-// ---------------------------------------------------------------------------------------- login --------------------------------------------------------------------------
+// ----------------------------------------------------------================================  courses ug function by sra1 ========================================--------------------------------------------------------
+ 
+app.get("/examsug", (req, res) => {
+  const course_id = req.params.course_id;
+  // const sql = "SELECT exam_name FROM 2egquiz_exam WHERE exam_name=UG";
+  const sql =
+    "SELECT exam_name FROM 2egquiz_exam WHERE course_id = ( SELECT Min(course_id)  FROM 2egquiz_exam  );";
+  db.query(sql, [course_id], (err, result) => {
+    if (err) {
+      console.error("Error querying the database: " + err.message);
+      res.status(500).json({ error: "Error fetching exams" });
+      return;
+    }
+    res.json(result);
+  });
+});
+ 
+app.get("/examspg", (req, res) => {
+  const course_id = req.params.course_id;
+  // const sql = "SELECT exam_name FROM 2egquiz_exam WHERE exam_name=UG";
+  const sql =
+    "SELECT exam_name FROM 2egquiz_exam WHERE course_id = ( SELECT Min(course_id+1)  FROM 2egquiz_exam  );";
+  db.query(sql, [course_id], (err, result) => {
+    if (err) {
+      console.error("Error querying the database: " + err.message);
+      res.status(500).json({ error: "Error fetching exams" });
+      return;
+    }
+    res.json(result);
+  });
+});
+app.get("/examsmba", (req, res) => {
+  const course_id = req.params.course_id;
+  // const sql = "SELECT exam_name FROM 2egquiz_exam WHERE exam_name=UG";
+  const sql =
+    "SELECT exam_name FROM 2egquiz_exam WHERE course_id = ( SELECT Min(course_id+2)  FROM 2egquiz_exam  );";
+  db.query(sql, [course_id], (err, result) => {
+    if (err) {
+      console.error("Error querying the database: " + err.message);
+      res.status(500).json({ error: "Error fetching exams" });
+      return;
+    }
+    res.json(result);
+  });
+});
+app.get("/examsca", (req, res) => {
+  const course_id = req.params.course_id;
+  // const sql = "SELECT exam_name FROM 2egquiz_exam WHERE exam_name=UG";
+  const sql =
+    "SELECT exam_name FROM 2egquiz_exam WHERE course_id = ( SELECT Min(course_id+3)  FROM 2egquiz_exam  );";
+  db.query(sql, [course_id], (err, result) => {
+    if (err) {
+      console.error("Error querying the database: " + err.message);
+      res.status(500).json({ error: "Error fetching exams" });
+      return;
+    }
+    res.json(result);
+  });
+});
+ 
+app.get("/coursesug", (req, res) => {
+  // const query = 'SELECT course_name,course_id FROM 1egquiz_courses';
+  const query =
+    "SELECT course_name FROM 1egquiz_courses WHERE course_id = ( SELECT Min(course_id)  FROM 1egquiz_courses  );";
+ 
+  db.query(query, (error, results) => {
+    if (error) {
+      console.error("Error executing query: " + error.stack);
+      res.status(500).send("Error retrieving data from database.");
+      return;
+    }
+    console.log("Retrieved data from test table:");
+    console.log(results);
+    // Send the retrieved data as JSON response
+    res.json(results);
+  });
+});
+ 
+app.get("/coursescurrentug", (req, res) => {
+  // const query = 'SELECT course_name,course_id FROM 1egquiz_courses';
+  const query =
+    "SELECT course_name FROM 1egquiz_courses WHERE course_id = ( SELECT Max(course_id)  FROM 1egquiz_courses  );";
+ 
+  db.query(query, (error, results) => {
+    if (error) {
+      console.error("Error executing query: " + error.stack);
+      res.status(500).send("Error retrieving data from database.");
+      return;
+    }
+    console.log("Retrieved data from test table:");
+    console.log(results);
+    // Send the retrieved data as JSON response
+    res.json(results);
+  });
+});
+ 
+app.get("/coursespg", (req, res) => {
+  // const query = 'SELECT course_name,course_id FROM 1egquiz_courses';
+  const query =
+    "SELECT course_name FROM 1egquiz_courses WHERE course_id = ( SELECT Min(course_id+1)  FROM 1egquiz_courses  );";
+ 
+  db.query(query, (error, results) => {
+    if (error) {
+      console.error("Error executing query: " + error.stack);
+      res.status(500).send("Error retrieving data from database.");
+      return;
+    }
+    console.log("Retrieved data from test table:");
+    console.log(results);
+    // Send the retrieved data as JSON response
+    res.json(results);
+  });
+});
+ 
+app.get("/coursesmba", (req, res) => {
+  // const query = 'SELECT course_name,course_id FROM 1egquiz_courses';
+  const query =
+    "SELECT course_name FROM 1egquiz_courses WHERE course_id = ( SELECT max(course_id-1)  FROM 1egquiz_courses  );";
+ 
+  db.query(query, (error, results) => {
+    if (error) {
+      console.error("Error executing query: " + error.stack);
+      res.status(500).send("Error retrieving data from database.");
+      return;
+    }
+    console.log("Retrieved data from test table:");
+    console.log(results);
+    // Send the retrieved data as JSON response
+    res.json(results);
+  });
+});
+app.get("/coursesca", (req, res) => {
+  // const query = 'SELECT course_name,course_id FROM 1egquiz_courses';
+  const query =
+    "SELECT course_name FROM 1egquiz_courses WHERE course_id = ( SELECT max(course_id)  FROM 1egquiz_courses  );";
+ 
+  db.query(query, (error, results) => {
+    if (error) {
+      console.error("Error executing query: " + error.stack);
+      res.status(500).send("Error retrieving data from database.");
+      return;
+    }
+    console.log("Retrieved data from test table:");
+    console.log(results);
+    // Send the retrieved data as JSON response
+    res.json(results);
+  });
+});
+ 
+
+
+
 
 
 // --------------------------------------login -----------------------------------------------------
  
+
  
 app.post('/register', async (req, res) => {
-  const { username, password } = req.body;
+  const { email, username, password } = req.body;
  
   // Hash the password
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -370,7 +522,7 @@ app.post('/register', async (req, res) => {
   const defaultRole = 'viewer';
  
   // Insert user into the database with a default role
-  db.query('INSERT INTO users (username, password, role) VALUES (?, ?, ?)', [username, hashedPassword, defaultRole], (err, result) => {
+  db.query('INSERT INTO users (email, username, password, role) VALUES (?, ?, ?, ?)', [email, username, hashedPassword, defaultRole], (err, result) => {
     if (err) {
       console.error('Error registering user:', err);
       res.status(500).send('Error registering user');
@@ -383,10 +535,10 @@ app.post('/register', async (req, res) => {
  
  
 app.post('/login', (req, res) => {
-  const { username, password } = req.body;
+  const { email, password } = req.body;
  
   // Retrieve user from the database
-  db.query('SELECT id, username, password, role FROM users WHERE username = ?', [username], async (err, result) => {
+  db.query('SELECT id, email, password, role FROM users WHERE email = ?', [email], async (err, result) => {
     if (err) {
       res.status(500).send('Error during login');
     } else if (result.length > 0) {
@@ -395,10 +547,10 @@ app.post('/login', (req, res) => {
  
       if (match) {
         // Send the role along with the login success response
-        const { id, username, role } = result[0];
+        const { id, email, role } = result[0];
         res.status(200).json({
           message: 'Login successful',
-          user: { id, username, role },
+          user: { id, email, role },
         });
       } else {
         res.status(401).send('Incorrect password');
@@ -408,6 +560,114 @@ app.post('/login', (req, res) => {
     }
   });
 });
+
+app.get("/users", (req, res) => {
+  const q = "SELECT * FROM users";
+  db.query(q, (err, data) => {
+    if (err) {
+      console.log(err);
+      return res.json(err);
+    }
+    return res.json(data);
+  });
+
+  
+});
+
+app.get("/userdetails/:id", (req, res) => {
+  const id = req.params.id;
+  db.query("SELECT * FROM users WHERE id = ?", id, (err, result) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.send(result);
+    }
+  });
+});
+
+
+
+
+app.put('/users/:id', async (req, res) => {
+  const id = req.params.id; // Extract the userId from request params
+  const { email, username, password, role } = req.body;
+
+  try {
+    // Hash the password if a new password is provided
+    let hashedPassword = password; // Use the provided password as default
+
+    if (password) {
+      hashedPassword = await bcrypt.hash(password, 10);
+    }
+
+    // Update user details with hashed password
+    db.query('UPDATE users SET email = ?, username = ?, password = ?, role = ? WHERE id = ?', [email, username, hashedPassword, role, id], (err, result) => {
+      if (err) {
+        console.error('Error updating user:', err);
+        res.status(500).send('Error updating user');
+      } else {
+        console.log('User updated successfully');
+        res.status(200).send('User updated successfully');
+      }
+    });
+  } catch (error) {
+    console.error('Error during user update:', error);
+    res.status(500).send('Error updating user');
+  }
+});
+
+
+// app.put("/users/:id", (req, res) => {
+//   const userId = req.params.id;
+//   // email, username, password, role
+//   const q = "UPDATE users SET `username`= ?, `email`= ?, `password`= ? `role`= ?  WHERE id = ?";
+ 
+//   const values = [
+//     req.body.username,
+//     req.body.email,
+//     req.body.password,
+//     req.body.role,
+
+//   ];
+ 
+//   db.query(q, [...values,userId], (err, data) => {
+//     if (err) return res.send(err);
+//     return res.json(data);
+//   });
+// });
+ 
+
+app.delete("/users/:id", (req, res) => {
+  const userId = req.params.id;
+  const q = " DELETE FROM users WHERE id = ? ";
+ 
+  db.query(q, [userId], (err, data) => {
+    if (err) return res.send(err);
+    return res.json(data);
+  });
+});
+// app.get("/act_info", (req, res) => {
+//   // const query = 'SELECT course_name,course_id FROM 1egquiz_courses';
+//   const query =
+//     "SELECT  * FROM users ";
+ 
+//   db.query(query, (error, results) => {
+//     if (error) {
+//       console.error("Error executing query: " + error.stack);
+//       res.status(500).send("Error retrieving data from database.");
+//       return;
+//     }
+//     console.log("Retrieved data from test table:");
+//     console.log(results);
+//     // Send the retrieved data as JSON response
+//     res.json(results);
+//   });
+// });
+ 
+
+// --------------------------------------login end -----------------------------------------------------
+
+// ----------------------------------------------------------================================  courses ug function by sra1 ========================================--------------------------------------------------------
 
 
 app.listen(port, () => {
