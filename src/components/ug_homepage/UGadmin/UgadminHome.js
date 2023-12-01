@@ -1,3 +1,4 @@
+
 // Home.js
 
 import React from 'react';
@@ -35,7 +36,7 @@ const UgadminHome = () => {
         </div>
       )}
 
-
+<button onClick={handleLogout}>Logout</button>
     </div>
   );
 };

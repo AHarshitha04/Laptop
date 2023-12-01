@@ -9,6 +9,7 @@ const Account_info = () => {
   const QuiZ_menu = () => {
     setShowQuizmobilemenu(!showQuizmobilemenu);
   };
+  const userRole = localStorage.getItem('userRole');
 
   const handleLogout = () => {
     localStorage.removeItem("isLoggedIn");
@@ -81,8 +82,26 @@ const Account_info = () => {
           );
         })}
       </div>
+      {userRole === 'admin' && (
+        <div>
+          <p>Admin View: Show all features</p>
+          {/* Admin-specific content goes here */}
+          <Users/>
+
+
+          {userRole === 'viewer' && (
+        <div>
+          <p>Viewer View: Show limited features</p>
+
+       
+          {/* Viewer-specific content goes here */}
+        </div>
+      )}
+
+        </div>
+      )}
      
-      <Users/>
+    
     </>
   );
 };

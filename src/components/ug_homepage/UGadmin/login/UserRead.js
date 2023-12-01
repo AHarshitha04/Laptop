@@ -13,12 +13,9 @@ const Read = () => {
     const QuiZ_menu = () => {
       setShowQuizmobilemenu(!showQuizmobilemenu);
     };
-  
-    const handleLogout = () => {
-      localStorage.removeItem("isLoggedIn");
-      localStorage.removeItem("userRole");
-      window.location.href = "/uglogin";
-    };
+    
+
+ 
   
     const {id} = useParams();
     const [user, setUsers] = useState([]);
@@ -31,6 +28,12 @@ const Read = () => {
         })
         .catch(err => console.log(err))
     }, []);
+
+    const handleLogout = () => {
+      localStorage.removeItem("isLoggedIn");
+      localStorage.removeItem("userRole");
+      window.location.href = "/uglogin";
+    };
  
   return (
     <>
@@ -52,7 +55,7 @@ const Read = () => {
               >
                 <ul>
                   <button style={{background:"none"}}>
-                    <Link to='/UgadminHome' className="Quiz__home">
+                    <Link to='/Account_info' className="Quiz__home">
                       Home
                     </Link>
                   </button>

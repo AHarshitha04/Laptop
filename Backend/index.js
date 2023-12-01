@@ -6,6 +6,8 @@ const bcrypt = require('bcrypt');
 const fs = require("fs");
 const app = express();
 const path = require("path");
+const sizeOf = require("image-size");
+// const diskusage = require("diskusage");
 app.use(express.static("public"));
 const bodyParser = require("body-parser");
 const port = 5001;
@@ -80,8 +82,8 @@ app.get("/sections/:course_id", (req, res) => {
   });
 });
 
-const storage = multer.memoryStorage(); // Store the image in memory as a Buffer
-const upload = multer({ storage: storage });
+// const storage = multer.memoryStorage(); // Store the image in memory as a Buffer
+// const upload = multer({ storage: storage });
 
 
 // main original code
@@ -113,41 +115,41 @@ const upload = multer({ storage: storage });
 
 
 // main original code
-app.post("/upload", upload.single("image"), (req, res) => {
-  const image = req.file.buffer;
-  const courseId = req.body.course_id; // Assuming you are sending the course_id in the request body
-  const sectionId = req.body.section_id;
-  const examId = req.body.exam_id; // Assuming you are sending the exam_id in the request body
+// app.post("/upload", upload.single("image"), (req, res) => {
+//   const image = req.file.buffer;
+//   const courseId = req.body.course_id; // Assuming you are sending the course_id in the request body
+//   const sectionId = req.body.section_id;
+//   const examId = req.body.exam_id; // Assuming you are sending the exam_id in the request body
 
-  if (!courseId || !sectionId) {
-    return res.status(400).json({ message: "Course ID and Section ID are required" });
-  }
+//   if (!courseId || !sectionId) {
+//     return res.status(400).json({ message: "Course ID and Section ID are required" });
+//   }
 
-  // Modify the query to include course_id and section_id
-  let query;
-  let values;
+//   // Modify the query to include course_id and section_id
+//   let query;
+//   let values;
 
-  if (examId) {
-    // If exam_id is present, include it in the query
-    query =
-      "INSERT INTO main_page_images (image_data, course_id, section_id, exam_id) VALUES (?, ?, ?, ?)";
-    values = [image, courseId, sectionId, examId];
-  } else {
-    // If exam_id is not present, exclude it from the query
-    query =
-      "INSERT INTO main_page_images (image_data, course_id, section_id) VALUES (?, ?, ?)";
-    values = [image, courseId, sectionId];
-  }
+//   if (examId) {
+//     // If exam_id is present, include it in the query
+//     query =
+//       "INSERT INTO main_page_images (image_data, course_id, section_id, exam_id) VALUES (?, ?, ?, ?)";
+//     values = [image, courseId, sectionId, examId];
+//   } else {
+//     // If exam_id is not present, exclude it from the query
+//     query =
+//       "INSERT INTO main_page_images (image_data, course_id, section_id) VALUES (?, ?, ?)";
+//     values = [image, courseId, sectionId];
+//   }
 
-  db.query(query, values, (err, result) => {
-    if (err) {
-      console.error("Error uploading image:", err);
-      res.status(500).json({ message: "Error uploading image" });
-    } else {
-      res.json({ message: "Image uploaded successfully" });
-    }
-  });
-});
+//   db.query(query, values, (err, result) => {
+//     if (err) {
+//       console.error("Error uploading image:", err);
+//       res.status(500).json({ message: "Error uploading image" });
+//     } else {
+//       res.json({ message: "Image uploaded successfully" });
+//     }
+//   });
+// });
 
 
 
@@ -225,22 +227,25 @@ app.post("/upload", upload.single("image"), (req, res) => {
 
 
 app.get("/HomeImages", (req, res) => {
-  const query = "SELECT * FROM images WHERE section_id=1 ;";
-
-  db.query(query, (error, results) => {
-    if (error) {
-      console.error("Error fetching images:", error);
+  const query = "SELECT images_id, image_data FROM images";
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error("Error fetching images:", err);
       res.status(500).send("Internal Server Error");
     } else {
-      const imageDataList = results.map((result) => {
-        // Use the correct column name based on your table structure
+      const imageArray = results.map((result) => {
         const base64 = result.image_data.toString("base64");
-        return `data:image/png;base64,${base64}`;
+        return {
+          id: result.images_id,
+          imageData: `data:image/png;base64,${base64}`,
+        };
       });
-      res.json(imageDataList);
+
+      res.json(imageArray);
     }
   });
 });
+
 
 
 app.get("/ExploreExam", (req, res) => {
@@ -552,6 +557,7 @@ app.post('/login', (req, res) => {
           message: 'Login successful',
           user: { id, email, role },
         });
+        console.log(`${email} ${id}`)
       } else {
         res.status(401).send('Incorrect password');
       }
@@ -560,6 +566,81 @@ app.post('/login', (req, res) => {
     }
   });
 });
+
+//extra fro login 
+// app.post('/login', (req, res) => {
+//   const { email, password } = req.body;
+ 
+//   // Retrieve user from the database
+//   db.query('SELECT * FROM users WHERE email = ? AND password= ?', [email,password], async (err, result) => {
+//     if (err) {
+//       res.status(500).send('Error during login');
+//     } else if (result.length > 0) {
+//       // Compare hashed password
+//       const match = await bcrypt.compare(password, result[0].password);
+ 
+//       if (match) {
+//         // Send the role along with the login success response
+//         const { id, email, role } = result[0];
+//         res.status(200).json({
+//           message: 'Login successful',
+//           user: { id, email, role },
+//         });
+//         console.log(`${email} ${id}`)
+//       } else {
+//         res.status(401).send('Incorrect password');
+//       }
+//     } else {
+//       res.status(404).send('User not found');
+//       res.send('User not found');
+
+//     }
+//   });
+// });
+
+// app.post('/login', (req, res) => {
+//   const { email, password } = req.body;
+
+//   // Query to authenticate user from MySQL database
+//   const query = `SELECT * FROM users WHERE email = ?`;
+//   db.query(query, [email], async (err, results) => {
+//     if (err) {
+//       console.error('Error executing query:', err);
+//       return res.status(500).json({ message: 'Internal Server Error' });
+//     }
+
+//     if (results.length === 0) {
+//       return res.status(401).json({ message: 'Invalid email or password' });
+//     }
+
+//     const user = results[0];
+//     // Compare hashed password with user's provided password
+//     const passwordMatch = await bcrypt.compare(password, user.password);
+
+//     if (!passwordMatch) {
+//       return res.status(401).json({ message: 'Invalid email or password' });
+//     }
+//     else if (passwordMatch) {
+//               // Send the role along with the login success response
+//               const { id, email, role } = result[0];
+//               res.status(200).json({
+//                 message: 'Login successful',
+//                 user: { id, email, role },
+//               });
+//               console.log(`${email} ${id}`)
+//             } 
+
+//     // If authentication is successful, return user data
+//     res.status(200).json({ message: 'Login successful', user });
+//   });
+// });
+
+
+
+
+//-------------------------------
+
+
 
 app.get("/users", (req, res) => {
   const q = "SELECT * FROM users";
@@ -573,6 +654,44 @@ app.get("/users", (req, res) => {
 
   
 });
+// ----------------------------------------------------------------------------------
+
+
+
+app.get('/login', (req, res) => {
+  const { email, password } = req.query; // Assuming email and password are passed as query parameters
+
+  // Validate inputs (email and password)
+  // if (!email || !password) {
+  //   return res.status(400).send('Email and password are required');
+  // }
+
+  // Retrieve user from the database
+  db.query('SELECT id, email, password, role FROM users WHERE email = ?', [email], async (err, result) => {
+    if (err) {
+      res.status(500).send('Error during login');
+    } else if (result.length > 0) {
+      // Compare hashed password
+      const match = await bcrypt.compare(password, result[0].password);
+
+      if (match) {
+        // Send the role along with the login success response
+        const { id, email, role } = result[0];
+        res.status(200).json({
+          message: 'Login successful',
+          user: { id, email, role },
+        });
+        console.log(`${email} ${id}`);
+      } else {
+        res.status(401).send('Incorrect password');
+      }
+    } else {
+      res.status(404).send('User not found');
+    }
+  });
+});
+
+// ----------------------------------------------------------------------------------
 
 app.get("/userdetails/:id", (req, res) => {
   const id = req.params.id;
@@ -586,6 +705,57 @@ app.get("/userdetails/:id", (req, res) => {
 });
 
 
+
+
+
+app.get('/user/:id', (req, res) => {
+  const userId = req.params.id;
+  const query = 'SELECT * FROM users WHERE id = ?';
+  db.query(query, userId, (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(500).send('Error retrieving user details');
+    } else {
+      if (result.length > 0) {
+        res.status(200).json(result[0]);
+      } else {
+        res.status(404).send('User not found');
+      }
+    }
+  });
+});
+// app.get("/sigleuserdetails/:id", (req, res) => {
+//   const id = req.params.id;
+//   const sql="SELECT * FROM users WHERE id = ?"
+
+//   db.query(sql,[id],(err,result)=>{
+//     if(err)return res.json({status:false});
+//     return res.json(result)
+//   })
+  
+  
+// });
+
+// app.get('/sigleuserdetails/:id', (req, res) => {
+//   const { id } = req.params;
+
+//   const query = 'SELECT * FROM users WHERE id = ?'; // Replace 'users' with your table name
+
+//   db.query(query, [id], (error, results) => {
+//     if (error) {
+//       console.error('Error fetching user details:', error);
+//       res.status(500).json({ message: 'Error fetching user details' });
+//       return;
+//     }
+
+//     if (results.length === 0) {
+//       res.status(404).json({ message: 'User not found' });
+//       return;
+//     }
+
+//     res.status(200).json(results[0]);
+//   });
+// });
 
 
 app.put('/users/:id', async (req, res) => {
@@ -668,6 +838,225 @@ app.delete("/users/:id", (req, res) => {
 // --------------------------------------login end -----------------------------------------------------
 
 // ----------------------------------------------------------================================  courses ug function by sra1 ========================================--------------------------------------------------------
+
+
+
+
+
+
+// ---------------------------------- R------------------
+app.get("/UGhomepageadimcourses", (req, res) => {
+  const query = "SELECT course_name, course_id FROM courses";
+  db.query(query, (error, results) => {
+    if (error) {
+      console.error("Error executing query: " + error.stack);
+      res.status(500).send("Error retrieving data from the database.");
+      return;
+    }
+    console.log("Retrieved data from test table:");
+    console.log(results);
+    res.json(results);
+  });
+});
+
+
+// ---------section ---
+app.get("/UGhomepageadimsections/:course_id", (req, res) => {
+  const course_id = req.params.course_id;
+  const sql = "SELECT * FROM sections WHERE course_id = ? ";
+  db.query(sql, [course_id], (err, result) => {
+    if (err) {
+      console.error("Error querying the database: " + err.message);
+      res.status(500).json({ error: "Error fetching exams" });
+      return;
+    }
+    res.json(result);
+  });
+});
+
+
+//----------------exams
+
+
+app.get("/UGhomepageadimexams/:course_id", (req, res) => {
+  const course_id = req.params.course_id;
+  const sql = "SELECT * FROM  2egquiz_exam WHERE course_id = ?";
+  db.query(sql, [course_id], (err, result) => {
+    if (err) {
+      console.error("Error querying the database: " + err.message);
+      res.status(500).json({ error: "Error fetching exams" });
+      return;
+    }
+    res.json(result);
+  });
+});
+
+
+
+
+
+
+
+// ----------------upload api
+
+async function getAvailableDiskSpace() {
+  const drive = path.parse(__dirname).root;
+  const info = await diskusage.check(drive);
+  return info.available;
+}
+
+db.connect((err) => {
+  if (err) {
+    console.error("Error connecting to MySQL:", err);
+  } else {
+    console.log("Connected to MySQL");
+  }
+});
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploadFiles");
+  },
+  filename: (req, file, cb) => {
+    cb(
+      null,
+      file.fieldname + "_" + Date.now() + path.extname(file.originalname)
+    );
+  },
+});
+
+const upload = multer({
+  storage: storage,
+});
+
+app.post("/upload", upload.single("image"), (req, res) => {
+  const uploadedFile = req.file;
+  // Retrieve values from req.body
+  const courseId = req.body.course_id;
+  const sectionId = req.body.section_id;
+  const examId = req.body.exam_id;
+  // Read the file content using fs
+  fs.readFile(uploadedFile.path, (err, data) => {
+    if (err) {
+      console.error("Error reading file:", err);
+      return res.status(500).json({ message: "Error reading file" });
+    }
+
+    // Use the file content as a Buffer for image-size
+    const dimensions = sizeOf(data);
+
+    // Rename the file to the original name
+    const newPath = path.join(
+      uploadedFile.destination,
+      uploadedFile.originalname
+    );
+
+    fs.rename(uploadedFile.path, newPath, (err) => {
+      if (err) {
+        console.error("Error renaming file:", err);
+        return res.status(500).json({ message: "Error renaming file" });
+      }
+
+      const imageBuffer = Buffer.from(data);
+
+      // Modify the query to include the original filename in image_title
+      let query;
+      let values;
+
+      if (examId) {
+        query =
+          "INSERT INTO images (image_title, image_data, course_id, section_id, exam_id) VALUES (?, ?, ?, ?,?)";
+        values = [
+          uploadedFile.originalname,
+          imageBuffer,
+          courseId,
+          sectionId,
+          examId,
+        ];
+      } else {
+        query =
+          "INSERT INTO images (image_title, image_data, course_id, section_id) VALUES (?, ?, ?,?)";
+        values = [uploadedFile.originalname, imageBuffer, courseId, sectionId];
+      }
+
+      db.query(query, values, (err, result) => {
+        if (err) {
+          console.error("Error uploading image:", err);
+          return res.status(500).json({ message: "Error uploading image" });
+        }
+
+        console.log("File uploaded and renamed successfully");
+        res.json({ message: "Image uploaded successfully" });
+      });
+    });
+  });
+});
+
+
+// main working code
+app.delete("/HomeImages/:images_id", (req, res) => {
+  const idToDelete = parseInt(req.params.images_id);
+
+  // Fetch the image data from the database to get the image title
+  const query = "SELECT image_title FROM images WHERE images_id = ?";
+  db.query(query, [idToDelete], (err, result) => {
+    if (err) {
+      console.error("Error fetching image data:", err);
+      res.status(500).send("Internal Server Error");
+      return;
+    }
+
+    if (result.length === 0) {
+      res.status(404).send("Image not found");
+      return;
+    }
+
+    const imageTitle = result[0].image_title;
+
+    // Delete the image record from the database
+    const deleteQuery = "DELETE FROM images WHERE images_id = ?";
+    db.query(deleteQuery, [idToDelete], (deleteErr, deleteResult) => {
+      if (deleteErr) {
+        console.error("Error deleting image:", deleteErr);
+        res.status(500).send("Internal Server Error");
+        return;
+      }
+
+      if (deleteResult.affectedRows > 0) {
+        // Delete the corresponding file from the server's uploadFiles directory
+        const filePath = path.join(__dirname, "uploadFiles", imageTitle);
+        fs.unlink(filePath, (unlinkErr) => {
+          if (unlinkErr) {
+            console.error("Error deleting file:", unlinkErr);
+            res.status(500).send("Error deleting file");
+          } else {
+            console.log("File deleted successfully");
+            res.status(200).send("Image and file deleted successfully");
+          }
+        });
+      } else {
+        res.status(404).send("Image not found");
+      }
+    });
+  });
+});
+
+app.get("/ImageTitle", (req, res) => {
+  const query = "SELECT images_id, image_title FROM images";
+  db.query(query, (error, results) => {
+    if (error) {
+      console.error("Error executing query: " + error.stack);
+      res.status(500).send("Error retrieving data from the database.");
+      return;
+    }
+    console.log("Retrieved data from test table:");
+    console.log(results);
+    res.json(results);
+  });
+});
+
+
+
+
 
 
 app.listen(port, () => {

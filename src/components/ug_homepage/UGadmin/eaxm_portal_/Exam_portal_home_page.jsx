@@ -143,6 +143,14 @@ export const Header = () => {
     window.location.href = "/uglogin";
   };
 
+const  act_info=()=>{
+  if (user.role === "admin") {
+    window.location.href = "/UgadminHome";
+  } else {
+    window.location.href = "/userdeatailspage/:id"; // Replace with the URL for user details page
+  }
+}
+  
   // ----------------- dashborad ---------------------/
   const userRole = localStorage.getItem("userRole");
   return (
@@ -213,8 +221,10 @@ export const Header = () => {
                        settings 
                     
                     <div className="dropdownmenu_foradim_page">
+                    {/* <Link to={`/userread/${user.id}`} className="btn btn-success mx-2">Read</Link> */}
                      
-                      <Link to='/Account_info'>Acount-info</Link>
+                      {/* <Link to={`/userdeatailspage/${user.id}`} >Acount-info</Link> */}
+                      <Link to='/Account_info' >Acount-info</Link>
 
                       <Link to='/'>General settings</Link>
                     <Link onClick={handleLogout}>Logout</Link>

@@ -66,11 +66,14 @@ import Examheader from "./components/UG/Examheader.jsx";
 
 import Login from "./components/ug_homepage/UGadmin/login/Login.js";
 import UgadminHome from "./components/ug_homepage/UGadmin/UgadminHome.js";
-import Quiz_dashboard from "./components/ug_homepage/UGadmin/eaxm_portal_/Quiz_dashboard.js";
+import Quiz_dashboard, { ImageFetching } from "./components/ug_homepage/UGadmin/eaxm_portal_/Quiz_dashboard.js";
 import Register from "./components/ug_homepage/UGadmin/login/Register.js";
 import Account_info from "./components/ug_homepage/UGadmin/login/Account_info.js";
 import UserRead from "./components/ug_homepage/UGadmin/login/UserRead.js"
 import Userupdate from "./components/ug_homepage/UGadmin/login/Userupdate.js";
+import Userdeatailspage from "./components/ug_homepage/UGadmin/login/Userdeatailedpage.js";
+import Userdeatailedpage from "./components/ug_homepage/UGadmin/login/Userdeatailedpage.js";
+
 
 const App = () => {
   return (
@@ -189,7 +192,15 @@ const App = () => {
         <Route path="/Account_info" element={<Account_info />} />
         <Route path="/userread/:id" element={<UserRead />} />
         <Route path="/Userupdate/:id" element={<Userupdate />} />
+        <Route path="/userdetails" element={<Userdeatailedpage />} />
 
+
+        {/* ========================================================= ughomepage ====================================================================== */}
+
+        <Route path="/ImageFetching" element={<ImageFetching />} />
+
+        
+        userdeatailspage
       </Routes>
       {/* <Footer /> */}
       {/* <LandingPage /> */}
@@ -199,6 +210,6 @@ const App = () => {
 
 const PrivateRoute = () => {
   const isAuthenticated = localStorage.getItem("isLoggedIn");
-  return isAuthenticated ? <UgadminHome /> : <Navigate to="/login" />;
+  return isAuthenticated ? <UgadminHome /> : <Navigate to="/uglogin" />;
 };
 export default App;
