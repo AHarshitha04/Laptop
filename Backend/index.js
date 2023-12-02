@@ -41,6 +41,33 @@ db.connect((err) => {
 
 app.use(cors());
 
+
+
+
+app.get('/helo/:userId', (req, res) => {
+  const userId = req.params.userId;
+
+  const query = 'SELECT id, email, username FROM users WHERE id = ?';
+  db.query(query, [userId], (error, results) => {
+    if (error) {
+      console.error('Error fetching user details:', error);
+      res.status(500).json({ error: 'Internal server error' });
+      return;
+    }
+
+    if (results.length === 0) {
+      res.status(404).json({ error: 'User not found' });
+      return;
+    }
+
+    const userData = results[0];
+    res.status(200).json(userData);
+  });
+});
+
+
+
+
 app.get("/courses", (req, res) => {
   const query = "SELECT course_name,course_id FROM courses";
   db.query(query, (error, results) => {
