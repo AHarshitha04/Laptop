@@ -59,7 +59,7 @@ export const Header = () => {
 
   const [password, setPassword] = useState("");
   const [user, setUser] = useState("");
-
+  const [userData, setUserData] = useState({});
   const Quiz_login = () => {
     setShowloginQuiz(true);
   };
@@ -72,44 +72,32 @@ export const Header = () => {
     setShowloginQuiz(false);
     setShowRegisterQuiz(false);
   };
+  
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await fetch('http://localhost:5001/user', {
+          headers: {
+            Authorization: `Bearer ${token}`, // Attach token to headers for authentication
+          },
+        });
 
-  const handleLogin = async () => {
-    try {
-      const response = await axios.post("http://localhost:3090/login", {
-        email,
-        password,
-      });
-      const data = response.data;
-      setUser(data); // Set the user upon successful login
-      setShowloginQuiz(false); // Close the login form
-    } catch (error) {
-      console.error("Login error:", error);
-    }
-  };
+        if (response.ok) {
+          const userData = await response.json();
+          setUserData(userData);
+          console.log(userData)
+        } else {
+          // Handle errors, e.g., if user data fetch fails
+        }
+      } catch (error) {
+        // Handle other errors
+      }
+    };
 
-  const handleRegister = async () => {
-    try {
-      const response = await axios.post("http://localhost:3090/register", {
-        email,
-        password,
-      });
-      const data = response.data;
-      setUser(data); // Set the user upon successful registration
-      setShowRegisterQuiz(false); // Close the registration form
-    } catch (error) {
-      console.error("Registration error:", error);
-    }
-  };
-  // const handleLogout = async () => {
-  //   try {
-  //     await axios.get('http://localhost:3090/logout');
-  //     setUser(null); // Clear the user upon logout
-  //     console.log('Logout successful');
+    fetchUserData();
+  }, []);
 
-  //   } catch (error) {
-  //     console.error('Logout error:', error);
-  //   }
-  // };
 
   // const [courses, setCourses] = useState([]);
   const [examsug, setExamsug] = useState([0]);
@@ -155,6 +143,7 @@ const  act_info=()=>{
   const userRole = localStorage.getItem("userRole");
   return (
     <>
+     
       <div className="Quiz_main_page_header">
         {nav.map((nav, index) => {
           return (
@@ -210,7 +199,7 @@ const  act_info=()=>{
                       <>
                         <li>
                           <button>
-                            <Link to="/Quiz_dashboard">ADMIN</Link>
+                            <Link to="/Quiz_dashboard">ADMIN Settings</Link>
                           </button>
                         </li>
                       </>
@@ -218,15 +207,15 @@ const  act_info=()=>{
                   </div>
                   <div>
                     <button  id="dropdownmenu_foradim_page_btn" >
-                       settings 
-                    
+                       
+                    {userData.username}
                     <div className="dropdownmenu_foradim_page">
                     {/* <Link to={`/userread/${user.id}`} className="btn btn-success mx-2">Read</Link> */}
                      
                       {/* <Link to={`/userdeatailspage/${user.id}`} >Acount-info</Link> */}
                       <Link to='/Account_info' >Acount-info</Link>
 
-                      <Link to='/'>General settings</Link>
+                    
                     <Link onClick={handleLogout}>Logout</Link>
 
                     </div>

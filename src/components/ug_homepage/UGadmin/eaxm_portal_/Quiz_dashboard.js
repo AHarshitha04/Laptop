@@ -40,7 +40,7 @@ const Quiz_dashboard = () => {
               >
                 <ul>
                   <button style={{ background: "none" }}>
-                    <Link to="/UgadminHome" className="Quiz__home">
+                    <Link to="/Exam_portal_home_page" className="Quiz__home">
                       Home
                     </Link>
                   </button>
@@ -492,7 +492,7 @@ export const UploadPage = () => {
 
 export const ImageFetching = () => {
   const [imageTitle, setImageTitle] = useState([]);
-
+ 
   useEffect(() => {
     axios
       .get("http://localhost:5001/ImageTitle")
@@ -503,11 +503,12 @@ export const ImageFetching = () => {
         console.error("Error fetching courses:", error);
       });
   }, []);
-
+ 
+ 
   const [imageArray, setImageArray] = useState([]);
   useEffect(() => {
     axios
-      .get("http://localhost:5001/HomeImages")
+      .get("http://localhost:5001/HomeImagesadmin")
       .then((res) => {
         setImageArray(res.data);
       })
@@ -515,8 +516,9 @@ export const ImageFetching = () => {
         console.error("Error fetching images:", error);
       });
   }, []);
-
-  const handleDelete = (imageId) => {
+ 
+ 
+  const handleDeleteImage = (imageId) => {
     axios
       .delete(`http://localhost:5001/HomeImages/${imageId}`)
       .then(() => {
@@ -524,31 +526,30 @@ export const ImageFetching = () => {
         setImageArray((prevImages) =>
           prevImages.filter((image) => image.id !== imageId)
         );
-        window.alert("Image deleted successfully!");
+        // window.alert('Image deleted successfully!');
       })
       .catch((error) => {
         console.error("Error deleting image:", error);
       });
   };
-
+  
   // const [updateData, setUpdateData] = useState({
   //   id: null,
   //   imageTitle: "",
   // });
-
+ 
   // const handleUpdate = (imageId) => {
   //   // Find the image data for the selected imageId
   //   const selectedImage = imageTitle.find(
   //     (image) => image.image_id === imageId
   //   );
-
+ 
   //   // Set the initial values in the update form
   //   setUpdateData({
   //     id: selectedImage.image_id,
   //     imageTitle: selectedImage.image_title,
   //   });
   // };
-
   return (
     <div className="UGhomepageadmin_Uploaded_Files">
       <div className="UGhomepageadmin_Uploaded_Files_header">
@@ -572,7 +573,7 @@ export const ImageFetching = () => {
               <td>{imageName.image_title}</td>
               <td className="action">
                 <Tooltip title="Delete" arrow>
-                  <Button onClick={() => handleDelete(imageName.images_id)}>
+                  <Button onClick={() => handleDeleteImage(imageName.images_id)}>
                     <span className="material-symbols-outlined">delete</span>{" "}
                   </Button>
                 </Tooltip>

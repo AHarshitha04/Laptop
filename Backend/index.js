@@ -6,10 +6,12 @@ const bcrypt = require('bcrypt');
 const fs = require("fs");
 const app = express();
 const path = require("path");
+const jwt = require('jsonwebtoken');
 const sizeOf = require("image-size");
 // const diskusage = require("diskusage");
 app.use(express.static("public"));
 const bodyParser = require("body-parser");
+const { register } = require("module");
 const port = 5001;
 // const cors = require('cors');
 
@@ -250,10 +252,76 @@ app.get("/sections/:course_id", (req, res) => {
 //     }
 //   });
 // });
+// app.delete("/HomeImages/:images_id", (req, res) => {
+//   const idToDelete = parseInt(req.params.images_id);
+
+//   // Fetch the image data from the database to get the image title
+//   const query = "SELECT image_title FROM images WHERE images_id = ?";
+//   db.query(query, [idToDelete], (err, result) => {
+//     if (err) {
+//       console.error("Error fetching image data:", err);
+//       res.status(500).send("Internal Server Error");
+//       return;
+//     }
+
+//     if (result.length === 0) {
+//       res.status(404).send("Image not found");
+//       return;
+//     }
+
+//     const imageTitle = result[0].image_title;
+
+//     // Delete the image record from the database
+//     const deleteQuery = "DELETE FROM images WHERE images_id = ?";
+//     db.query(deleteQuery, [idToDelete], (deleteErr, deleteResult) => {
+//       if (deleteErr) {
+//         console.error("Error deleting image:", deleteErr);
+//         res.status(500).send("Internal Server Error");
+//         return;
+//       }
+
+//       if (deleteResult.affectedRows > 0) {
+//         // Delete the corresponding file from the server's uploadFiles directory
+//         const filePath = path.join(__dirname, "uploadFiles", imageTitle);
+//         fs.unlink(filePath, (unlinkErr) => {
+//           if (unlinkErr) {
+//             console.error("Error deleting file:", unlinkErr);
+//             res.status(500).send("Error deleting file");
+//           } else {
+//             console.log("File deleted successfully");
+//             res.status(200).send("Image and file deleted successfully");
+//           }
+//         });
+//       } else {
+//         res.status(404).send("Image not found");
+//       }
+//     });
+//   });
+// });
 
 
 
-app.get("/HomeImages", (req, res) => {
+
+
+
+
+
+
+
+
+
+
+app.delete("/HomeImages/:images_id", (req, res) => {
+  const imageId = req.params.images_id;
+  const q = "DELETE FROM images WHERE images_id = ?";
+ 
+  db.query(q, [imageId], (err, data) => {
+    if (err) return res.send(err);
+    return res.json(data);
+  });
+});
+
+app.get("/HomeImagesadmin", (req, res) => {
   const query = "SELECT images_id, image_data FROM images";
   db.query(query, (err, results) => {
     if (err) {
@@ -274,6 +342,24 @@ app.get("/HomeImages", (req, res) => {
 });
 
 
+
+app.get("/HomeImages", (req, res) => {
+  const query = "SELECT * FROM images WHERE section_id=1 ;";
+ 
+  db.query(query, (error, results) => {
+    if (error) {
+      console.error("Error fetching images:", error);
+      res.status(500).send("Internal Server Error");
+    } else {
+      const imageDataList = results.map((result) => {
+        // Use the correct column name based on your table structure
+        const base64 = result.image_data.toString("base64");
+        return `data:image/png;base64,${base64}`;
+      });
+      res.json(imageDataList);
+    }
+  });
+});
 
 app.get("/ExploreExam", (req, res) => {
   const query = "SELECT * FROM images WHERE section_id=2;";
@@ -543,186 +629,104 @@ app.get("/coursesca", (req, res) => {
 // --------------------------------------login -----------------------------------------------------
  
 
- 
 app.post('/register', async (req, res) => {
-  const { email, username, password } = req.body;
- 
-  // Hash the password
-  const hashedPassword = await bcrypt.hash(password, 10);
- 
-  // Set the default role to 'viewer'
-  const defaultRole = 'viewer';
- 
-  // Insert user into the database with a default role
-  db.query('INSERT INTO users (email, username, password, role) VALUES (?, ?, ?, ?)', [email, username, hashedPassword, defaultRole], (err, result) => {
-    if (err) {
-      console.error('Error registering user:', err);
-      res.status(500).send('Error registering user');
-    } else {
-      console.log('User registered successfully');
-      res.status(200).send('User registered successfully');
-    }
-  });
+  const { username, email, password } = req.body;
+
+  try {
+    // Check if the email already exists in the database
+    const checkEmailQuery = 'SELECT * FROM log WHERE email = ?';
+    db.query(checkEmailQuery, [email], async (error, results) => {
+      if (error) {
+        res.status(500).json({ error: 'Internal server error' });
+        return;
+      }
+
+      if (results.length > 0) {
+        res.status(400).json({ error: 'User already exists with this email' });
+        return;
+      }
+
+      const hashedPassword = await bcrypt.hash(password, 10); // Hash password
+      const defaultRole = 'viewer';
+      
+      const insertQuery = 'INSERT INTO log (username, email, password, role) VALUES (?, ?, ?, ?)';
+      db.query(insertQuery, [username, email, hashedPassword, defaultRole], (err, result) => {
+        if (err) {
+          res.status(500).json({ error: 'Failed to register user' });
+          return;
+        }
+        res.status(201).json({ message: 'User registered successfully' });
+      });
+    });
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
 });
- 
- 
-app.post('/login', (req, res) => {
+
+
+
+
+
+
+
+
+app.post('/login', async (req, res) => {
   const { email, password } = req.body;
- 
-  // Retrieve user from the database
-  db.query('SELECT id, email, password, role FROM users WHERE email = ?', [email], async (err, result) => {
-    if (err) {
-      res.status(500).send('Error during login');
-    } else if (result.length > 0) {
-      // Compare hashed password
-      const match = await bcrypt.compare(password, result[0].password);
- 
-      if (match) {
-        // Send the role along with the login success response
-        const { id, email, role } = result[0];
-        res.status(200).json({
-          message: 'Login successful',
-          user: { id, email, role },
-        });
-        console.log(`${email} ${id}`)
-      } else {
-        res.status(401).send('Incorrect password');
+
+  try {
+    const sql = 'SELECT * FROM log WHERE email = ?';
+    db.query(sql, [email], async (error, results) => {
+      if (error || results.length === 0) {
+        res.status(401).json({ error: 'Invalid credentials' });
+        return;
       }
-    } else {
-      res.status(404).send('User not found');
-    }
-  });
-});
 
-//extra fro login 
-// app.post('/login', (req, res) => {
-//   const { email, password } = req.body;
- 
-//   // Retrieve user from the database
-//   db.query('SELECT * FROM users WHERE email = ? AND password= ?', [email,password], async (err, result) => {
-//     if (err) {
-//       res.status(500).send('Error during login');
-//     } else if (result.length > 0) {
-//       // Compare hashed password
-//       const match = await bcrypt.compare(password, result[0].password);
- 
-//       if (match) {
-//         // Send the role along with the login success response
-//         const { id, email, role } = result[0];
-//         res.status(200).json({
-//           message: 'Login successful',
-//           user: { id, email, role },
-//         });
-//         console.log(`${email} ${id}`)
-//       } else {
-//         res.status(401).send('Incorrect password');
-//       }
-//     } else {
-//       res.status(404).send('User not found');
-//       res.send('User not found');
+      const user = results[0];
+      const passwordMatch = await bcrypt.compare(password, user.password);
 
-//     }
-//   });
-// });
-
-// app.post('/login', (req, res) => {
-//   const { email, password } = req.body;
-
-//   // Query to authenticate user from MySQL database
-//   const query = `SELECT * FROM users WHERE email = ?`;
-//   db.query(query, [email], async (err, results) => {
-//     if (err) {
-//       console.error('Error executing query:', err);
-//       return res.status(500).json({ message: 'Internal Server Error' });
-//     }
-
-//     if (results.length === 0) {
-//       return res.status(401).json({ message: 'Invalid email or password' });
-//     }
-
-//     const user = results[0];
-//     // Compare hashed password with user's provided password
-//     const passwordMatch = await bcrypt.compare(password, user.password);
-
-//     if (!passwordMatch) {
-//       return res.status(401).json({ message: 'Invalid email or password' });
-//     }
-//     else if (passwordMatch) {
-//               // Send the role along with the login success response
-//               const { id, email, role } = result[0];
-//               res.status(200).json({
-//                 message: 'Login successful',
-//                 user: { id, email, role },
-//               });
-//               console.log(`${email} ${id}`)
-//             } 
-
-//     // If authentication is successful, return user data
-//     res.status(200).json({ message: 'Login successful', user });
-//   });
-// });
-
-
-
-
-//-------------------------------
-
-
-
-app.get("/users", (req, res) => {
-  const q = "SELECT * FROM users";
-  db.query(q, (err, data) => {
-    if (err) {
-      console.log(err);
-      return res.json(err);
-    }
-    return res.json(data);
-  });
-
-  
-});
-// ----------------------------------------------------------------------------------
-
-
-
-app.get('/login', (req, res) => {
-  const { email, password } = req.query; // Assuming email and password are passed as query parameters
-
-  // Validate inputs (email and password)
-  // if (!email || !password) {
-  //   return res.status(400).send('Email and password are required');
-  // }
-
-  // Retrieve user from the database
-  db.query('SELECT id, email, password, role FROM users WHERE email = ?', [email], async (err, result) => {
-    if (err) {
-      res.status(500).send('Error during login');
-    } else if (result.length > 0) {
-      // Compare hashed password
-      const match = await bcrypt.compare(password, result[0].password);
-
-      if (match) {
-        // Send the role along with the login success response
-        const { id, email, role } = result[0];
-        res.status(200).json({
-          message: 'Login successful',
-          user: { id, email, role },
-        });
-        console.log(`${email} ${id}`);
-      } else {
-        res.status(401).send('Incorrect password');
+      if (!passwordMatch) {
+        res.status(401).json({ error: 'Invalid credentials' });
+        return;
       }
-    } else {
-      res.status(404).send('User not found');
-    }
-  });
+
+      const token = jwt.sign({ id: user.id }, 'your_secret_key', { expiresIn: '1h' });
+      const { id, email, role } = user;
+      res.status(200).json({ token, user: { id, email, role } });
+    });
+    console.log(`${email}`)
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
 });
 
-// ----------------------------------------------------------------------------------
 
+// Profile endpoint
+app.get('/profile/:userId', async (req, res) => {
+  const userId = req.params.userId;
+
+  try {
+    const sql = 'SELECT * FROM log WHERE id = ?';
+    db.query(sql, [userId], (error, results) => {
+      if (error || results.length === 0) {
+        res.status(404).json({ error: 'User not found' });
+        return;
+      }
+
+      const user = results[0];
+      // Send user profile details
+      res.status(200).json(user);
+    });
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+
+
+// user details by ID
 app.get("/userdetails/:id", (req, res) => {
   const id = req.params.id;
-  db.query("SELECT * FROM users WHERE id = ?", id, (err, result) => {
+  db.query("SELECT * FROM log WHERE id = ?", id, (err, result) => {
     if (err) {
       console.log(err);
     } else {
@@ -731,26 +735,46 @@ app.get("/userdetails/:id", (req, res) => {
   });
 });
 
-
-
-
-
-app.get('/user/:id', (req, res) => {
-  const userId = req.params.id;
-  const query = 'SELECT * FROM users WHERE id = ?';
-  db.query(query, userId, (err, result) => {
-    if (err) {
-      console.log(err);
-      res.status(500).send('Error retrieving user details');
-    } else {
-      if (result.length > 0) {
-        res.status(200).json(result[0]);
-      } else {
-        res.status(404).send('User not found');
-      }
+app.get('/user', async (req, res) => {
+  try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      res.status(401).json({ error: 'Unauthorized' });
+      return;
     }
-  });
+
+    const token = authHeader.split(' ')[1]; // Extract token from Authorization header
+    const decodedToken = jwt.verify(token, 'your_secret_key'); // Verify and decode the token
+
+    const userId = decodedToken.id; // Get user ID from decoded token
+    const sql = 'SELECT id, username, email FROM log WHERE id = ?';
+    db.query(sql, [userId], (error, results) => {
+      if (error || results.length === 0) {
+        res.status(404).json({ error: 'User not found' });
+        return;
+      }
+
+      const userData = results[0];
+      res.status(200).json(userData); // Send user data as JSON response
+    });
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
 });
+
+
+// ----------------------------------------------------------------------------------
+
+
+
+
+// ----------------------------------------------------------------------------------
+
+
+
+
+
+
 // app.get("/sigleuserdetails/:id", (req, res) => {
 //   const id = req.params.id;
 //   const sql="SELECT * FROM users WHERE id = ?"
@@ -763,26 +787,26 @@ app.get('/user/:id', (req, res) => {
   
 // });
 
-// app.get('/sigleuserdetails/:id', (req, res) => {
-//   const { id } = req.params;
+app.get('/sigleuserdetails/:id', (req, res) => {
+  const { id } = req.params;
 
-//   const query = 'SELECT * FROM users WHERE id = ?'; // Replace 'users' with your table name
+  const query = 'SELECT * FROM users WHERE id = ?'; // Replace 'users' with your table name
 
-//   db.query(query, [id], (error, results) => {
-//     if (error) {
-//       console.error('Error fetching user details:', error);
-//       res.status(500).json({ message: 'Error fetching user details' });
-//       return;
-//     }
+  db.query(query, [id], (error, results) => {
+    if (error) {
+      console.error('Error fetching user details:', error);
+      res.status(500).json({ message: 'Error fetching user details' });
+      return;
+    }
 
-//     if (results.length === 0) {
-//       res.status(404).json({ message: 'User not found' });
-//       return;
-//     }
+    if (results.length === 0) {
+      res.status(404).json({ message: 'User not found' });
+      return;
+    }
 
-//     res.status(200).json(results[0]);
-//   });
-// });
+    res.status(200).json(results[0]);
+  });
+});
 
 
 app.put('/users/:id', async (req, res) => {
@@ -836,30 +860,30 @@ app.put('/users/:id', async (req, res) => {
 
 app.delete("/users/:id", (req, res) => {
   const userId = req.params.id;
-  const q = " DELETE FROM users WHERE id = ? ";
+  const q = " DELETE FROM log WHERE id = ? ";
  
   db.query(q, [userId], (err, data) => {
     if (err) return res.send(err);
     return res.json(data);
   });
 });
-// app.get("/act_info", (req, res) => {
-//   // const query = 'SELECT course_name,course_id FROM 1egquiz_courses';
-//   const query =
-//     "SELECT  * FROM users ";
+app.get("/act_info", (req, res) => {
+  // const query = 'SELECT course_name,course_id FROM 1egquiz_courses';
+  const query =
+    "SELECT  * FROM log ";
  
-//   db.query(query, (error, results) => {
-//     if (error) {
-//       console.error("Error executing query: " + error.stack);
-//       res.status(500).send("Error retrieving data from database.");
-//       return;
-//     }
-//     console.log("Retrieved data from test table:");
-//     console.log(results);
-//     // Send the retrieved data as JSON response
-//     res.json(results);
-//   });
-// });
+  db.query(query, (error, results) => {
+    if (error) {
+      console.error("Error executing query: " + error.stack);
+      res.status(500).send("Error retrieving data from database.");
+      return;
+    }
+    console.log("Retrieved data from test table:");
+    console.log(results);
+    // Send the retrieved data as JSON response
+    res.json(results);
+  });
+});
  
 
 // --------------------------------------login end -----------------------------------------------------
