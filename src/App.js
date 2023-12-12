@@ -76,6 +76,47 @@ import Userupdate from "./components/ug_homepage/UGadmin/login/Userupdate.js";
 import Userdeatailspage from "./components/ug_homepage/UGadmin/login/Userdeatailedpage.js";
 import Userdeatailedpage from "./components/ug_homepage/UGadmin/login/Userdeatailedpage.js";
 import Exam_portal_home_page from "./components/ug_homepage/UGadmin/eaxm_portal_/Exam_portal_home_page.jsx";
+// ========================================================= ugquiz exam imports ===========================================================
+
+import Paper1 from "./components/ug_homepage/UGadmin/eaxm_portal_/Paper1.jsx";
+import FullTest from "./components/ug_homepage/UGadmin/eaxm_portal_/FullTest.jsx";
+import Instructions from "./components/ug_homepage/UGadmin/eaxm_portal_/Instructions.jsx";
+
+import General_intructions_page from "./components/ug_homepage/UGadmin/eaxm_portal_/General_intructions_page.jsx";
+
+import CoursePage from "./components/ug_homepage/UGadmin/eaxm_portal_/CoursePage.jsx";
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 const App = () => {
   return (
@@ -174,7 +215,16 @@ const App = () => {
 
         {/* ========================================================= ughomepage ====================================================================== */}
         <Route path="/ImageFetching" element={<ImageFetching />} />
-        userdeatailspage
+        
+
+
+        {/* ========================================================= quiz exam routes ====================================================================== */}
+        
+        <Route path='/feachingcourse/:examId' element={<CoursePage/>} />
+        <Route path='/Test_List/:courseCreationId' element={<FullTest />} />
+        <Route path='/Instructions/:testCreationTableId/:minSubjectId' element={<Instructions />} />
+        <Route path='/General_intructions_page/:testCreationTableId/:minSubjectId' element={<General_intructions_page />} />
+        <Route path='/subjects/:testCreationTableId/:subjectId'  element={<Paper1 />} />
       </Routes>
       {/* <Footer /> */}
       {/* <LandingPage /> */}

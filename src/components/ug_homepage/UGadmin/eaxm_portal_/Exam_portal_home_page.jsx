@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 
+import iitjee from "../../../../Images/iit-jee-course.jpg";
 import axios from "axios";
 
 import { Link, useParams } from "react-router-dom";
@@ -28,7 +29,7 @@ const Exam_portal_home_page = () => {
   const [courses, setCourses] = useState([]);
   useEffect(() => {
     axios
-      .get("http://localhost:3090/courses")
+      .get("http://localhost:5001/courses")
       .then((res) => {
         setCourses(res.data);
         console.log(res.data);
@@ -72,12 +73,12 @@ export const Header = () => {
     setShowloginQuiz(false);
     setShowRegisterQuiz(false);
   };
-  
+
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const token = localStorage.getItem('token');
-        const response = await fetch('http://localhost:5001/user', {
+        const token = localStorage.getItem("token");
+        const response = await fetch("http://localhost:5001/user", {
           headers: {
             Authorization: `Bearer ${token}`, // Attach token to headers for authentication
           },
@@ -86,7 +87,7 @@ export const Header = () => {
         if (response.ok) {
           const userData = await response.json();
           setUserData(userData);
-          console.log(userData)
+          console.log(userData);
         } else {
           // Handle errors, e.g., if user data fetch fails
         }
@@ -97,7 +98,6 @@ export const Header = () => {
 
     fetchUserData();
   }, []);
-
 
   // const [courses, setCourses] = useState([]);
   const [examsug, setExamsug] = useState([0]);
@@ -131,19 +131,18 @@ export const Header = () => {
     window.location.href = "/uglogin";
   };
 
-const  act_info=()=>{
-  if (user.role === "admin") {
-    window.location.href = "/UgadminHome";
-  } else {
-    window.location.href = "/userdeatailspage/:id"; // Replace with the URL for user details page
-  }
-}
-  
+  const act_info = () => {
+    if (user.role === "admin") {
+      window.location.href = "/UgadminHome";
+    } else {
+      window.location.href = "/userdeatailspage/:id"; // Replace with the URL for user details page
+    }
+  };
+
   // ----------------- dashborad ---------------------/
   const userRole = localStorage.getItem("userRole");
   return (
     <>
-     
       <div className="Quiz_main_page_header">
         {nav.map((nav, index) => {
           return (
@@ -161,7 +160,7 @@ const  act_info=()=>{
                 }
               >
                 <ul>
-                  <button style={{background:"none"}}>
+                  <button style={{ background: "none" }}>
                     <a href="#" className="Quiz__home">
                       Home
                     </a>
@@ -206,19 +205,16 @@ const  act_info=()=>{
                     )}
                   </div>
                   <div>
-                    <button  id="dropdownmenu_foradim_page_btn" >
-                       
-                    {userData.username}
-                    <div className="dropdownmenu_foradim_page">
-                    {/* <Link to={`/userread/${user.id}`} className="btn btn-success mx-2">Read</Link> */}
-                     
-                      {/* <Link to={`/userdeatailspage/${user.id}`} >Acount-info</Link> */}
-                      <Link to='/Account_info' >Acount-info</Link>
+                    <button id="dropdownmenu_foradim_page_btn">
+                      {userData.username}
+                      <div className="dropdownmenu_foradim_page">
+                        {/* <Link to={`/userread/${user.id}`} className="btn btn-success mx-2">Read</Link> */}
 
-                    
-                    <Link onClick={handleLogout}>Logout</Link>
+                        {/* <Link to={`/userdeatailspage/${user.id}`} >Acount-info</Link> */}
+                        <Link to="/Account_info">Acount-info</Link>
 
-                    </div>
+                        <Link onClick={handleLogout}>Logout</Link>
+                      </div>
                     </button>
                   </div>
                 </ul>
@@ -237,7 +233,6 @@ const  act_info=()=>{
 };
 
 // ------------------------------------------------------------------------- header end ---------------------------------------------
-
 
 // ------------------------------------------------------------------------- home section ---------------------------------------------
 
@@ -386,6 +381,21 @@ export const Quiz_Courses = () => {
     setshowcardactive2(true);
   };
 
+
+  // ----------------- h  
+  const [examCardName, setExamCardName] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get(`http://localhost:4009/examData`)
+      .then((response) => {
+        setExamCardName(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, []);
+
   return (
     <>
       <div className="Quiz_cards_page">
@@ -433,6 +443,43 @@ export const Quiz_Courses = () => {
                   <div key={examsug.exam_id}>
                     {/* <a href=""><h1>{e.exam_name}</h1> </a>  */}
                     coming soon
+                    {/* ----------------------------------- h--------------------- */}
+                    <div className="card">
+                      <div className="container">
+                        {" "}
+                        <ul className="card_container_ul">
+                          {examCardName.map((cardItem) => (
+                            <React.Fragment key={cardItem.examId}>
+                              <div className="card_container_li">
+                                <img src={iitjee} alt="card" width={350} />
+                                <h3>{cardItem.examName}</h3>
+                                <li>
+                                  {" "}
+                                  Validity: ({cardItem.startDate}) to (
+                                  {cardItem.endDate})
+                                </li>
+                                <li>
+                                  <br />
+                                  <div className="start_now">
+                                    {/* <Link to={`/CoursePage/${cardItem.examId}`}>Start Now </Link */}
+                                    <Link
+                                      to={`/feachingcourse/${cardItem.examId}`}
+                                    >
+                                      Start Now{" "}
+                                    </Link>
+                                    {/* to={`/CoursePage/${cardItem.examId}`} */}
+                                  </div>
+                                  {/* <Link to={`/feachingcourse/${cardItem.examId}`}>
+                          View Courses for {cardItem.examName}
+                        </Link> */}
+                                </li>
+                              </div>
+                            </React.Fragment>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+                    {/* ----------------------------------- h--------------------- */}
                   </div>
                 );
               })}
@@ -464,7 +511,7 @@ export const Quiz_Courses = () => {
 //     const [coursesca, setCoursesca] = useState([]);
 
 //     useEffect(() => {
-//       axios.get('http://localhost:3090/coursesug')
+//       axios.get('http://localhost:5001/coursesug')
 //         .then((res) => {
 //             setCoursesug(res.data);
 //           console.log(coursesug)
@@ -475,7 +522,7 @@ export const Quiz_Courses = () => {
 //     }, []);
 
 //     useEffect(() => {
-//         axios.get('http://localhost:3090/coursespg')
+//         axios.get('http://localhost:5001/coursespg')
 //           .then((res) => {
 //             setCoursespg(res.data);
 //             console.log(coursesug)
@@ -486,7 +533,7 @@ export const Quiz_Courses = () => {
 //       }, []);
 
 //       useEffect(() => {
-//         axios.get('http://localhost:3090/coursesmba')
+//         axios.get('http://localhost:5001/coursesmba')
 //           .then((res) => {
 //             setCoursesmba(res.data);
 //             console.log(coursesug)
@@ -497,7 +544,7 @@ export const Quiz_Courses = () => {
 //       }, []);
 
 //       useEffect(() => {
-//         axios.get('http://localhost:3090/coursesca')
+//         axios.get('http://localhost:5001/coursesca')
 //           .then((res) => {
 //             setCoursesca(res.data);
 //             console.log(coursesug)
@@ -513,7 +560,7 @@ export const Quiz_Courses = () => {
 //       const[examsca,setExamsca]=useState([0])
 
 //       useEffect(() => {
-//         axios.get('http://localhost:3090/examsug')
+//         axios.get('http://localhost:5001/examsug')
 //           .then((res) => {
 //             setExamsug(res.data);
 //             console.log(setExamsug)
@@ -524,7 +571,7 @@ export const Quiz_Courses = () => {
 //       }, []);
 
 //       useEffect(() => {
-//         axios.get('http://localhost:3090/examspg')
+//         axios.get('http://localhost:5001/examspg')
 //           .then((res) => {
 //             setExamspg(res.data);
 //             console.log(setExamspg)
@@ -535,7 +582,7 @@ export const Quiz_Courses = () => {
 //       }, []);
 
 //       useEffect(() => {
-//         axios.get('http://localhost:3090/examsmba')
+//         axios.get('http://localhost:5001/examsmba')
 //           .then((res) => {
 //             setExamsmba(res.data);
 //             console.log(setExamsmba)
@@ -545,7 +592,7 @@ export const Quiz_Courses = () => {
 //           });
 //       }, []);
 //       useEffect(() => {
-//         axios.get('http://localhost:3090/examsca')
+//         axios.get('http://localhost:5001/examsca')
 //           .then((res) => {
 //             setExamsca(res.data);
 //             console.log(setExamsca)

@@ -13,20 +13,12 @@ app.use(express.static("public"));
 const bodyParser = require("body-parser");
 const { register } = require("module");
 const port = 5001;
-// const cors = require('cors');
-
-
-
-// const corsOptions = {
-//   origin: "*",
-//   optionsSuccessStatus: 200,
-// };
 
 const db = mysql.createConnection({
   host: "localhost",
   user: "root",
   password: "",
-  database: "egrad_quiz",
+  database: "admin_project",
 });
 app.use(bodyParser.json());
 // app.use(cors(corsOptions));
@@ -46,27 +38,10 @@ app.use(cors());
 
 
 
-app.get('/helo/:userId', (req, res) => {
-  const userId = req.params.userId;
 
-  const query = 'SELECT id, email, username FROM users WHERE id = ?';
-  db.query(query, [userId], (error, results) => {
-    if (error) {
-      console.error('Error fetching user details:', error);
-      res.status(500).json({ error: 'Internal server error' });
-      return;
-    }
 
-    if (results.length === 0) {
-      res.status(404).json({ error: 'User not found' });
-      return;
-    }
 
-    const userData = results[0];
-    res.status(200).json(userData);
-  });
-});
-
+// -----------------------------------sravan----------------------------
 
 
 
@@ -84,19 +59,19 @@ app.get("/courses", (req, res) => {
   });
 });
 
-app.get("/quiz_exams/:course_id", (req, res) => {
-  const course_id = req.params.course_id;
-  // const section_id = req.params.section_id;
-  const sql = "SELECT * FROM exams WHERE course_id = ?";
-  db.query(sql, [course_id], (err, result) => {
-    if (err) {
-      console.error("Error querying the database: " + err.message);
-      res.status(500).json({ error: "Error fetching exams" });
-      return;
-    }
-    res.json(result);
-  });
-});
+// app.get("/quiz_exams/:course_id", (req, res) => {
+//   const course_id = req.params.course_id;
+//   // const section_id = req.params.section_id;
+//   const sql = "SELECT * FROM exams WHERE course_id = ?";
+//   db.query(sql, [course_id], (err, result) => {
+//     if (err) {
+//       console.error("Error querying the database: " + err.message);
+//       res.status(500).json({ error: "Error fetching exams" });
+//       return;
+//     }
+//     res.json(result);
+//   });
+// });
 
 app.get("/sections/:course_id", (req, res) => {
   const course_id = req.params.course_id;
@@ -110,204 +85,6 @@ app.get("/sections/:course_id", (req, res) => {
     res.json(result);
   });
 });
-
-// const storage = multer.memoryStorage(); // Store the image in memory as a Buffer
-// const upload = multer({ storage: storage });
-
-
-// main original code
-// app.post("/upload", upload.single("image"), (req, res) => {
-//   const image = req.file.buffer;
-//   const courseId = req.body.course_id; // Assuming you are sending the course_id in the request body
-//   const sectionId = req.body.section_id;
-
-//   if (!courseId || !sectionId) {
-//     return res.status(400).json({ message: "Course ID is required" });
-//   }
-  
-
-//   // Modify the query to include course_id
-//   const query =
-//     "INSERT INTO main_page_images (image_data, course_id, section_id ) VALUES (?, ?,?)";
-//   const values = [image, courseId, sectionId];
-
-//   db.query(query, values, (err, result) => {
-//     if (err) {
-//       console.error("Error uploading image:", err);
-//       res.status(500).json({ message: "Error uploading image" });
-//     } else {
-//       res.json({ message: "Image uploaded successfully" });
-//     }
-//   });
-// });
-
-
-
-// main original code
-// app.post("/upload", upload.single("image"), (req, res) => {
-//   const image = req.file.buffer;
-//   const courseId = req.body.course_id; // Assuming you are sending the course_id in the request body
-//   const sectionId = req.body.section_id;
-//   const examId = req.body.exam_id; // Assuming you are sending the exam_id in the request body
-
-//   if (!courseId || !sectionId) {
-//     return res.status(400).json({ message: "Course ID and Section ID are required" });
-//   }
-
-//   // Modify the query to include course_id and section_id
-//   let query;
-//   let values;
-
-//   if (examId) {
-//     // If exam_id is present, include it in the query
-//     query =
-//       "INSERT INTO main_page_images (image_data, course_id, section_id, exam_id) VALUES (?, ?, ?, ?)";
-//     values = [image, courseId, sectionId, examId];
-//   } else {
-//     // If exam_id is not present, exclude it from the query
-//     query =
-//       "INSERT INTO main_page_images (image_data, course_id, section_id) VALUES (?, ?, ?)";
-//     values = [image, courseId, sectionId];
-//   }
-
-//   db.query(query, values, (err, result) => {
-//     if (err) {
-//       console.error("Error uploading image:", err);
-//       res.status(500).json({ message: "Error uploading image" });
-//     } else {
-//       res.json({ message: "Image uploaded successfully" });
-//     }
-//   });
-// });
-
-
-
-// app.post("/upload", upload.single("image"), (req, res) => {
-//   const image = req.file.buffer;
-//   const courseId = req.body.course_id;
-//   const sectionId = req.body.section_id;
-//   const examId = req.body.exam_id;
-
-//   if (!courseId || !sectionId) {
-//     return res.status(400).json({ message: "Course ID and Section ID are required" });
-//   }
-
-//   const isUGMainPage = courseId === "UG" && sectionId === "UG Main Page";
-//   const isUGExploreExam = courseId === "UG" && sectionId === "UG Explore Exam";
-//   const isPGMainPage = courseId === "PG" && sectionId === "PG Main Page";
-//   const isPGExploreExam = courseId === "PG" && sectionId === "PG Explore Exam";
-//   const isUGCourseExam = courseId === "UG" && sectionId === "UG Course Exam";
-//   const isPGCourseExam = courseId === "PG" && sectionId === "PG Course Exam";
-
-//   if ((isUGMainPage || isUGExploreExam || isPGMainPage || isPGExploreExam) && !examId) {
-//     // Modify the query to include course_id and section_id
-//     const query =
-//       "INSERT INTO main_page_images (image_data, course_id, section_id) VALUES (?, ?, ?)";
-//     const values = [image, courseId, sectionId];
-
-//     db.query(query, values, (err, result) => {
-//       if (err) {
-//         console.error("Error uploading image:", err);
-//         res.status(500).json({ message: "Error uploading image" });
-//       } else {
-//         res.json({ message: "Image uploaded successfully" });
-//       }
-//     });
-//   } else if ((isUGCourseExam || isPGCourseExam) && examId) {
-//     // Modify the query to include course_id, section_id, and exam_id
-//     const query =
-//       "INSERT INTO course_exam_images (image_data, course_id, section_id, exam_id) VALUES (?, ?, ?, ?)";
-//     const values = [image, courseId, sectionId, examId];
-
-//     db.query(query, values, (err, result) => {
-//       if (err) {
-//         console.error("Error uploading image:", err);
-//         res.status(500).json({ message: "Error uploading image" });
-//       } else {
-//         res.json({ message: "Image uploaded successfully" });
-//       }
-//     });
-//   } else {
-//     res.status(403).json({ message: "Image upload is only allowed for specified sections" });
-//   }
-// });
-   
-
-
-//ORIGINAL CODE
-// app.get("/images", (req, res) => {
-//   const query = "SELECT * FROM main_page_images";
-
-//   db.query(query, (error, results) => {
-//     if (error) {
-//       console.error("Error fetching images:", error);
-//       res.status(500).send("Internal Server Error");
-//     } else {
-//       const imageDataList = results.map((result) => {
-//         // Use the correct column name based on your table structure
-//         const base64 = result.image_data.toString("base64");
-//         return `data:image/png;base64,${base64}`;
-//       });
-//       res.json(imageDataList);
-//     }
-//   });
-// });
-// app.delete("/HomeImages/:images_id", (req, res) => {
-//   const idToDelete = parseInt(req.params.images_id);
-
-//   // Fetch the image data from the database to get the image title
-//   const query = "SELECT image_title FROM images WHERE images_id = ?";
-//   db.query(query, [idToDelete], (err, result) => {
-//     if (err) {
-//       console.error("Error fetching image data:", err);
-//       res.status(500).send("Internal Server Error");
-//       return;
-//     }
-
-//     if (result.length === 0) {
-//       res.status(404).send("Image not found");
-//       return;
-//     }
-
-//     const imageTitle = result[0].image_title;
-
-//     // Delete the image record from the database
-//     const deleteQuery = "DELETE FROM images WHERE images_id = ?";
-//     db.query(deleteQuery, [idToDelete], (deleteErr, deleteResult) => {
-//       if (deleteErr) {
-//         console.error("Error deleting image:", deleteErr);
-//         res.status(500).send("Internal Server Error");
-//         return;
-//       }
-
-//       if (deleteResult.affectedRows > 0) {
-//         // Delete the corresponding file from the server's uploadFiles directory
-//         const filePath = path.join(__dirname, "uploadFiles", imageTitle);
-//         fs.unlink(filePath, (unlinkErr) => {
-//           if (unlinkErr) {
-//             console.error("Error deleting file:", unlinkErr);
-//             res.status(500).send("Error deleting file");
-//           } else {
-//             console.log("File deleted successfully");
-//             res.status(200).send("Image and file deleted successfully");
-//           }
-//         });
-//       } else {
-//         res.status(404).send("Image not found");
-//       }
-//     });
-//   });
-// });
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -775,17 +552,6 @@ app.get('/user', async (req, res) => {
 
 
 
-// app.get("/sigleuserdetails/:id", (req, res) => {
-//   const id = req.params.id;
-//   const sql="SELECT * FROM users WHERE id = ?"
-
-//   db.query(sql,[id],(err,result)=>{
-//     if(err)return res.json({status:false});
-//     return res.json(result)
-//   })
-  
-  
-// });
 
 app.get('/sigleuserdetails/:id', (req, res) => {
   const { id } = req.params;
@@ -838,26 +604,6 @@ app.put('/users/:id', async (req, res) => {
 });
 
 
-// app.put("/users/:id", (req, res) => {
-//   const userId = req.params.id;
-//   // email, username, password, role
-//   const q = "UPDATE users SET `username`= ?, `email`= ?, `password`= ? `role`= ?  WHERE id = ?";
- 
-//   const values = [
-//     req.body.username,
-//     req.body.email,
-//     req.body.password,
-//     req.body.role,
-
-//   ];
- 
-//   db.query(q, [...values,userId], (err, data) => {
-//     if (err) return res.send(err);
-//     return res.json(data);
-//   });
-// });
- 
-
 app.delete("/users/:id", (req, res) => {
   const userId = req.params.id;
   const q = " DELETE FROM log WHERE id = ? ";
@@ -893,7 +639,7 @@ app.get("/act_info", (req, res) => {
 
 
 
-
+// ----------------------------------------EGRAD WEBSITE ADMIN IMAGES UPLOADER--------------------
 
 // ---------------------------------- R------------------
 app.get("/UGhomepageadimcourses", (req, res) => {
@@ -1104,10 +850,493 @@ app.get("/ImageTitle", (req, res) => {
     res.json(results);
   });
 });
+// ----------------------------------------EGRAD WEBSITE ADMIN IMAGES UPLOADER--------------------
+
+
+// -----------------------------------end sravan----------------------------
 
 
 
 
+
+
+
+// -----------------------------------h------------------------------------
+
+
+//_________________________________________________FRONT END_______________________________________
+
+app.get("/examData", async (req, res) => {
+  // FetchData
+  try {
+    const [rows] = await db.query("SELECT * FROM exams");
+    res.json(rows);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+app.get("/feachingcourse/:examId", async (req, res) => {
+  const { examId } = req.params;
+  try {
+    // Fetch exams from the database
+    const [rows] = await db.query(
+      "SELECT * FROM course_creation_table WHERE examId = ?",
+      [examId]
+    );
+    console.log("Query Result:", rows);
+
+    res.json(rows);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+app.get("/feachingtest/:courseCreationId/:typeOfTestId", async (req, res) => {
+  const { courseCreationId, typeOfTestId } = req.params;
+  try {
+    // Fetch tests from the database based on courseCreationId and typeOfTestId
+    const [testRows] = await db.query(
+      "SELECT * FROM test_creation_table WHERE courseCreationId = ? AND courseTypeOfTestId = ?",
+      [courseCreationId, typeOfTestId]
+    );
+    res.json(testRows);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+app.get("/feachingtest/:courseCreationId", async (req, res) => {
+  const { courseCreationId } = req.params;
+  try {
+    // Fetch exams from the database
+    const [rows] = await db.query(
+      "SELECT * FROM test_creation_table WHERE 	courseCreationId  = ?",
+      [courseCreationId]
+    );
+
+    res.json(rows);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+app.get("/feachingtypeoftest", async (req, res) => {
+  try {
+    // Fetch type_of_test data from the database
+    const [typeOfTestRows] = await db.query("SELECT * FROM type_of_test");
+    res.json(typeOfTestRows);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+// app.get("/feachingtestbytype/:typeOfTestId", async (req, res) => {
+//   const { typeOfTestId } = req.params;
+//   try {
+//     // Fetch tests from the database based on typeOfTestId
+//     const [testRows] = await db.query(
+//       "SELECT * FROM test_creation_table WHERE courseTypeOfTestId = ?",
+//       [typeOfTestId]
+//     );
+//     res.json(testRows);
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ error: "Internal Server Error" });
+//   }
+// });
+
+app.get("/fetchinstructions/:testCreationTableId", async (req, res) => {
+  const { testCreationTableId } = req.params;
+  try {
+    // Fetch instructions from the database based on testCreationTableId
+    const [instructionsRows] = await db.query(
+      "SELECT instruction.instructionId, instructionHeading, points, id FROM instructions_points " +
+        "JOIN instruction ON instructions_points.instructionId = instruction.instructionId " +
+        "JOIN test_creation_table ON instruction.instructionId = test_creation_table.instructionId " +
+        "WHERE test_creation_table.testCreationTableId = ?",
+      [testCreationTableId]
+    );
+    res.json(instructionsRows);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+
+app.get("/fetchinstructions/:testCreationTableId", async (req, res) => {
+  const { testCreationTableId } = req.params;
+  try {
+    // Fetch instructions from the database based on testCreationTableId
+    const [instructionsRows] = await db.query(
+      "SELECT instruction.instructionId, instructionHeading, points, id, test_creation_table.testCreationTableId, course_subjects.subjectId " +
+        "FROM instructions_points " +
+        "JOIN instruction ON instructions_points.instructionId = instruction.instructionId " +
+        "JOIN test_creation_table ON instruction.instructionId = test_creation_table.instructionId " +
+        "JOIN course_creation_table ON test_creation_table.courseCreationId = course_creation_table.courseCreationId " +
+        "JOIN course_subjects ON course_creation_table.courseCreationId = course_subjects.courseCreationId " +
+        "WHERE test_creation_table.testCreationTableId = ?",
+      [testCreationTableId]
+    );
+    res.json(instructionsRows);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+
+// SELECT t1.instructionheading, t2.points, cct.examid, tct.courseCreationId
+// FROM instruction t1
+// JOIN instructions_points t2 ON t1.examid = t2.examid
+// JOIN course_creation_table cct ON t1.examid = cct.examid
+// JOIN test_creation_table tct ON cct.courseCreationId = tct.courseCreationId
+// WHERE t1.examid = 8;
+
+app.get("/fetchinstructions/:examid", async (req, res) => {
+  const { examid } = req.params;
+  try {
+    // Fetch instructions from the database based on testCreationTableId
+    const [instructionsRows] = await db.query(
+      "SELECT t2.instructionHeading, t2.points, cct.examid, tct.courseCreationId FROM instruction t1 JOIN instructions_points t2 ON t1.instructionid = t2.instructionid JOIN course_creation_table cct ON t1.examid = cct.examid JOIN test_creation_table tct ON cct.courseCreationId = tct.courseCreationId WHERE t1.examid = ?;", [examid]
+    );
+    res.json(instructionsRows);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+
+app.get('/subjects/:testCreationTableId', async (req, res) => {
+  const { testCreationTableId } = req.params;
+  try {
+    // Fetch instructions from the database based on testCreationTableId
+    // const [subjects] = await db.query(
+    //   'SELECT subjects.subjectName,subjects.subjectId FROM test_creation_table JOIN course_creation_table ON test_creation_table.courseCreationId = course_creation_table.courseCreationId JOIN course_subjects ON course_creation_table.courseCreationId = course_subjects.courseCreationId JOIN Subjects ON course_subjects.subjectId = Subjects.subjectId WHERE test_creation_table.testCreationTableId = ?',
+    //   [testCreationTableId]
+    // );
+
+
+    const [subjects] = await db.query(
+      'SELECT subjects.subjectName,subjects.subjectId FROM test_creation_table JOIN course_creation_table ON test_creation_table.courseCreationId = course_creation_table.courseCreationId JOIN course_subjects ON course_creation_table.courseCreationId = course_subjects.courseCreationId JOIN Subjects ON course_subjects.subjectId = Subjects.subjectId WHERE test_creation_table.testCreationTableId = ?',
+      [testCreationTableId]
+    );
+    res.json(subjects);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.get("/fetchSections/:testCreationTableId", async (req, res) => {
+  const { testCreationTableId } = req.params;
+  try {
+    const [rows] = await db.query(
+      "SELECT * FROM sections WHERE testCreationTableId = ?",
+      [testCreationTableId]
+    );
+    res.json(rows);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+app.post("/upload", upload.single("document"), async (req, res) => {
+  const docxFilePath = `uploads/${req.file.filename}`;
+  const outputDir = `uploads/${req.file.originalname}_images`;
+
+  const docName = `${req.file.originalname}`;
+  try {
+    await fs.mkdir(outputDir, { recursive: true });
+    const result = await mammoth.convertToHtml({ path: docxFilePath });
+    const htmlContent = result.value;
+    const $ = cheerio.load(htmlContent);
+    const textResult = await mammoth.extractRawText({ path: docxFilePath });
+    const textContent = textResult.value;
+    const textSections = textContent.split("\n\n");
+
+    // Insert documentName and get documentId
+    const [documentResult] = await db.query("INSERT INTO ots_document SET ?", {
+      documen_name: docName,
+      testCreationTableId: req.body.testCreationTableId,
+      subjectId: req.body.subjectId,
+    });
+    const document_Id = documentResult.insertId;
+
+    // Get all images in the order they appear in the HTML
+    const images = [];
+    $("img").each(function (i, element) {
+      const base64Data = $(this)
+        .attr("src")
+        .replace(/^data:image\/\w+;base64,/, "");
+      const imageBuffer = Buffer.from(base64Data, "base64");
+      images.push(imageBuffer);
+    });
+
+    let j = 0;
+    let Question_id;
+    for (let i = 0; i < images.length; i++) {
+      if (j == 0) {
+        const questionRecord = {
+          question_img: images[i],
+          testCreationTableId: req.body.testCreationTableId,
+          sectionId: req.body.sectionId,
+          document_Id: document_Id,
+          subjectId: req.body.subjectId,
+        };
+        console.log(j);
+        Question_id = await insertRecord("questions", questionRecord);
+        j++;
+      } else if (j > 0 && j < 5) {
+        const optionRecord = {
+          option_img: images[i],
+          question_id: Question_id,
+        };
+        console.log(j);
+        await insertRecord("options", optionRecord);
+        j++;
+      } else if (j == 5) {
+        const solutionRecord = {
+          solution_img: images[i],
+          question_id: Question_id,
+        };
+        console.log(j);
+        await insertRecord("solution", solutionRecord);
+        j = 0;
+      }
+    }
+    res.send(
+      "Text content and images extracted and saved to the database with the selected topic ID successfully."
+    );
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .send("Error extracting content and saving it to the database.");
+  }
+});
+
+async function insertRecord(table, record) {
+  try {
+    const [result] = await db.query(`INSERT INTO ${table} SET ?`, record);
+    console.log(`${table} id: ${result.insertId}`);
+    return result.insertId;
+  } catch (err) {
+    console.error(`Error inserting data into ${table}: ${err}`);
+    throw err;
+  }
+}
+// end -------------------
+
+
+// doc name getting 
+app.get("/documentName", async (req, res) => {
+  try {
+    const query =
+      "SELECT document_Id, testCreationTableId, documen_name, subjectId FROM ots_document";
+    const [rows] = await db.query(query);
+    res.json(rows);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+// end ----------
+
+
+
+app.get("/subjectData/:subjectId", async (req, res) => {
+  // FetchData
+  try {
+    const {subjectId } = req.params;
+    const [rows] = await db.query("SELECT * FROM subjects WHERE subjectId=?",[subjectId]);
+    res.json(rows);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+
+app.get("/subjectData/:courseCreationId", async (req, res) => {
+  // FetchData
+  try {
+    const {courseCreationId } = req.params;
+    const [rows] = await db.query("SELECT DISTINCT subjectId FROM course_subjects JOIN test_creation_table ON course_subjects.courseCreationId = test_creation_table.courseCreationId WHERE test_creation_table.courseCreationId = ?;",[courseCreationId]);
+    res.json(rows);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+
+
+app.get("/subjectData/:testCreationTableId", async (req, res) => {
+  // FetchData
+  try {
+    const {testCreationTableId } = req.params;
+    const [rows] = await db.query(" SELECT DISTINCT subjectId FROM course_subjects JOIN test_creation_table ON course_subjects.courseCreationId = test_creation_table.courseCreationId WHERE test_creation_table.testCreationTableId  = ?;",[testCreationTableId]);
+    res.json(rows);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+
+app.get("/getPaperData/:testCreationTableId/:subjectId", async (req, res) => {
+  try {
+    const subjectId = req.params.subjectId;
+    const testCreationTableId = req.params.testCreationTableId;
+ 
+    // Fetch data from testCreationTableId table
+    const testData = await getDataByTestCreationTableId(testCreationTableId);
+ 
+    // Fetch question data based on subjectId and document_Id
+    const questions = await getQuestionsBySubjectAndDocumentId(subjectId, testCreationTableId);
+ 
+    // Fetch option data based on questions and document_Id
+    const options = await getOptionsByQuestionsAndDocumentId(questions, testCreationTableId);
+ 
+    // Fetch solution data based on questions and document_Id
+    const solutions = await getSolutionsByQuestionsAndDocumentId(questions, testCreationTableId);
+ 
+    res.json({
+      testData,
+      questions,
+      options,
+      solutions,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error fetching data from the database.');
+  }
+});
+// Reusable function to get data from testCreationTableId table
+async function getDataByTestCreationTableId(testCreationTableId) {
+  try {
+    const query = `
+      SELECT *
+      FROM test_creation_table
+      WHERE testCreationTableId = ?  
+    `;
+    const [results] = await db.query(query, [testCreationTableId]);
+ 
+    return results; // Adjust this based on your actual table structure
+  } catch (err) {
+    console.error(`Error fetching data from test_creation_table: ${err}`);
+    throw err;
+  }
+}
+ 
+ 
+// Reusable function to get questions data based on subjectId and document_Id
+async function getQuestionsBySubjectAndDocumentId(subjectId, testCreationTableId) {
+  try {
+    const query = `
+      SELECT question_id, question_img
+      FROM questions
+      WHERE subjectId = ? AND testCreationTableId = ?  
+    `;
+    const [results] = await db.query(query, [subjectId, testCreationTableId]);
+    const optionsWithBase64 = results.map(option => ({
+      question_id: option.question_id,
+      question_img: option.question_img.toString('base64'),
+    }));
+    return optionsWithBase64;
+  } catch (err) {
+    console.error(`Error fetching questions: ${err}`);
+    throw err;
+  }
+}
+ 
+// Reusable function to get options data based on questions and document_Id
+async function getOptionsByQuestionsAndDocumentId(questions, testCreationTableId) {
+  try {
+    const questionIds = questions.map(question => question.question_id);
+    const query = `
+    SELECT question_id, option_img
+    FROM options
+    WHERE question_id IN (?)
+    `;
+    const [results] = await db.query(query, [questionIds, testCreationTableId]);
+ 
+    // Convert BLOB data to base64 for sending in the response
+    const optionsWithBase64 = results.map(option => ({
+      question_id: option.question_id,
+      option_img: option.option_img.toString('base64'),
+    }));
+ 
+    return optionsWithBase64;
+  } catch (err) {
+    console.error(`Error fetching options: ${err.message}`);
+    throw err;
+  }
+}
+ 
+ 
+// Reusable function to get solutions data based on questions and document_Id
+async function getSolutionsByQuestionsAndDocumentId(questions, testCreationTableId) {
+  try {
+    const questionIds = questions.map(question => question.question_id);
+    const query = `
+      SELECT question_id, solution_img
+      FROM solution
+      WHERE question_id IN (?)
+    `;
+    const [results] = await db.query(query, [questionIds, testCreationTableId]);
+ 
+    // Convert BLOB data to base64 for sending in the response
+    const solutionsWithBase64 = results.map(solution => ({
+      question_id: solution.question_id,
+      solution_img: solution.solution_img.toString('base64'),
+    }));
+ 
+    return solutionsWithBase64;
+  } catch (err) {
+    console.error(`Error fetching solutions: ${err}`);
+    throw err;
+  }
+}
+ 
+function combineImage(questions, options, solutions) {
+  const combinedImages = [];
+ 
+  for (let i = 0; i < questions.length; i++) {
+    const questionImage = questions[i].question_img;
+    const optionImages = options
+      .filter((opt) => opt.question_id === questions[i].question_id)
+      .map((opt) => opt.option_img);
+    const solutionImage = solutions.find(
+      (sol) => sol.question_id === questions[i].question_id
+    )?.solution_img;
+ 
+    combinedImages.push({
+      questionImage,
+      optionImages,
+      solutionImage,
+    });
+  }
+ 
+  return combinedImages;
+}
+
+
+
+
+
+
+// -----------------------------------h------------------------------------
 
 
 app.listen(port, () => {

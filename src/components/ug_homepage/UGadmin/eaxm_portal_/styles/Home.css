@@ -407,6 +407,111 @@
 
 
 
+/* ---------------------------------------------------------course-cards------------------------------------------------------------------------------ */
+/* 
+.course_cards{
+    background-color: antiquewhite;
+} */
+
+.CurrentCourses_div{
+    text-align: center;
+    /* display: flex; */
+}
+.card_name{
+    display: flex;
+    gap: 500px;
+}
+
+.card {
+    /* Add shadows to create the "card" effect */
+    /* box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2); */
+    /* transition: 0.3s; */
+    /* width: 350px; */
+    height: 400px;
+    /* margin: 30px; */
+    text-align:left;
+    /* display: flex; */
+  }
+  
+  /* On mouse-over, add a deeper shadow */
+  .card:hover {
+    /* box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2); */
+  }
+  
+  /* Add some padding inside the card container */
+  .container {
+    /* margin: 30px; */
+    /* display: flex; */
+    padding: 2px 16px;
+  }
+  .card_container{
+    margin: 30px;
+    display: flex;
+    gap: 80px;
+  }
+
+  .card_container_ul{
+    
+     display: flex;
+     gap: 50px;
+  }
+  .card_ul{
+    /* gap: 500px; */
+    /* display: flex; */
+  }
+  .card_container_li{
+
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    gap: 400px;
+  }
+
+
+  /* .card_container{
+    text-align: center;
+  } */
+  .first_card{
+    /* display: flex; */
+    text-align: center;
+    /* width: 350px; */
+    /* margin-left: 40px; */
+
+  }
+  .first_card>h4{
+    font-size: 25px;
+
+  }
+
+
+  #buy_now_btn{
+    /* border-top: 2px solid rgb(179, 179, 137); */
+    background: rgb(105, 179, 240);
+    cursor: pointer;
+    border-radius: 10px;
+
+  }
+  #buy_now_btn:hover{
+     /* border-color: #00a3ff; */
+
+  }
+
+  #buy_now_btn>p{
+    padding: 15px;
+     font-weight: 600;
+     font-size: large;
+
+  }
+
+  #buy_now_btn>p>span{
+    padding-left: 5rem;
+  }
+
+.start_now{
+    padding: 15px;
+    text-align: center;
+    background-color: #00a3ff;
+}
+
+/* ---------------------------------------------------------course-cards endz------------------------------------------------------------------------------ */
 
 
 /* ------------------------------------------------------------------------- footer --------------------------------------------- */
