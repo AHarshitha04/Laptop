@@ -231,7 +231,7 @@ app.get("/sections/:course_id", (req, res) => {
 //     res.status(403).json({ message: "Image upload is only allowed for specified sections" });
 //   }
 // });
-
+   
 
 
 //ORIGINAL CODE
