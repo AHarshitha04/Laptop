@@ -182,8 +182,18 @@ const App = () => {
   );
 };
 
+
+
+
 const PrivateRoute = () => {
   const isAuthenticated = localStorage.getItem("isLoggedIn");
-  return isAuthenticated ? <UgadminHome /> : <Navigate to="/uglogin" />;
+  return (
+    isAuthenticated ?
+    <>
+    <UgadminHome />
+    </>
+     : <Navigate to="/uglogin" />
+    
+    )
 };
 export default App;

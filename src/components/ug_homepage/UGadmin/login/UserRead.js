@@ -9,6 +9,7 @@ import { Link } from "react-router-dom";
  
 const Read = () => {
 
+
     const [showQuizmobilemenu, setShowQuizmobilemenu] = useState(false);
     const QuiZ_menu = () => {
       setShowQuizmobilemenu(!showQuizmobilemenu);
@@ -38,6 +39,7 @@ const Read = () => {
  
   return (
     <>
+       ID: {id}
      <div className="Quiz_main_page_header">
         {nav.map((nav, index) => {
           return (
