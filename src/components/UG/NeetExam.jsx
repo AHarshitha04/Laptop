@@ -34,7 +34,7 @@ export const NeetExam = () => {
   const [imageDataList1, setImageDataList1] = useState([]);
   useEffect(() => {
     axios
-      .get("http://localhost:5001/NeetExamBanners")
+      .get("http://localhost:5005/NeetExamBanners")
       .then((response) => {
         setImageDataList1(response.data);
       })

@@ -13,7 +13,7 @@ const Exam_Explore = () => {
   const [imageDataList1, setImageDataList1] = useState([]);
   useEffect(() => {
     axios
-      .get("http://localhost:5001/ExploreExam")
+      .get("http://localhost:5005/ExploreExam")
       .then((response) => {
         setImageDataList1(response.data);
       })

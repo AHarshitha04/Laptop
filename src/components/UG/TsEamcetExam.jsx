@@ -27,7 +27,7 @@ export const TsEamcetExam = () => {
   const [imageDataList1, setImageDataList1] = useState([]);
   useEffect(() => {
     axios
-      .get("http://localhost:5001/TsEamcetBanners")
+      .get("http://localhost:5005/TsEamcetBanners")
       .then((response) => {
         setImageDataList1(response.data);
       })

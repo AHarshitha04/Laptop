@@ -175,6 +175,7 @@ ul.EGATE_elandUl li a {
     border-radius: 10px;
     box-sizing: border-box;
     color: #fff;
+    /* color: black; */
     cursor: pointer;
     display: flex;
     flex-direction: column;
@@ -195,6 +196,8 @@ ul.EGATE_elandUl li a {
     -webkit-user-select: none;
     touch-action: manipulation;
   }
+
+ 
   
   .Pg_buttonn:active {
     outline: 0;
@@ -204,6 +207,7 @@ ul.EGATE_elandUl li a {
     outline: 0;
     background: rgb(42, 113, 132);
     color: rgb(255, 255, 255);
+    /* color: black; */
   }
   
   .Pg_buttonn span {

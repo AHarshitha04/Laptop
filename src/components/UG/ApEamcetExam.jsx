@@ -29,7 +29,7 @@ export const ApEamcetExam = () => {
   const [imageDataList1, setImageDataList1] = useState([]);
   useEffect(() => {
     axios
-      .get("http://localhost:5001/ApEapcetBanners")
+      .get("http://localhost:5005/ApEapcetBanners")
       .then((response) => {
         setImageDataList1(response.data);
       })

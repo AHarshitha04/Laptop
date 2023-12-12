@@ -8,7 +8,7 @@ const app = express();
 const path = require("path");
 app.use(express.static("public"));
 const bodyParser = require("body-parser");
-const port = 5001;
+const port = 5005;
 // const cors = require('cors');
 
 
@@ -40,7 +40,7 @@ db.connect((err) => {
 app.use(cors());
 
 app.get("/courses", (req, res) => {
-  const query = "SELECT course_name,course_id FROM courses";
+  const query = "SELECT course_name FROM courses";
   db.query(query, (error, results) => {
     if (error) {
       console.error("Error executing query: " + error.stack);
@@ -242,6 +242,24 @@ app.get("/HomeImages", (req, res) => {
   });
 });
 
+// app.get("/HomeImages/:section_id", (req, res) => {
+//   const section_id = req.params.section_id;
+//   const query = "SELECT * FROM images WHERE section_id=? ;";
+
+//   db.query(query, [section_id], (error, results) => {
+//     if (error) {
+//       console.error("Error fetching images:", error);
+//       res.status(500).send("Internal Server Error");
+//     } else {
+//       const imageDataList = results.map((result) => {
+//         // Use the correct column name based on your table structure
+//         const base64 = result.image_data.toString("base64");
+//         return `data:image/png;base64,${base64}`;
+//       });
+//       res.json(imageDataList);
+//     }
+//   });
+// });
 
 app.get("/ExploreExam", (req, res) => {
   const query = "SELECT * FROM images WHERE section_id=2;";

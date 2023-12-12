@@ -31,7 +31,7 @@ export const IITJEE_EXAM = () => {
   const [imageDataList1, setImageDataList1] = useState([]);
   useEffect(() => {
     axios
-      .get("http://localhost:5001/ExamBanners")
+      .get("http://localhost:5005/ExamBanners")
       .then((response) => {
         setImageDataList1(response.data);
       })
