@@ -87,19 +87,19 @@ const Account_info = () => {
           <p>Admin View: Show all features</p>
           {/* Admin-specific content goes here */}
           <Users/>
-
+          </div>
+      )}
 
           {userRole === 'viewer' && (
         <div>
           <p>Viewer View: Show limited features</p>
 
-       
+          <Users_info/>
           {/* Viewer-specific content goes here */}
         </div>
       )}
-
-        </div>
-      )}
+        
+     
      
     
     </>
@@ -124,7 +124,7 @@ export const Users = () => {
   useEffect(() => {
     const fetchAllUsers = async () => {
       try {
-        const res = await axios.get("http://localhost:5001/users");
+        const res = await axios.get("http://localhost:5001/act_info");
         setUsers(res.data);
       } catch (err) {
         console.log(err);
@@ -200,3 +200,59 @@ export const Users = () => {
  
 
    
+
+export const Users_info=()=>{
+  
+  
+  const [userData, setUserData] = useState({});
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await fetch('http://localhost:5001/user', {
+          headers: {
+            Authorization: `Bearer ${token}`, // Attach token to headers for authentication
+          },
+        });
+
+        if (response.ok) {
+          const userData = await response.json();
+          setUserData(userData);
+          console.log(userData)
+        } else {
+          // Handle errors, e.g., if user data fetch fails
+        }
+      } catch (error) {
+        // Handle other errors
+      }
+    };
+
+    fetchUserData();
+
+    
+  }, []);
+return(
+  <>
+
+
+
+  <div>
+<div className="profilepic">
+propic 
+</div>
+<div className="pofile_data">
+<h2>Username: {userData.username}</h2> 
+<p>Email: {userData.email}</p>
+
+
+
+
+
+</div>
+
+
+  </div>
+         
+  </>
+)
+}

@@ -3,9 +3,11 @@
 
 import React from 'react';
 import Exam_portal_home_page from './eaxm_portal_/Exam_portal_home_page';
+import Quiz_dashboard from './eaxm_portal_/Quiz_dashboard';
 
 
 const UgadminHome = () => {
+  
   const userRole = localStorage.getItem('userRole');
 
   const handleLogout = () => {
@@ -15,14 +17,13 @@ const UgadminHome = () => {
   };
 
   return (
-    <div>
-      <h2>Welcome to the Home Page!</h2>
+    <div>      
 
       {userRole === 'admin' && (
         <div>
           <p>Admin View: Show all features</p>
           {/* Admin-specific content goes here */}
-          <Exam_portal_home_page/>
+          <Quiz_dashboard/>
 
         </div>
       )}
@@ -36,7 +37,7 @@ const UgadminHome = () => {
         </div>
       )}
 
-<button onClick={handleLogout}>Logout</button>
+{/* <button onClick={handleLogout}>Logout</button> */}
     </div>
   );
 };

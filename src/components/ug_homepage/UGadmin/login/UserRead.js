@@ -28,6 +28,7 @@ const Read = () => {
         })
         .catch(err => console.log(err))
     }, []);
+  
 
     const handleLogout = () => {
       localStorage.removeItem("isLoggedIn");

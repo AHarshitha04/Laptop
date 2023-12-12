@@ -116,7 +116,7 @@
 
 
 .Quiz_main_page_navbar button,.Quiz_main_page_login_signUp_btn button {
-    width: 100px;
+    /* width: 100px; */
     height: 40px;
     display: flex;
     justify-content: center;
@@ -151,6 +151,7 @@
     position: relative;
     font-size: 1rem;
     z-index: 1000;
+    text-transform: uppercase;
     background: none;
     &:hover .dropdownmenu_foradim_page{
         position: absolute;

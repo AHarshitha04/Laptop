@@ -66,14 +66,16 @@ import Examheader from "./components/UG/Examheader.jsx";
 
 import Login from "./components/ug_homepage/UGadmin/login/Login.js";
 import UgadminHome from "./components/ug_homepage/UGadmin/UgadminHome.js";
-import Quiz_dashboard, { ImageFetching } from "./components/ug_homepage/UGadmin/eaxm_portal_/Quiz_dashboard.js";
+import Quiz_dashboard, {
+  ImageFetching,
+} from "./components/ug_homepage/UGadmin/eaxm_portal_/Quiz_dashboard.js";
 import Register from "./components/ug_homepage/UGadmin/login/Register.js";
 import Account_info from "./components/ug_homepage/UGadmin/login/Account_info.js";
-import UserRead from "./components/ug_homepage/UGadmin/login/UserRead.js"
+import UserRead from "./components/ug_homepage/UGadmin/login/UserRead.js";
 import Userupdate from "./components/ug_homepage/UGadmin/login/Userupdate.js";
 import Userdeatailspage from "./components/ug_homepage/UGadmin/login/Userdeatailedpage.js";
 import Userdeatailedpage from "./components/ug_homepage/UGadmin/login/Userdeatailedpage.js";
-
+import Exam_portal_home_page from "./components/ug_homepage/UGadmin/eaxm_portal_/Exam_portal_home_page.jsx";
 
 const App = () => {
   return (
@@ -83,24 +85,17 @@ const App = () => {
         <Route path="/" element={<Egate />} />
         {/* ======================================================== LANDING PAGE ================================================================ */}
         {/* This is a link for landing page */}
-
         {/* ======================================================== ALL HOME PAGES ================================================================ */}
-
         {/* These are the links for all Home pages */}
-
         {/* This is a link for UG Home page */}
         <Route path="/home" element={<UG_HOME />} />
         {/* This ia a link for PG Home page */}
         <Route path="/PgHome" element={<Pg_home_page />} />
         {/* This is a link for MBA Home page */}
         <Route path="/MbaHome" element={<MbaHome />} />
-
         {/* ======================================================== ALL UG EXAM PAGES(INCLUDING OTS AND OLVC PAGES) ================================================================ */}
-
         {/* These are the links for all UG Exam pages  */}
-
         {/* This is the EXAM page OTS Page and OLVC page for IIT-JEE */}
-
         {/* This is the EXAM page for IIT-JEE */}
         <Route path="/iitjeeExam" element={<IITJEE_EXAM />} />
         {/* This is the OTS page for IIT-JEE */}
@@ -108,25 +103,20 @@ const App = () => {
         <Route path="/iitjee_otc" element={<JeeOts />} />
         {/* This is the OLVC page for IIT-JEE */}
         <Route path="/iitjee_olvc" element={<OLVC />} />
-
         {/* This is the EXAM page OTS Page and OLVC page for NEET */}
-
         {/* This is the EXAM page for NEET */}
         <Route path="/neetexam" element={<NeetExam />} />
         {/* This is the OTS page for NEET */}
         <Route path="/neetotc" element={<NeetOtc />} />
         {/* This is the OLVC page for NEET */}
         <Route path="/neet_olvc" element={<NeetOLVC />} />
-
         {/* This is the EXAM page OTS Page and OLVC page for BITSAT */}
-
         {/* This is the EXAM page for BITSAT */}
         <Route path="/bitsatexam" element={<BitsatExam />} />
         {/* This is the OTS page for BITSAT */}
         <Route path="/bitsatots" element={<BitsatOTC />} />
         {/* This is the OLVC page for BITSAT */}
         <Route path="/bitsat_olvc" element={<BitsatOLVC />} />
-
         {/* This is the EXAM page for VITEEE */}
         <Route path="/viteeeexam" element={<ViteeeExam />} />
         {/* This is the EXAM page for AP-EAPCET */}
@@ -143,13 +133,9 @@ const App = () => {
         <Route path="/keamexam" element={<KeamExam />} />
         {/* This is the EXAM page for SRMJEE */}
         <Route path="/srmjeeexam" element={<SrmJeeExam />} />
-
         {/* ========================================================= END OF UG EXAM LINKS ====================================================================== */}
-
         {/* ======================================================== ALL PG EXAM PAGES(INCLUDING OTS AND OLVC PAGES) ================================================================ */}
-
         {/* These are the links for all PG Exam pages  */}
-
         {/* This is the EXAM page for GATE */}
         <Route path="/pggateexam" element={<PGGATE_Exam />} />
         {/* This is the EXAM page for IITJAM */}
@@ -162,44 +148,32 @@ const App = () => {
         <Route path="/isro_examPage" element={<Pg_Isro_ExamPage />} />
         {/* This is the EXAM page for BARC */}
         <Route path="/barc_examPage" element={<Pg_BARC_Exam_Page />} />
-
         {/* ========================================================= END OF PG EXAM LINKS ====================================================================== */}
-
         {/* This is a link for GATE OTS page */}
         <Route path="/" element={<GATE_OTS />} />
-
         {/* This is a link for GATE OLVC Page */}
         <Route path="/" element={<GateOts />} />
-
         <Route path="/terms" element={<TERMsCONDITIONS />} />
         <Route path="/policy" element={<Privacypolicy />} />
-
-
-
         {/* ========================================================= uglogin ====================================================================== */}
-
-  
         <Route path="/Register" element={<Register />} />
-        <Route path="/uglogin" element={<Login />} />
-
+        {/* <Route path="/uglogin" element={<Login />} /> */}
         <Route path="/UgadminHome" element={<PrivateRoute />} />
         {/* Remove the following line, as it always redirects to the login page */}
         <Route path="/uglogin" element={<Login />} />
-        
         {/* ========================================================= ugdashboard ====================================================================== */}
-        Account_info
+        
+        <Route path="/Exam_portal_home_page" element={<Exam_portal_home_page/>} />
+
         <Route path="/Quiz_dashboard" element={<Quiz_dashboard />} />
         <Route path="/Account_info" element={<Account_info />} />
         <Route path="/userread/:id" element={<UserRead />} />
         <Route path="/Userupdate/:id" element={<Userupdate />} />
         <Route path="/userdetails" element={<Userdeatailedpage />} />
-
+        {/* <Route path="/Quiz_dashboard" element={<Quiz_dashboard />} /> */}
 
         {/* ========================================================= ughomepage ====================================================================== */}
-
         <Route path="/ImageFetching" element={<ImageFetching />} />
-
-        
         userdeatailspage
       </Routes>
       {/* <Footer /> */}
