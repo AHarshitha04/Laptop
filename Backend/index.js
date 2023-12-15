@@ -26,7 +26,7 @@ const db = mysql.createConnection({
   host: "localhost",
   user: "root",
   password: "",
-  database: "egrad_quiz",
+  database: "admin_project",
 });
 app.use(bodyParser.json());
 // app.use(cors(corsOptions));
