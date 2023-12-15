@@ -223,8 +223,11 @@ const App = () => {
         <Route path='/feachingcourse/:examId' element={<CoursePage/>} />
         <Route path='/Test_List/:courseCreationId' element={<FullTest />} />
         <Route path='/Instructions/:testCreationTableId/:minSubjectId' element={<Instructions />} />
-        <Route path='/General_intructions_page/:testCreationTableId/:minSubjectId' element={<General_intructions_page />} />
-        <Route path='/subjects/:testCreationTableId/:subjectId'  element={<Paper1 />} />
+        {/* <Route path='/General_intructions_page/:testCreationTableId/:minSubjectId' element={<General_intructions_page />} /> */}
+
+        <Route path='/General_intructions_page/:testCreationTableId/1' element={<General_intructions_page />} />
+
+        <Route path='/subjects/:testCreationTableId/1'  element={<Paper1 />} />
       </Routes>
       {/* <Footer /> */}
       {/* <LandingPage /> */}

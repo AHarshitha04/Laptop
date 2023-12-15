@@ -387,7 +387,7 @@ export const Quiz_Courses = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:4009/examData`)
+      .get(`http://localhost:5001/examData`)
       .then((response) => {
         setExamCardName(response.data);
       })

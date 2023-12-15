@@ -163,7 +163,12 @@ const FullTest = () => {
                   </Link> */}
 
                   <Link 
-                    to={`/Instructions/${test.testCreationTableId}/${minsubjectid}`}
+                    // to={`/Instructions/${test.testCreationTableId}/${minsubjectid}`}
+
+                    // to={`/General_intructions_page/${test.testCreationTableId}/${minsubjectid}`}
+                    to={`/General_intructions_page/${test.testCreationTableId}/1`}
+
+
                   >
                     Start Test
                   </Link>

@@ -62,14 +62,14 @@ export const General_intructions_page_container = ({ seconds }) => {
   };
 
   const [instructionsData, setInstructionsData] = useState([]);
-  const { examid, subjectId } = useParams();
+  const { examid, subjectId , testCreationTableId} = useParams();
   console.log("examid:", examid);
 
   useEffect(() => {
     const fetchInstructions = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5001/fetchinstructions/${examid}/`
+          `http://localhost:5001/fetchinstructions/${testCreationTableId}/`
         );
         const data = await response.json();
         setInstructionsData(data);
@@ -81,7 +81,7 @@ export const General_intructions_page_container = ({ seconds }) => {
     };
 
     fetchInstructions();
-  }, [examid, subjectId]);
+  }, [testCreationTableId]);
 
   const [SubjectData, setSubjectData] = useState([]);
 
@@ -106,14 +106,14 @@ export const General_intructions_page_container = ({ seconds }) => {
     <>
       <div>
         <h2>General Instructions</h2>
-        {/* <ul>
+        <ul>
           {instructionsData.map((instruction, index) => (
             <React.Fragment key={instruction.id}>
               {index === 0 && <li>{instruction.instructionHeading}</li>}
               <li>{instruction.points}</li>
             </React.Fragment>
           ))}
-        </ul> */}
+        </ul>
       </div>
 
       <div>
@@ -137,7 +137,7 @@ export const General_intructions_page_container = ({ seconds }) => {
        
 
             <Link
-            to={`/subjects/${examid}/${subjectId}`}
+            to={`/subjects/${testCreationTableId}/1`}
             className="gn_next_btn"
             >
             I am ready to begin <AiOutlineArrowRight />
