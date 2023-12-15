@@ -33,7 +33,7 @@ app.use(bodyParser.json());
 app.use(cors({ origin: "*" }));
 
 
-db.connect((err) => {
+db.connect((err) => { 
   if (err) {
     console.error("Error connecting to MySQL:", err);
   } else {
