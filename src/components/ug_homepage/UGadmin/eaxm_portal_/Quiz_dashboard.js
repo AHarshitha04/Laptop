@@ -19,9 +19,11 @@ const Quiz_dashboard = () => {
     localStorage.removeItem("userRole");
     window.location.href = "/uglogin";
   };
+  
 
   return (
     <div>
+      
       <div className="Quiz_main_page_header">
         {nav.map((nav, index) => {
           return (
@@ -87,7 +89,7 @@ const [showcard2, setshowcard2] = useState(false);
     setshowcardactive2(true);
     setshowcardactive1(false);
     setshowcard1(true)
-
+console.log("hello");
     setshowcard2(false)
 
   };

@@ -2,11 +2,11 @@ const express = require("express");
 const multer = require("multer");
 const cors = require("cors");
 const mysql = require("mysql");
-const bcrypt = require('bcrypt');
+const bcrypt = require("bcrypt");
 const fs = require("fs");
 const app = express();
 const path = require("path");
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
 const sizeOf = require("image-size");
 // const diskusage = require("diskusage");
 app.use(express.static("public"));
@@ -18,12 +18,11 @@ const db = mysql.createConnection({
   host: "localhost",
   user: "root",
   password: "",
-  database: "admin_project",  
+  database: "admin_project",
 });
 app.use(bodyParser.json());
 // app.use(cors(corsOptions));
 app.use(cors({ origin: "*" }));
-
 
 db.connect((err) => {
   if (err) {
@@ -35,15 +34,7 @@ db.connect((err) => {
 
 app.use(cors());
 
-
-
-
-
-
-
 // -----------------------------------sravan----------------------------
-
-
 
 app.get("/courses", (req, res) => {
   const query = "SELECT course_name,course_id FROM courses";
@@ -86,12 +77,10 @@ app.get("/sections/:course_id", (req, res) => {
   });
 });
 
-
-
 app.delete("/HomeImages/:images_id", (req, res) => {
   const imageId = req.params.images_id;
   const q = "DELETE FROM images WHERE images_id = ?";
- 
+
   db.query(q, [imageId], (err, data) => {
     if (err) return res.send(err);
     return res.json(data);
@@ -118,11 +107,9 @@ app.get("/HomeImagesadmin", (req, res) => {
   });
 });
 
-
-
 app.get("/HomeImages", (req, res) => {
   const query = "SELECT * FROM images WHERE section_id=1 ;";
- 
+
   db.query(query, (error, results) => {
     if (error) {
       console.error("Error fetching images:", error);
@@ -192,7 +179,6 @@ app.get("/NeetExamBanners", (req, res) => {
   });
 });
 
-
 app.get("/BitsatExamBanners", (req, res) => {
   const query = "SELECT * FROM images WHERE exam_id=203;";
 
@@ -247,10 +233,8 @@ app.get("/TsEamcetBanners", (req, res) => {
   });
 });
 
-
-
 // ----------------------------------------------------------================================  courses ug function by sra1 ========================================--------------------------------------------------------
- 
+
 app.get("/examsug", (req, res) => {
   const course_id = req.params.course_id;
   // const sql = "SELECT exam_name FROM 2egquiz_exam WHERE exam_name=UG";
@@ -265,7 +249,7 @@ app.get("/examsug", (req, res) => {
     res.json(result);
   });
 });
- 
+
 app.get("/examspg", (req, res) => {
   const course_id = req.params.course_id;
   // const sql = "SELECT exam_name FROM 2egquiz_exam WHERE exam_name=UG";
@@ -308,12 +292,12 @@ app.get("/examsca", (req, res) => {
     res.json(result);
   });
 });
- 
+
 app.get("/coursesug", (req, res) => {
   // const query = 'SELECT course_name,course_id FROM 1egquiz_courses';
   const query =
     "SELECT course_name FROM 1egquiz_courses WHERE course_id = ( SELECT Min(course_id)  FROM 1egquiz_courses  );";
- 
+
   db.query(query, (error, results) => {
     if (error) {
       console.error("Error executing query: " + error.stack);
@@ -326,12 +310,12 @@ app.get("/coursesug", (req, res) => {
     res.json(results);
   });
 });
- 
+
 app.get("/coursescurrentug", (req, res) => {
   // const query = 'SELECT course_name,course_id FROM 1egquiz_courses';
   const query =
     "SELECT course_name FROM 1egquiz_courses WHERE course_id = ( SELECT Max(course_id)  FROM 1egquiz_courses  );";
- 
+
   db.query(query, (error, results) => {
     if (error) {
       console.error("Error executing query: " + error.stack);
@@ -344,12 +328,12 @@ app.get("/coursescurrentug", (req, res) => {
     res.json(results);
   });
 });
- 
+
 app.get("/coursespg", (req, res) => {
   // const query = 'SELECT course_name,course_id FROM 1egquiz_courses';
   const query =
     "SELECT course_name FROM 1egquiz_courses WHERE course_id = ( SELECT Min(course_id+1)  FROM 1egquiz_courses  );";
- 
+
   db.query(query, (error, results) => {
     if (error) {
       console.error("Error executing query: " + error.stack);
@@ -362,12 +346,12 @@ app.get("/coursespg", (req, res) => {
     res.json(results);
   });
 });
- 
+
 app.get("/coursesmba", (req, res) => {
   // const query = 'SELECT course_name,course_id FROM 1egquiz_courses';
   const query =
     "SELECT course_name FROM 1egquiz_courses WHERE course_id = ( SELECT max(course_id-1)  FROM 1egquiz_courses  );";
- 
+
   db.query(query, (error, results) => {
     if (error) {
       console.error("Error executing query: " + error.stack);
@@ -384,7 +368,7 @@ app.get("/coursesca", (req, res) => {
   // const query = 'SELECT course_name,course_id FROM 1egquiz_courses';
   const query =
     "SELECT course_name FROM 1egquiz_courses WHERE course_id = ( SELECT max(course_id)  FROM 1egquiz_courses  );";
- 
+
   db.query(query, (error, results) => {
     if (error) {
       console.error("Error executing query: " + error.stack);
@@ -397,64 +381,56 @@ app.get("/coursesca", (req, res) => {
     res.json(results);
   });
 });
- 
-
-
-
-
 
 // --------------------------------------login -----------------------------------------------------
- 
 
-app.post('/register', async (req, res) => {
+app.post("/register", async (req, res) => {
   const { username, email, password } = req.body;
 
   try {
     // Check if the email already exists in the database
-    const checkEmailQuery = 'SELECT * FROM log WHERE email = ?';
+    const checkEmailQuery = "SELECT * FROM log WHERE email = ?";
     db.query(checkEmailQuery, [email], async (error, results) => {
       if (error) {
-        res.status(500).json({ error: 'Internal server error' });
+        res.status(500).json({ error: "Internal server error" });
         return;
       }
 
       if (results.length > 0) {
-        res.status(400).json({ error: 'User already exists with this email' });
+        res.status(400).json({ error: "User already exists with this email" });
         return;
       }
 
       const hashedPassword = await bcrypt.hash(password, 10); // Hash password
-      const defaultRole = 'viewer';
-      
-      const insertQuery = 'INSERT INTO log (username, email, password, role) VALUES (?, ?, ?, ?)';
-      db.query(insertQuery, [username, email, hashedPassword, defaultRole], (err, result) => {
-        if (err) {
-          res.status(500).json({ error: 'Failed to register user' });
-          return;
+      const defaultRole = "viewer";
+
+      const insertQuery =
+        "INSERT INTO log (username, email, password, role) VALUES (?, ?, ?, ?)";
+      db.query(
+        insertQuery,
+        [username, email, hashedPassword, defaultRole],
+        (err, result) => {
+          if (err) {
+            res.status(500).json({ error: "Failed to register user" });
+            return;
+          }
+          res.status(201).json({ message: "User registered successfully" });
         }
-        res.status(201).json({ message: 'User registered successfully' });
-      });
+      );
     });
   } catch (error) {
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 
-
-
-
-
-
-
-
-app.post('/login', async (req, res) => {
+app.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const sql = 'SELECT * FROM log WHERE email = ?';
+    const sql = "SELECT * FROM log WHERE email = ?";
     db.query(sql, [email], async (error, results) => {
       if (error || results.length === 0) {
-        res.status(401).json({ error: 'Invalid credentials' });
+        res.status(401).json({ error: "Invalid credentials" });
         return;
       }
 
@@ -462,30 +438,31 @@ app.post('/login', async (req, res) => {
       const passwordMatch = await bcrypt.compare(password, user.password);
 
       if (!passwordMatch) {
-        res.status(401).json({ error: 'Invalid credentials' });
+        res.status(401).json({ error: "Invalid credentials" });
         return;
       }
 
-      const token = jwt.sign({ id: user.id }, 'your_secret_key', { expiresIn: '1h' });
+      const token = jwt.sign({ id: user.id }, "your_secret_key", {
+        expiresIn: "1h",
+      });
       const { id, email, role } = user;
       res.status(200).json({ token, user: { id, email, role } });
     });
-    console.log(`${email}`)
+    console.log(`${email}`);
   } catch (error) {
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 
-
 // Profile endpoint
-app.get('/profile/:userId', async (req, res) => {
+app.get("/profile/:userId", async (req, res) => {
   const userId = req.params.userId;
 
   try {
-    const sql = 'SELECT * FROM log WHERE id = ?';
+    const sql = "SELECT * FROM log WHERE id = ?";
     db.query(sql, [userId], (error, results) => {
       if (error || results.length === 0) {
-        res.status(404).json({ error: 'User not found' });
+        res.status(404).json({ error: "User not found" });
         return;
       }
 
@@ -494,11 +471,9 @@ app.get('/profile/:userId', async (req, res) => {
       res.status(200).json(user);
     });
   } catch (error) {
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: "Internal server error" });
   }
 });
-
-
 
 // user details by ID
 app.get("/userdetails/:id", (req, res) => {
@@ -512,22 +487,22 @@ app.get("/userdetails/:id", (req, res) => {
   });
 });
 
-app.get('/user', async (req, res) => {
+app.get("/user", async (req, res) => {
   try {
     const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      res.status(401).json({ error: 'Unauthorized' });
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      res.status(401).json({ error: "Unauthorized" });
       return;
     }
 
-    const token = authHeader.split(' ')[1]; // Extract token from Authorization header
-    const decodedToken = jwt.verify(token, 'your_secret_key'); // Verify and decode the token
+    const token = authHeader.split(" ")[1]; // Extract token from Authorization header
+    const decodedToken = jwt.verify(token, "your_secret_key"); // Verify and decode the token
 
     const userId = decodedToken.id; // Get user ID from decoded token
-    const sql = 'SELECT id, username, email FROM log WHERE id = ?';
+    const sql = "SELECT id, username, email FROM log WHERE id = ?";
     db.query(sql, [userId], (error, results) => {
       if (error || results.length === 0) {
-        res.status(404).json({ error: 'User not found' });
+        res.status(404).json({ error: "User not found" });
         return;
       }
 
@@ -535,38 +510,28 @@ app.get('/user', async (req, res) => {
       res.status(200).json(userData); // Send user data as JSON response
     });
   } catch (error) {
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 
+// ----------------------------------------------------------------------------------
 
 // ----------------------------------------------------------------------------------
 
-
-
-
-// ----------------------------------------------------------------------------------
-
-
-
-
-
-
-
-app.get('/sigleuserdetails/:id', (req, res) => {
+app.get("/sigleuserdetails/:id", (req, res) => {
   const { id } = req.params;
 
-  const query = 'SELECT * FROM users WHERE id = ?'; // Replace 'users' with your table name
+  const query = "SELECT * FROM users WHERE id = ?"; // Replace 'users' with your table name
 
   db.query(query, [id], (error, results) => {
     if (error) {
-      console.error('Error fetching user details:', error);
-      res.status(500).json({ message: 'Error fetching user details' });
+      console.error("Error fetching user details:", error);
+      res.status(500).json({ message: "Error fetching user details" });
       return;
     }
 
     if (results.length === 0) {
-      res.status(404).json({ message: 'User not found' });
+      res.status(404).json({ message: "User not found" });
       return;
     }
 
@@ -574,8 +539,7 @@ app.get('/sigleuserdetails/:id', (req, res) => {
   });
 });
 
-
-app.put('/users/:id', async (req, res) => {
+app.put("/users/:id", async (req, res) => {
   const id = req.params.id; // Extract the userId from request params
   const { email, username, password, role } = req.body;
 
@@ -588,26 +552,29 @@ app.put('/users/:id', async (req, res) => {
     }
 
     // Update user details with hashed password
-    db.query('UPDATE users SET email = ?, username = ?, password = ?, role = ? WHERE id = ?', [email, username, hashedPassword, role, id], (err, result) => {
-      if (err) {
-        console.error('Error updating user:', err);
-        res.status(500).send('Error updating user');
-      } else {
-        console.log('User updated successfully');
-        res.status(200).send('User updated successfully');
+    db.query(
+      "UPDATE users SET email = ?, username = ?, password = ?, role = ? WHERE id = ?",
+      [email, username, hashedPassword, role, id],
+      (err, result) => {
+        if (err) {
+          console.error("Error updating user:", err);
+          res.status(500).send("Error updating user");
+        } else {
+          console.log("User updated successfully");
+          res.status(200).send("User updated successfully");
+        }
       }
-    });
+    );
   } catch (error) {
-    console.error('Error during user update:', error);
-    res.status(500).send('Error updating user');
+    console.error("Error during user update:", error);
+    res.status(500).send("Error updating user");
   }
 });
-
 
 app.delete("/users/:id", (req, res) => {
   const userId = req.params.id;
   const q = " DELETE FROM log WHERE id = ? ";
- 
+
   db.query(q, [userId], (err, data) => {
     if (err) return res.send(err);
     return res.json(data);
@@ -615,9 +582,8 @@ app.delete("/users/:id", (req, res) => {
 });
 app.get("/act_info", (req, res) => {
   // const query = 'SELECT course_name,course_id FROM 1egquiz_courses';
-  const query =
-    "SELECT  * FROM log ";
- 
+  const query = "SELECT  * FROM log ";
+
   db.query(query, (error, results) => {
     if (error) {
       console.error("Error executing query: " + error.stack);
@@ -630,14 +596,10 @@ app.get("/act_info", (req, res) => {
     res.json(results);
   });
 });
- 
 
 // --------------------------------------login end -----------------------------------------------------
 
 // ----------------------------------------------------------================================  courses ug function by sra1 ========================================--------------------------------------------------------
-
-
-
 
 // ----------------------------------------EGRAD WEBSITE ADMIN IMAGES UPLOADER--------------------
 
@@ -655,12 +617,10 @@ app.get("/UGhomepageadimcourses", (req, res) => {
     res.json(results);
   });
 });
-
-
 // ---------section ---
 app.get("/UGhomepageadimsections/:course_id", (req, res) => {
   const course_id = req.params.course_id;
-  const sql = "SELECT * FROM sections WHERE course_id = ? ";
+  const sql = "SELECT * FROM  sections_admin WHERE course_id = ? ";
   db.query(sql, [course_id], (err, result) => {
     if (err) {
       console.error("Error querying the database: " + err.message);
@@ -674,7 +634,6 @@ app.get("/UGhomepageadimsections/:course_id", (req, res) => {
 
 //----------------exams
 
-
 app.get("/UGhomepageadimexams/:course_id", (req, res) => {
   const course_id = req.params.course_id;
   const sql = "SELECT * FROM  2egquiz_exam WHERE course_id = ?";
@@ -687,12 +646,6 @@ app.get("/UGhomepageadimexams/:course_id", (req, res) => {
     res.json(result);
   });
 });
-
-
-
-
-
-
 
 // ----------------upload api
 
@@ -724,6 +677,7 @@ const storage = multer.diskStorage({
 const upload = multer({
   storage: storage,
 });
+
 
 app.post("/upload", upload.single("image"), (req, res) => {
   const uploadedFile = req.file;
@@ -852,17 +806,9 @@ app.get("/ImageTitle", (req, res) => {
 });
 // ----------------------------------------EGRAD WEBSITE ADMIN IMAGES UPLOADER--------------------
 
-
 // -----------------------------------end sravan----------------------------
 
-
-
-
-
-
-
 // -----------------------------------h------------------------------------
-
 
 //_________________________________________________FRONT END_______________________________________
 
@@ -969,7 +915,6 @@ app.get("/fetchinstructions/:testCreationTableId", async (req, res) => {
   }
 });
 
-
 app.get("/fetchinstructions/:testCreationTableId", async (req, res) => {
   const { testCreationTableId } = req.params;
   try {
@@ -991,7 +936,6 @@ app.get("/fetchinstructions/:testCreationTableId", async (req, res) => {
   }
 });
 
-
 // SELECT t1.instructionheading, t2.points, cct.examid, tct.courseCreationId
 // FROM instruction t1
 // JOIN instructions_points t2 ON t1.examid = t2.examid
@@ -1004,7 +948,8 @@ app.get("/fetchinstructions/:examid", async (req, res) => {
   try {
     // Fetch instructions from the database based on testCreationTableId
     const [instructionsRows] = await db.query(
-      "SELECT t2.instructionHeading, t2.points, cct.examid, tct.courseCreationId FROM instruction t1 JOIN instructions_points t2 ON t1.instructionid = t2.instructionid JOIN course_creation_table cct ON t1.examid = cct.examid JOIN test_creation_table tct ON cct.courseCreationId = tct.courseCreationId WHERE t1.examid = ?;", [examid]
+      "SELECT t2.instructionHeading, t2.points, cct.examid, tct.courseCreationId FROM instruction t1 JOIN instructions_points t2 ON t1.instructionid = t2.instructionid JOIN course_creation_table cct ON t1.examid = cct.examid JOIN test_creation_table tct ON cct.courseCreationId = tct.courseCreationId WHERE t1.examid = ?;",
+      [examid]
     );
     res.json(instructionsRows);
   } catch (error) {
@@ -1013,8 +958,7 @@ app.get("/fetchinstructions/:examid", async (req, res) => {
   }
 });
 
-
-app.get('/subjects/:testCreationTableId', async (req, res) => {
+app.get("/subjects/:testCreationTableId", async (req, res) => {
   const { testCreationTableId } = req.params;
   try {
     // Fetch instructions from the database based on testCreationTableId
@@ -1023,15 +967,14 @@ app.get('/subjects/:testCreationTableId', async (req, res) => {
     //   [testCreationTableId]
     // );
 
-
     const [subjects] = await db.query(
-      'SELECT subjects.subjectName,subjects.subjectId FROM test_creation_table JOIN course_creation_table ON test_creation_table.courseCreationId = course_creation_table.courseCreationId JOIN course_subjects ON course_creation_table.courseCreationId = course_subjects.courseCreationId JOIN Subjects ON course_subjects.subjectId = Subjects.subjectId WHERE test_creation_table.testCreationTableId = ?',
+      "SELECT subjects.subjectName,subjects.subjectId FROM test_creation_table JOIN course_creation_table ON test_creation_table.courseCreationId = course_creation_table.courseCreationId JOIN course_subjects ON course_creation_table.courseCreationId = course_subjects.courseCreationId JOIN Subjects ON course_subjects.subjectId = Subjects.subjectId WHERE test_creation_table.testCreationTableId = ?",
       [testCreationTableId]
     );
     res.json(subjects);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
@@ -1136,8 +1079,7 @@ async function insertRecord(table, record) {
 }
 // end -------------------
 
-
-// doc name getting 
+// doc name getting
 app.get("/documentName", async (req, res) => {
   try {
     const query =
@@ -1152,65 +1094,76 @@ app.get("/documentName", async (req, res) => {
 
 // end ----------
 
-
-
 app.get("/subjectData/:subjectId", async (req, res) => {
   // FetchData
   try {
-    const {subjectId } = req.params;
-    const [rows] = await db.query("SELECT * FROM subjects WHERE subjectId=?",[subjectId]);
+    const { subjectId } = req.params;
+    const [rows] = await db.query("SELECT * FROM subjects WHERE subjectId=?", [
+      subjectId,
+    ]);
     res.json(rows);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
-
 
 app.get("/subjectData/:courseCreationId", async (req, res) => {
   // FetchData
   try {
-    const {courseCreationId } = req.params;
-    const [rows] = await db.query("SELECT DISTINCT subjectId FROM course_subjects JOIN test_creation_table ON course_subjects.courseCreationId = test_creation_table.courseCreationId WHERE test_creation_table.courseCreationId = ?;",[courseCreationId]);
+    const { courseCreationId } = req.params;
+    const [rows] = await db.query(
+      "SELECT DISTINCT subjectId FROM course_subjects JOIN test_creation_table ON course_subjects.courseCreationId = test_creation_table.courseCreationId WHERE test_creation_table.courseCreationId = ?;",
+      [courseCreationId]
+    );
     res.json(rows);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
-
-
 
 app.get("/subjectData/:testCreationTableId", async (req, res) => {
   // FetchData
   try {
-    const {testCreationTableId } = req.params;
-    const [rows] = await db.query(" SELECT DISTINCT subjectId FROM course_subjects JOIN test_creation_table ON course_subjects.courseCreationId = test_creation_table.courseCreationId WHERE test_creation_table.testCreationTableId  = ?;",[testCreationTableId]);
+    const { testCreationTableId } = req.params;
+    const [rows] = await db.query(
+      " SELECT DISTINCT subjectId FROM course_subjects JOIN test_creation_table ON course_subjects.courseCreationId = test_creation_table.courseCreationId WHERE test_creation_table.testCreationTableId  = ?;",
+      [testCreationTableId]
+    );
     res.json(rows);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
-
 
 app.get("/getPaperData/:testCreationTableId/:subjectId", async (req, res) => {
   try {
     const subjectId = req.params.subjectId;
     const testCreationTableId = req.params.testCreationTableId;
- 
+
     // Fetch data from testCreationTableId table
     const testData = await getDataByTestCreationTableId(testCreationTableId);
- 
+
     // Fetch question data based on subjectId and document_Id
-    const questions = await getQuestionsBySubjectAndDocumentId(subjectId, testCreationTableId);
- 
+    const questions = await getQuestionsBySubjectAndDocumentId(
+      subjectId,
+      testCreationTableId
+    );
+
     // Fetch option data based on questions and document_Id
-    const options = await getOptionsByQuestionsAndDocumentId(questions, testCreationTableId);
- 
+    const options = await getOptionsByQuestionsAndDocumentId(
+      questions,
+      testCreationTableId
+    );
+
     // Fetch solution data based on questions and document_Id
-    const solutions = await getSolutionsByQuestionsAndDocumentId(questions, testCreationTableId);
- 
+    const solutions = await getSolutionsByQuestionsAndDocumentId(
+      questions,
+      testCreationTableId
+    );
+
     res.json({
       testData,
       questions,
@@ -1219,7 +1172,7 @@ app.get("/getPaperData/:testCreationTableId/:subjectId", async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    res.status(500).send('Error fetching data from the database.');
+    res.status(500).send("Error fetching data from the database.");
   }
 });
 // Reusable function to get data from testCreationTableId table
@@ -1231,17 +1184,19 @@ async function getDataByTestCreationTableId(testCreationTableId) {
       WHERE testCreationTableId = ?  
     `;
     const [results] = await db.query(query, [testCreationTableId]);
- 
+
     return results; // Adjust this based on your actual table structure
   } catch (err) {
     console.error(`Error fetching data from test_creation_table: ${err}`);
     throw err;
   }
 }
- 
- 
+
 // Reusable function to get questions data based on subjectId and document_Id
-async function getQuestionsBySubjectAndDocumentId(subjectId, testCreationTableId) {
+async function getQuestionsBySubjectAndDocumentId(
+  subjectId,
+  testCreationTableId
+) {
   try {
     const query = `
       SELECT question_id, question_img
@@ -1249,9 +1204,9 @@ async function getQuestionsBySubjectAndDocumentId(subjectId, testCreationTableId
       WHERE subjectId = ? AND testCreationTableId = ?  
     `;
     const [results] = await db.query(query, [subjectId, testCreationTableId]);
-    const optionsWithBase64 = results.map(option => ({
+    const optionsWithBase64 = results.map((option) => ({
       question_id: option.question_id,
-      question_img: option.question_img.toString('base64'),
+      question_img: option.question_img.toString("base64"),
     }));
     return optionsWithBase64;
   } catch (err) {
@@ -1259,59 +1214,64 @@ async function getQuestionsBySubjectAndDocumentId(subjectId, testCreationTableId
     throw err;
   }
 }
- 
+
 // Reusable function to get options data based on questions and document_Id
-async function getOptionsByQuestionsAndDocumentId(questions, testCreationTableId) {
+async function getOptionsByQuestionsAndDocumentId(
+  questions,
+  testCreationTableId
+) {
   try {
-    const questionIds = questions.map(question => question.question_id);
+    const questionIds = questions.map((question) => question.question_id);
     const query = `
     SELECT question_id, option_img
     FROM options
     WHERE question_id IN (?)
     `;
     const [results] = await db.query(query, [questionIds, testCreationTableId]);
- 
+
     // Convert BLOB data to base64 for sending in the response
-    const optionsWithBase64 = results.map(option => ({
+    const optionsWithBase64 = results.map((option) => ({
       question_id: option.question_id,
-      option_img: option.option_img.toString('base64'),
+      option_img: option.option_img.toString("base64"),
     }));
- 
+
     return optionsWithBase64;
   } catch (err) {
     console.error(`Error fetching options: ${err.message}`);
     throw err;
   }
 }
- 
- 
+
 // Reusable function to get solutions data based on questions and document_Id
-async function getSolutionsByQuestionsAndDocumentId(questions, testCreationTableId) {
+async function getSolutionsByQuestionsAndDocumentId(
+  questions,
+  testCreationTableId
+) {
   try {
-    const questionIds = questions.map(question => question.question_id);
+    const questionIds = questions.map((question) => question.question_id);
     const query = `
       SELECT question_id, solution_img
       FROM solution
       WHERE question_id IN (?)
     `;
     const [results] = await db.query(query, [questionIds, testCreationTableId]);
- 
+
     // Convert BLOB data to base64 for sending in the response
-    const solutionsWithBase64 = results.map(solution => ({
+    const solutionsWithBase64 = results.map((solution) => ({
       question_id: solution.question_id,
-      solution_img: solution.solution_img.toString('base64'),
+      solution_img: solution.solution_img.toString("base64"),
     }));
- 
+
     return solutionsWithBase64;
   } catch (err) {
     console.error(`Error fetching solutions: ${err}`);
     throw err;
   }
 }
- 
+
 function combineImage(questions, options, solutions) {
   const combinedImages = [];
- 
+
   for (let i = 0; i < questions.length; i++) {
     const questionImage = questions[i].question_img;
     const optionImages = options
@@ -1320,24 +1280,18 @@ function combineImage(questions, options, solutions) {
     const solutionImage = solutions.find(
       (sol) => sol.question_id === questions[i].question_id
     )?.solution_img;
- 
+
     combinedImages.push({
       questionImage,
       optionImages,
       solutionImage,
     });
   }
- 
+
   return combinedImages;
 }
 
-
-
-
-
-
 // -----------------------------------h------------------------------------
-
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
