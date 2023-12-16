@@ -513,4 +513,4 @@ function combineImage(questions, options, solutions) {
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
-});
+}); 
