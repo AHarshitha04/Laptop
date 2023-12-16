@@ -88,7 +88,7 @@ import CoursePage from "./components/ug_homepage/UGadmin/eaxm_portal_/CoursePage
 
 // {/* ---------------------------------  Exam_portal_admin_integration ------------- */}
 
-// import Exam_portal_admin_Dashboard from "./components/ug_homepage/exam_portal_admin/Exam_portal_admin_Dashboard.jsx";
+import ExamUpdataion_admin from "./components/ug_homepage/exam_portal_admin/ExamUpdataion_admin.jsx";
 
 const App = () => {
   return (
@@ -209,7 +209,9 @@ const App = () => {
         <Route path="/subjects/:testCreationTableId/1" element={<Paper1 />} />
 
         {/* ---------------------------------  Exam_portal_admin_integration ------------- */}
-        {/* <Route path="/Exam_portal_admin_Dashboard" element={<Exam_portal_admin_Dashboard />} /> */}
+        <Route path="/ExamUpdataion_admin/:examId" element={<ExamUpdataion_admin />} />
+
+
       </Routes>
       {/* <Footer /> */}
       {/* <LandingPage /> */}

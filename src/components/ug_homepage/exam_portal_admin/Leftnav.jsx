@@ -13,9 +13,6 @@ import InstructionPage_admin from "./InstructionPage_admin";
 import Testcreationadmin from "./Testcreationadmin";
 import DocumentUpload_admin from "./DocumentUpload_admin";
 
-
-
-
 // import logo2 from './logo2.jpeg'
 // import HomeLandingPage from "../Frontend/Pages/HomeLandingPage/HomeLandingPage";
 
@@ -26,74 +23,63 @@ const Leftnav = () => {
 
   const [showdashboard, setShowdashboard] = useState(true);
   const [showExamcreation_admin, setShowExamcreation_admin] = useState(false);
-  const[showInstructionPage_admin,setInstructionPage_admin]=useState(false)
-  const [showCoursecreation_admin, setshowCoursecreation_admin] =useState(false);
-  const[showTestcreationadmin,setTestcreationadmin]=useState(false)
-  const[showDocumentUpload_admin,setDocumentUpload_admin]=useState(false)
-
-    
+  const [showInstructionPage_admin, setInstructionPage_admin] = useState(false);
+  const [showCoursecreation_admin, setshowCoursecreation_admin] =
+    useState(false);
+  const [showTestcreationadmin, setTestcreationadmin] = useState(false);
+  const [showDocumentUpload_admin, setDocumentUpload_admin] = useState(false);
 
   const handledisplaydashboard = () => {
     setShowdashboard(true);
     setShowExamcreation_admin(false);
     setshowCoursecreation_admin(false);
-    setInstructionPage_admin(false)
-    setTestcreationadmin(false)
-    setDocumentUpload_admin(false)
+    setInstructionPage_admin(false);
+    setTestcreationadmin(false);
+    setDocumentUpload_admin(false);
   };
 
   const handleshowExamcreation_admin = () => {
     setShowdashboard(false);
     setshowCoursecreation_admin(false);
     setShowExamcreation_admin(true);
-    setInstructionPage_admin(false)
-    setTestcreationadmin(false)
-    setDocumentUpload_admin(false)
-
-
-
+    setInstructionPage_admin(false);
+    setTestcreationadmin(false);
+    setDocumentUpload_admin(false);
   };
   const handleshowCoursecreation_admin = () => {
     setShowdashboard(false);
     setShowExamcreation_admin(false);
     setshowCoursecreation_admin(true);
-    setInstructionPage_admin(false)
-    setTestcreationadmin(false)
-    setDocumentUpload_admin(false)
-
-
-
+    setInstructionPage_admin(false);
+    setTestcreationadmin(false);
+    setDocumentUpload_admin(false);
   };
-const handleInstructionPage_admin=()=>{
-  setShowdashboard(false);
+  const handleInstructionPage_admin = () => {
+    setShowdashboard(false);
     setShowExamcreation_admin(false);
     setshowCoursecreation_admin(false);
-    setInstructionPage_admin(true)
-    setTestcreationadmin(false)
-    setDocumentUpload_admin(false)
+    setInstructionPage_admin(true);
+    setTestcreationadmin(false);
+    setDocumentUpload_admin(false);
+  };
 
-
-}
-
-const handleTestcreationadmin=()=>{
-  setShowdashboard(false);
+  const handleTestcreationadmin = () => {
+    setShowdashboard(false);
     setShowExamcreation_admin(false);
     setshowCoursecreation_admin(false);
-    setInstructionPage_admin(false)
-    setTestcreationadmin(true)
-    setDocumentUpload_admin(false)
+    setInstructionPage_admin(false);
+    setTestcreationadmin(true);
+    setDocumentUpload_admin(false);
+  };
 
-}
-
-
-const handleshowDocumentUpload_admin=()=>{
-  setShowdashboard(false);
-  setShowExamcreation_admin(false);
-  setshowCoursecreation_admin(false);
-  setInstructionPage_admin(false)
-  setTestcreationadmin(false)
-  setDocumentUpload_admin(true)
-}
+  const handleshowDocumentUpload_admin = () => {
+    setShowdashboard(false);
+    setShowExamcreation_admin(false);
+    setshowCoursecreation_admin(false);
+    setInstructionPage_admin(false);
+    setTestcreationadmin(false);
+    setDocumentUpload_admin(true);
+  };
   return (
     <>
       <div className="left_nav_bar_container">
@@ -153,8 +139,10 @@ const handleshowDocumentUpload_admin=()=>{
             </li>
             <li>
               {/* <Link onClick={handleInstructionPage_admin} to="/InstructionPage" className="LeftnavLinks"> */}
-              <Link onClick={handleInstructionPage_admin} className="LeftnavLinks">
-
+              <Link
+                onClick={handleInstructionPage_admin}
+                className="LeftnavLinks"
+              >
                 <div className="">
                   {/* <img width={40} src={dashboard} alt="" /> */}
                   <i class="fa-solid fa-person-chalkboard logo_-clr"></i>
@@ -164,8 +152,7 @@ const handleshowDocumentUpload_admin=()=>{
             </li>
             <li>
               {/* <Link  onClick={handleTestcreationadmin} to="/Testcreation" className="LeftnavLinks"> */}
-              <Link  onClick={handleTestcreationadmin} className="LeftnavLinks">
-
+              <Link onClick={handleTestcreationadmin} className="LeftnavLinks">
                 <div className="">
                   {/* <img width={40} src={dashboard} alt="" /> */}
                   <i class="fa-solid fa-file-lines logo_-clr"></i>
@@ -175,8 +162,10 @@ const handleshowDocumentUpload_admin=()=>{
             </li>
             <li>
               {/* <Link to="/DocumentUpload" onClick={handleshowDocumentUpload_admin} className="LeftnavLinks"> */}
-              <Link onClick={handleshowDocumentUpload_admin} className="LeftnavLinks">
-
+              <Link
+                onClick={handleshowDocumentUpload_admin}
+                className="LeftnavLinks"
+              >
                 <div className="">
                   {/* <img width={40} src={dashboard} alt="" /> */}
                   <i class="fa-solid fa-folder-open logo_-clr"></i>
@@ -212,26 +201,23 @@ const handleshowDocumentUpload_admin=()=>{
         </>
       ) : null}
 
-{showInstructionPage_admin? (
+      {showInstructionPage_admin ? (
         <>
           <InstructionPage_admin />
         </>
       ) : null}
 
-{showTestcreationadmin? (
+      {showTestcreationadmin ? (
         <>
           <Testcreationadmin />
         </>
       ) : null}
 
-      
-{showDocumentUpload_admin? (
+      {showDocumentUpload_admin ? (
         <>
           <DocumentUpload_admin />
         </>
       ) : null}
-
-
     </>
   );
 };
