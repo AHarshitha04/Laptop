@@ -761,7 +761,7 @@ const Coursecreation_admin = () => {
                 <td>{course.totalPrice}</td>
                 <td>
                   <div className="EditDelete_-btns">
-                    <Link className="Ots_-edit" to={`/courseupdate/${course.courseCreationId}`}>
+                    <Link className="Ots_-edit" to={`/Coureseupdate_admin/${course.courseCreationId}`}>
                      
                         <i className="fa-solid fa-pencil"></i>
                     

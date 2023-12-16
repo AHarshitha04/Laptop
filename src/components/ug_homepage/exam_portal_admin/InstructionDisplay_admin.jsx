@@ -110,7 +110,7 @@ const InstructionDisplay_admin = () => {
                 
                 <div className="tooltip-container  EditDelete_-btns">
                   <Link
-                    to={`/Instruction/editIns/${ite.instructionId}`}
+                    to={`/UpdateInstruction_admin/editIns/${ite.instructionId}`}
                     // title="Open Instruction Points"
                     className="my-anchor-element1 Ots_-edit"
                     data-tooltip-variant="info"

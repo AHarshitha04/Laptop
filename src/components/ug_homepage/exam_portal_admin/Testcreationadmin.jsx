@@ -818,7 +818,7 @@ setSubmitting(false);
                   <div className="EditDelete_-btns">
                     <Link
                       className="Ots_-edit "
-                      to={`/testupdate/${test.testCreationTableId}`}
+                      to={`/TestUpdateadmin/${test.testCreationTableId}`}
                     >
                       {" "}
                       <i className="fa-solid fa-pencil"></i>
