@@ -290,7 +290,7 @@ function Examcreation_admin() {
                     <td>
                       <div className="EditDelete_-btns">
                         <button className="Ots_-edit ">
-                          <Link to={`/update/${exam.examId}`}>
+                          <Link to={`/ExamUpdataion_admin/${exam.examId}`}>
                             <i class="fa-solid fa-pencil"></i>
                           </Link>
                         </button>
