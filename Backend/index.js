@@ -1022,7 +1022,7 @@ app.get("/getPaperData/:testCreationTableId/:subjectId", (req, res) => {
       questions,
       options,
       solutions,
-    });
+    }); 
   } catch (error) {
     console.error(error);
     res.status(500).send('Error fetching data from the database.');
