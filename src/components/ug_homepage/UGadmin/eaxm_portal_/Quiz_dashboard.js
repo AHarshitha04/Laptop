@@ -5,6 +5,8 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import Tooltip from "@mui/material/Tooltip";
 import Button from "@mui/material/Button";
+
+import Exam_portal_admin_integration from "../../exam_portal_admin/Exam_portal_admin_integration"
 import UG_HOME from "../../UG_HOME";
 import "./Quiz_amain_page.css"
 
@@ -141,7 +143,8 @@ console.log("hello");
        {showcard2 ? (
           <div className="UGQUizadmin">
          
-         UGQUizadmin
+        <Exam_portal_admin_integration/>
+
         </div>
 
 

@@ -86,37 +86,9 @@ import General_intructions_page from "./components/ug_homepage/UGadmin/eaxm_port
 
 import CoursePage from "./components/ug_homepage/UGadmin/eaxm_portal_/CoursePage.jsx";
 
+// {/* ---------------------------------  Exam_portal_admin_integration ------------- */}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// import Exam_portal_admin_Dashboard from "./components/ug_homepage/exam_portal_admin/Exam_portal_admin_Dashboard.jsx";
 
 const App = () => {
   return (
@@ -203,8 +175,11 @@ const App = () => {
         {/* Remove the following line, as it always redirects to the login page */}
         <Route path="/uglogin" element={<Login />} />
         {/* ========================================================= ugdashboard ====================================================================== */}
-        
-        <Route path="/Exam_portal_home_page" element={<Exam_portal_home_page/>} />
+
+        <Route
+          path="/Exam_portal_home_page"
+          element={<Exam_portal_home_page />}
+        />
 
         <Route path="/Quiz_dashboard" element={<Quiz_dashboard />} />
         <Route path="/Account_info" element={<Account_info />} />
@@ -215,19 +190,26 @@ const App = () => {
 
         {/* ========================================================= ughomepage ====================================================================== */}
         <Route path="/ImageFetching" element={<ImageFetching />} />
-        
-
 
         {/* ========================================================= quiz exam routes ====================================================================== */}
-        
-        <Route path='/feachingcourse/:examId' element={<CoursePage/>} />
-        <Route path='/Test_List/:courseCreationId' element={<FullTest />} />
-        <Route path='/Instructions/:testCreationTableId/:minSubjectId' element={<Instructions />} />
+
+        <Route path="/feachingcourse/:examId" element={<CoursePage />} />
+        <Route path="/Test_List/:courseCreationId" element={<FullTest />} />
+        <Route
+          path="/Instructions/:testCreationTableId/:minSubjectId"
+          element={<Instructions />}
+        />
         {/* <Route path='/General_intructions_page/:testCreationTableId/:minSubjectId' element={<General_intructions_page />} /> */}
 
-        <Route path='/General_intructions_page/:testCreationTableId/1' element={<General_intructions_page />} />
+        <Route
+          path="/General_intructions_page/:testCreationTableId/1"
+          element={<General_intructions_page />}
+        />
 
-        <Route path='/subjects/:testCreationTableId/1'  element={<Paper1 />} />
+        <Route path="/subjects/:testCreationTableId/1" element={<Paper1 />} />
+
+        {/* ---------------------------------  Exam_portal_admin_integration ------------- */}
+        {/* <Route path="/Exam_portal_admin_Dashboard" element={<Exam_portal_admin_Dashboard />} /> */}
       </Routes>
       {/* <Footer /> */}
       {/* <LandingPage /> */}
@@ -235,18 +217,14 @@ const App = () => {
   );
 };
 
-
-
-
 const PrivateRoute = () => {
   const isAuthenticated = localStorage.getItem("isLoggedIn");
-  return (
-    isAuthenticated ?
+  return isAuthenticated ? (
     <>
-    <UgadminHome />
+      <UgadminHome />
     </>
-     : <Navigate to="/uglogin" />
-    
-    )
+  ) : (
+    <Navigate to="/uglogin" />
+  );
 };
 export default App;
