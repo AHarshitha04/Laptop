@@ -4,6 +4,7 @@ import InstructionsDisplay from "./InstructionDisplay_admin";
 import base64 from "base64-js";
 
 import "./styles/InstructionPage_admin.css";
+import InstructionDisplay_admin from "./InstructionDisplay_admin";
 
 // import { Link } from "react-router-dom";
 const InstructionPage_admin = () => {
@@ -170,7 +171,7 @@ const InstructionPage_admin = () => {
       )}
       <div className="instruction_content">
         
-        <InstructionsDisplay />
+        <InstructionDisplay_admin />
         {/* <ExcelTable /> */}
       </div>
       </div>

@@ -91,9 +91,12 @@ import CoursePage from "./components/ug_homepage/UGadmin/eaxm_portal_/CoursePage
 import ExamUpdataion_admin from "./components/ug_homepage/exam_portal_admin/ExamUpdataion_admin.jsx";
 import Coureseupdate_admin from "./components/ug_homepage/exam_portal_admin/Coureseupdate_admin.jsx";
 import TestUpdateadmin from "./components/ug_homepage/exam_portal_admin/TestUpdateadmin.jsx";
-import  UpdateInstruction_admin from "./components/ug_homepage/exam_portal_admin/UpdateInstruction_admin.jsx";
-import { UpdateInstructionpage_admin } from "./components/ug_homepage/exam_portal_admin/UpdateInstructionpage_admin.jsx";
 import  Document_ImageInfo  from "./components/ug_homepage/exam_portal_admin/Document_ImageInfo.jsx";
+
+
+
+
+
 
 
 
@@ -226,24 +229,17 @@ const App = () => {
         />
 
         <Route
-          path="/testUpdate/:testCreationTableId"
+          path="/TestUpdateadmin/:testCreationTableId"
           element={<TestUpdateadmin />}
         />
 
-<Route
-        path="/UpdateInstruction_admin/editIns/:instructionId/:id"
-        element={<UpdateInstruction_admin />}
-      />
-
-<Route
-            path="/UpdateInstructionpage_admin/editIns/:instructionId/:id"
-            element={<UpdateInstructionpage_admin />} 
-          /> 
 
 <Route
             path="/getSubjectData/:subjectId/:testCreationTableId"
             element={<Document_ImageInfo />}
           />
+
+
       </Routes>
 
       {/* <Footer /> */}
