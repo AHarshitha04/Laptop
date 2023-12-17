@@ -3,7 +3,6 @@
 
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-
 function Document_ImageInfo() {
   const [data, setData] = useState(null);
 const {subjectId, testCreationTableId} = useParams();
@@ -71,7 +70,6 @@ const {subjectId, testCreationTableId} = useParams();
 }
 
 export default Document_ImageInfo;
-
 
 
 

@@ -93,6 +93,11 @@ import Coureseupdate_admin from "./components/ug_homepage/exam_portal_admin/Cour
 import TestUpdateadmin from "./components/ug_homepage/exam_portal_admin/TestUpdateadmin.jsx";
 import  Document_ImageInfo  from "./components/ug_homepage/exam_portal_admin/Document_ImageInfo.jsx";
 
+import  GettinggInstructions  from "./components/ug_homepage/exam_portal_admin/GettinggInstructions.jsx";
+
+
+import  {UpdateInstruction}  from "./components/ug_homepage/exam_portal_admin/UpdateInstruction.jsx";
+
 
 
 
@@ -238,7 +243,16 @@ const App = () => {
             path="/getSubjectData/:subjectId/:testCreationTableId"
             element={<Document_ImageInfo />}
           />
+    <Route
+            path="/Instruction/editIns/:instructionId/"
+            element={<GettinggInstructions />} 
+          />
+          <Route
+path="/InstructionPage/editIns/:instructionId/:id"
+element={<UpdateInstruction />} 
+/> 
 
+ 
 
       </Routes>
 
