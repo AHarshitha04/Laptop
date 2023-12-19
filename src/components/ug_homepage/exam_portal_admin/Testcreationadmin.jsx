@@ -112,7 +112,7 @@ const Testcreationadmin = () => {
   useEffect(() => {
     const fetchInstructions = async () => {
       try {
-        const response = await fetch("http://localhost:3081/instructions");
+        const response = await fetch("http://localhost:5001/TestCreation/instructions");
         const data = await response.json();
         setInstructionsData(data);
       } catch (error) {
@@ -124,7 +124,7 @@ const Testcreationadmin = () => {
   }, []);
 
   useEffect(() => {
-    fetch("http://localhost:3081/testcourses")
+    fetch("http://localhost:5001/TestCreation/testcourses")
       .then((response) => response.json())
       .then((data) => setCourses(data))
       .catch((error) => console.error("Error fetching courses:", error));
@@ -132,7 +132,7 @@ const Testcreationadmin = () => {
 
   useEffect(() => {
     if (selectedCourse) {
-      fetch(`http://localhost:3081/course-typeoftests/${selectedCourse}`)
+      fetch(`http://localhost:5001/TestCreation/course-typeoftests/${selectedCourse}`)
         .then((response) => response.json())
         .then((data) => setTypeOfTests(data))
         .catch((error) =>
@@ -143,7 +143,7 @@ const Testcreationadmin = () => {
 
   useEffect(() => {
     if (selectedCourse) {
-      fetch(`http://localhost:3081/course-subjects/${selectedCourse}`)
+      fetch(`http://localhost:5001/TestCreation/course-subjects/${selectedCourse}`)
         .then((response) => response.json())
         .then((data) => {
           console.log("Fetched subjects:", data);
@@ -255,7 +255,7 @@ const Testcreationadmin = () => {
       // const testCreationTableId = getTestCreationTableId();
 
       // Make a request to create test and sections
-      const response = await fetch("http://localhost:3081/create-test", {
+      const response = await fetch("http://localhost:5001/TestCreation/create-test", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -296,7 +296,7 @@ setSubmitting(false);
     const feachTestData = async () => {
       try {
         const response = await fetch(
-          "http://localhost:3081/test_creation_table"
+          "http://localhost:5001/TestCreation/test_creation_table"
         );
         const data = await response.json(); // Convert the response to JSON
         setTestData(data);
@@ -328,7 +328,7 @@ setSubmitting(false);
     if (confirmDelete) {
       try {
         const response = await fetch(
-          `http://localhost:3081/test_table_data_delete/${testCreationTableId}`,
+          `http://localhost:5001/TestCreation/test_table_data_delete/${testCreationTableId}`,
           {
             method: "DELETE",
           }

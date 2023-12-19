@@ -62,7 +62,7 @@ const Coursecreation_admin = () => {
     const fetchSelectedExam = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3081/courese-exams/${selectedexams}`
+          `http://localhost:5001/CoureseCreation/courese-exams/${selectedexams}`
         );
 
         if (!response.ok) {
@@ -85,7 +85,7 @@ const Coursecreation_admin = () => {
     const fetchCourseData = async () => {
       try {
         const response = await fetch(
-          "http://localhost:3081/course_creation_table"
+          "http://localhost:5001/CoureseCreation/course_creation_table"
         );
         const result = await response.json();
         const coursesWithArrays = result.map((course) => ({
@@ -108,7 +108,7 @@ const Coursecreation_admin = () => {
   }, []);
 
   useEffect(() => {
-    fetch("http://localhost:3081/courese-exams")
+    fetch("http://localhost:5001/CoureseCreation/courese-exams")
       .then((response) => response.json())
       .then((data) => {
         setExams(data);
@@ -123,7 +123,7 @@ const Coursecreation_admin = () => {
     console.log("Selected Exam ID (after setting):", selectedexams);
     try {
       const response = await fetch(
-        `http://localhost:3081/courese-exam-subjects/${selectedExamId}/subjects`
+        `http://localhost:5001/CoureseCreation/courese-exam-subjects/${selectedExamId}/subjects`
       );
       const data = await response.json();
       console.log("Subjects Data:", data); // Log the fetched data
@@ -153,7 +153,7 @@ const Coursecreation_admin = () => {
   useEffect(() => {
     const fetchTypeOfTest = async () => {
       try {
-        const response = await fetch("http://localhost:3081/type_of_tests");
+        const response = await fetch("http://localhost:5001/CoureseCreation/type_of_tests");
         const result = await response.json();
         setTypeOfTest(result);
       } catch (error) {
@@ -193,7 +193,7 @@ const Coursecreation_admin = () => {
   useEffect(() => {
     const fetchTypeOfQuestion = async () => {
       try {
-        const response = await fetch("http://localhost:3081/type_of_questions");
+        const response = await fetch("http://localhost:5001/CoureseCreation/type_of_questions");
         const result = await response.json();
         // console.log("Type of Questions Data:", result); // Add this line to log the data
         setTypeofQuestion(result);
@@ -330,7 +330,7 @@ const Coursecreation_admin = () => {
     };
 
     try {
-      const response = await fetch("http://localhost:3081/course-creation", {
+      const response = await fetch("http://localhost:5001/CoureseCreation/course-creation", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -342,7 +342,7 @@ const Coursecreation_admin = () => {
       if (result && result.courseCreationId) {
         const courseCreationId = result.courseCreationId;
         const subjectsResponse = await fetch(
-          "http://localhost:3081/course_type_of_question",
+          "http://localhost:5001/course_type_of_question",
           {
             method: "POST",
             headers: {
@@ -383,7 +383,7 @@ const Coursecreation_admin = () => {
     if (confirmDelete) {
       try {
         const response = await fetch(
-          `http://localhost:3081/course_creation_table_Delete/${courseCreationId}`,
+          `http://localhost:5001/CoureseCreation/course_creation_table_Delete/${courseCreationId}`,
           {
             method: "DELETE",
           }

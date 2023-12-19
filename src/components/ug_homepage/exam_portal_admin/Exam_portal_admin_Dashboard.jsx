@@ -31,11 +31,11 @@ const useFetchCount = (url) => {
 };
 
 const Exam_portal_admin_Dashboard = () => {
-  const examCount = useFetchCount("http://localhost:3081/exam/count");
-  const courseCount = useFetchCount("http://localhost:3081/courses/count");
-  const testCount = useFetchCount("http://localhost:3081/test/count");
-  const questionCount = useFetchCount("http://localhost:3081/question/count");
-
+  const examCount = useFetchCount("http://localhost:5001/Dashboard/exam/count");
+  const courseCount = useFetchCount("http://localhost:5001/Dashboard/courses/count");
+  const testCount = useFetchCount("http://localhost:5001/Dashboard/test/count");
+  const questionCount = useFetchCount("http://localhost:5001/Dashboard/question/count");
+console.log(examCount)
   return (
     
     <div className="Dashboard_container">

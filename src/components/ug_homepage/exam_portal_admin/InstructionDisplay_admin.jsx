@@ -19,7 +19,7 @@ const InstructionDisplay_admin = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3081/instructionData`
+          `http://localhost:5001/InstructionCreation/instructionData`
         );
         instructionPoints(response.data.points);
         console.log("Response:", response.data);
@@ -36,7 +36,7 @@ const InstructionDisplay_admin = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3081/instructionpointsGet`
+          `http://localhost:5001/InstructionCreation/instructionpointsGet`
         );
         setPoints(response.data.points);
         console.log("Response:", response.data);
@@ -52,7 +52,7 @@ const InstructionDisplay_admin = () => {
   const handleDelete = async (instructionId) => {
     try {
       const response = await axios.delete(
-        `http://localhost:3081/deleteinstruction/${instructionId}`
+        `http://localhost:5001/InstructionCreation/deleteinstruction/${instructionId}`
       );
       window.location.reload();
       console.log("Delete Response:", response.data);
@@ -65,7 +65,7 @@ const InstructionDisplay_admin = () => {
   // const handleDeletePoint = async (instructionId, id) => {
   //   try {
   //     const response = await axios.delete(
-  //       `http://localhost:3081/deletepoint/${instructionId}/${id}`
+  //       `http://localhost:5001/deletepoint/${instructionId}/${id}`
   //     );
   //     window.location.reload();
 

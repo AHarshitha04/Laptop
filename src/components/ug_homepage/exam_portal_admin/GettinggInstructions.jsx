@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 
-const API_BASE_URL = "http://localhost:3081";
+const API_BASE_URL = "http://localhost:5001";
 
 const GettinggInstructions = () => {
   const [points, setPoints] = useState([]);
@@ -12,7 +12,7 @@ const GettinggInstructions = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `${API_BASE_URL}/instructionpoints/${instructionId}`
+          `${API_BASE_URL}/InstructionCreation/instructionpoints/${instructionId}`
         );
 
         if (response.data.success) {
@@ -39,7 +39,7 @@ const GettinggInstructions = () => {
   const handleDeletePoint = async (instructionId, id) => {
     try {
       const response = await axios.delete(
-        `http://localhost:3081/deletepoint/${instructionId}/${id}`
+        `http://localhost:5001/InstructionCreation/deletepoint/${instructionId}/${id}`
       );
       window.location.reload();
 
@@ -103,7 +103,7 @@ export default GettinggInstructions;
 // import { Link, useParams } from "react-router-dom";
 // import axios from "axios";
 
-// const API_BASE_URL = "http://localhost:3081";
+// const API_BASE_URL = "http://localhost:5001";
 
 // const GettinggInstructions = () => {
 //   const [points, setPoints] = useState([]);
@@ -147,7 +147,7 @@ export default GettinggInstructions;
 //   const handleDeletePoint = async (instructionId, id) => {
 //     try {
 //       const response = await axios.delete(
-//         `http://localhost:3081/deletepoint/${instructionId}/${id}`
+//         `http://localhost:5001/deletepoint/${instructionId}/${id}`
 //       );
 //       window.location.reload();
 

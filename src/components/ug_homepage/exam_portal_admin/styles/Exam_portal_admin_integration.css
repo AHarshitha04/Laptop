@@ -45,8 +45,8 @@
     transform: rotatez(-50deg);
     transition: 0.5s ease-in-out;
     border-radius: 18px;
-    margin-bottom: 12px;
-    margin-left: 5px;
+    /* margin-bottom: 12px; */
+    margin-left: 4px;
   }
   
   .rotate_left {
@@ -59,28 +59,24 @@
     height: 6px;
     border-radius: 18px;
     background: rgb(0, 0, 0);
-    margin-top: -0.65rem;
+    margin-top: -0.799rem;
     transform: rotatez(50deg);
     transition: 0.5s ease-in-out;
   }
   
   /* -------------------------------------- header .js ---------------------- */
-  
+/*   
   .header {
-    /* background-color: #000000; */
-    /* background: #e2f7fb; */
-    background: #1a374d;
-    /* height: 4rem; */
+   
   
     display: flex;
-    /* justify-content: center; */
+    
     align-items: center;
-    color: #fff;
-    /* padding: 5px 100px; */
+   
     padding: 11px 16px;
     box-shadow: 3px 0px 10px 0px;
   }
-  
+   */
   .img {
     font-size: 34px;
     font-weight: bold;
@@ -654,9 +650,9 @@
   }
   @media (max-width: 1000px) {
     .mobile_menu {
-      position: fixed;
-      top: 28%;
-      left: 170px;
+      /* position: absolute; */
+      /* top: 28%; */
+      /* left: 170px; */
       /* right: 0; */
       background: #ffffff;
       display: flex;

@@ -39,7 +39,7 @@ const InstructionPage_admin = () => {
   useEffect(() => {
     const fetchExams = async () => {
       try {
-        const response = await axios.get("http://localhost:3081/exams");
+        const response = await axios.get("http://localhost:5001/InstructionCreation/exams");
         setExams(response.data);
       } catch (error) {
         console.error("Error fetching exams:", error);
@@ -64,7 +64,7 @@ const InstructionPage_admin = () => {
         formData.append("examId", selectedExam);
         formData.append("instructionHeading", instructionHeading);
        
-        await axios.post("http://localhost:3081/InstructionsUpdate", formData, {
+        await axios.post("http://localhost:5001//InstructionCreation/InstructionsUpdate", formData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },

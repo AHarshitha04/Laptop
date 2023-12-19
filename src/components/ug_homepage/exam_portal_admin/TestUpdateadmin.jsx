@@ -63,7 +63,7 @@ const TestUpdateadmin = () => {
   // };
 
   useEffect(() => {
-    fetch("http://localhost:3081/instructions")
+    fetch("http://localhost:5001/TestCreation/instructions")
       .then((response) => response.json())
       .then((data) => setInstructionsData(data))
       .catch((error) => console.error("Error fetching courses:", error));
@@ -71,7 +71,7 @@ const TestUpdateadmin = () => {
 
   useEffect(() => {
     // Fetch courses from the API
-    fetch("http://localhost:3081/testcourses")
+    fetch("http://localhost:5001/TestCreation/testcourses")
       .then((response) => response.json())
       .then((data) => setCourses(data))
       .catch((error) => console.error("Error fetching courses:", error));
@@ -81,7 +81,7 @@ const TestUpdateadmin = () => {
     // Fetch type of tests from the API based on the selected course
     if (testData.selectedCourse) {
       fetch(
-        `http://localhost:3081/course-typeoftests/${testData.selectedCourse}`
+        `http://localhost:5001/TestCreation/course-typeoftests/${testData.selectedCourse}`
       )
         .then((response) => response.json())
         .then((data) => setTypeOfTests(data))
@@ -95,7 +95,7 @@ const TestUpdateadmin = () => {
     // Fetch subjects based on the selected course
     if (testData.selectedCourse) {
       console.log("Fetching subjects...");
-      fetch(`http://localhost:3081/course-subjects/${testData.selectedCourse}`)
+      fetch(`http://localhost:5001/TestCreation/course-subjects/${testData.selectedCourse}`)
         .then((response) => response.json())
         .then((data) => setSubjects(data))
         .catch((error) => console.error("Error fetching subjects:", error));
@@ -103,7 +103,7 @@ const TestUpdateadmin = () => {
   }, [testData.selectedCourse]);
 
   useEffect(() => {
-    fetch(`http://localhost:3081/testupdate/${testCreationTableId}`)
+    fetch(`http://localhost:5001/TestCreation/testupdate/${testCreationTableId}`)
       .then((response) => {
         console.log("Response Status:", response.status);
         return response.json();
@@ -129,7 +129,7 @@ const TestUpdateadmin = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:3081/test-update/${testCreationTableId}`,
+        `http://localhost:5001/TestCreation/test-update/${testCreationTableId}`,
         {
           method: "PUT",
           headers: {

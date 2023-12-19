@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import "./styles/Exam_portal_admin_integration.css";
-import "./styles/Exam_portal_admin_integration.css";
 
 import { Link } from "react-router-dom";
 import dashboard from "./assert/daashboard.png";
@@ -12,6 +11,8 @@ import Coursecreation_admin from "./Coursecreation_admin";
 import InstructionPage_admin from "./InstructionPage_admin";
 import Testcreationadmin from "./Testcreationadmin";
 import DocumentUpload_admin from "./DocumentUpload_admin";
+import Examcreation from "./Examcreation";
+import Coursecreation from "./Coursecreation";
 
 // import logo2 from './logo2.jpeg'
 // import HomeLandingPage from "../Frontend/Pages/HomeLandingPage/HomeLandingPage";
@@ -192,12 +193,15 @@ const Leftnav = () => {
       {showExamcreation_admin ? (
         <>
           <Examcreation_admin />
+          {/* <Examcreation/> */}
         </>
       ) : null}
 
       {showCoursecreation_admin ? (
         <>
           <Coursecreation_admin />
+          {/* <Coursecreation/> */}
+
         </>
       ) : null}
 

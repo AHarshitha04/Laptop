@@ -34,7 +34,7 @@ const {testCreationTableId}= useParams()
 //   };
   useEffect(() => {
     // Fetch tests data
-    fetch("http://localhost:3081/tests")
+    fetch("http://localhost:5001/DocumentUpload/tests")
       .then((response) => response.json())
       .then((data) => setTests(data))
       .catch((error) => console.error("Error fetching tests data:", error));
@@ -47,7 +47,7 @@ const {testCreationTableId}= useParams()
     // Fetch subjects data based on the selected test
     try {
       const response = await fetch(
-        `http://localhost:3081/subjects/${testCreationTableId}`
+        `http://localhost:5001/DocumentUpload/subjects/${testCreationTableId}`
       );
 
       const data = await response.json();
@@ -62,7 +62,7 @@ const {testCreationTableId}= useParams()
  
     // Fetch sections data based on the selected subject
     try {
-      const response = await fetch(`http://localhost:3081/sections/${selectedSubject}/${selectedTest}`);
+      const response = await fetch(`http://localhost:5001/DocumentUpload/sections/${selectedSubject}/${selectedTest}`);
       const data = await response.json();
       setSections(data);
     } catch (error) {
@@ -88,7 +88,7 @@ const {testCreationTableId}= useParams()
     formData.append("sectionId", selectedSection);
     formData.append("testCreationTableId", selectedTest);
 
-    fetch("http://localhost:3081/upload", {
+    fetch("http://localhost:5001/DocumentUpload/upload", {
       method: "POST",
       body: formData,
     })
@@ -205,7 +205,7 @@ export default DocumentUpload_admin;
 
 //   const fetchData = async () => {
 //     try {
-//       const response = await fetch("http://localhost:3081/documentName");
+//       const response = await fetch("http://localhost:5001/documentName");
 //       const jsonData = await response.json();
 //       setData(jsonData);
 //     } catch (error) {
@@ -223,7 +223,7 @@ export default DocumentUpload_admin;
 //     if (confirmDelete) {
 //       try {
 //         const response = await fetch(
-//           `http://localhost:3081/DocumentDelete/${document_Id}`,
+//           `http://localhost:5001/DocumentDelete/${document_Id}`,
 //           {
 //             method: "DELETE",
 //           }
@@ -306,7 +306,7 @@ export const UploadedDoc = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:3081/documentName");
+        const response = await fetch("http://localhost:5001/DocumentUpload/documentName");
         const jsonData = await response.json();
         setData(jsonData);
       } catch (error) {
@@ -329,7 +329,7 @@ const [documentData,setDocumentData] = useState([]);
     if (confirmDelete) {
       try {
         const response = await fetch(
-          `http://localhost:3081/DocumentDelete/${document_Id}`,
+          `http://localhost:5001/DocumentUpload/DocumentDelete/${document_Id}`,
           {
             method: "DELETE",
           }

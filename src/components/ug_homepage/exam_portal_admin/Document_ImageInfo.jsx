@@ -9,7 +9,7 @@ const {subjectId, testCreationTableId} = useParams();
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`http://localhost:3081/getSubjectData/${subjectId}/${testCreationTableId}`);
+        const response = await fetch(`http://localhost:5001/DocumentUpload/getSubjectData/${subjectId}/${testCreationTableId}`);
         const result = await response.json();
         setData(result);
       } catch (error) {
@@ -83,7 +83,7 @@ export default Document_ImageInfo;
 //   const fetchData = async () => {
 //     try {
 //       const response = await fetch(
-//         `http://localhost:3081/getSubjectData/${subjectId}/${testCreationTableId}`
+//         `http://localhost:5001/getSubjectData/${subjectId}/${testCreationTableId}`
 //       );
 
 //       if (!response.ok) {

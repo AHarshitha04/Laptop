@@ -52,7 +52,7 @@ function Examcreation_admin() {
   useEffect(() => {
     // Fetch subjects from the backend when the component mounts
     axios
-      .get("http://localhost:3081/subjects")
+      .get("http://localhost:5001/ExamCreation/subjects")
       .then((response) => {
         setSubjects(response.data);
       })
@@ -92,7 +92,7 @@ function Examcreation_admin() {
     if (validateForm()) {
       setSubmitting(true);
     axios
-      .post("http://localhost:3081/exams", examData)
+      .post("http://localhost:5001/ExamCreation/exams", examData)
       .then((response) => {
         console.log("Exam created:", response.data);
         // Reset form fields and state as needed
@@ -123,7 +123,7 @@ function Examcreation_admin() {
   function exams_with_subject(){
     // alert("hi")
     axios
-    .get("http://localhost:3081/exams-with-subjects")
+    .get("http://localhost:5001/ExamCreation/exams-with-subjects")
     .then((response) => {
       setExamsWithSubjects(response.data);
     })
@@ -146,7 +146,7 @@ function Examcreation_admin() {
 
       // Send a request to delete the exam from the server
       axios
-        .delete(`http://localhost:3081/exams/${examId}`)
+        .delete(`http://localhost:5001/ExamCreation/exams/${examId}`)
         .then((response) => {
           console.log(`Exam with ID ${examId} deleted from the database`);
         })

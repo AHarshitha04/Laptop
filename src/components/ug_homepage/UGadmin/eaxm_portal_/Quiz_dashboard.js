@@ -122,7 +122,7 @@ console.log("hello");
             }
             onClick={UG_HOMEQuiz_btn}
           >
-            UG Quiz Adim
+            UG Quiz Admin
           </button>
         </div>
 

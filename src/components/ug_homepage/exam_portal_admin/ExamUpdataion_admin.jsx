@@ -13,7 +13,7 @@ const ExamUpdataion_admin = () => {
 
   useEffect(() => {
     // Fetch subjects from the API
-    fetch("http://localhost:3081/subjects")
+    fetch("http://localhost:5001/ExamCreation/subjects")
       .then((response) => response.json())
       .then((data) => setSubjects(data))
       .catch((error) => console.error("Error fetching subjects:", error));
@@ -23,7 +23,7 @@ const ExamUpdataion_admin = () => {
     try {
       // Fetch selected subjects for the specific exam
       const response = await axios.get(
-        `http://localhost:3081/exams/${examId}/subjects`
+        `http://localhost:5001/ExamCreation/exams/${examId}/subjects`
       );
       const selectedSubjectsData = response.data;
 
@@ -38,10 +38,10 @@ const ExamUpdataion_admin = () => {
     const fetchData = async () => {
       try {
         const examResponse = await axios.get(
-          `http://localhost:3081/feachingexams/${examId}`
+          `http://localhost:5001/ExamCreation/feachingexams/${examId}`
         );
         const selectedSubjectsResponse = await axios.get(
-          `http://localhost:3081/exams/${examId}/subjects`
+          `http://localhost:5001/ExamCreation/exams/${examId}/subjects`
         );
 
         const examData = examResponse.data[0];
@@ -114,7 +114,7 @@ const ExamUpdataion_admin = () => {
 
     // Send PUT request to update exam data
     axios
-      .put(`http://localhost:3081/update/${examId}`, updatedExamData)
+      .put(`http://localhost:5001/ExamCreation/update/${examId}`, updatedExamData)
       .then((response) => {
         console.log(response.data);
         // Handle success, e.g., show a success message to the user
