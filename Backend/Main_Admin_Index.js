@@ -8,28 +8,30 @@ app.use(express.static("public"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
-const ImeageUpload = require('./mainWebsitAdmin/ImeageUpload')
-const db1 = require('./db1');
-const db2=require('./db2');
+const ughomepage_banner_login = require('./mainWebsitAdmin/ughomepage_banner_login')
+const db1 = require('./databases/db1');
+const db2=require('./databases/db2');
 const Dashboard = require('./otsadmin/Dashboard')
 const ExamCreation = require('./otsadmin/ExamCreation')
-const courseCreation = require('./otsadmin/CoureseCreation')
+const CoureseCreation=require("./otsadmin/CoureseCreation")
 const InstructionCreation = require('./otsadmin/InstructionCreation')
 const TestCreation = require('./otsadmin/TestCreation')
 const DocumentUpload =require('./otsadmin/DocumentUpload')
+
 app.use(cors({ origin: "*" }));
 
-app.use('/ImeageUpload', ImeageUpload)
+//ughomepage_banner_login
+
+app.use('/ughomepage_banner_login', ughomepage_banner_login)
 
 //OTS Admin
 
 app.use('/Dashboard', Dashboard)
 app.use('/ExamCreation', ExamCreation)
-app.use('/courseCreation' , courseCreation)
+app.use('/CoureseCreation',CoureseCreation)
 app.use('/InstructionCreation',InstructionCreation)
 app.use('/TestCreation',TestCreation)
 app.use('/DocumentUpload',DocumentUpload)
-
 
 
 app.listen(port, () => {

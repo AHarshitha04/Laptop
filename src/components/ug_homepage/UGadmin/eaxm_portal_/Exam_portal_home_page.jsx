@@ -29,7 +29,7 @@ const Exam_portal_home_page = () => {
   const [courses, setCourses] = useState([]);
   useEffect(() => {
     axios
-      .get("http://localhost:5001/courses")
+      .get("http://localhost:5001/ughomepage_banner_login/courses")
       .then((res) => {
         setCourses(res.data);
         console.log(res.data);
@@ -78,7 +78,7 @@ export const Header = () => {
     const fetchUserData = async () => {
       try {
         const token = localStorage.getItem("token");
-        const response = await fetch("http://localhost:5001/user", {
+        const response = await fetch("http://localhost:5001/ughomepage_banner_login/user", {
           headers: {
             Authorization: `Bearer ${token}`, // Attach token to headers for authentication
           },
@@ -104,7 +104,7 @@ export const Header = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5001/examsug")
+      .get("http://localhost:5001/ughomepage_banner_login/examsug")
       .then((res) => {
         setExamsug(res.data);
         console.log(res.data);
@@ -315,7 +315,7 @@ export const Quiz_Courses = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5001/coursesug")
+      .get("http://localhost:5001/ughomepage_banner_login/coursesug")
       .then((res) => {
         setCoursesug(res.data);
         console.log(coursesug);
@@ -328,7 +328,7 @@ export const Quiz_Courses = () => {
   // ----------------------------------------------------------currentcourses function--------------------------------------------------------
   useEffect(() => {
     axios
-      .get("http://localhost:5001/coursescurrentug")
+      .get("http://localhost:5001/ughomepage_banner_login/coursescurrentug")
       .then((res) => {
         setCoursescurrentug(res.data);
         console.log(coursesug);
@@ -342,7 +342,7 @@ export const Quiz_Courses = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5001/examsug")
+      .get("http://localhost:5001/ughomepage_banner_login/examsug")
       .then((res) => {
         setExamsug(res.data);
         console.log(setExamsug);
@@ -354,7 +354,7 @@ export const Quiz_Courses = () => {
   // ----------------------------------------------------------examexamscurrentugsug function--------------------------------------------------------
   useEffect(() => {
     axios
-      .get("http://localhost:5001/examsug")
+      .get("http://localhost:5001/ughomepage_banner_login/examsug")
       .then((res) => {
         setExamsug(res.data);
         console.log(setExamsug);
@@ -387,7 +387,7 @@ export const Quiz_Courses = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:5001/examData`)
+      .get(`http://localhost:5001/ughomepage_banner_login/examData`)
       .then((response) => {
         setExamCardName(response.data);
       })

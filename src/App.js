@@ -238,11 +238,14 @@ const App = () => {
           element={<TestUpdateadmin />}
         />
 
-
 <Route
+              path="/getSubjectData/:subjectId/:testCreationTableId/:sectionId"
+              element={<Document_ImageInfo />}
+            />
+{/* <Route
             path="/getSubjectData/:subjectId/:testCreationTableId"
             element={<Document_ImageInfo />}
-          />
+          /> */}
     <Route
             path="/Instruction/editIns/:instructionId/"
             element={<GettinggInstructions />} 

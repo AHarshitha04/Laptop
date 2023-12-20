@@ -342,7 +342,7 @@ const Coursecreation_admin = () => {
       if (result && result.courseCreationId) {
         const courseCreationId = result.courseCreationId;
         const subjectsResponse = await fetch(
-          "http://localhost:5001/course_type_of_question",
+          "http://localhost:5001/CoureseCreation/course_type_of_question",
           {
             method: "POST",
             headers: {

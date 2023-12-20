@@ -10,7 +10,7 @@ export const UpdateInstruction = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5001/instructionpoints/${instructionId}/${id}`
+          `http://localhost:5001/InstructionCreation/instructionpoints/${instructionId}/${id}`
         );
         setPoints(
           response.data.points.map((item) => ({
@@ -38,7 +38,7 @@ export const UpdateInstruction = () => {
   const handleUpdate = async () => {
     try {
       const response = await axios.put(
-        `http://localhost:5001/updatepoints/${instructionId}/${id}`,
+        `http://localhost:5001/InstructionCreation/updatepoints/${instructionId}/${id}`,
         {
           points: points.map((item) => item.points),
         }

@@ -45,7 +45,7 @@ const Register = () => {
     }
 
     try {
-      const response = await fetch('http://localhost:5001/register', {
+      const response = await fetch('http://localhost:5001/ughomepage_banner_login/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

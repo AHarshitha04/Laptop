@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../db2');
+const db = require('../databases/db2');
 
 
 router.get('/subjects', async (req, res) => {

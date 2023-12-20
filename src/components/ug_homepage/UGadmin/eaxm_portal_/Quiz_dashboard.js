@@ -170,7 +170,7 @@ export const UploadPage = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5001/UGhomepageadimcourses")
+      .get("http://localhost:5001/ughomepage_banner_login/UGhomepageadimcourses")
       .then((res) => {
         setCourses(res.data);
       })
@@ -181,7 +181,7 @@ export const UploadPage = () => {
 
   const fetchExamsAndSections = (courseId) => {
     axios
-      .get(`http://localhost:5001/UGhomepageadimsections/${courseId}`)
+      .get(`http://localhost:5001/ughomepage_banner_login/UGhomepageadimsections/${courseId}`)
       .then((res) => {
         setSections(res.data);
         console.log(sections);
@@ -226,7 +226,7 @@ export const UploadPage = () => {
     if (isFirstSection || isSecondSection || isFourthSection || isFiveSection) {
       const fetchExamsAndSections = (courseId) => {
         axios
-          .get(`http://localhost:5001/UGhomepageadimsections/${courseId}`)
+          .get(`http://localhost:5001/ughomepage_banner_login/UGhomepageadimsections/${courseId}`)
           .then((res) => {
             setSections(res.data);
             console.log("Selected section:", sectionId);
@@ -236,7 +236,7 @@ export const UploadPage = () => {
             console.error("Error fetching sections:", error);
           });
         axios
-          .get(`http://localhost:5001/UGhomepageadimexams/${courseId}`)
+          .get(`http://localhost:5001/ughomepage_banner_login/UGhomepageadimexams/${courseId}`)
           .then((res) => {
             // setExams(res.data);
             console.log(exams);
@@ -251,7 +251,7 @@ export const UploadPage = () => {
 
       const fetchExamsAndSections = (courseId) => {
         axios
-          .get(`http://localhost:5001/UGhomepageadimsections/${courseId}`)
+          .get(`http://localhost:5001/ughomepage_banner_login/UGhomepageadimsections/${courseId}`)
           .then((res) => {
             setSections(res.data);
             console.log(sections);
@@ -261,7 +261,7 @@ export const UploadPage = () => {
           });
 
         axios
-          .get(`http://localhost:5001/UGhomepageadimexams/${courseId}`)
+          .get(`http://localhost:5001/ughomepage_banner_login/UGhomepageadimexams/${courseId}`)
           .then((res) => {
             setExams(res.data);
 
@@ -286,7 +286,7 @@ export const UploadPage = () => {
 
       const fetchExamsAndSections = (courseId) => {
         axios
-          .get(`http://localhost:5001/UGhomepageadimsections/${courseId}`)
+          .get(`http://localhost:5001/ughomepage_banner_login/UGhomepageadimsections/${courseId}`)
           .then((res) => {
             setSections(res.data);
             console.log(sections);
@@ -296,7 +296,7 @@ export const UploadPage = () => {
           });
 
         axios
-          .get(`http://localhost:5001/UGhomepageadimexams/${courseId}`)
+          .get(`http://localhost:5001/ughomepage_banner_login/UGhomepageadimexams/${courseId}`)
           .then((res) => {
             // setExams(res.data);
 
@@ -321,7 +321,7 @@ export const UploadPage = () => {
 
       const fetchExamsAndSections = (courseId) => {
         axios
-          .get(`http://localhost:5001/UGhomepageadimsections/${courseId}`)
+          .get(`http://localhost:5001/ughomepage_banner_login/UGhomepageadimsections/${courseId}`)
           .then((res) => {
             setSections(res.data);
             console.log(sections);
@@ -330,7 +330,7 @@ export const UploadPage = () => {
             console.error("Error fetching sections:", error);
           });
         axios
-          .get(`http://localhost:5001/UGhomepageadimexams/${courseId}`)
+          .get(`http://localhost:5001/ughomepage_banner_login/UGhomepageadimexams/${courseId}`)
           .then((res) => {
             // setExams(res.data);
 
@@ -361,6 +361,7 @@ export const UploadPage = () => {
 
   const handleUpload = async () => {
     if (!selectedCourse || !selectedSection || !image) {
+      setUploadStatus("error")
       console.error(
         "Please select course, section, and choose an image before uploading."
       );
@@ -384,7 +385,7 @@ export const UploadPage = () => {
 
       // Use a single route for both main page and course exam uploads
       const response = await axios.post(
-        "http://localhost:5001/upload",
+        "http://localhost:5001/ughomepage_banner_login/upload",
         formData,
         {
           headers: {
@@ -500,7 +501,7 @@ export const ImageFetching = () => {
  
   useEffect(() => {
     axios
-      .get("http://localhost:5001/ImageTitle")
+      .get("http://localhost:5001/ughomepage_banner_login/ImageTitle")
       .then((res) => {
         setImageTitle(res.data);
       })
@@ -513,7 +514,7 @@ export const ImageFetching = () => {
   const [imageArray, setImageArray] = useState([]);
   useEffect(() => {
     axios
-      .get("http://localhost:5001/HomeImagesadmin")
+      .get("http://localhost:5001/ughomepage_banner_login/HomeImagesadmin")
       .then((res) => {
         setImageArray(res.data);
       })
@@ -525,7 +526,7 @@ export const ImageFetching = () => {
  
   const handleDeleteImage = (imageId) => {
     axios
-      .delete(`http://localhost:5001/HomeImages/${imageId}`)
+      .delete(`http://localhost:5001/ughomepage_banner_login/HomeImages/${imageId}`)
       .then(() => {
         // Remove the deleted image from the local state
         setImageArray((prevImages) =>

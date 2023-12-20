@@ -11,7 +11,7 @@ const DocumentUpload_admin = () => {
   const [selectedSubject, setSelectedSubject] = useState("");
   const [selectedSection, setSelectedSection] = useState("");
   const [file, setFile] = useState(null);
-const {testCreationTableId}= useParams()
+const {testCreationTableId,sectionId}= useParams()
 
 // const [formErrors, setFormErrors] = useState({});
 // const [submitting, setSubmitting] = useState(false);
@@ -386,7 +386,9 @@ const [documentData,setDocumentData] = useState([]);
                   <td  >
                     <div className="EditDelete_-btns">
                     <Link className="Ots_-edit " 
-                         to={`/getSubjectData/${item.subjectId}/${item.testCreationTableId}`}
+
+
+                         to={`/getSubjectData/${item.subjectId}/${item.testCreationTableId}/${item.sectionId}`}
                       // to={`/getSubjectData/${item.subjectId}/${item.testCreationTableId}`}
                     >
                       Open Document

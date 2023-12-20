@@ -24,11 +24,11 @@ const Coureseupdate_admin = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5001/courseupdate/${courseCreationId}`
+          `http://localhost:5001/CoureseCreation/courseupdate/${courseCreationId}`
         );
 
         const examsResponse = await axios.get(
-          "http://localhost:5001/courese-exams"
+          "http://localhost:5001/CoureseCreation/courese-exams"
         );
         // const typeOfTestsResponse = await axios.get(
         //   "http://localhost:5001/type_of_tests"
@@ -77,7 +77,7 @@ const Coureseupdate_admin = () => {
       try {
         if (selectedExam) {
           const response = await axios.get(
-            `http://localhost:5001/courese-exam-subjects/${selectedExam}/subjects`
+            `http://localhost:5001/CoureseCreation/courese-exam-subjects/${selectedExam}/subjects`
           );
           setSubjects(response.data);
         } else {
@@ -94,7 +94,7 @@ const Coureseupdate_admin = () => {
     const fetchSelectedSubjects = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5001/course_subjects/${courseCreationId}`
+          `http://localhost:5001/CoureseCreation/course_subjects/${courseCreationId}`
         );
         const selectedSubjectIds = response.data.map(
           (subject) => subject.subjectId
@@ -112,7 +112,7 @@ const Coureseupdate_admin = () => {
     const fetchQuestionTypes = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5001/type_of_questions"
+          "http://localhost:5001/CoureseCreation/type_of_questions"
         );
         setQuestionTypes(response.data);
       } catch (error) {
@@ -127,7 +127,7 @@ const Coureseupdate_admin = () => {
     const fetchSelectedQuestionTypes = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5001/course-type-of-questions/${courseCreationId}`
+          `http://localhost:5001/CoureseCreation/course-type-of-questions/${courseCreationId}`
         );
         const selectedTypes = response.data.map((type) => type.quesionTypeId);
         setSelectedQuestionTypes(selectedTypes);
@@ -156,7 +156,7 @@ const Coureseupdate_admin = () => {
   useEffect(() => {
     const fetchtypeOfTests = async () => {
       try {
-        const response = await axios.get("http://localhost:5001/type_of_tests");
+        const response = await axios.get("http://localhost:5001/CoureseCreation/type_of_tests");
         setTypeOfTests(response.data);
       } catch (error) {
         console.error("Error fetching  type of test:", error);
@@ -170,7 +170,7 @@ const Coureseupdate_admin = () => {
     const fetchSelectedtypeOftests = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5001/course-type-of-test/${courseCreationId}`
+          `http://localhost:5001/CoureseCreation/course-type-of-test/${courseCreationId}`
         );
         const selectedTypeOfTests = response.data.map(
           (typeOfTest) => typeOfTest.typeOfTestId
@@ -242,7 +242,7 @@ const Coureseupdate_admin = () => {
 
     try {
       await axios.put(
-        `http://localhost:5001/update-course/${courseCreationId}`,
+        `http://localhost:5001/CoureseCreation/update-course/${courseCreationId}`,
         {
           courseName,
           selectedTypeOfTests,

@@ -2,10 +2,10 @@
   "name": "backend",
   "version": "1.0.0",
   "description": "",
-  "main": "Admin1.js",
+  "main": "Main_Admin_Index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon Admin1.js"
+    "start": "nodemon Main_Admin_Index.js"
   },
   "author": "",
   "license": "ISC",
