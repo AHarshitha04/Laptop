@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { nav } from "../eaxm_portal_/DATA/Data";
 import axios from "axios";
+import  "./Account_info.css"
 
 const Account_info = () => {
   const [showQuizmobilemenu, setShowQuizmobilemenu] = useState(false);
@@ -19,7 +20,7 @@ const Account_info = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5001/act_info")
+      .get("http://localhost:5001/ughomepage_banner_login/act_info")
       .then((res) => {
         setActinfo(res.data);
         console.log(actinfo);
@@ -124,7 +125,7 @@ export const Users = () => {
   useEffect(() => {
     const fetchAllUsers = async () => {
       try {
-        const res = await axios.get("http://localhost:5001/act_info");
+        const res = await axios.get("http://localhost:5001/ughomepage_banner_login/act_info");
         setUsers(res.data);
       } catch (err) {
         console.log(err);
@@ -137,7 +138,7 @@ export const Users = () => {
  
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:5001/users/${id}`);
+      await axios.delete(`http://localhost:5001/ughomepage_banner_login/users/${id}`);
       window.location.reload()
     } catch (err) {
       console.log(err);
@@ -145,13 +146,13 @@ export const Users = () => {
   };
  
   return (
-    <div className="container">
+    <div className="act_infocontainer">
   
         <div className='row'>
             <div className='col-md-12'>
             <p><Link to="/add" className="btn btn-success">Add new users</Link></p>
             <table className="table table-bordered">
-            <thead>
+            <thead className="otsGEt_-contantHead otc_-table_-header">
                 <tr>
                     <th>S No.</th>
                     <th>Full Name</th>
@@ -161,11 +162,14 @@ export const Users = () => {
                     <th>Actions</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody className="otc_-table_-tBody">
                 {
                     users.map((user, i) => {
                         return (
-                            <tr key={i}>
+                            <tr key={i}
+                            className={user.id % 2 === 0 ? "color1" : "color2"}
+                            
+                            >
                                 <td>{i + 1}</td>
                                 <td>{user.username} </td>
                                 <td>{user.email} </td>
@@ -209,7 +213,7 @@ export const Users_info=()=>{
     const fetchUserData = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch('http://localhost:5001/user', {
+        const response = await fetch('http://localhost:5001/ughomepage_banner_login/user', {
           headers: {
             Authorization: `Bearer ${token}`, // Attach token to headers for authentication
           },

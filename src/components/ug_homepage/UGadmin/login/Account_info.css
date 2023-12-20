@@ -1,0 +1,11 @@
+.act_infocontainer{
+    width: 80%;
+    margin: 0 auto;
+}
+.table{
+    text-align: center;
+}
+
+.table th{
+    padding: 1rem ;
+}
