@@ -9,3 +9,18 @@
     align-items: center;
     gap: 10px;
 }
+table{
+    border-collapse: collapse;
+
+}
+tr td{
+        text-align: center;
+    /* border: 1px solid; */
+    border: none;
+}
+tr th{
+    text-align: center;
+    border: none;
+
+    /* border: 1px solid; */
+}

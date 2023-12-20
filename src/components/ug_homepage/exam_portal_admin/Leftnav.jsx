@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import "./styles/Exam_portal_admin_integration.css";
+import "./styles/otcCss.css";
+
+
 
 import { Link } from "react-router-dom";
 import dashboard from "./assert/daashboard.png";

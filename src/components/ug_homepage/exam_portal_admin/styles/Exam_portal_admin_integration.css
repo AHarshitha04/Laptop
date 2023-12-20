@@ -8,6 +8,12 @@
   
   .Exam_portal_admin_integration_container{
     display: flex;
+    margin: 2rem auto;
+    /* border: 1px solid red; */
+    box-shadow: 0px 0px 15px rgba(39, 158, 255, 0.822);
+    padding:  1rem;
+    border-radius: 18px;
+    height: 80vh;
   }
 
 
@@ -92,7 +98,7 @@
   
   .left-nav-bar {
     width: 240px;
-    height: 100vh;
+    height: auto;
     /* background-color: #000000; */
     /* background: #e2f7fb; */
     background: #1a374d;

@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import "./styles/otcCss.css";
+
 
 export const UpdateInstruction = () => {
   const [points, setPoints] = useState([]);
@@ -57,9 +59,10 @@ export const UpdateInstruction = () => {
       {points.map((item, index) => (
         <div key={index} className="Instruction_-points_-content" style={{display:'flex',gap:'1rem'}}>
           <label htmlFor="">{item.id}</label> 
-          <input
+          <textarea
             type="text"
             value={item.points}
+            id="Update_Instruction_point"
             onChange={(e) => handleInputChange(index, e.target.value)}
           />
         </div>
