@@ -22,7 +22,7 @@ const Read = () => {
     const [user, setUsers] = useState([]);
  
     useEffect(() => {
-        axios.get("http://localhost:5001/userdetails/"+id)
+        axios.get("http://localhost:5001/ughomepage_banner_login/userdetails/"+id)
         .then(res => {
             console.log(res)
             setUsers(res.data[0]);

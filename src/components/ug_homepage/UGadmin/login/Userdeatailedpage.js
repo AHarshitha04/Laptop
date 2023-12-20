@@ -16,7 +16,7 @@ const Userdeatailedpage = () => {
         const email = localStorage.getItem("loggedInUserEmail");
 
         if (email) {
-          const response = await axios.get(`http://localhost:5001/userdetails?email=${email}`);
+          const response = await axios.get(`http://localhost:5001/ughomepage_banner_login/userdetails?email=${email}`);
           setUserData(response.data.user); // Set user data in state
         } else {
           // Handle case where email is not found in localStorage

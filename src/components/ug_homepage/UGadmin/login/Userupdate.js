@@ -37,7 +37,7 @@ const Userupdate = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5001/userdetails/" + id)
+      .get("http://localhost:5001/ughomepage_banner_login/userdetails/" + id)
       .then((res) => {
         console.log(res);
         setUser(res.data[0]);
@@ -49,7 +49,7 @@ const Userupdate = () => {
     e.preventDefault();
 
     try {
-      await axios.put(`http://localhost:5001/users/${userId}`, user);
+      await axios.put(`http://localhost:5001/ughomepage_banner_login/users/${userId}`, user);
       navigate("/Account_info");
     } catch (err) {
       console.log(err);
