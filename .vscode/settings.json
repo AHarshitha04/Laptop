@@ -24,6 +24,6 @@
     "console-ninja.featureSet": "Community",
     "prettier.endOfLine": "auto",
     "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.fontFamily": "\"Iosevka Slab\", monospace",
-    "workbench.colorTheme": "Developers Theme - Ocean",
+    "editor.fontFamily": "'FontAwesome'",
+    "workbench.colorTheme": "Tron Contrast (rainglow)",
 }
