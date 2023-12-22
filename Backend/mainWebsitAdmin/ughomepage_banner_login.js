@@ -747,7 +747,7 @@ router.get("/UGhomepageadimcourses", (req, res) => {
   
       // Update user details with hashed password
       db1.query(
-        "UPDATE users SET email = ?, username = ?, password = ?, role = ? WHERE id = ?",
+        "UPDATE log SET email = ?, username = ?, password = ?, role = ? WHERE id = ?",
         [email, username, hashedPassword, role, id],
         (err, result) => {
           if (err) {

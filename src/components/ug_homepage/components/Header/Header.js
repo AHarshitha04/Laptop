@@ -74,9 +74,9 @@ const Header = () => {
                   className="mobile_menu mobile_menu_non"
                   onClick={() => setshowMenu(!showMenu)}
                 >
-                  <div className={showMenu ? "rotate_right  " : "lines "}></div>
-                  <div className={showMenu ? "no_lines  " : "lines "}></div>
-                  <div className={showMenu ? "rotate_left  " : "lines "}></div>
+                  <div className={showMenu ? "rotate_right  " : "lines_ "}></div>
+                  <div className={showMenu ? "no_lines  " : "lines_ "}></div>
+                  <div className={showMenu ? "rotate_left  " : "lines_ "}></div>
                 </div>
                 {/* <a href="#"><AiOutlineMenu/></a> */}{" "}
               </div>

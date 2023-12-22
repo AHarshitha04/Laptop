@@ -103,10 +103,15 @@ console.log("hello");
     setshowcard2(true)
 
   };
+  const userRole = localStorage.getItem('userRole');
   return (
     <>
       <div className="Quiz_main_page_container">
         <div className="Quiz_main_page_container_btns">
+
+        {/* {(userRole === 'admin' || userRole === 'ugadmin') && ( */}
+{userRole === 'admin'  && (
+      
           <button
             className={
               showcardactive2 ? "showcardactive" : "showcardactivenone"
@@ -115,32 +120,45 @@ console.log("hello");
           >
             UG Page Admin
           </button>
+   )}
+{userRole === 'admin'  && (
 
-          <button
-            className={
-              showcardactive1 ? "showcardactive" : "showcardactivenone"
-            }
-            onClick={UG_HOMEQuiz_btn}
-          >
-            UG Quiz Admin
-          </button>
+// {(userRole === 'admin' || userRole === 'ugotsadmin') && (
+  <button
+    className={showcardactive1 ? "showcardactive" : "showcardactivenone"}
+    onClick={UG_HOMEQuiz_btn}
+  >
+    UG Quiz Admin
+  </button>
+)}
         </div>
 
 
+ {/* {(userRole === 'admin' || userRole === 'ugadmin') && ( */}
+{userRole === 'admin'  && (
 
-        {showcard1 ? (
+ <>
+ 
+  {showcard1 ? (
           <div className="UGhomepageadmin">
           <UploadPage />
         </div>
 
 
 ) : null}
+
+ </>)}
+        
        
 
        
+ {/* {(userRole === 'admin' || userRole === 'ugotsadmin') && ( */}
 
-       
-       {showcard2 ? (
+{userRole === 'admin'  && (
+
+  <>
+    
+    {showcard2 ? (
           <div className="UGQUizadmin">
          
         <Exam_portal_admin_integration/>
@@ -149,6 +167,22 @@ console.log("hello");
 
 
 ) : null}
+  
+  </>
+ )}
+   
+
+{userRole === 'ugadmin'  && (
+  <>
+    <UploadPage />
+  </>
+)}
+
+{userRole === 'ugotsadmin'  && (
+  <>
+    <Exam_portal_admin_integration />
+  </>
+)}
 </div>
     </>
   );
