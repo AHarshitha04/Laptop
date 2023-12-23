@@ -2,21 +2,18 @@
     "git.autofetch": true,
     "files.autoSave": "afterDelay",
     "[javascriptreact]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
     "editor.wordWrap": "on",
- 
     "[javascript]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
     "emmet.includeLanguages": {
- 
-        "javascript": "javascriptreact"
-   
+      "javascript": "javascriptreact"
     },
     "[css]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
-    },   
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
     "workbench.iconTheme": "developer-icon-theme",
     "workbench.productIconTheme": "developer-icons",
     "workbench.sideBar.location": "right",
@@ -24,6 +21,8 @@
     "console-ninja.featureSet": "Community",
     "prettier.endOfLine": "auto",
     "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.fontFamily": "\"Iosevka Slab\", monospace",
-    "workbench.colorTheme": "Developers Theme - Ocean",
-}
+    "editor.fontFamily": "'FontAwesome'",
+    "workbench.colorTheme": "Tron Contrast (rainglow)" // Your desired theme
+  }
+  
+  
