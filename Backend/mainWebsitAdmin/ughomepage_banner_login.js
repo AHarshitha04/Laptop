@@ -13,8 +13,6 @@ const { register } = require("module");
 
 app.use(bodyParser.json());
 
-// --------------------------------------------------- databse connection finish ------------------------------------
-
 // --------------------------------------------------- ug admin for banners page------------------------------------
 
 // ----------------------------------UGhomepageadimcourses
