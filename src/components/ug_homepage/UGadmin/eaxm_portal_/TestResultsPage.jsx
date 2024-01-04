@@ -1,50 +1,47 @@
 
-import { useLocation } from 'react-router-dom';
+import React from 'react'
+import { useParams, useNavigate } from "react-router-dom";
 
 
 
 const TestResultsPage = () => {
 
-    // Explicitly use the useLocation hook
-  const location = useLocation();
+  //   // Explicitly use the useLocation hook
+  // const location = useLocation();
 
-      // Check if location is defined and has a state property
-  if (!location || !location.state) {
-    // Handle the case where location or location.state is undefined
-    return <div>Error: Missing location or location.state</div>;
-  }
+  //     // Check if location is defined and has a state property
+  // if (!location || !location.state) {
+  //   // Handle the case where location or location.state is undefined
+  //   return <div>Error: Missing location or location.state</div>;
+  // }
 
       // Access counts from location state
-  const {
-    answeredCount,
-    notAnsweredCount,
-    markedForReviewCount,
-    answeredmarkedForReviewCount,
-    VisitedCount,
-  } = location.state;
+  // const {
+  //   answeredCount,
+  //   notAnsweredCount,
+  //   markedForReviewCount,
+  //   answeredmarkedForReviewCount,
+  //   VisitedCount,
+  // } = location.state;
 
-  const totalQuestions =
-  answeredCount +
-  notAnsweredCount +
-  markedForReviewCount +
-  answeredmarkedForReviewCount +
-  VisitedCount;
+  // const totalQuestions =
+  // answeredCount +
+  // notAnsweredCount +
+  // markedForReviewCount +
+  // answeredmarkedForReviewCount +
+  // VisitedCount;
 
   
     return (
       <div>
-        <h1>You have completed you exam</h1>
-        <h2>Test Results</h2>
-        <p>Answered Questions: {answeredCount}</p>
-        <p>Not Answered Questions: {notAnsweredCount}</p>
-        <p>Marked for Review: {markedForReviewCount}</p>
-        <p>Answered but Marked for Review: {answeredmarkedForReviewCount}</p>
-        <p>Not Visited Questions: {VisitedCount}</p>
-  
-        {answeredCount === totalQuestions && (
-          <p>Congratulations! You answered all questions.</p>
-        )}
-        {/* Other result details */}
+        <div>
+          <h1>Your Test Performance</h1>
+          <p>Your Score</p>
+          <p>Attempted Questions</p>
+          <p>Correct</p>
+          <p>Top Score</p>
+          <p>Live Rank</p>
+        </div>
       </div>
     );
   };

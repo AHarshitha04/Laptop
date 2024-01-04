@@ -791,6 +791,12 @@ const Paper1 = () => {
     fetchUserData();
   }, []);
 
+
+
+
+
+
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -812,6 +818,12 @@ const Paper1 = () => {
 
     fetchData();
   }, [testCreationTableId]);
+
+
+
+
+
+  
   const handleNextClick = async () => {
     console.log("Before state update", currentQuestionIndex);
   

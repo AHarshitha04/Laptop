@@ -86,6 +86,10 @@ import General_intructions_page from "./components/ug_homepage/UGadmin/eaxm_port
 
 import CoursePage from "./components/ug_homepage/UGadmin/eaxm_portal_/CoursePage.jsx";
 
+// import ExamSummary from './components/ug_homepage/UGadmin/eaxm_portal_/Exam_Summary';
+import SubmitPage from './components/ug_homepage/UGadmin/eaxm_portal_/Submit_Page';
+import TestResultsPage from './components/ug_homepage/UGadmin/eaxm_portal_/TestResultsPage';
+
 // {/* ---------------------------------  Exam_portal_admin_integration ------------- */}
 
 import ExamUpdataion_admin from "./components/ug_homepage/exam_portal_admin/ExamUpdataion_admin.jsx";
@@ -223,9 +227,12 @@ const App = () => {
           path="/General_intructions_page/:testCreationTableId"
           element={<General_intructions_page />}
         />
-
+         
         <Route path="/getPaperData/:testCreationTableId" element={<Paper1 />} />
-
+        <Route path='/SubmitPage'  element={<SubmitPage />} /> 
+        <Route path='/TestResultsPage'  element={<TestResultsPage />} />
+        {/* <Route path='/ExamSummary'  element={<ExamSummary />} /> */}
+         
         {/* ---------------------------------  Exam_portal_admin_integration ------------- */}
         <Route
           path="/ExamUpdataion_admin/:examId"
