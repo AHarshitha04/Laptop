@@ -249,7 +249,7 @@ const App = () => {
         />
 
 <Route
-              path="/getSubjectData/:subjectId/:testCreationTableId/:sectionId"
+              path="/getSubjectData/:testCreationTableId/:subjectId/:sectionId"
               element={<Document_ImageInfo />}
             />
 {/* <Route
