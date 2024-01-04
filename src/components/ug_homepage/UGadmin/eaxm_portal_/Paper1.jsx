@@ -605,24 +605,6 @@
 
 // export default Paper1;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import React, { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -791,26 +773,17 @@ const Paper1 = () => {
     fetchUserData();
   }, []);
 
-
-
-
-
-
-
   useEffect(() => {
     const fetchData = async () => {
       try {
-      
-
         const response = await fetch(
           `http://localhost:5001/QuestionPaper/getPaperData/${testCreationTableId}`
         );
         const result = await response.json();
         setData(result);
         console.log(data);
-         console.log("hello")
-         console.log(testCreationTableId)
-       
+        console.log("hello");
+        console.log(testCreationTableId);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -819,25 +792,19 @@ const Paper1 = () => {
     fetchData();
   }, [testCreationTableId]);
 
-
-
-
-
-  
   const handleNextClick = async () => {
     console.log("Before state update", currentQuestionIndex);
-  
+
     setCurrentQuestionIndex((prevIndex) => {
       if (prevIndex < data.questions.length - 1) {
         return prevIndex + 1;
       }
     });
     try {
-     
       console.log("User ID:", userData.user_Id);
       console.log("Test Creation Table ID:", testCreationTableId);
       console.log("Current Question:", currentQuestion);
-  
+
       const token = localStorage.getItem("token");
       const response = await fetch(
         "http://localhost:5001/ughomepage_banner_login/user",
@@ -846,43 +813,42 @@ const Paper1 = () => {
             Authorization: `Bearer ${token}`, // Attach token to headers for authentication
           },
         }
-      );   
-  
-  
+      );
+
       const responsetc = await fetch(
         `http://localhost:5001/QuestionPaper/getPaperData/${testCreationTableId}`
       );
       const result = await responsetc.json();
       setData(result);
       console.log(data);
-      console.log("hiii")
-      console.log(testCreationTableId)
-  
+      console.log("hiii");
+      console.log(testCreationTableId);
+
       // Move these lines to the top to ensure variables are properly declared
       const user_Id = userData.user_Id;
       const testCreationTableId = data.testCreationTableId;
       const currentQuestion = data.questions[currentQuestionIndex];
-  
+
       if (!data || !data.questions) {
         console.error("Data or questions are null or undefined");
         return;
       }
-  
+
       if (isNaN(user_Id) || isNaN(testCreationTableId) || !currentQuestion) {
         console.error("Invalid values or question data");
         return;
       }
-  
+
       const selectedOption1 = selectedAnswersMap1[currentQuestion.question_id];
       const selectedOption2 = selectedAnswersMap2[currentQuestion.question_id];
-  
+
       const optionIndexes1 =
         selectedOption1 !== undefined ? [selectedOption1] : [];
       const optionIndexes2 =
         selectedOption2 !== undefined ? selectedOption2 : [];
-  
+
       const questionId = currentQuestion.question_id;
-  
+
       if (answeredQuestionsMap[questionId]) {
         const updatedResponse = {
           optionIndexes1: optionIndexes1.map((index) =>
@@ -892,14 +858,14 @@ const Paper1 = () => {
             String.fromCharCode("a".charCodeAt(0) + index)
           ),
         };
-  
+
         const updateResponse = await axios.put(
           `http://localhost:5001/QuestionPaper/updateResponse/${questionId}`,
           {
             updatedResponse,
           }
         );
-  
+
         console.log(updateResponse.data);
         console.log("Handle Next Click - Response Updated");
       } else {
@@ -915,23 +881,23 @@ const Paper1 = () => {
             ),
           },
         };
-  
+
         const saveResponse = await axios.post(
           "http://localhost:5001/QuestionPaper/response",
           {
             responses,
           }
         );
-  
+
         console.log(saveResponse.data);
         console.log("Handle Next Click - New Response Saved");
-  
+
         setAnsweredQuestionsMap((prevMap) => ({
           ...prevMap,
           [questionId]: true,
         }));
       }
-  
+
       setClickCount((prevCount) => prevCount + 1);
       if (currentQuestionIndex < data.length - 1) {
         // setCurrentQuestionIndex((prevActiveQuestion) => prevActiveQuestion + 1);
@@ -939,13 +905,10 @@ const Paper1 = () => {
         // setShowResult(true);
         calculateResult();
       }
-    
     } catch (error) {
       console.error("Error handling next click:", error);
     }
   };
-  
-
 
   // const handleNextClick = async () => {
   //   console.log("Before state update", currentQuestionIndex);
@@ -956,7 +919,7 @@ const Paper1 = () => {
   //     }
   //   });
   //   try {
-     
+
   //     console.log("User ID:", userData.user_Id);
   //     console.log("Test Creation Table ID:", testCreationTableId);
   //     console.log("Current Question:", currentQuestion);
@@ -969,8 +932,7 @@ const Paper1 = () => {
   //           Authorization: `Bearer ${token}`, // Attach token to headers for authentication
   //         },
   //       }
-  //     );   
-
+  //     );
 
   //     const responsetc = await fetch(
   //       `http://localhost:5001/QuestionPaper/getPaperData/${testCreationTableId}`
@@ -980,8 +942,6 @@ const Paper1 = () => {
   //     console.log(data);
   //      console.log("hiii")
   //      console.log(testCreationTableId)
-
-
 
   //     // const data = await responsetc.json();
   //     if (response.ok) {
@@ -1068,7 +1028,7 @@ const Paper1 = () => {
   //       // setShowResult(true);
   //       calculateResult();
   //     }
-    
+
   //   } catch (error) {
   //     console.error("Error handling next click:", error);
   //   }
@@ -1149,8 +1109,8 @@ const Paper1 = () => {
         const result = await response.json();
         setData(result);
         console.log(data);
-         console.log("hello")
-         console.log(testCreationTableId)
+        console.log("hello");
+        console.log(testCreationTableId);
         const selectedAnswersForSubject =
           selectedAnswersMap1[defaultSubjectId] || [];
         setSelectedAnswers(selectedAnswersForSubject);
@@ -1241,6 +1201,27 @@ const Paper1 = () => {
 
   const markForReview = () => {};
 
+  const [questionData, setQuestionData] = useState({});
+  const  {  sectionId } = useParams();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`http://localhost:5001/QuestionPaper/fulldocimages/${testCreationTableId}/${subjectId}/${sectionId}`);
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        setQuestionData(data);
+      } catch (error) {
+        console.error('Error fetching question data:', error);
+      }
+    };
+
+    fetchData();
+  }, [testCreationTableId, subjectId, sectionId]); 
+
   return (
     <div>
       {!showExamSumary ? (
@@ -1274,7 +1255,73 @@ const Paper1 = () => {
             </div>
           </div>
           <div>
-            {data !== null && data.questions.length > 0 ? (
+          {questionData.questions.map((question, index) => (
+        <div key={index} className="question-container">
+          <h3>Question {question.question_id}</h3>
+          <img
+            src={`http://localhost:3081/uploads/${question.documen_name}/${question.questionImgName}`}
+            alt={`Question ${question.question_id}`}
+          />
+
+          {/* Display options */}
+          <div>
+            {question.options.map((option, optionIndex) => (
+              <div key={optionIndex}>
+                {String.fromCharCode("a".charCodeAt(0) + optionIndex)}
+                <img
+                  src={`http://localhost:3081/uploads/${question.documen_name}/${option.optionImgName}`}
+                  alt={`Option ${option.option_id}`}
+                />
+              </div>
+            ))}
+          </div>
+
+          {/* Display solution */}
+          {question.solution && (
+            <div>
+              <h3>Solution</h3>
+              <img
+                src={`http://localhost:3081/uploads/${question.documen_name}/${question.solution.solutionImgName}`}
+                alt={`Solution ${question.solution.solution_id}`}
+              />
+            </div>
+          )}
+          <div>
+            {question.qtype && (
+              <div>
+                <h3>qtype</h3>
+                {question.qtype.qtype_text}
+              </div>
+            )}
+          </div>
+          <div>
+            {question.answer && (
+              <div>
+                <h3>ans</h3>
+                {question.answer.answer_text}
+              </div>
+            )}
+          </div>
+          <div>
+            {question.marks && (
+              <div>
+                <h3>Marks</h3>
+                {question.marks.marks_text}
+              </div>
+            )}
+          </div>
+          <div>
+            {question.sortid && (
+              <div>
+                <h3>sortid</h3>
+                {question.sortid.sortid_text}
+              </div>
+            )}
+          </div>
+        
+        </div>
+      ))}
+            {/* {data !== null && data.questions.length > 0 ? (
               <div className="qps_button_sections">
                 <div className="question_paper_section">
                   <div className="question_options_container">
@@ -1419,7 +1466,7 @@ const Paper1 = () => {
               </div>
             ) : (
               <p>Loading data...</p>
-            )}
+            )} */}
           </div>
         </div>
       ) : (
