@@ -19,7 +19,7 @@ const UgadminHome = () => {
   return (
     <div>      
 
-{(userRole === 'admin' || userRole === 'ugotsadmin' ||  userRole === 'ugadmin') && (
+      {userRole === 'admin' && (
         <div>
           <p>Admin View: Show all features</p>
           {/* Admin-specific content goes here */}

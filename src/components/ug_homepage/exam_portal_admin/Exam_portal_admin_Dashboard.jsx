@@ -32,53 +32,40 @@ const useFetchCount = (url) => {
 
 const Exam_portal_admin_Dashboard = () => {
   const examCount = useFetchCount("http://localhost:5001/Dashboard/exam/count");
-  const courseCount = useFetchCount(
-    "http://localhost:5001/Dashboard/courses/count"
-  );
+  const courseCount = useFetchCount("http://localhost:5001/Dashboard/courses/count");
   const testCount = useFetchCount("http://localhost:5001/Dashboard/test/count");
-  const questionCount = useFetchCount(
-    "http://localhost:5001/Dashboard/question/count"
-  );
-  console.log(examCount);
+  const questionCount = useFetchCount("http://localhost:5001/Dashboard/question/count");
+console.log(examCount)
   return (
+    
     <div className="Dashboard_container">
       {/* <h1>Dashboard</h1> */}
-      <h1 className="textColor">Dashboard</h1>
-      {/* <div style={{display:'flex',flexDirection:'column'}}>
-       */}
-
-      <div className="Dashboard_subcontainer">
-        <div
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-            justifyContent: "center",
-            alignItems: "center",
-            gap: "1rem",
-          }}
-        >
-          <div className="Dashboard_contant">
-            <i className="fa-solid fa-user-pen"></i>
-            {/* <img width={150} src={TotalExam} alt="" /> */}
-            <h2>Total Exams </h2>
-            <h2 className="examCount"> {examCount}</h2>
-          </div>
-          <div className="Dashboard_contant">
-            <i className="fa-solid fa-pen-nib"></i>
-            <h2>Total Courses</h2>
-            <h2> {courseCount}</h2>
-          </div>
-          <div className="Dashboard_contant">
-            <i className="fa-solid fa-person-chalkboard"></i>
-            <h2>Total Tests</h2>
-            <h2 className="examCount"> {testCount}</h2>
-          </div>
-          <div className="Dashboard_contant">
-            <i className="fa-solid fa-file-lines"></i>
-            <h2>Total Questions </h2>
-            <h2 className="examCount">{questionCount}</h2>
-          </div>
-        </div>
+  <h1 className="textColor">Dashboard</h1>
+      <div style={{display:'flex',flexDirection:'column'}}>
+       
+      <div style={{display:'flex',gap:'1rem'}}>
+      <div className="Dashboard_contant">
+        <i  className="fa-solid fa-user-pen"></i>
+        {/* <img width={150} src={TotalExam} alt="" /> */}
+        <h2>Total Exams </h2>
+        <h2 className="examCount"> {examCount}</h2>
+      </div>
+      <div className="Dashboard_contant">
+        <i className="fa-solid fa-pen-nib"></i>
+        <h2>Total Courses</h2>
+        <h2> {courseCount}</h2>
+      </div>
+      <div className="Dashboard_contant">
+        <i className="fa-solid fa-person-chalkboard"></i>
+        <h2>Total Tests</h2>
+        <h2 className="examCount"> {testCount}</h2>
+      </div>
+      <div className="Dashboard_contant">
+        <i className="fa-solid fa-file-lines"></i>
+        <h2>Total Questions </h2>
+        <h2 className="examCount">{questionCount}</h2>
+      </div>
+      </div>
       </div>
     </div>
   );

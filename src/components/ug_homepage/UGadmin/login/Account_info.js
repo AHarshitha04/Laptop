@@ -86,14 +86,8 @@ const Account_info = () => {
           <Users />
         </div>
       )}
-<<<<<<< HEAD
 
       {userRole === "viewer" && (
-=======
-      {(userRole === "viewer" ||
-        userRole === "ugotsadmin" ||
-        userRole === "ugadmin") && (
->>>>>>> 68a70ae5e4dda9d40b96baab08e3ed12626fafef
         <div>
           <p>Viewer View: Show limited features</p>
 
@@ -144,15 +138,11 @@ export const Users = () => {
     <div className="act_infocontainer">
       <div className="row">
         <div className="col-md-12">
-<<<<<<< HEAD
           <p>
             <Link to="/add" className="btn btn-success">
               Add new users
             </Link>
           </p>
-=======
-          {/* <p><Link to="/add" className="btn btn-success">Add new users</Link></p> */}
->>>>>>> 68a70ae5e4dda9d40b96baab08e3ed12626fafef
           <table className="table table-bordered">
             <thead className="otsGEt_-contantHead otc_-table_-header">
               <tr>
@@ -243,20 +233,12 @@ export const Users_info = () => {
 
     fetchUserData();
   }, []);
-<<<<<<< HEAD
 
   return (
     <>
       <div>
         <div className="profilepic">
           <p>User ID: {userData.user_Id}</p>
-=======
-  return (
-    <>
-      <div>
-        <div className="profilepic">propic</div>
-        <div className="pofile_data">
->>>>>>> 68a70ae5e4dda9d40b96baab08e3ed12626fafef
           <h2>Username: {userData.username}</h2>
           <p>Email: {userData.email}</p>
         </div>
