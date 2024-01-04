@@ -121,7 +121,7 @@ const Register = () => {
           <h2>Register</h2>
           <form onSubmit={handleRegister}>
             <label>Username:
-              <input type="text" value={username} onChange={(e) => setUsername(e.target.value)}  />
+              <input  value={username} onChange={(e) => setUsername(e.target.value)}  />
             </label>
             
             <label>Email:

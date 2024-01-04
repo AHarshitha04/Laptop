@@ -208,20 +208,23 @@ const App = () => {
 
         {/* ========================================================= quiz exam routes ====================================================================== */}
 
+
+
+
         <Route path="/feachingcourse/:examId" element={<CoursePage />} />
         <Route path="/Test_List/:courseCreationId" element={<FullTest />} />
         <Route
-          path="/Instructions/:testCreationTableId/:minSubjectId"
+          path="/Instructions/:testCreationTableId"
           element={<Instructions />}
         />
-        {/* <Route path='/General_intructions_page/:testCreationTableId/:minSubjectId' element={<General_intructions_page />} /> */}
+       
 
         <Route
-          path="/General_intructions_page/:testCreationTableId/1"
+          path="/General_intructions_page/:testCreationTableId"
           element={<General_intructions_page />}
         />
 
-        <Route path="/subjects/:testCreationTableId/1" element={<Paper1 />} />
+        <Route path="/getPaperData/:testCreationTableId" element={<Paper1 />} />
 
         {/* ---------------------------------  Exam_portal_admin_integration ------------- */}
         <Route

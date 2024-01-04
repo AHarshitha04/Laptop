@@ -1,150 +1,603 @@
-
-
 // import React, { useState, useEffect } from "react";
-// import { useParams, Link } from "react-router-dom";
+// import { useParams, Link, useNavigate } from "react-router-dom";
+// import axios from "axios";
+// import ButtonsFunctionality from "./ButtonsFunctionality";
+// import './styles/Paper.css'
 
 // const Paper1 = () => {
-//   const [data, setData] = useState(null);
-//   const { subjectId, testCreationTableId } = useParams();
+//   const [data, setData] = useState({ questions: [] });
+//   const { subjectId, testCreationTableId,user_Id } = useParams();
 //   const [Subjects, setSubjects] = useState([]);
+//   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+//   const [selectedSubject, setSelectedSubject] = useState(null);
+//   const [questionStatus, setQuestionStatus] = useState(
+//     Array.isArray(data) ? Array(data.questions.length).fill("notAnswered") : []
+//   );
+//   const [sections, setSections] = useState([]);
+//   const [currentQuestionType, setCurrentQuestionType] = useState(null);
 
+//   const navigate = useNavigate();
 
-//   useEffect(() => {
-//     const fetchData = async () => {
-//       try {
-//         // Fetch all subjects
-//         const responseSubjects = await fetch(
-//           `http://localhost:5001/subjects/${testCreationTableId}`
-//         );
-//         const subjectsData = await responseSubjects.json();
-//         setSubjects(subjectsData);
-//         console.log(subjectsData);
-  
-//         // Find the least subjectId
-//         const leastSubjectId = subjectsData.length > 0 ? Math.min(...subjectsData.map(subject => subject.subjectId)) : null;
-  
-//         // If subjectId is not provided, set it to the least subjectId
-//         const defaultSubjectId = subjectId || leastSubjectId;
-  
-//         // Fetch data for the default subject
-//         const response = await fetch(
-//           `http://localhost:5001/getPaperData/${testCreationTableId}/${defaultSubjectId}`
-//         );
-//         const result = await response.json();
-//         setData(data);
-  
-//         // Construct the link with the least subjectId
-//         const linkUrl = `/subjects/${testCreationTableId}/${subjectId || leastSubjectId}`;
-//         // Use linkUrl as needed in your component
-  
-//       } catch (error) {
-//         console.error("Error fetching data:", error);
+//   const [answeredCount, setAnsweredCount] = useState(0);
+//   const [notAnsweredCount, setNotAnsweredCount] = useState(0);
+//   const [answeredmarkedForReviewCount, setAnsweredmarkedForReviewCount] =
+//     useState(0);
+//   const [markedForReviewCount, setMarkedForReviewCount] = useState(0);
+//   const [VisitedCount, setVisitedCount] = useState(0);
+//   const [showExamSumary, setShowExamSumary] = useState(false);
+//   const calculateQuestionCounts = () => {
+//     let answered = 0;
+//     let notAnswered = 0;
+//     let markedForReview = 0;
+//     let answeredmarkedForReviewCount = 0;
+//     let VisitedCount = 0;
+
+//     questionStatus.forEach((status, index) => {
+//       if (status === "answered") {
+//         answered++;
+//       } else if (status === "notAnswered") {
+//         notAnswered++;
+//       } else if (status === "marked") {
+//         markedForReview++;
+//       } else if (status === "Answered but marked for review") {
+//         answeredmarkedForReviewCount++;
+//       } else if (status === "notVisited") {
+//         VisitedCount++;
 //       }
+//     });
+
+//     return {
+//       answered,
+//       notAnswered,
+//       markedForReview,
+//       answeredmarkedForReviewCount,
+//       VisitedCount,
 //     };
-  
-//     fetchData();
-//   }, [testCreationTableId, subjectId]);
-  
-  
+//   };
 
+//   const handleQuestionSelect = (questionNumber) => {
+//     setCurrentQuestionIndex(questionNumber - 1);
+//   };
 
-
-//   // useEffect(() => {
-//   //   const fetchData = async () => {
-//   //     try {
-//   //       // Fetch all subjects
-//   //       const responseSubjects = await fetch(
-//   //         `http://localhost:5001/subjects/${testCreationTableId}`
-//   //       );
-//   //       const subjectsData = await responseSubjects.json();
-//   //       setSubjects(subjectsData);
-//   //       console.log(subjectsData);
-        
-
-//   //       // If subjectId is not provided, set it to the first subject
-//   //       // const subjectId ='1';
-//   //       // const defaultSubjectId = subjectId || subjectsData[0]?.subjectId;
-//   //       const defaultSubjectId = subjectId || (Subjects.length > 0 ? Subjects[0].subjectId : null);
-
-//   //       // Fetch data for the default subject
-//   //       const response = await fetch(
-//   //         `http://localhost:5001/getPaperData/${testCreationTableId}/${defaultSubjectId}`
-//   //       );
-//   //       const result = await response.json();
-//   //       setData(result);
-//   //     } catch (error) {
-//   //       console.error("Error fetching data:", error);
-//   //     }
-//   //   };
-
-//   //   fetchData();
-//   // }, [testCreationTableId, subjectId]);
-
-
-  
 //   const handleSubjectsClick = async (clickedSubjectId) => {
-//     setData(null);
+//     setCurrentQuestionIndex(0);
+//     setSelectedSubject(clickedSubjectId);
+
+//     const selectedAnswersForSubject =
+//       selectedAnswersMap1[clickedSubjectId] || [];
+//     setSelectedAnswers(selectedAnswersForSubject);
+
 //     try {
 //       const response = await fetch(
-//         `http://localhost:5001/getPaperData/${testCreationTableId}/${clickedSubjectId}`
+//         `http://localhost:5001/QuestionPaper/getPaperData/${testCreationTableId}`
 //       );
 //       const subjectsData = await response.json();
 
 //       if (subjectsData && subjectsData.questions) {
 //         setData(subjectsData);
+//         setSelectedSubject(clickedSubjectId);
+//         setSections(subjectsData.sections);
+//         setCurrentQuestionIndex(0);
+
+//         if (clickedSubjectId !== selectedSubject) {
+//           navigate(`/getPaperData/${testCreationTableId}`);
+//         }
 //       } else {
-//         console.error('Invalid data format:', subjectsData);
+//         console.error("Invalid data format:", subjectsData);
 //       }
 //     } catch (error) {
 //       console.error(error);
 //     }
 //   };
 
-  
+//   const handlePreviousClick = () => {
+//     setCurrentQuestionIndex((prevIndex) =>
+//       prevIndex > 0 ? prevIndex - 1 : prevIndex
+//     );
+//   };
 
+//   const clearResponse = async () => {
+//     try {
+//       const userId = data.questions[currentQuestionIndex].user_Id;
+//       console.log("Response cleared successfully");
+//       // Clear response for radio buttons (MCQ)
+//       const updatedSelectedAnswersMap1 = { ...selectedAnswersMap1 };
+//       updatedSelectedAnswersMap1[userId] = null;
+//       setSelectedAnswersMap1(updatedSelectedAnswersMap1);
+
+//       // Clear response for checkboxes (MSQ)
+//       const updatedSelectedAnswersMap2 = { ...selectedAnswersMap2 };
+//       updatedSelectedAnswersMap2[userId] = [];
+//       setSelectedAnswersMap2(updatedSelectedAnswersMap2);
+
+//       // Send a request to your server to clear the user's response for the current question
+//       const response = await axios.delete(
+//         `http://localhost:5001/QuestionPaper/clearResponse/${userId}`
+//       );
+
+//       if (response.status === 200) {
+//         console.log("Response cleared successfully");
+//         // Update any state or perform additional actions as needed
+//       } else {
+//         console.error("Failed to clear response:", response.data);
+//       }
+//     } catch (error) {
+//       console.error("Error clearing response:", error);
+//     }
+//   };
+
+//   const [clickCount, setClickCount] = useState(0);
+
+//   const [answeredQuestionsMap, setAnsweredQuestionsMap] = useState({});
+//   const correctAnswer =
+//     data && data.questions && data.questions[currentQuestionIndex]
+//       ? data.questions[currentQuestionIndex].correct_answer
+//       : null; // or provide a default value based on your logic
+
+//   const handleNextClick = async () => {
+//     console.log("Before state update", currentQuestionIndex);
+//     setCurrentQuestionIndex((prevIndex) => {
+//       if (prevIndex < data.questions.length - 1) {
+//         return prevIndex + 1;
+//       }
+//     });
+//     try {
+//       if (!data || !data.questions) {
+//         console.error("Data or questions are null or undefined");
+//         return;
+//       }
+
+//       const currentQuestion = data.questions[currentQuestionIndex];
+//       const selectedOption1 = selectedAnswersMap1[currentQuestion.question_id];
+//       const selectedOption2 = selectedAnswersMap2[currentQuestion.question_id];
+
+//       const optionIndexes1 =
+//         selectedOption1 !== undefined ? [selectedOption1] : [];
+//       const optionIndexes2 =
+//         selectedOption2 !== undefined ? selectedOption2 : [];
+
+//       const userId = currentQuestion.user_Id;
+//       const testCreationTableId =  currentQuestion.testCreationTableId	;
+//       if (answeredQuestionsMap[userId]) {
+//         const updatedResponse = {
+//           optionIndexes1: optionIndexes1.map((index) =>
+//             String.fromCharCode("a".charCodeAt(0) + index)
+//           ),
+//           optionIndexes2: optionIndexes2.map((index) =>
+//             String.fromCharCode("a".charCodeAt(0) + index)
+//           ),
+//         };
+
+//         const updateResponse = await axios.put(
+//           `http://localhost:5001/QuestionPaper/updateResponse/${userId}`,
+//           {
+//             updatedResponse,
+//           }
+//         );
+
+//         console.log(updateResponse.data);
+//         console.log("Handle Next Click - Response Updated");
+//       } else {
+//         const responses = {
+//           [userId]: {
+//             optionIndexes1: optionIndexes1.map((index) =>
+//               String.fromCharCode("a".charCodeAt(0) + index)
+//             ),
+//             optionIndexes2: optionIndexes2.map((index) =>
+//               String.fromCharCode("a".charCodeAt(0) + index)
+//             ),
+//           },
+//         };
+
+//         const saveResponse = await axios.post(
+//           "http://localhost:5001/QuestionPaper/response",
+//           {
+//             userId: user_Id,  // Correct the variable name to userId
+//             testcreationtableid: testCreationTableId,
+//               responses,
+//           }
+//       );
+
+//         console.log(saveResponse.data);
+//         console.log("Handle Next Click - New Response Saved");
+
+//         setAnsweredQuestionsMap((prevMap) => ({
+//           ...prevMap,
+//           [userId]: true,
+//         }));
+//       }
+
+//       setClickCount((prevCount) => prevCount + 1);
+//     } catch (error) {
+//       console.error("Error handling next click:", error);
+//     }
+
+//     if (currentQuestionIndex < data.length - 1) {
+//       setCurrentQuestionIndex((prevActiveQuestion) => prevActiveQuestion + 1);
+//     } else {
+//       // setShowResult(true);
+//       calculateResult();
+//     }
+//   };
+
+//   useEffect(() => {
+//     const counts = calculateQuestionCounts();
+//     setAnsweredCount(counts.answered);
+//     setNotAnsweredCount(counts.notAnswered);
+//     setMarkedForReviewCount(counts.markedForReview);
+//     setAnsweredmarkedForReviewCount(counts.answeredmarkedForReviewCount);
+//     setVisitedCount(counts.VisitedCount);
+//   }, [questionStatus]);
+
+//   const handleSubmit = () => {
+//     window.alert("Your Test has been Submitted!! Click Ok to See Result.");
+//     setShowExamSumary(true);
+//     calculateResult();
+//     const counts = calculateQuestionCounts();
+//     setAnsweredCount(counts.answered);
+//     setNotAnsweredCount(counts.notAnswered);
+//     setMarkedForReviewCount(counts.markedForReview);
+//     setAnsweredmarkedForReviewCount(counts.answeredmarkedForReviewCount);
+//     setVisitedCount(counts.VisitedCount);
+//   };
+
+//   const [selectedAnswersMap1, setSelectedAnswersMap1] = useState({});
+//   const [selectedAnswersMap2, setSelectedAnswersMap2] = useState({});
+//   const [selectedAnswers, setSelectedAnswers] = useState([]);
+
+//   const [questionTypes, setQuestionTypes] = useState([]);
+
+//   useEffect(() => {
+//     const fetchQuestionTypes = async () => {
+//       try {
+//         if (data && data.questions) {
+//           const qID = data.questions[currentQuestionIndex].question_id;
+
+//           const responseQuestionTypes = await fetch(
+//             `http://localhost:5001/QuestionPaper/questionType/${qID}`
+//           );
+//           const questionTypes = await responseQuestionTypes.json();
+//           setQuestionTypes(questionTypes);
+
+//           const currentQuestionType = questionTypes.find(
+//             (q) => q.question_id === qID
+//           );
+
+//           setCurrentQuestionType(currentQuestionType);
+//         }
+//       } catch (error) {
+//         console.error("Error fetching question types:", error);
+//       }
+//     };
+
+//     fetchQuestionTypes();
+//   }, [data, currentQuestionIndex]);
+
+//   useEffect(() => {
+//     const fetchData = async () => {
+//       try {
+//         const responseSubjects = await fetch(
+//           `http://localhost:5001/QuestionPaper/subjects/${testCreationTableId}`
+//         );
+//         const subjectsData = await responseSubjects.json();
+//         setSubjects(subjectsData);
+
+//         const leastSubjectId =
+//           subjectsData.length > 0
+//             ? Math.min(...subjectsData.map((subject) => subject.subjectId))
+//             : null;
+
+//         const defaultSubjectId = subjectId || leastSubjectId;
+
+//         const response = await fetch(
+//           `http://localhost:5001/QuestionPaper/getPaperData/${testCreationTableId}`
+//         );
+//         const result = await response.json();
+//         setData(result);
+
+//         const selectedAnswersForSubject =
+//           selectedAnswersMap1[defaultSubjectId] || [];
+//         setSelectedAnswers(selectedAnswersForSubject);
+
+//         const linkUrl = `/subjects/${testCreationTableId}/${
+//           subjectId || leastSubjectId
+//         }`;
+//       } catch (error) {
+//         console.error("Error fetching data:", error);
+//       }
+//     };
+
+//     fetchData();
+//   }, [testCreationTableId, subjectId, selectedAnswersMap1]);
+
+//   const [timer, setTimer] = useState(0);
+//   const [timers, setTimers] = useState(Array(data));
+//   const formatTime = (seconds) => {
+//     const hours = Math.floor(seconds / 3600);
+//     const minutes = Math.floor((seconds % 3600) / 60);
+//     const remainingSeconds = seconds % 60;
+//     return `${hours > 9 ? hours : "0" + hours}:${
+//       minutes > 9 ? minutes : "0" + minutes
+//     }:${remainingSeconds > 9 ? remainingSeconds : "0" + remainingSeconds}`;
+//   };
+
+//   useEffect(() => {
+//     setTimer(timers[currentQuestionIndex] || 0);
+//     let interval;
+//     interval = setInterval(() => {
+//       setTimer((prevTimer) => prevTimer + 1);
+//     }, 1000);
+
+//     return () => {
+//       clearInterval(interval);
+//     };
+//   }, [currentQuestionIndex, timers]);
+
+//   const onAnswerSelected1 = (optionIndex) => {
+//     const questionId = data.questions[currentQuestionIndex].question_id;
+//     const charcodeatopt = String.fromCharCode("a".charCodeAt(0) + optionIndex);
+//     const questionIndex = currentQuestionIndex + 1;
+//     console.log(`Question Index: ${questionIndex}`);
+//     console.log(`Clicked Option Index: ${charcodeatopt}`);
+//     setSelectedAnswersMap1((prevMap) => ({
+//       ...prevMap,
+//       [questionId]: optionIndex,
+//     }));
+//     setSelectedAnswersMap2((prevMap) => ({
+//       ...prevMap,
+//       [questionId]: [],
+//     }));
+//   };
+
+//   const onAnswerSelected2 = (optionIndex) => {
+//     const questionId = data.questions[currentQuestionIndex].question_id;
+//     const charcodeatopt = String.fromCharCode("a".charCodeAt(0) + optionIndex);
+//     const questionIndex = currentQuestionIndex + 1;
+//     console.log(`Question Index: ${questionIndex}`);
+//     console.log(`Clicked Option Index: ${charcodeatopt}`);
+//     setSelectedAnswersMap2((prevMap) => {
+//       const updatedSelection = [...(prevMap[questionId] || [])];
+//       const index = updatedSelection.indexOf(optionIndex);
+
+//       if (index !== -1) {
+//         updatedSelection.splice(index, 1);
+//       } else {
+//         updatedSelection.push(optionIndex);
+//       }
+
+//       return {
+//         ...prevMap,
+//         [questionId]: updatedSelection,
+//       };
+//     });
+//   };
+
+//   // const [showExamSumary, setShowExamSumary] = useState(false);
+//   const calculateResult = () => {
+//     // // Make sure answeredQuestions is defined before accessing its length
+//     // const totalAttempted = answeredQuestions ? answeredQuestions.length : 0;
+//     // // const totalCorrect = result.correctAnswers;
+//   };
+
+//   const handleYes = () => {
+//     navigate("/SubmitPage");
+//   };
+
+//   const markForReview = () => {};
 
 //   return (
 //     <div>
-//       <div className="subjects">
-//         {Subjects.map((subjectTitle) => (
-//           <li key={subjectTitle.subjectId}>
-//             <Link
-//               to="#"
-//               onClick={() => handleSubjectsClick(subjectTitle.subjectId)}
-//               className="subject-btn"
-//             >
-//         {/* {subjectTitle.subjectId[0]} */}
-//               {subjectTitle.subjectName}
-//             </Link>
-//           </li>
-//         ))}
-//       </div>
-//       {data !== null ? (
-//         data.questions.map((question, index) => (
-//           <div key={index}>
-//             <div className="question">
-//               <h3>{index + 1}</h3>
-//               <img
-//                 src={`data:image/png;base64,${question.question_img}`}
-//                 alt="Question"
-//               />
-//             </div>
+//       {!showExamSumary ? (
+//         <div>
+//           <div className="subjects">
+//             {Subjects.map((subjectTitle) => (
+//               <li key={subjectTitle.subjectId}>
+//                 <button
+//                   onClick={() => handleSubjectsClick(subjectTitle.subjectId)}
+//                   className="subject_btn"
+//                 >
+//                   {subjectTitle.subjectName}
+//                 </button>
+//               </li>
+//             ))}
 
-//             {/* Map over options and render them */}
-//             {data.options
-//               .filter((opt) => opt.question_id === question.question_id)
-//               .map((option) => (
-//                 <div className="option" key={option.question_id}>
-//                   <img
-//                     src={`data:image/png;base64,${option.option_img}`}
-//                     alt="Option"
-//                   />
-//                 </div>
+//             <h3>
+//               Question Type:{" "}
+//               {questionTypes.map((type) => (
+//                 <li key={type.quesionTypeId}>
+//                   <p>{type.typeofQuestion}</p>
+//                 </li>
 //               ))}
+//             </h3>
+//             <div className="right-header">
+//               <div className="marks">
+//                 Marks: <div className="plus-mark">+1</div>
+//                 <div className="minus-mark">-1</div>
+//               </div>
+//               <div>Timer: {formatTime(timer)}</div>
+//             </div>
 //           </div>
-//         ))
+//           <div>
+//             {data !== null && data.questions.length > 0 ? (
+//               <div className="qps_button_sections">
+//                 <div className="question_paper_section">
+//                   <div className="question_options_container">
+//                     <div className="question">
+//                       <h3>{currentQuestionIndex + 1}.</h3>
+//                       <img
+//                         src={`data:image/png;base64,${data.questions[currentQuestionIndex].question_img}`}
+//                         alt="Question"
+//                       />
+//                     </div>
+
+//                     {data.options
+//                       .filter(
+//                         (opt) =>
+//                           opt.question_id ===
+//                           data.questions[currentQuestionIndex].question_id
+//                       )
+//                       .map((option, optionIndex) => (
+//                         <div className="option" key={option.option_id}>
+//                           <li className="option_li" key={optionIndex}>
+//                             {currentQuestionType &&
+//                               currentQuestionType.typeofQuestion.toLowerCase() ===
+//                                 "mcq(multiple choice question)" && (
+//                                 <input
+//                                   type="radio"
+//                                   name={`question-${currentQuestionIndex}-option`}
+//                                   value={String.fromCharCode(
+//                                     "A".charCodeAt(0) + optionIndex
+//                                   )}
+//                                   checked={
+//                                     selectedAnswersMap1[
+//                                       data.questions[currentQuestionIndex]
+//                                         .question_id
+//                                     ] === optionIndex
+//                                   }
+//                                   onChange={() =>
+//                                     onAnswerSelected1(optionIndex)
+//                                   }
+//                                 />
+//                               )}
+
+//                             {currentQuestionType &&
+//                               currentQuestionType.typeofQuestion.toLowerCase() ===
+//                                 "msq(multiple selection question)" && (
+//                                 <input
+//                                   type="checkbox"
+//                                   name={`question-${currentQuestionIndex}-optionIndex`}
+//                                   value={String.fromCharCode(
+//                                     "A".charCodeAt(0) + optionIndex
+//                                   )}
+//                                   checked={
+//                                     selectedAnswersMap2[
+//                                       data.questions[currentQuestionIndex]
+//                                         .question_id
+//                                     ] &&
+//                                     selectedAnswersMap2[
+//                                       data.questions[currentQuestionIndex]
+//                                         .question_id
+//                                     ].includes(optionIndex)
+//                                   }
+//                                   onChange={() =>
+//                                     onAnswerSelected2(optionIndex)
+//                                   }
+//                                 />
+//                               )}
+
+//                             {currentQuestionType &&
+//                               currentQuestionType.typeofQuestion.toLowerCase() ===
+//                                 "nat(numerical answer type)" && (
+//                                 <input
+//                                   type="text"
+//                                   name={`question-${currentQuestionIndex}`}
+//                                   value={
+//                                     selectedAnswersMap2[
+//                                       data.questions[currentQuestionIndex]
+//                                         .question_id
+//                                     ] || ""
+//                                   }
+//                                   onChange={(e) =>
+//                                     onAnswerSelected2(e.target.value)
+//                                   }
+//                                 />
+//                               )}
+
+//                             {option.option_img && (
+//                               <div className="option_contents">
+//                                 <p>
+//                                   (
+//                                   {String.fromCharCode(
+//                                     "A".charCodeAt(0) + optionIndex
+//                                   )}
+//                                   )
+//                                 </p>
+//                                 <img
+//                                   src={`data:image/png;base64,${option.option_img}`}
+//                                   alt={`Option-${optionIndex}`}
+//                                 />
+//                               </div>
+//                             )}
+//                           </li>
+//                         </div>
+//                       ))}
+//                   </div>
+
+//                   <div>
+//                     <button className="clear-btn" onClick={markForReview}>
+//                       Mark for Review & Next
+//                     </button>
+//                     <button className="clear-btn" onClick={clearResponse}>
+//                       Clear Response
+//                     </button>
+//                     <button
+//                       className="previous-btn"
+//                       onClick={handlePreviousClick}
+//                       disabled={currentQuestionIndex === 0}
+//                     >
+//                       <i className="fa-solid fa-angles-left"></i> Previous
+//                     </button>
+//                     <button className="save-btn" onClick={handleNextClick}>
+//                       Save and Next <i className="fa-solid fa-angles-right"></i>
+//                     </button>
+//                   </div>
+//                 </div>
+
+//                 <div className="rightsidebar">
+//                   <ButtonsFunctionality
+//                     onQuestionSelect={handleQuestionSelect}
+//                     questionStatus={questionStatus}
+//                     setQuestionStatus={setQuestionStatus}
+//                     answeredCount={answeredCount}
+//                     notAnsweredCount={notAnsweredCount}
+//                     answeredmarkedForReviewCount={answeredmarkedForReviewCount}
+//                     markedForReviewCount={markedForReviewCount}
+//                     VisitedCount={VisitedCount}
+//                     selectedSubject={selectedSubject}
+//                     data={data}
+//                   />
+//                   <button onClick={handleSubmit} id="resume_btn">
+//                     Submit
+//                   </button>
+//                 </div>
+//               </div>
+//             ) : (
+//               <p>Loading data...</p>
+//             )}
+//           </div>
+//         </div>
 //       ) : (
-//         <p>Loading data...</p>
+//         <div className="result">
+//           <h3 id="result_header">Exam Summary</h3>
+//           <div className="result_page_links"></div>
+//           <div className="result_contents">
+//             <p>
+//               Total Questions: <span>{data.questions.length}</span>
+//             </p>
+//             <p>
+//               Answered Questions:<span> {data.AnsweredQuestions}</span>
+//             </p>
+//             <p>
+//               Not Answered Questions:<span> {data.NotAnsweredQuestions}</span>
+//             </p>
+//             <p>
+//               Marked for Review Questions:
+//               <span> {data.MarkedforReviewQuestions}</span>
+//             </p>
+//             <p>
+//               Answered & Marked for Review Questions:
+//               <span> {data.AnsweredAndMarkedforReviewQuestions}</span>
+//             </p>
+//           </div>
+//           <div>
+//             <h2>
+//               Are you sure you want to submit for final marking? <br />
+//               No changes will be allowed after submission.
+//             </h2>
+//             <button onClick={handleYes}>YES</button>
+//             <button>NO</button>
+//           </div>
+//         </div>
 //       )}
 //     </div>
 //   );
@@ -165,1781 +618,830 @@
 
 
 
-// // import React, { useState, useEffect } from "react";
-// // import { useParams, Link } from "react-router-dom";
-// // import './styles/Paper.css'
-
-// // const Paper1 = () => {
-// //   const [data, setData] = useState(null);
-// //   const { subjectId, testCreationTableId } = useParams();
-// //   const [Subjects, setSubjects] = useState([]);
-
-// //   useEffect(() => {
-// //     const fetchData = async () => {
-// //       try {
-// //         // Fetch all subjects
-// //         const responseSubjects = await fetch(
-// //           `http://localhost:5001/subjects/${testCreationTableId}`
-// //         );
-// //         const subjectsData = await responseSubjects.json();
-// //         setSubjects(subjectsData);
-// //         console.log(subjectsData);
-
-// //         // Find the least subjectId
-// //         const leastSubjectId = subjectsData.length > 0 ? Math.min(...subjectsData.map(subject => subject.subjectId)) : null;
-
-// //         // If subjectId is not provided, set it to the least subjectId
-// //         const defaultSubjectId = subjectId || leastSubjectId;
-
-// //         // Fetch data for the default subject
-// //         const response = await fetch(
-// //           `http://localhost:5001/getPaperData/${testCreationTableId}/${defaultSubjectId}`
-// //         );
-// //         const result = await response.json();
-// //         setData(result);
-
-// //         // Construct the link with the least subjectId
-// //         const linkUrl = `/subjects/${testCreationTableId}/${subjectId || leastSubjectId}`;
-// //         // Use linkUrl as needed in your component
-
-// //       } catch (error) {
-// //         console.error("Error fetching data:", error);
-// //       }
-// //     };
-
-// //     fetchData();
-// //   }, [testCreationTableId, subjectId]);
-
-// //   // useEffect(() => {
-// //   //   const fetchData = async () => {
-// //   //     try {
-// //   //       // Fetch all subjects
-// //   //       const responseSubjects = await fetch(
-// //   //         `http://localhost:5001/subjects/${testCreationTableId}`
-// //   //       );
-// //   //       const subjectsData = await responseSubjects.json();
-// //   //       setSubjects(subjectsData);
-// //   //       console.log(subjectsData);
-
-// //   //       // If subjectId is not provided, set it to the first subject
-// //   //       // const subjectId ='1';
-// //   //       // const defaultSubjectId = subjectId || subjectsData[0]?.subjectId;
-// //   //       const defaultSubjectId = subjectId || (Subjects.length > 0 ? Subjects[0].subjectId : null);
-
-// //   //       // Fetch data for the default subject
-// //   //       const response = await fetch(
-// //   //         `http://localhost:5001/getPaperData/${testCreationTableId}/${defaultSubjectId}`
-// //   //       );
-// //   //       const result = await response.json();
-// //   //       setData(result);
-// //   //     } catch (error) {
-// //   //       console.error("Error fetching data:", error);
-// //   //     }
-// //   //   };
-
-// //   //   fetchData();
-// //   // }, [testCreationTableId, subjectId]);
-
-// //   const handleSubjectsClick = async (clickedSubjectId) => {
-// //     setData(null);
-// //     try {
-// //       const response = await fetch(
-// //         `http://localhost:5001/getPaperData/${testCreationTableId}/${clickedSubjectId}`
-// //       );
-// //       const subjectsData = await response.json();
-
-// //       if (subjectsData && subjectsData.questions) {
-// //         setData(subjectsData);
-// //       } else {
-// //         console.error('Invalid data format:', subjectsData);
-// //       }
-// //     } catch (error) {
-// //       console.error(error);
-// //     }
-// //   };
-
-// //   return (
-// //     <div>
-// //       <div className="subjects">
-// //         {Subjects.map((subjectTitle) => (
-// //           <li key={subjectTitle.subjectId}>
-// //             <Link
-// //               to="#"
-// //               onClick={() => handleSubjectsClick(subjectTitle.subjectId)}
-// //               className="subject-btn"
-// //             >
-// //         {/* {subjectTitle.subjectId[0]} */}
-// //               {subjectTitle.subjectName}
-// //             </Link>
-// //           </li>
-// //         ))}
-// //       </div>
-// //       {data !== null ? (
-// //         data.questions.map((question, index) => (
-// //           <div key={index}>
-// //             <div className="question">
-// //               <strong>{index + 1}.</strong>
-// //               <img
-// //                 src={`data:image/png;base64,${question.question_img}`}
-// //                 alt="Question"
-// //               />
-// //             </div>
-
-// //             {/* Map over options and render them */}
-// //             {data.options
-// //               .filter((opt) => opt.question_id === question.question_id)
-// //               .map((option,optionIndex) => (
-// //                 <div className="option" key={option.question_id}>
-// //                    <input
-// //                   type="radio"
-// //                   // name={`question-${currentQuestionIndex}-option`}
-// //                   value={optionIndex}
-// //                   // checked={
-// //                   //   selectedAnswers[currentQuestionIndex] === optionIndex
-// //                   // }
-// //                   // onChange={() => onAnswerSelected(optionIndex)}
-// //                 />
-// //                   <img
-// //                     src={`data:image/png;base64,${option.option_img}`}
-// //                     alt="Option"
-// //                   />
-// //                 </div>
-// //               ))}
-// //           </div>
-// //         ))
-// //       ) : (
-// //         <p>Loading data...</p>
-// //       )}
-// //     </div>
-// //   );
-// // };
-
-// // export default Paper1;
-
-// // import React, { useState, useEffect } from "react";
-// // import { useParams, Link } from "react-router-dom";
-
-// // const Paper1 = () => {
-// //   const [data, setData] = useState(null);
-// //   const { subjectId, testCreationTableId } = useParams();
-// //   const [Subjects, setSubjects] = useState([]);
-
-// //   useEffect(() => {
-// //     const fetchData = async () => {
-// //       try {
-// //         // Fetch all subjects
-// //         const responseSubjects = await fetch(
-// //           `http://localhost:5001/subjects/${testCreationTableId}`
-// //         );
-// //         const subjectsData = await responseSubjects.json();
-// //         setSubjects(subjectsData);
-// //         console.log(subjectsData);
-
-// //         // Find the least subjectId
-// //         const leastSubjectId = subjectsData.length > 0 ? Math.min(...subjectsData.map(subject => subject.subjectId)) : null;
-
-// //         // If subjectId is not provided, set it to the least subjectId
-// //         const defaultSubjectId = subjectId || leastSubjectId;
-
-// //         // Fetch data for the default subject
-// //         const response = await fetch(
-// //           `http://localhost:5001/getPaperData/${testCreationTableId}/${defaultSubjectId}`
-// //         );
-// //         const result = await response.json();
-// //         setData(result);
-
-// //         // Construct the link with the least subjectId
-// //         const linkUrl = `/subjects/${testCreationTableId}/${subjectId || leastSubjectId}`;
-// //         // Use linkUrl as needed in your component
-
-// //       } catch (error) {
-// //         console.error("Error fetching data:", error);
-// //       }
-// //     };
-
-// //     fetchData();
-// //   }, [testCreationTableId, subjectId]);
-
-// //   // useEffect(() => {
-// //   //   const fetchData = async () => {
-// //   //     try {
-// //   //       // Fetch all subjects
-// //   //       const responseSubjects = await fetch(
-// //   //         `http://localhost:5001/subjects/${testCreationTableId}`
-// //   //       );
-// //   //       const subjectsData = await responseSubjects.json();
-// //   //       setSubjects(subjectsData);
-// //   //       console.log(subjectsData);
-
-// //   //       // If subjectId is not provided, set it to the first subject
-// //   //       // const subjectId ='1';
-// //   //       // const defaultSubjectId = subjectId || subjectsData[0]?.subjectId;
-// //   //       const defaultSubjectId = subjectId || (Subjects.length > 0 ? Subjects[0].subjectId : null);
-
-// //   //       // Fetch data for the default subject
-// //   //       const response = await fetch(
-// //   //         `http://localhost:5001/getPaperData/${testCreationTableId}/${defaultSubjectId}`
-// //   //       );
-// //   //       const result = await response.json();
-// //   //       setData(result);
-// //   //     } catch (error) {
-// //   //       console.error("Error fetching data:", error);
-// //   //     }
-// //   //   };
-
-// //   //   fetchData();
-// //   // }, [testCreationTableId, subjectId]);
-
-// //   const handleSubjectsClick = async (clickedSubjectId) => {
-// //     setData(null);
-// //     try {
-// //       const response = await fetch(
-// //         `http://localhost:5001/getPaperData/${testCreationTableId}/${clickedSubjectId}`
-// //       );
-// //       const subjectsData = await response.json();
-
-// //       if (subjectsData && subjectsData.questions) {
-// //         setData(subjectsData);
-// //       } else {
-// //         console.error('Invalid data format:', subjectsData);
-// //       }
-// //     } catch (error) {
-// //       console.error(error);
-// //     }
-// //   };
-
-// //   return (
-// //     <div>
-// //       <div className="subjects">
-// //         {Subjects.map((subjectTitle) => (
-// //           <li key={subjectTitle.subjectId}>
-// //             <Link
-// //               to="#"
-// //               onClick={() => handleSubjectsClick(subjectTitle.subjectId)}
-// //               className="subject-btn"
-// //             >
-// //         {/* {subjectTitle.subjectId[0]} */}
-// //               {subjectTitle.subjectName}
-// //             </Link>
-// //           </li>
-// //         ))}
-// //       </div>
-// //       {data !== null ? (
-// //         data.questions.map((question, index) => (
-// //           <div key={index}>
-// //             <div className="question">
-// //               <h3>{index + 1}</h3>
-// //               <img
-// //                 src={`data:image/png;base64,${question.question_img}`}
-// //                 alt="Question"
-// //               />
-// //             </div>
-
-// //             {/* Map over options and render them */}
-// //             {data.options
-// //               .filter((opt) => opt.question_id === question.question_id)
-// //               .map((option) => (
-// //                 <div className="option" key={option.question_id}>
-// //                   <img
-// //                     src={`data:image/png;base64,${option.option_img}`}
-// //                     alt="Option"
-// //                   />
-// //                 </div>
-// //               ))}
-// //           </div>
-// //         ))
-// //       ) : (
-// //         <p>Loading data...</p>
-// //       )}
-// //     </div>
-// //   );
-// // };
-
-// // export default Paper1;
-
-// // import React, { useState, useEffect } from "react";
-// // import { useParams, Link } from "react-router-dom";
-
-// // const Paper1 = () => {
-// //   const [data, setData] = useState(null);
-// //   const { subjectId, testCreationTableId } = useParams();
-// //   const [Subjects, setSubjects] = useState([]);
-
-// //   useEffect(() => {
-// //     const fetchData = async () => {
-// //       try {
-// //         // Fetch all subjects
-// //         const responseSubjects = await fetch(
-// //           `http://localhost:5001/subjects/${testCreationTableId}`
-// //         );
-// //         const subjectsData = await responseSubjects.json();
-// //         setSubjects(subjectsData);
-
-// //         // If subjectId is not provided, set it to the least subject id
-// //         const defaultSubjectId = subjectId || (subjectsData.length > 0 ? subjectsData.reduce((min, subject) => subject.subjectId < min ? subject.subjectId : min, subjectsData[0].subjectId) : null);
-
-// //         // Fetch data for the default subject
-// //         const response = await fetch(
-// //           `http://localhost:5001/getPaperData/${testCreationTableId}/${defaultSubjectId}`
-// //         );
-// //         const result = await response.json();
-// //         setData(result);
-// //       } catch (error) {
-// //         console.error("Error fetching data:", error);
-// //       }
-// //     };
-
-// //     fetchData();
-// //   }, [testCreationTableId, subjectId]);
-
-// //   const handleSubjectsClick = async (clickedSubjectId) => {
-// //     setData(null);
-// //     try {
-// //       const response = await fetch(
-// //         `http://localhost:5001/getPaperData/${testCreationTableId}/${clickedSubjectId}`
-// //       );
-// //       const subjectsData = await response.json();
-
-// //       if (subjectsData && subjectsData.questions) {
-// //         setData(subjectsData);
-// //       } else {
-// //         console.error('Invalid data format:', subjectsData);
-// //       }
-// //     } catch (error) {
-// //       console.error(error);
-// //     }
-// //   };
-
-// //   return (
-// //     <div>
-// //       <div className="subjects">
-// //         {Subjects.map((subjectTitle) => (
-// //           <li key={subjectTitle.subjectId}>
-// //             <Link
-// //               to="#"
-// //               onClick={() => handleSubjectsClick(subjectTitle.subjectId)}
-// //               className="subject-btn"
-// //             >
-// //               {subjectTitle.subjectName}
-// //             </Link>
-// //           </li>
-// //         ))}
-// //       </div>
-// //       {data !== null ? (
-// //         data.questions.map((question, index) => (
-// //           <div key={index}>
-// //             <div className="question">
-// //               <h3>{index + 1}</h3>
-// //               <img
-// //                 src={`data:image/png;base64,${question.question_img}`}
-// //                 alt="Question"
-// //               />
-// //             </div>
-
-// //             {/* Map over options and render them */}
-// //             {data.options
-// //               .filter((opt) => opt.question_id === question.question_id)
-// //               .map((option) => (
-// //                 <div className="option" key={option.question_id}>
-// //                   <img
-// //                     src={`data:image/png;base64,${option.option_img}`}
-// //                     alt="Option"
-// //                   />
-// //                 </div>
-// //               ))}
-// //           </div>
-// //         ))
-// //       ) : (
-// //         <p>Loading data...</p>
-// //       )}
-// //     </div>
-// //   );
-// // };
-
-// // export default Paper1;
-
-// // import React, { useState, useEffect } from "react";
-// // import { useParams, Link } from "react-router-dom";
-
-// // const Paper1 = () => {
-// //   const [data, setData] = useState(null);
-// //   const { subjectId, testCreationTableId } = useParams();
-// //   const [Subjects, setSubjects] = useState([]);
-
-// //   useEffect(() => {
-// //     const fetchData = async () => {
-// //       try {
-// //         const response = await fetch(
-// //           `http://localhost:5001/getPaperData/${testCreationTableId}/${subjectId}`
-// //         );
-// //         const result = await response.json();
-// //         setData(result);
-// //         console.log(data);
-// //       } catch (error) {
-// //         console.error("Error fetching data:", error);
-// //       }
-// //     };
-
-// //     fetchData();
-// //   }, [testCreationTableId, subjectId]);
-
-// //   useEffect(() => {
-// //     const fetchSubjects = async () => {
-// //       try {
-// //         const response = await fetch(
-// //           `http://localhost:5001/subjects/${testCreationTableId}`
-// //         );
-// //         const subjectsData = await response.json();
-// //         setSubjects(subjectsData);
-
-// //         // Check if subjectId is not specified in the URL, set the first subject as default
-// //         if (!subjectId && subjectsData.length > 0) {
-// //           handleSubjectsClick(subjectsData[0].subjectId);
-// //         }
-// //       } catch (error) {
-// //         console.error(error);
-// //       }
-// //     };
-
-// //     fetchSubjects();
-// //   }, [testCreationTableId, subjectId]);
-
-// //   const handleSubjectsClick = async (subjectId) => {
-// //     setData(null);
-// //     try {
-// //       const response = await fetch(
-// //         `http://localhost:5001/getPaperData/${testCreationTableId}/${subjectId}`
-// //       );
-// //       const subjectsData = await response.json();
-
-// //       if (subjectsData && subjectsData.questions) {
-// //         setData(subjectsData);
-// //       } else {
-// //         console.error("Invalid data format:", subjectsData);
-// //       }
-
-// //       console.log(subjectId);
-// //     } catch (error) {
-// //       console.error(error);
-// //     }
-// //   };
-
-// //   return (
-// //     <div>
-// //       <div className="subjects">
-// //         {Subjects.map((subjectTitle) => (
-// //           <li key={subjectTitle.subjectId}>
-// //             <Link
-// //               to="#"
-// //               onClick={() => handleSubjectsClick(subjectTitle.subjectId)}
-// //               className="subject-btn"
-// //             >
-// //               {subjectTitle.subjectName}
-// //             </Link>
-// //           </li>
-// //         ))}
-// //       </div>
-// //       {data !== null ? (
-// //         data.questions.map((question, index) => (
-// //           <div key={index}>
-// //             <div className="question">
-// //               <h3>{index + 1}</h3>
-// //               <img
-// //                 src={`data:image/png;base64,${question.question_img}`}
-// //                 alt="Question"
-// //               />
-// //             </div>
-
-// //             {/* Map over options and render them */}
-// //             {data.options
-// //               .filter((opt) => opt.question_id === question.question_id)
-// //               .map((option) => (
-// //                 <div className="option" key={option.question_id}>
-// //                   <img
-// //                     src={`data:image/png;base64,${option.option_img}`}
-// //                     alt="Option"
-// //                   />
-// //                 </div>
-// //               ))}
-// //           </div>
-// //         ))
-// //       ) : (
-// //         <p>Loading data...</p>
-// //       )}
-// //     </div>
-// //   );
-// // };
-
-// // export default Paper1;
-
-// //struture
-
-// // import React, { useState, useEffect } from "react";
-// // import { Link, useParams, useNavigate } from "react-router-dom";
-// // import PaperHeader from "./PaperHeader.js";
-// // import "./styles/Paper.css";
-// // // import ButtonsFunctionality from "./ButtonsFunctionality";
-// // import TestResultsPage from "./TestResultsPage";
-
-// // const Paper1 = ({ answeredQuestions }) => {
-// //   const [selectedSubject, setSelectedSubject] = useState(null);
-
-// //   const handleSubjectSelect = (subject) => {
-// //     // Set the selected subject when a subject button is clicked
-// //     setSelectedSubject(subject);
-// //   };
-
-// //   const [questionData, setQuestionData] = useState([]);
-// //   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-// //   const [Subjects, setSubjects] = useState([]);
-// //   const { testCreationTableId, subjectId } = useParams();
-// //   const [sections, setSections] = useState([]);
-
-// //   const [questionStatus, setQuestionStatus] = useState(
-// //     Array(questionData.length).fill("notAnswered")
-// //   );
-
-// //   const [answeredCount, setAnsweredCount] = useState(0);
-// //   const [notAnsweredCount, setNotAnsweredCount] = useState(0);
-// //   const [answeredmarkedForReviewCount, setAnsweredmarkedForReviewCount] =
-// //     useState(0);
-// //   const [markedForReviewCount, setMarkedForReviewCount] = useState(0);
-// //   const [VisitedCount, setVisitedCount] = useState(0);
-
-// //   const updateCounters = () => {
-// //     let answered = 0;
-// //     let notAnswered = 0;
-// //     let marked = 0;
-// //     let markedForReview = 0;
-// //     let Visited = 0;
-
-// //     questionStatus.forEach((status) => {
-// //       if (status === "answered") {
-// //         answered++;
-// //       } else if (status === "notAnswered") {
-// //         notAnswered++;
-// //       } else if (status === "marked") {
-// //         marked++;
-// //       } else if (status === "Answered but marked for review") {
-// //         markedForReview++;
-// //       } else if (status === "notVisited") {
-// //         Visited++;
-// //       }
-// //     });
-
-// //     setAnsweredCount(answered);
-// //     setNotAnsweredCount(notAnswered);
-// //     setAnsweredmarkedForReviewCount(marked);
-// //     setMarkedForReviewCount(markedForReview);
-// //     setVisitedCount(Visited);
-// //   };
-
-// //   // ---------------------------------Timer code Start--------------------------------
-// //   const [timer, setTimer] = useState(0);
-// //   const [timers, setTimers] = useState(new Array(questionData.length).fill(0));
-
-// //   const formatTime = (seconds) => {
-// //     const hours = Math.floor(seconds / 3600);
-
-// //     const minutes = Math.floor((seconds % 3600) / 60);
-
-// //     const remainingSeconds = seconds % 60;
-
-// //     return `${hours > 9 ? hours : "0" + hours}:${
-// //       minutes > 9 ? minutes : "0" + minutes
-// //     }:${remainingSeconds > 9 ? remainingSeconds : "0" + remainingSeconds}`;
-// //   };
-
-// //   useEffect(() => {
-// //     // Set the timer to the saved value for the current question
-// //     setTimer(timers[currentQuestionIndex] || 0);
-// //     let interval;
-// //     interval = setInterval(() => {
-// //       setTimer((prevTimer) => prevTimer + 1);
-// //     }, 1000);
-// //     // Clear the interval when the component unmounts or when the user moves to the next question
-// //     return () => {
-// //       clearInterval(interval);
-// //     };
-// //   }, [currentQuestionIndex, timers]);
-// //   // ------------------------------------Timer code end--------------------------------
-
-// //   useEffect(() => {
-// //     const fetchSubjects = async () => {
-// //       try {
-// //         const response = await fetch(
-// //           `http://localhost:5001/subjects/${testCreationTableId}`
-// //         );
-// //         const data = await response.json();
-// //         setSubjects(data);
-// //       } catch (error) {
-// //         console.error(error);
-// //       }
-// //     };
-
-// //     const fetchSections = async () => {
-// //       try {
-// //         const response = await fetch(
-// //           `http://localhost:5001/fetchSections/${testCreationTableId}`
-// //         );
-// //         const data = await response.json();
-// //         setSections(data);
-// //       } catch (error) {
-// //         console.error(error);
-// //       }
-// //     };
-
-// //     const fetchQuestionData = async () => {
-// //       try {
-// //         const response = await fetch(
-// //           `http://localhost:5001/getPaperData/${testCreationTableId}`
-// //         );
-// //         const data = await response.json();
-
-// //         // Check if the data has both 'questions' and 'options' properties
-// //         if (data && data.questions && data.options) {
-// //           // Assuming both questions and options are arrays, you might want to merge them
-// //           const mergedData = data.questions.map((question, index) => ({
-// //             ...question,
-// //             options: data.options.slice(index * 4, (index + 1) * 4), // Assuming 4 options per question
-// //           }));
-
-// //           setQuestionData(mergedData);
-// //           setQuestionStatus([
-// //             "notAnswered",
-// //             ...Array(mergedData.length - 1).fill("notVisited"),
-// //           ]);
-// //         } else {
-// //           console.error("API response does not have expected structure:", data);
-// //         }
-// //       } catch (error) {
-// //         console.error(error);
-// //       }
-// //     };
-
-// //     fetchSubjects();
-// //     fetchSections();
-// //     fetchQuestionData();
-// //   }, [testCreationTableId]);
-
-// //   useEffect(() => {
-// //     // Call the updateCounters function initially when the component mounts
-// //     updateCounters();
-// //   }, [questionStatus]);
-
-// //   const [selectedAnswers, setSelectedAnswers] = useState(
-// //     Array(questionData.length).fill("")
-// //   );
-
-// //   const onAnswerSelected = (OptionLetter) => {
-// //     const updatedSelectedAnswers = [...selectedAnswers];
-// //     updatedSelectedAnswers[activeQuestion] = OptionLetter;
-// //     setSelectedAnswers(updatedSelectedAnswers);
-
-// //     const updatedQuestionStatus = [...questionStatus];
-// //     updatedQuestionStatus[activeQuestion] = "answered";
-// //     setQuestionStatus(updatedQuestionStatus);
-// //   };
-
-// //   const [activeQuestion, setActiveQuestion] = useState(0);
-
-// //   const markForReview = () => {
-// //     // Update questionStatus for the marked question
-// //     const updatedQuestionStatus = [...questionStatus];
-// //     if (selectedAnswers[activeQuestion]) {
-// //       updatedQuestionStatus[activeQuestion] = "Answered but marked for review";
-// //       if (
-// //         selectedAnswers[activeQuestion] === "Answered but marked for review"
-// //       ) {
-// //         updatedQuestionStatus[activeQuestion] =
-// //           "Answered but marked for review";
-// //       }
-// //     } else if (!selectedAnswers[activeQuestion]) {
-// //       updatedQuestionStatus[activeQuestion] = "marked";
-// //     }
-
-// //     setQuestionStatus(updatedQuestionStatus);
-// //   };
-
-// //   const clearResponse = () => {
-// //     const updatedSelectedAnswers = [...selectedAnswers];
-// //     updatedSelectedAnswers[currentQuestionIndex] = "";
-// //     setSelectedAnswers(updatedSelectedAnswers);
-// //   };
-
-// //   // const goToPreviousQuestion = () => {
-// //   //     setCurrentQuestionIndex((prevIndex) => {
-// //   //         // Save the current timer value for the question
-// //   //         const updatedTimers = [...timers];
-// //   //         updatedTimers[prevIndex] = timer;
-// //   //         setTimers(updatedTimers);
-// //   //         // Move to the previous question
-// //   //         return prevIndex > 0 ? prevIndex - 1 : prevIndex;
-// //   //     });
-
-// //   //     if (questionData.length > 0) {
-// //   //         setActiveQuestion((prevActiveQuestion) => prevActiveQuestion > 0 ? prevActiveQuestion - 1 : prevActiveQuestion);
-// //   //     }
-// //   // };
-
-// //   const goToPreviousQuestion = () => {
-// //     setCurrentQuestionIndex((prevIndex) => {
-// //       // Save the current timer value for the question
-// //       const updatedTimers = [...timers];
-// //       updatedTimers[prevIndex] = timer;
-// //       setTimers(updatedTimers);
-// //       // Move to the previous question
-// //       return prevIndex - 1;
-// //     });
-
-// //     setActiveQuestion((prevActiveQuestion) => prevActiveQuestion - 1);
-// //   };
-
-// //   const handleNextClick = () => {
-// //     setCurrentQuestionIndex((prevIndex) => {
-// //       // Save the current timer value for the question
-
-// //       const updatedTimers = [...timers];
-
-// //       updatedTimers[prevIndex] = timer;
-
-// //       setTimers(updatedTimers);
-// //       return prevIndex + 1;
-// //     });
-
-// //     const updatedQuestionStatus = [...questionStatus];
-
-// //     if (activeQuestion < questionData.length - 1) {
-// //       // Check the status of the next question
-// //       const nextQuestionStatus = questionStatus[activeQuestion + 1];
-
-// //       if (nextQuestionStatus === "answered") {
-// //         updatedQuestionStatus[activeQuestion + 1] = "answered";
-// //       } else if (nextQuestionStatus === "notAnswered") {
-// //         updatedQuestionStatus[activeQuestion + 1] = "notAnswered";
-// //       } else if (!markForReview() === false) {
-// //         markForReview();
-// //       }
-
-// //       setActiveQuestion((prevActiveQuestion) => prevActiveQuestion + 1);
-// //     }
-
-// //     updateCounters();
-
-// //     // Set status of the next question (if any) to "notAnswered"
-
-// //     if (activeQuestion < questionData.length - 1) {
-// //       const updatedQuestionStatus = [...questionStatus];
-// //       const nextQuestionStatus = questionStatus[activeQuestion + 1];
-
-// //       if (nextQuestionStatus === "notVisited") {
-// //         updatedQuestionStatus[activeQuestion + 1] = "notAnswered";
-// //       }
-
-// //       if (selectedAnswers[activeQuestion] === "answered") {
-// //         updatedQuestionStatus[activeQuestion] = "answered";
-// //       } else if (markForReview() === true) {
-// //         updatedQuestionStatus[activeQuestion] =
-// //           "Answered but marked for review";
-// //       } else if (markForReview() === false) {
-// //         updatedQuestionStatus[activeQuestion] = "marked";
-// //       }
-
-// //       if (nextQuestionStatus === "notAnswered") {
-// //         updatedQuestionStatus[activeQuestion + 1] = "notAnswered";
-// //       }
-
-// //       setQuestionStatus(updatedQuestionStatus);
-// //     }
-// //   };
-
-// //   const [accuracy, setAccuracy] = useState(0);
-// //   const [averageScore, setAverageScore] = useState(0);
-// //   const [topScore, setTopScore] = useState(0);
-// //   const [liveRank, setLiveRank] = useState(0);
-
-// //   const calculateQuestionCounts = () => {
-// //     let answered = 0;
-// //     let notAnswered = 0;
-// //     let markedForReview = 0;
-// //     let answeredmarkedForReviewCount = 0;
-// //     let VisitedCount = 0;
-
-// //     questionStatus.forEach((status, index) => {
-// //       if (status === "answered") {
-// //         answered++;
-// //       } else if (status === "notAnswered") {
-// //         notAnswered++;
-// //       } else if (status === "marked") {
-// //         markedForReview++;
-// //       } else if (status === "Answered but marked for review") {
-// //         answeredmarkedForReviewCount++;
-// //       } else if (status === "notVisited") {
-// //         VisitedCount++;
-// //       }
-// //     });
-
-// //     return {
-// //       answered,
-// //       notAnswered,
-// //       markedForReview,
-// //       answeredmarkedForReviewCount,
-// //       VisitedCount,
-// //     };
-// //   };
-
-// //   const [showResult, setShowResult] = useState(false);
-// //   const navigate = useNavigate();
-
-// //   const handleSubmit = () => {
-// //     window.alert("Your Test has been Submitted!! Click Ok to See Result.");
-
-// //     // Call the function to get question counts
-// //     const {
-// //       answered,
-// //       notAnswered,
-// //       markedForReview,
-// //       answeredmarkedForReviewCount,
-// //       VisitedCount,
-// //     } = calculateQuestionCounts();
-
-// //     // Add any additional logic you need for submitting the exam
-// //     // For example, you might want to send this data to the server.
-// //     // Redirect to the result page
-// //     navigate("/result", {
-// //       state: {
-// //         answeredCount: answered,
-// //         notAnsweredCount: notAnswered,
-// //         markedForReviewCount: markedForReview,
-// //         answeredmarkedForReviewCount: answeredmarkedForReviewCount,
-// //         VisitedCount: VisitedCount,
-// //       },
-// //     });
-// //   };
-
-// //   const handleQuestionSelect = (questionNumber) => {
-// //     setCurrentQuestionIndex(questionNumber - 1);
-// //     setActiveQuestion(questionNumber - 1);
-// //   };
-
-// //   // har code
-
-// //   const [data, setData] = useState(null);
-// //   // const { subjectId, testCreationTableId } = useParams();
-// //   // const [Subjects, setSubjects] = useState([]);
-
-// //   useEffect(() => {
-// //     const fetchData = async () => {
-// //       try {
-// //         // Fetch all subjects
-// //         const responseSubjects = await fetch(
-// //           `http://localhost:5001/subjects/${testCreationTableId}`
-// //         );
-// //         const subjectsData = await responseSubjects.json();
-// //         setSubjects(subjectsData);
-// //         console.log(subjectsData);
-
-// //         // Find the least subjectId
-// //         const leastSubjectId =
-// //           subjectsData.length > 0
-// //             ? Math.min(...subjectsData.map((subject) => subject.subjectId))
-// //             : null;
-
-// //         // If subjectId is not provided, set it to the least subjectId
-// //         const defaultSubjectId = subjectId || leastSubjectId;
-
-// //         // Fetch data for the default subject
-// //         const response = await fetch(
-// //           `http://localhost:5001/getPaperData/${testCreationTableId}/${defaultSubjectId}`
-// //         );
-// //         const result = await response.json();
-// //         setData(result);
-
-// //         // Construct the link with the least subjectId
-// //         const linkUrl = `/subjects/${testCreationTableId}/${
-// //           subjectId || leastSubjectId
-// //         }`;
-// //         // Use linkUrl as needed in your component
-// //       } catch (error) {
-// //         console.error("Error fetching data:", error);
-// //       }
-// //     };
-
-// //     fetchData();
-// //   }, [testCreationTableId, subjectId]);
-
-// //   const handleSubjectsClick = async (clickedSubjectId) => {
-// //     setData(null);
-// //     try {
-// //       const response = await fetch(
-// //         `http://localhost:5001/getPaperData/${testCreationTableId}/${clickedSubjectId}`
-// //       );
-// //       const subjectsData = await response.json();
-
-// //       if (subjectsData && subjectsData.questions) {
-// //         setData(subjectsData);
-// //       } else {
-// //         console.error("Invalid data format:", subjectsData);
-// //       }
-// //     } catch (error) {
-// //       console.error(error);
-// //     }
-// //   };
-
-// //   return (
-// //     <div className="Main-Page">
-// //       {showResult ? (
-// //         // Render the ResultPage component here
-// //         <TestResultsPage
-// //           answeredCount={answeredCount}
-// //           notAnsweredCount={notAnsweredCount}
-// //           markedForReviewCount={markedForReviewCount}
-// //           answeredmarkedForReviewCount={answeredmarkedForReviewCount}
-// //           VisitedCount={VisitedCount}
-// //         />
-// //       ) : (
-// //         <div>
-// //           <div>
-// //             <PaperHeader />
-// //           </div>
-// //           <div className="QUESTIONS_CONTAINER">
-// //             <div className="QUESTIONS_CONTAINER_subpart">
-// //               <div className="subjects">
-// //                 {Subjects.map((subjectTitle, index) => (
-// //                   <li key={index}>
-// //                     <Link>
-// //                       <button
-// //                         className="subject-btn"
-// //                         onClick={() =>
-// //                           handleSubjectSelect(subjectTitle.subjectName)
-// //                         }
-// //                       >
-// //                         {subjectTitle.subjectName}
-// //                       </button>
-// //                     </Link>
-// //                     {/* <button className="subject-btn">{subjectTitle.subjectName}</button> */}
-// //                   </li>
-// //                 ))}
-// //               </div>
-
-// //               <div className="second-header">
-// //                 <div className="single-select-question">
-// //                   {sections.map((sectionTitle, index) => (
-// //                     <li key={index}>
-// //                       <p>{sectionTitle.sectionName}</p>
-// //                     </li>
-// //                   ))}
-// //                   {/* Single Select Question */}
-// //                 </div>
-// //                 <div className="right-header">
-// //                   <div className="marks">
-// //                     Marks: <div className="plus-mark">+1</div>
-// //                     <div className="minus-mark">-1</div>
-// //                   </div>
-// //                   <div>Timer: {formatTime(timer)}</div>
-// //                 </div>
-// //               </div>
-
-// //               <div className="Question_No_heading">
-// //                 <p>
-// //                   {" "}
-// //                   Question No. {currentQuestionIndex + 1} of{" "}
-// //                   {questionData.length}
-// //                 </p>
-// //               </div>
-
-// //               <div className="_quizexampart ">
-// //                 {questionData.length > 0 && (
-// //                   <div className="quizexampart_q_O_container">
-// //                     <h4>
-// //                       {/* {currentQuestionIndex + 1}. */}
-// //                       {/* <img
-// //                         src={`data:image/png;base64,${questionData[currentQuestionIndex].question_img}`}
-// //                         alt={`Question ${currentQuestionIndex + 1}`}
-// //                     /> */}
-// //                       {currentQuestionIndex + 1}.
-// //                       <img
-// //                         src={`data:image/png;base64,${questionData[currentQuestionIndex].question_img}`}
-// //                         alt={`Question ${currentQuestionIndex + 1}`}
-// //                       />
-// //                     </h4>
-
-// //                     {questionData[currentQuestionIndex].options.map(
-// //                       (OptionImage, optionIndex) => (
-// //                         <li key={optionIndex}>
-// //                           <input
-// //                             type="radio"
-// //                             name={`question-${currentQuestionIndex}-option`}
-// //                             value={optionIndex}
-// //                             checked={
-// //                               selectedAnswers[currentQuestionIndex] ===
-// //                               optionIndex
-// //                             }
-// //                             onChange={() => onAnswerSelected(optionIndex)}
-// //                           />
-// //                           {/* {OptionImage && OptionImage.option_img && (
-// //                                 <img
-// //                                     key={OptionImage.question_id}
-// //                                     src={`data:image/png;base64,${OptionImage.option_img}`}
-// //                                     alt={`Option ${optionIndex + 1}`}
-// //                                 />
-// //                             )} */}
-
-// //                           {questionData[currentQuestionIndex].options
-// //                             .filter(
-// //                               (opt) =>
-// //                                 opt.question_id === questionData.question_id
-// //                             )
-// //                             .map((OptionImage, optionIndex) => (
-// //                               <div
-// //                                 className="option"
-// //                                 key={OptionImage.question_id}
-// //                               >
-// //                                 <li key={optionIndex}>
-// //                                   <input
-// //                                     type="radio"
-// //                                     name={`question-${currentQuestionIndex}-option`}
-// //                                     value={optionIndex}
-// //                                     checked={
-// //                                       selectedAnswers[currentQuestionIndex] ===
-// //                                       optionIndex
-// //                                     }
-// //                                     onChange={() =>
-// //                                       onAnswerSelected(optionIndex)
-// //                                     }
-// //                                   />
-// //                                   {OptionImage && OptionImage.option_img && (
-// //                                     <img
-// //                                       key={OptionImage.question_id}
-// //                                       src={`data:image/png;base64,${OptionImage.option_img}`}
-// //                                       alt={`Option ${optionIndex + 1}`}
-// //                                     />
-// //                                   )}
-// //                                 </li>
-// //                               </div>
-// //                             ))}
-// //                         </li>
-// //                       )
-// //                     )}
-// //                     <div className="flex-right">
-// //                       <button className="clear-btn" onClick={markForReview}>
-// //                         Mark for Review & Next
-// //                       </button>
-// //                       <button className="clear-btn" onClick={clearResponse}>
-// //                         Clear Response
-// //                       </button>
-// //                       <button
-// //                         className="previous-btn"
-// //                         onClick={goToPreviousQuestion}
-// //                         disabled={currentQuestionIndex === 0}
-// //                       >
-// //                         <i className="fa-solid fa-angles-left"></i> Previous
-// //                       </button>
-// //                       <button className="save-btn" onClick={handleNextClick}>
-// //                         Next <i className="fa-solid fa-angles-right"></i>
-// //                       </button>
-// //                     </div>
-// //                   </div>
-// //                 )}
-// //               </div>
-// //             </div>
-
-// //             <div className="rightsidebar">
-// //               <ButtonsFunctionality
-// //                 onQuestionSelect={handleQuestionSelect}
-// //                 questionStatus={questionStatus}
-// //                 setQuestionStatus={setQuestionStatus}
-// //                 answeredCount={answeredCount}
-// //                 notAnsweredCount={notAnsweredCount}
-// //                 answeredmarkedForReviewCount={answeredmarkedForReviewCount}
-// //                 markedForReviewCount={markedForReviewCount}
-// //                 VisitedCount={VisitedCount}
-// //                 selectedSubject={selectedSubject}
-// //                 questionData={questionData}
-// //               />
-// //               <button onClick={handleSubmit} id="resume_btn">
-// //                 Submit
-// //               </button>
-// //             </div>
-// //           </div>
-// //         </div>
-// //       )}
-// //     </div>
-// //   );
-// // };
-// // export default Paper1;
-
-
-
-// ///practice 1
-
-// // const Paper1 = ({ answeredQuestions }) => {
-// //   const [selectedSubject, setSelectedSubject] = useState(null);
-
-// //   //   const handleSubjectSelect = (subject) => {
-// //   //     // Set the selected subject when a subject button is clicked
-// //   //     setSelectedSubject(subject);
-// //   //   };
-
-// //   const [questionData, setQuestionData] = useState([]);
-// //   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-// //   const [Subjects, setSubjects] = useState([]);
-// //   const { testCreationTableId, subjectId } = useParams();
-// //   const [sections, setSections] = useState([]);
-
-// //   const [questionStatus, setQuestionStatus] = useState(
-// //     Array(questionData.length).fill("notAnswered")
-// //   );
-
-// //   const [answeredCount, setAnsweredCount] = useState(0);
-// //   const [notAnsweredCount, setNotAnsweredCount] = useState(0);
-// //   const [answeredmarkedForReviewCount, setAnsweredmarkedForReviewCount] =
-// //     useState(0);
-// //   const [markedForReviewCount, setMarkedForReviewCount] = useState(0);
-// //   const [VisitedCount, setVisitedCount] = useState(0);
-
-// //   const updateCounters = () => {
-// //     let answered = 0;
-// //     let notAnswered = 0;
-// //     let marked = 0;
-// //     let markedForReview = 0;
-// //     let Visited = 0;
-
-// //     questionStatus.forEach((status) => {
-// //       if (status === "answered") {
-// //         answered++;
-// //       } else if (status === "notAnswered") {
-// //         notAnswered++;
-// //       } else if (status === "marked") {
-// //         marked++;
-// //       } else if (status === "Answered but marked for review") {
-// //         markedForReview++;
-// //       } else if (status === "notVisited") {
-// //         Visited++;
-// //       }
-// //     });
-
-// //     setAnsweredCount(answered);
-// //     setNotAnsweredCount(notAnswered);
-// //     setAnsweredmarkedForReviewCount(marked);
-// //     setMarkedForReviewCount(markedForReview);
-// //     setVisitedCount(Visited);
-// //   };
-
-// //   // ---------------------------------Timer code Start--------------------------------
-// //   const [timer, setTimer] = useState(0);
-// //   const [timers, setTimers] = useState(new Array(questionData.length).fill(0));
-
-// //   const formatTime = (seconds) => {
-// //     const hours = Math.floor(seconds / 3600);
-
-// //     const minutes = Math.floor((seconds % 3600) / 60);
-
-// //     const remainingSeconds = seconds % 60;
-
-// //     return `${hours > 9 ? hours : "0" + hours}:${
-// //       minutes > 9 ? minutes : "0" + minutes
-// //     }:${remainingSeconds > 9 ? remainingSeconds : "0" + remainingSeconds}`;
-// //   };
-
-// //   useEffect(() => {
-// //     // Set the timer to the saved value for the current question
-// //     setTimer(timers[currentQuestionIndex] || 0);
-// //     let interval;
-// //     interval = setInterval(() => {
-// //       setTimer((prevTimer) => prevTimer + 1);
-// //     }, 1000);
-// //     // Clear the interval when the component unmounts or when the user moves to the next question
-// //     return () => {
-// //       clearInterval(interval);
-// //     };
-// //   }, [currentQuestionIndex, timers]);
-// //   // ------------------------------------Timer code end--------------------------------
-
-// //   useEffect(() => {
-// //     const fetchSections = async () => {
-// //       try {
-// //         const response = await fetch(
-// //           `http://localhost:5001/fetchSections/${testCreationTableId}`
-// //         );
-// //         const data = await response.json();
-// //         setSections(data);
-// //       } catch (error) {
-// //         console.error(error);
-// //       }
-// //     };
-
-// //     fetchSections();
-// //   }, [testCreationTableId]);
-
-// //   useEffect(() => {
-// //     const fetchData = async () => {
-// //       try {
-// //         // Fetch all subjects
-// //         const responseSubjects = await fetch(
-// //           `http://localhost:5001/subjects/${testCreationTableId}`
-// //         );
-// //         const subjectsData = await responseSubjects.json();
-// //         setSubjects(subjectsData);
-// //         console.log(subjectsData);
-
-// //         // Find the least subjectId
-// //         const leastSubjectId =
-// //           subjectsData.length > 0
-// //             ? Math.min(...subjectsData.map((subject) => subject.subjectId))
-// //             : null;
-
-// //         // If subjectId is not provided, set it to the least subjectId
-// //         const defaultSubjectId = subjectId || leastSubjectId;
-
-// //         // Fetch data for the default subject
-// //         const response = await fetch(
-// //           `http://localhost:5001/getPaperData/${testCreationTableId}/${defaultSubjectId}`
-// //         );
-// //         const result = await response.json();
-// //         setQuestionData(result);
-
-// //         // Construct the link with the least subjectId
-// //         const linkUrl = `/subjects/${testCreationTableId}/${
-// //           subjectId || leastSubjectId
-// //         }`;
-// //         // Use linkUrl as needed in your component
-// //       } catch (error) {
-// //         console.error("Error fetching data:", error);
-// //       }
-// //     };
-
-// //     fetchData();
-// //   }, [testCreationTableId, subjectId]);
-
-// //   const handleSubjectsClick = async (clickedSubjectId) => {
-// //     setQuestionData(null);
-// //     try {
-// //       const response = await fetch(
-// //         `http://localhost:5001/getPaperData/${testCreationTableId}/${clickedSubjectId}`
-// //       );
-// //       const subjectsData = await response.json();
-
-// //       if (subjectsData && subjectsData.questions) {
-// //         setQuestionData(subjectsData);
-// //       } else {
-// //         console.error("Invalid data format:", subjectsData);
-// //       }
-// //     } catch (error) {
-// //       console.error(error);
-// //     }
-// //   };
-
-// //   useEffect(() => {
-// //     // Call the updateCounters function initially when the component mounts
-// //     updateCounters();
-// //   }, [questionStatus]);
-
-// //   const [selectedAnswers, setSelectedAnswers] = useState(
-// //     Array(questionData.length).fill("")
-// //   );
-
-// //   const onAnswerSelected = (OptionLetter) => {
-// //     const updatedSelectedAnswers = [...selectedAnswers];
-// //     updatedSelectedAnswers[activeQuestion] = OptionLetter;
-// //     setSelectedAnswers(updatedSelectedAnswers);
-
-// //     const updatedQuestionStatus = [...questionStatus];
-// //     updatedQuestionStatus[activeQuestion] = "answered";
-// //     setQuestionStatus(updatedQuestionStatus);
-// //   };
-
-// //   const [activeQuestion, setActiveQuestion] = useState(0);
-
-// //   const markForReview = () => {
-// //     // Update questionStatus for the marked question
-// //     const updatedQuestionStatus = [...questionStatus];
-// //     if (selectedAnswers[activeQuestion]) {
-// //       updatedQuestionStatus[activeQuestion] = "Answered but marked for review";
-// //       if (
-// //         selectedAnswers[activeQuestion] === "Answered but marked for review"
-// //       ) {
-// //         updatedQuestionStatus[activeQuestion] =
-// //           "Answered but marked for review";
-// //       }
-// //     } else if (!selectedAnswers[activeQuestion]) {
-// //       updatedQuestionStatus[activeQuestion] = "marked";
-// //     }
-
-// //     setQuestionStatus(updatedQuestionStatus);
-// //   };
-
-// //   const clearResponse = () => {
-// //     const updatedSelectedAnswers = [...selectedAnswers];
-// //     updatedSelectedAnswers[currentQuestionIndex] = "";
-// //     setSelectedAnswers(updatedSelectedAnswers);
-// //   };
-
-
-// //   const goToPreviousQuestion = () => {
-// //     setCurrentQuestionIndex((prevIndex) => {
-// //       // Save the current timer value for the question
-// //       const updatedTimers = [...timers];
-// //       updatedTimers[prevIndex] = timer;
-// //       setTimers(updatedTimers);
-// //       // Move to the previous question
-// //       return prevIndex - 1;
-// //     });
-
-// //     setActiveQuestion((prevActiveQuestion) => prevActiveQuestion - 1);
-// //   };
-
-// //   const handleNextClick = () => {
-// //     setCurrentQuestionIndex((prevIndex) => {
-// //       // Save the current timer value for the question
-
-// //       const updatedTimers = [...timers];
-
-// //       updatedTimers[prevIndex] = timer;
-
-// //       setTimers(updatedTimers);
-// //       return prevIndex + 1;
-// //     });
-
-// //     const updatedQuestionStatus = [...questionStatus];
-
-// //     if (activeQuestion < questionData.length - 1) {
-// //       // Check the status of the next question
-// //       const nextQuestionStatus = questionStatus[activeQuestion + 1];
-
-// //       if (nextQuestionStatus === "answered") {
-// //         updatedQuestionStatus[activeQuestion + 1] = "answered";
-// //       } else if (nextQuestionStatus === "notAnswered") {
-// //         updatedQuestionStatus[activeQuestion + 1] = "notAnswered";
-// //       } else if (!markForReview() === false) {
-// //         markForReview();
-// //       }
-
-// //       setActiveQuestion((prevActiveQuestion) => prevActiveQuestion + 1);
-// //     }
-
-// //     updateCounters();
-
-// //     // Set status of the next question (if any) to "notAnswered"
-
-// //     if (activeQuestion < questionData.length - 1) {
-// //       const updatedQuestionStatus = [...questionStatus];
-// //       const nextQuestionStatus = questionStatus[activeQuestion + 1];
-
-// //       if (nextQuestionStatus === "notVisited") {
-// //         updatedQuestionStatus[activeQuestion + 1] = "notAnswered";
-// //       }
-
-// //       if (selectedAnswers[activeQuestion] === "answered") {
-// //         updatedQuestionStatus[activeQuestion] = "answered";
-// //       } else if (markForReview() === true) {
-// //         updatedQuestionStatus[activeQuestion] =
-// //           "Answered but marked for review";
-// //       } else if (markForReview() === false) {
-// //         updatedQuestionStatus[activeQuestion] = "marked";
-// //       }
-
-// //       if (nextQuestionStatus === "notAnswered") {
-// //         updatedQuestionStatus[activeQuestion + 1] = "notAnswered";
-// //       }
-
-// //       setQuestionStatus(updatedQuestionStatus);
-// //     }
-// //   };
-
-// //   const [accuracy, setAccuracy] = useState(0);
-// //   const [averageScore, setAverageScore] = useState(0);
-// //   const [topScore, setTopScore] = useState(0);
-// //   const [liveRank, setLiveRank] = useState(0);
-
-// //   const calculateQuestionCounts = () => {
-// //     let answered = 0;
-// //     let notAnswered = 0;
-// //     let markedForReview = 0;
-// //     let answeredmarkedForReviewCount = 0;
-// //     let VisitedCount = 0;
-
-// //     questionStatus.forEach((status, index) => {
-// //       if (status === "answered") {
-// //         answered++;
-// //       } else if (status === "notAnswered") {
-// //         notAnswered++;
-// //       } else if (status === "marked") {
-// //         markedForReview++;
-// //       } else if (status === "Answered but marked for review") {
-// //         answeredmarkedForReviewCount++;
-// //       } else if (status === "notVisited") {
-// //         VisitedCount++;
-// //       }
-// //     });
-
-// //     return {
-// //       answered,
-// //       notAnswered,
-// //       markedForReview,
-// //       answeredmarkedForReviewCount,
-// //       VisitedCount,
-// //     };
-// //   };
-
-// //   const [showResult, setShowResult] = useState(false);
-// //   const navigate = useNavigate();
-
-// //   const handleSubmit = () => {
-// //     window.alert("Your Test has been Submitted!! Click Ok to See Result.");
-
-// //     // Call the function to get question counts
-// //     const {
-// //       answered,
-// //       notAnswered,
-// //       markedForReview,
-// //       answeredmarkedForReviewCount,
-// //       VisitedCount,
-// //     } = calculateQuestionCounts();
-
-// //     // Add any additional logic you need for submitting the exam
-// //     // For example, you might want to send this data to the server.
-// //     // Redirect to the result page
-// //     navigate("/result", {
-// //       state: {
-// //         answeredCount: answered,
-// //         notAnsweredCount: notAnswered,
-// //         markedForReviewCount: markedForReview,
-// //         answeredmarkedForReviewCount: answeredmarkedForReviewCount,
-// //         VisitedCount: VisitedCount,
-// //       },
-// //     });
-// //   };
-
-// //   const handleQuestionSelect = (questionNumber) => {
-// //     setCurrentQuestionIndex(questionNumber - 1);
-// //     setActiveQuestion(questionNumber - 1);
-// //   };
-
-// //   return (
-// //     <div className="Main-Page">
-// //       {showResult ? (
-// //         // Render the ResultPage component here
-// //         <TestResultsPage
-// //           answeredCount={answeredCount}
-// //           notAnsweredCount={notAnsweredCount}
-// //           markedForReviewCount={markedForReviewCount}
-// //           answeredmarkedForReviewCount={answeredmarkedForReviewCount}
-// //           VisitedCount={VisitedCount}
-// //         />
-// //       ) : (
-// //         <div>
-// //           <div>
-// //             <PaperHeader />
-// //           </div>
-// //           <div className="QUESTIONS_CONTAINER">
-// //             <div className="QUESTIONS_CONTAINER_subpart">
-// //               <div className="subjects">
-// //                 {Subjects.map((subjectTitle) => (
-// //                   <li key={subjectTitle.subjectId}>
-// //                     <Link
-// //                       to="#"
-// //                       onClick={() =>
-// //                         handleSubjectsClick(subjectTitle.subjectId)
-// //                       }
-// //                       className="subject-btn"
-// //                     >
-// //                       {/* {subjectTitle.subjectId[0]} */}
-// //                       {subjectTitle.subjectName}
-// //                     </Link>
-// //                   </li>
-// //                 ))}
-// //               </div>
-// //               {/* <div className="subjects">
-// //                 {Subjects.map((subjectTitle, index) => (
-// //                   <li key={index}>
-// //                     <Link>
-// //                       <button
-// //                         className="subject-btn"
-// //                         onClick={() =>
-// //                           handleSubjectSelect(subjectTitle.subjectName)
-// //                         }
-// //                       >
-// //                         {subjectTitle.subjectName}
-// //                       </button>
-// //                     </Link>
-                   
-// //                   </li>
-// //                 ))}
-// //               </div> */}
-
-// //               <div className="second-header">
-// //                 <div className="single-select-question">
-// //                   {sections.map((sectionTitle, index) => (
-// //                     <li key={index}>
-// //                       <p>{sectionTitle.sectionName}</p>
-// //                     </li>
-// //                   ))}
-// //                   {/* Single Select Question */}
-// //                 </div>
-// //                 <div className="right-header">
-// //                   <div className="marks">
-// //                     Marks: <div className="plus-mark">+1</div>
-// //                     <div className="minus-mark">-1</div>
-// //                   </div>
-// //                   <div>Timer: {formatTime(timer)}</div>
-// //                 </div>
-// //               </div>
-
-// //               <div className="Question_No_heading">
-// //                 <p>
-// //                   {" "}
-// //                   Question No. {currentQuestionIndex + 1} of{" "}
-// //                   {questionData.length}
-// //                 </p>
-// //               </div>
-
-// //               <div className="_quizexampart ">
-// //                 {questionData !== null ? (
-// //                   questionData.length > 0 && (
-// //                     <div className="quizexampart_q_O_container">
-// //                       <div className="question">
-// //                         <h3>
-// //                           {currentQuestionIndex + 1}.
-// //                           <img
-// //                             src={`data:image/png;base64,${questionData[currentQuestionIndex].question_img}`}
-// //                             alt={`Question ${currentQuestionIndex + 1}`}
-// //                           />
-// //                         </h3>
-// //                       </div>
-
-// //                       {/* Map over options and render them */}
-// //                       {questionData[currentQuestionIndex].options
-// //                         .filter(
-// //                           (opt) => opt.question_id === questionData.question_id
-// //                         )
-// //                         .map((OptionImage, optionIndex) => (
-// //                           <div className="option" key={OptionImage.question_id}>
-// //                             <li key={optionIndex}>
-// //                               <input
-// //                                 type="radio"
-// //                                 name={`question-${currentQuestionIndex}-option`}
-// //                                 value={optionIndex}
-// //                                 checked={
-// //                                   selectedAnswers[currentQuestionIndex] ===
-// //                                   optionIndex
-// //                                 }
-// //                                 onChange={() => onAnswerSelected(optionIndex)}
-// //                               />
-// //                               {OptionImage && OptionImage.option_img && (
-// //                                 <img
-// //                                   key={OptionImage.question_id}
-// //                                   src={`data:image/png;base64,${OptionImage.option_img}`}
-// //                                   alt={`Option ${optionIndex + 1}`}
-// //                                 />
-// //                               )}
-// //                             </li>
-// //                           </div>
-// //                         ))}
-
-// //                       <div className="flex-right">
-// //                         <button className="clear-btn" onClick={markForReview}>
-// //                           Mark for Review & Next
-// //                         </button>
-// //                         <button className="clear-btn" onClick={clearResponse}>
-// //                           Clear Response
-// //                         </button>
-// //                         <button
-// //                           className="previous-btn"
-// //                           onClick={goToPreviousQuestion}
-// //                           disabled={currentQuestionIndex === 0}
-// //                         >
-// //                           <i className="fa-solid fa-angles-left"></i> Previous
-// //                         </button>
-// //                         <button className="save-btn" onClick={handleNextClick}>
-// //                           Next <i className="fa-solid fa-angles-right"></i>
-// //                         </button>
-// //                       </div>
-// //                     </div>
-// //                   )
-// //                 ) : (
-// //                   <p>Loading data...</p>
-// //                 )}
-// //               </div>
-// //             </div>
-
-// //             <div className="rightsidebar">
-// //               {/* <ButtonsFunctionality
-// //                 onQuestionSelect={handleQuestionSelect}
-// //                 questionStatus={questionStatus}
-// //                 setQuestionStatus={setQuestionStatus}
-// //                 answeredCount={answeredCount}
-// //                 notAnsweredCount={notAnsweredCount}
-// //                 answeredmarkedForReviewCount={answeredmarkedForReviewCount}
-// //                 markedForReviewCount={markedForReviewCount}
-// //                 VisitedCount={VisitedCount}
-// //                 selectedSubject={selectedSubject}
-// //                 questionData={questionData}
-// //               /> */}
-// //               <button onClick={handleSubmit} id="resume_btn">
-// //                 Submit
-// //               </button>
-// //             </div>
-// //           </div>
-// //         </div>
-// //       )}
-// //     </div>
-// //   );
-// // };
-
-
-
-// // export default Paper1;
 
 
 
 
 
 import React, { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import ButtonsFunctionality from "./ButtonsFunctionality";
+import "./styles/Paper.css";
 
 const Paper1 = () => {
-  const [data, setData] = useState(null);
+  const [data, setData] = useState({ questions: [] });
   const { subjectId, testCreationTableId } = useParams();
   const [Subjects, setSubjects] = useState([]);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [selectedSubject, setSelectedSubject] = useState(null);
+  const [questionStatus, setQuestionStatus] = useState(
+    Array.isArray(data) ? Array(data.questions.length).fill("notAnswered") : []
+  );
+  const [sections, setSections] = useState([]);
+  const [currentQuestionType, setCurrentQuestionType] = useState(null);
 
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // Fetch all subjects
-        const responseSubjects = await fetch(
-          `http://localhost:5001/subjects/${testCreationTableId}`
-        );
-        const subjectsData = await responseSubjects.json();
-        setSubjects(subjectsData);
-        console.log(subjectsData);
-  
-        // Find the least subjectId
-        const leastSubjectId = subjectsData.length > 0 ? Math.min(...subjectsData.map(subject => subject.subjectId)) : null;
-  
-        // If subjectId is not provided, set it to the least subjectId
-        const defaultSubjectId = subjectId || leastSubjectId;
-  
-        // Fetch data for the default subject
-        const response = await fetch(
-          `http://localhost:5001/getPaperData/${testCreationTableId}/${defaultSubjectId}`
-        );
-        const result = await response.json();
-        setData(result);
-  
-        // Construct the link with the least subjectId
-        const linkUrl = `/subjects/${testCreationTableId}/${subjectId || leastSubjectId}`;
-        // Use linkUrl as needed in your component
-  
-      } catch (error) {
-        console.error("Error fetching data:", error);
+  const [answeredCount, setAnsweredCount] = useState(0);
+  const [notAnsweredCount, setNotAnsweredCount] = useState(0);
+  const [answeredmarkedForReviewCount, setAnsweredmarkedForReviewCount] =
+    useState(0);
+  const [markedForReviewCount, setMarkedForReviewCount] = useState(0);
+  const [VisitedCount, setVisitedCount] = useState(0);
+  const [showExamSumary, setShowExamSumary] = useState(false);
+  const calculateQuestionCounts = () => {
+    let answered = 0;
+    let notAnswered = 0;
+    let markedForReview = 0;
+    let answeredmarkedForReviewCount = 0;
+    let VisitedCount = 0;
+
+    questionStatus.forEach((status, index) => {
+      if (status === "answered") {
+        answered++;
+      } else if (status === "notAnswered") {
+        notAnswered++;
+      } else if (status === "marked") {
+        markedForReview++;
+      } else if (status === "Answered but marked for review") {
+        answeredmarkedForReviewCount++;
+      } else if (status === "notVisited") {
+        VisitedCount++;
       }
+    });
+
+    return {
+      answered,
+      notAnswered,
+      markedForReview,
+      answeredmarkedForReviewCount,
+      VisitedCount,
     };
-  
-    fetchData();
-  }, [testCreationTableId, subjectId]);
-  
-  
+  };
 
+  const handleQuestionSelect = (questionNumber) => {
+    setCurrentQuestionIndex(questionNumber - 1);
+  };
 
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       // Fetch all subjects
-  //       const responseSubjects = await fetch(
-  //         `http://localhost:5001/subjects/${testCreationTableId}`
-  //       );
-  //       const subjectsData = await responseSubjects.json();
-  //       setSubjects(subjectsData);
-  //       console.log(subjectsData);
-        
-
-  //       // If subjectId is not provided, set it to the first subject
-  //       // const subjectId ='1';
-  //       // const defaultSubjectId = subjectId || subjectsData[0]?.subjectId;
-  //       const defaultSubjectId = subjectId || (Subjects.length > 0 ? Subjects[0].subjectId : null);
-
-  //       // Fetch data for the default subject
-  //       const response = await fetch(
-  //         `http://localhost:5001/getPaperData/${testCreationTableId}/${defaultSubjectId}`
-  //       );
-  //       const result = await response.json();
-  //       setData(result);
-  //     } catch (error) {
-  //       console.error("Error fetching data:", error);
-  //     }
-  //   };
-
-  //   fetchData();
-  // }, [testCreationTableId, subjectId]);
-
-
-  
   const handleSubjectsClick = async (clickedSubjectId) => {
-    setData(null);
+    setCurrentQuestionIndex(0);
+    setSelectedSubject(clickedSubjectId);
+
+    const selectedAnswersForSubject =
+      selectedAnswersMap1[clickedSubjectId] || [];
+    setSelectedAnswers(selectedAnswersForSubject);
+
     try {
       const response = await fetch(
-        `http://localhost:5001/getPaperData/${testCreationTableId}/${clickedSubjectId}`
+        `http://localhost:5001/QuestionPaper/getPaperData/${testCreationTableId}`
       );
       const subjectsData = await response.json();
 
       if (subjectsData && subjectsData.questions) {
         setData(subjectsData);
+        setSelectedSubject(clickedSubjectId);
+        setSections(subjectsData.sections);
+        setCurrentQuestionIndex(0);
+
+        if (clickedSubjectId !== selectedSubject) {
+          navigate(`/getPaperData/${testCreationTableId}`);
+        }
       } else {
-        console.error('Invalid data format:', subjectsData);
+        console.error("Invalid data format:", subjectsData);
       }
     } catch (error) {
       console.error(error);
     }
   };
 
+  const handlePreviousClick = () => {
+    setCurrentQuestionIndex((prevIndex) =>
+      prevIndex > 0 ? prevIndex - 1 : prevIndex
+    );
+  };
+
+  const clearResponse = async () => {
+    try {
+      const questionId = data.questions[currentQuestionIndex].question_id;
+      console.log("Response cleared successfully");
+      // Clear response for radio buttons (MCQ)
+      const updatedSelectedAnswersMap1 = { ...selectedAnswersMap1 };
+      updatedSelectedAnswersMap1[questionId] = null;
+      setSelectedAnswersMap1(updatedSelectedAnswersMap1);
+
+      // Clear response for checkboxes (MSQ)
+      const updatedSelectedAnswersMap2 = { ...selectedAnswersMap2 };
+      updatedSelectedAnswersMap2[questionId] = [];
+      setSelectedAnswersMap2(updatedSelectedAnswersMap2);
+
+      // Send a request to your server to clear the user's response for the current question
+      const response = await axios.delete(
+        `http://localhost:5001/QuestionPaper/clearResponse/${questionId}`
+      );
+
+      if (response.status === 200) {
+        console.log("Response cleared successfully");
+        // Update any state or perform additional actions as needed
+      } else {
+        console.error("Failed to clear response:", response.data);
+      }
+    } catch (error) {
+      console.error("Error clearing response:", error);
+    }
+  };
+
+  const [clickCount, setClickCount] = useState(0);
+
+  const [answeredQuestionsMap, setAnsweredQuestionsMap] = useState({});
+  const correctAnswer =
+    data && data.questions && data.questions[currentQuestionIndex]
+      ? data.questions[currentQuestionIndex].correct_answer
+      : null; // or provide a default value based on your logic
+
+  // /user
+
+  //user name
+  const [userData, setUserData] = useState({});
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const response = await fetch(
+          "http://localhost:5001/ughomepage_banner_login/user",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Attach token to headers for authentication
+            },
+          }
+        );
+
+        if (response.ok) {
+          const userData = await response.json();
+          setUserData(userData);
+          // console.log(userData);
+        } else {
+          // Handle errors, e.g., if user data fetch fails
+        }
+      } catch (error) {
+        // Handle other errors
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+      
+
+        const response = await fetch(
+          `http://localhost:5001/QuestionPaper/getPaperData/${testCreationTableId}`
+        );
+        const result = await response.json();
+        setData(result);
+        console.log(data);
+         console.log("hello")
+         console.log(testCreationTableId)
+       
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, [testCreationTableId]);
+  const handleNextClick = async () => {
+    console.log("Before state update", currentQuestionIndex);
+  
+    setCurrentQuestionIndex((prevIndex) => {
+      if (prevIndex < data.questions.length - 1) {
+        return prevIndex + 1;
+      }
+    });
+    try {
+     
+      console.log("User ID:", userData.user_Id);
+      console.log("Test Creation Table ID:", testCreationTableId);
+      console.log("Current Question:", currentQuestion);
+  
+      const token = localStorage.getItem("token");
+      const response = await fetch(
+        "http://localhost:5001/ughomepage_banner_login/user",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Attach token to headers for authentication
+          },
+        }
+      );   
+  
+  
+      const responsetc = await fetch(
+        `http://localhost:5001/QuestionPaper/getPaperData/${testCreationTableId}`
+      );
+      const result = await responsetc.json();
+      setData(result);
+      console.log(data);
+      console.log("hiii")
+      console.log(testCreationTableId)
+  
+      // Move these lines to the top to ensure variables are properly declared
+      const user_Id = userData.user_Id;
+      const testCreationTableId = data.testCreationTableId;
+      const currentQuestion = data.questions[currentQuestionIndex];
+  
+      if (!data || !data.questions) {
+        console.error("Data or questions are null or undefined");
+        return;
+      }
+  
+      if (isNaN(user_Id) || isNaN(testCreationTableId) || !currentQuestion) {
+        console.error("Invalid values or question data");
+        return;
+      }
+  
+      const selectedOption1 = selectedAnswersMap1[currentQuestion.question_id];
+      const selectedOption2 = selectedAnswersMap2[currentQuestion.question_id];
+  
+      const optionIndexes1 =
+        selectedOption1 !== undefined ? [selectedOption1] : [];
+      const optionIndexes2 =
+        selectedOption2 !== undefined ? selectedOption2 : [];
+  
+      const questionId = currentQuestion.question_id;
+  
+      if (answeredQuestionsMap[questionId]) {
+        const updatedResponse = {
+          optionIndexes1: optionIndexes1.map((index) =>
+            String.fromCharCode("a".charCodeAt(0) + index)
+          ),
+          optionIndexes2: optionIndexes2.map((index) =>
+            String.fromCharCode("a".charCodeAt(0) + index)
+          ),
+        };
+  
+        const updateResponse = await axios.put(
+          `http://localhost:5001/QuestionPaper/updateResponse/${questionId}`,
+          {
+            updatedResponse,
+          }
+        );
+  
+        console.log(updateResponse.data);
+        console.log("Handle Next Click - Response Updated");
+      } else {
+        const responses = {
+          user_Id,
+          testCreationTableId,
+          [questionId]: {
+            optionIndexes1: optionIndexes1.map((index) =>
+              String.fromCharCode("a".charCodeAt(0) + index)
+            ),
+            optionIndexes2: optionIndexes2.map((index) =>
+              String.fromCharCode("a".charCodeAt(0) + index)
+            ),
+          },
+        };
+  
+        const saveResponse = await axios.post(
+          "http://localhost:5001/QuestionPaper/response",
+          {
+            responses,
+          }
+        );
+  
+        console.log(saveResponse.data);
+        console.log("Handle Next Click - New Response Saved");
+  
+        setAnsweredQuestionsMap((prevMap) => ({
+          ...prevMap,
+          [questionId]: true,
+        }));
+      }
+  
+      setClickCount((prevCount) => prevCount + 1);
+      if (currentQuestionIndex < data.length - 1) {
+        // setCurrentQuestionIndex((prevActiveQuestion) => prevActiveQuestion + 1);
+      } else {
+        // setShowResult(true);
+        calculateResult();
+      }
+    
+    } catch (error) {
+      console.error("Error handling next click:", error);
+    }
+  };
   
 
 
+  // const handleNextClick = async () => {
+  //   console.log("Before state update", currentQuestionIndex);
+
+  //   setCurrentQuestionIndex((prevIndex) => {
+  //     if (prevIndex < data.questions.length - 1) {
+  //       return prevIndex + 1;
+  //     }
+  //   });
+  //   try {
+     
+  //     console.log("User ID:", userData.user_Id);
+  //     console.log("Test Creation Table ID:", testCreationTableId);
+  //     console.log("Current Question:", currentQuestion);
+
+  //     const token = localStorage.getItem("token");
+  //     const response = await fetch(
+  //       "http://localhost:5001/ughomepage_banner_login/user",
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`, // Attach token to headers for authentication
+  //         },
+  //       }
+  //     );   
+
+
+  //     const responsetc = await fetch(
+  //       `http://localhost:5001/QuestionPaper/getPaperData/${testCreationTableId}`
+  //     );
+  //     const result = await responsetc.json();
+  //     setData(result);
+  //     console.log(data);
+  //      console.log("hiii")
+  //      console.log(testCreationTableId)
+
+
+
+  //     // const data = await responsetc.json();
+  //     if (response.ok) {
+  //       const userData = await response.json();
+  //       setUserData(userData);
+  //       console.log(userData);
+  //     }
+  //     if (!data || !data.questions) {
+  //       console.error("Data or questions are null or undefined");
+  //       return;
+  //     }
+  //     const user_Id = userData.user_Id;
+  //     const testCreationTableId = data.testCreationTableId;
+  //     const currentQuestion = data.questions[currentQuestionIndex];
+
+  //     if (isNaN(user_Id) || isNaN(testCreationTableId) || !currentQuestion) {
+  //       console.error("Invalid values or question data");
+  //       return;
+  //     }
+
+  //     const selectedOption1 = selectedAnswersMap1[currentQuestion.question_id];
+  //     const selectedOption2 = selectedAnswersMap2[currentQuestion.question_id];
+
+  //     const optionIndexes1 =
+  //       selectedOption1 !== undefined ? [selectedOption1] : [];
+  //     const optionIndexes2 =
+  //       selectedOption2 !== undefined ? selectedOption2 : [];
+
+  //     const questionId = currentQuestion.question_id;
+
+  //     if (answeredQuestionsMap[questionId]) {
+  //       const updatedResponse = {
+  //         optionIndexes1: optionIndexes1.map((index) =>
+  //           String.fromCharCode("a".charCodeAt(0) + index)
+  //         ),
+  //         optionIndexes2: optionIndexes2.map((index) =>
+  //           String.fromCharCode("a".charCodeAt(0) + index)
+  //         ),
+  //       };
+
+  //       const updateResponse = await axios.put(
+  //         `http://localhost:5001/QuestionPaper/updateResponse/${questionId}`,
+  //         {
+  //           updatedResponse,
+  //         }
+  //       );
+
+  //       console.log(updateResponse.data);
+  //       console.log("Handle Next Click - Response Updated");
+  //     } else {
+  //       const responses = {
+  //         user_Id,
+  //         testCreationTableId,
+  //         [questionId]: {
+  //           optionIndexes1: optionIndexes1.map((index) =>
+  //             String.fromCharCode("a".charCodeAt(0) + index)
+  //           ),
+  //           optionIndexes2: optionIndexes2.map((index) =>
+  //             String.fromCharCode("a".charCodeAt(0) + index)
+  //           ),
+  //         },
+  //       };
+
+  //       const saveResponse = await axios.post(
+  //         "http://localhost:5001/QuestionPaper/response",
+  //         {
+  //           responses,
+  //         }
+  //       );
+
+  //       console.log(saveResponse.data);
+  //       console.log("Handle Next Click - New Response Saved");
+
+  //       setAnsweredQuestionsMap((prevMap) => ({
+  //         ...prevMap,
+  //         [questionId]: true,
+  //       }));
+  //     }
+
+  //     setClickCount((prevCount) => prevCount + 1);
+  //     if (currentQuestionIndex < data.length - 1) {
+  //       // setCurrentQuestionIndex((prevActiveQuestion) => prevActiveQuestion + 1);
+  //     } else {
+  //       // setShowResult(true);
+  //       calculateResult();
+  //     }
+    
+  //   } catch (error) {
+  //     console.error("Error handling next click:", error);
+  //   }
+  // };
+
+  useEffect(() => {
+    const counts = calculateQuestionCounts();
+    setAnsweredCount(counts.answered);
+    setNotAnsweredCount(counts.notAnswered);
+    setMarkedForReviewCount(counts.markedForReview);
+    setAnsweredmarkedForReviewCount(counts.answeredmarkedForReviewCount);
+    setVisitedCount(counts.VisitedCount);
+  }, [questionStatus]);
+
+  const handleSubmit = () => {
+    window.alert("Your Test has been Submitted!! Click Ok to See Result.");
+    setShowExamSumary(true);
+    calculateResult();
+    const counts = calculateQuestionCounts();
+    setAnsweredCount(counts.answered);
+    setNotAnsweredCount(counts.notAnswered);
+    setMarkedForReviewCount(counts.markedForReview);
+    setAnsweredmarkedForReviewCount(counts.answeredmarkedForReviewCount);
+    setVisitedCount(counts.VisitedCount);
+  };
+
+  const [selectedAnswersMap1, setSelectedAnswersMap1] = useState({});
+  const [selectedAnswersMap2, setSelectedAnswersMap2] = useState({});
+  const [selectedAnswers, setSelectedAnswers] = useState([]);
+
+  const [questionTypes, setQuestionTypes] = useState([]);
+
+  useEffect(() => {
+    const fetchQuestionTypes = async () => {
+      try {
+        if (data && data.questions) {
+          const qID = data.questions[currentQuestionIndex].question_id;
+
+          const responseQuestionTypes = await fetch(
+            `http://localhost:5001/QuestionPaper/questionType/${qID}`
+          );
+          const questionTypes = await responseQuestionTypes.json();
+          setQuestionTypes(questionTypes);
+
+          const currentQuestionType = questionTypes.find(
+            (q) => q.question_id === qID
+          );
+
+          setCurrentQuestionType(currentQuestionType);
+        }
+      } catch (error) {
+        console.error("Error fetching question types:", error);
+      }
+    };
+
+    fetchQuestionTypes();
+  }, [data, currentQuestionIndex]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const responseSubjects = await fetch(
+          `http://localhost:5001/QuestionPaper/subjects/${testCreationTableId}`
+        );
+        const subjectsData = await responseSubjects.json();
+        setSubjects(subjectsData);
+
+        const leastSubjectId =
+          subjectsData.length > 0
+            ? Math.min(...subjectsData.map((subject) => subject.subjectId))
+            : null;
+
+        const defaultSubjectId = subjectId || leastSubjectId;
+
+        const response = await fetch(
+          `http://localhost:5001/QuestionPaper/getPaperData/${testCreationTableId}`
+        );
+        const result = await response.json();
+        setData(result);
+        console.log(data);
+         console.log("hello")
+         console.log(testCreationTableId)
+        const selectedAnswersForSubject =
+          selectedAnswersMap1[defaultSubjectId] || [];
+        setSelectedAnswers(selectedAnswersForSubject);
+
+        const linkUrl = `/subjects/${testCreationTableId}/${
+          subjectId || leastSubjectId
+        }`;
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, [testCreationTableId, subjectId, selectedAnswersMap1]);
+
+  const [timer, setTimer] = useState(0);
+  const [timers, setTimers] = useState(Array(data));
+  const formatTime = (seconds) => {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const remainingSeconds = seconds % 60;
+    return `${hours > 9 ? hours : "0" + hours}:${
+      minutes > 9 ? minutes : "0" + minutes
+    }:${remainingSeconds > 9 ? remainingSeconds : "0" + remainingSeconds}`;
+  };
+
+  useEffect(() => {
+    setTimer(timers[currentQuestionIndex] || 0);
+    let interval;
+    interval = setInterval(() => {
+      setTimer((prevTimer) => prevTimer + 1);
+    }, 1000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [currentQuestionIndex, timers]);
+
+  const onAnswerSelected1 = (optionIndex) => {
+    const questionId = data.questions[currentQuestionIndex].question_id;
+    const charcodeatopt = String.fromCharCode("a".charCodeAt(0) + optionIndex);
+    const questionIndex = currentQuestionIndex + 1;
+    console.log(`Question Index: ${questionIndex}`);
+    console.log(`Clicked Option Index: ${charcodeatopt}`);
+    setSelectedAnswersMap1((prevMap) => ({
+      ...prevMap,
+      [questionId]: optionIndex,
+    }));
+    setSelectedAnswersMap2((prevMap) => ({
+      ...prevMap,
+      [questionId]: [],
+    }));
+  };
+
+  const onAnswerSelected2 = (optionIndex) => {
+    const questionId = data.questions[currentQuestionIndex].question_id;
+    const charcodeatopt = String.fromCharCode("a".charCodeAt(0) + optionIndex);
+    const questionIndex = currentQuestionIndex + 1;
+    console.log(`Question Index: ${questionIndex}`);
+    console.log(`Clicked Option Index: ${charcodeatopt}`);
+    setSelectedAnswersMap2((prevMap) => {
+      const updatedSelection = [...(prevMap[questionId] || [])];
+      const index = updatedSelection.indexOf(optionIndex);
+
+      if (index !== -1) {
+        updatedSelection.splice(index, 1);
+      } else {
+        updatedSelection.push(optionIndex);
+      }
+
+      return {
+        ...prevMap,
+        [questionId]: updatedSelection,
+      };
+    });
+  };
+
+  // const [showExamSumary, setShowExamSumary] = useState(false);
+  const calculateResult = () => {
+    // // Make sure answeredQuestions is defined before accessing its length
+    // const totalAttempted = answeredQuestions ? answeredQuestions.length : 0;
+    // // const totalCorrect = result.correctAnswers;
+  };
+
+  const handleYes = () => {
+    navigate("/SubmitPage");
+  };
+
+  const markForReview = () => {};
+
   return (
     <div>
-      <div className="subjects">
-        {Subjects.map((subjectTitle) => (
-          <li key={subjectTitle.subjectId}>
-            <Link
-              to="#"
-              onClick={() => handleSubjectsClick(subjectTitle.subjectId)}
-              className="subject-btn"
-            >
-        {/* {subjectTitle.subjectId[0]} */}
-              {subjectTitle.subjectName}
-            </Link>
-          </li>
-        ))}
-      </div>
-      {data !== null ? (
-        data.questions.map((question, index) => (
-          <div key={index}>
-            <div className="question">
-              <h3>{index + 1}</h3>
-              <img
-                src={`data:image/png;base64,${question.question_img}`}
-                alt="Question"
-              />
-            </div>
+      {!showExamSumary ? (
+        <div>
+          <div className="subjects">
+            {Subjects.map((subjectTitle) => (
+              <li key={subjectTitle.subjectId}>
+                <button
+                  onClick={() => handleSubjectsClick(subjectTitle.subjectId)}
+                  className="subject_btn"
+                >
+                  {subjectTitle.subjectName}
+                </button>
+              </li>
+            ))}
 
-            {/* Map over options and render them */}
-            {data.options
-              .filter((opt) => opt.question_id === question.question_id)
-              .map((option) => (
-                <div className="option" key={option.question_id}>
-                  <img
-                    src={`data:image/png;base64,${option.option_img}`}
-                    alt="Option"
-                  />
-                </div>
+            <h3>
+              Question Type:{" "}
+              {questionTypes.map((type) => (
+                <li key={type.quesionTypeId}>
+                  <p>{type.typeofQuestion}</p>
+                </li>
               ))}
+            </h3>
+            <div className="right-header">
+              <div className="marks">
+                Marks: <div className="plus-mark">+1</div>
+                <div className="minus-mark">-1</div>
+              </div>
+              <div>Timer: {formatTime(timer)}</div>
+            </div>
           </div>
-        ))
+          <div>
+            {data !== null && data.questions.length > 0 ? (
+              <div className="qps_button_sections">
+                <div className="question_paper_section">
+                  <div className="question_options_container">
+                    <div className="question">
+                      <h3>{currentQuestionIndex + 1}.</h3>
+                      <img
+                        src={`data:image/png;base64,${data.questions[currentQuestionIndex].question_img}`}
+                        alt="Question"
+                      />
+                    </div>
+
+                    {data.options
+                      .filter(
+                        (opt) =>
+                          opt.question_id ===
+                          data.questions[currentQuestionIndex].question_id
+                      )
+                      .map((option, optionIndex) => (
+                        <div className="option" key={option.option_id}>
+                          <li className="option_li" key={optionIndex}>
+                            {currentQuestionType &&
+                              currentQuestionType.typeofQuestion.toLowerCase() ===
+                                "mcq(multiple choice question)" && (
+                                <input
+                                  type="radio"
+                                  name={`question-${currentQuestionIndex}-option`}
+                                  value={String.fromCharCode(
+                                    "A".charCodeAt(0) + optionIndex
+                                  )}
+                                  checked={
+                                    selectedAnswersMap1[
+                                      data.questions[currentQuestionIndex]
+                                        .question_id
+                                    ] === optionIndex
+                                  }
+                                  onChange={() =>
+                                    onAnswerSelected1(optionIndex)
+                                  }
+                                />
+                              )}
+
+                            {currentQuestionType &&
+                              currentQuestionType.typeofQuestion.toLowerCase() ===
+                                "msq(multiple selection question)" && (
+                                <input
+                                  type="checkbox"
+                                  name={`question-${currentQuestionIndex}-optionIndex`}
+                                  value={String.fromCharCode(
+                                    "A".charCodeAt(0) + optionIndex
+                                  )}
+                                  checked={
+                                    selectedAnswersMap2[
+                                      data.questions[currentQuestionIndex]
+                                        .question_id
+                                    ] &&
+                                    selectedAnswersMap2[
+                                      data.questions[currentQuestionIndex]
+                                        .question_id
+                                    ].includes(optionIndex)
+                                  }
+                                  onChange={() =>
+                                    onAnswerSelected2(optionIndex)
+                                  }
+                                />
+                              )}
+
+                            {currentQuestionType &&
+                              currentQuestionType.typeofQuestion.toLowerCase() ===
+                                "nat(numerical answer type)" && (
+                                <input
+                                  type="text"
+                                  name={`question-${currentQuestionIndex}`}
+                                  value={
+                                    selectedAnswersMap2[
+                                      data.questions[currentQuestionIndex]
+                                        .question_id
+                                    ] || ""
+                                  }
+                                  onChange={(e) =>
+                                    onAnswerSelected2(e.target.value)
+                                  }
+                                />
+                              )}
+
+                            {option.option_img && (
+                              <div className="option_contents">
+                                <p>
+                                  (
+                                  {String.fromCharCode(
+                                    "A".charCodeAt(0) + optionIndex
+                                  )}
+                                  )
+                                </p>
+                                <img
+                                  src={`data:image/png;base64,${option.option_img}`}
+                                  alt={`Option-${optionIndex}`}
+                                />
+                              </div>
+                            )}
+                          </li>
+                        </div>
+                      ))}
+                  </div>
+
+                  <div>
+                    <button className="clear-btn" onClick={markForReview}>
+                      Mark for Review & Next
+                    </button>
+                    <button className="clear-btn" onClick={clearResponse}>
+                      Clear Response
+                    </button>
+                    <button
+                      className="previous-btn"
+                      onClick={handlePreviousClick}
+                      disabled={currentQuestionIndex === 0}
+                    >
+                      <i className="fa-solid fa-angles-left"></i> Previous
+                    </button>
+                    <button className="save-btn" onClick={handleNextClick}>
+                      Save and Next <i className="fa-solid fa-angles-right"></i>
+                    </button>
+                  </div>
+                </div>
+
+                <div className="rightsidebar">
+                  <ButtonsFunctionality
+                    onQuestionSelect={handleQuestionSelect}
+                    questionStatus={questionStatus}
+                    setQuestionStatus={setQuestionStatus}
+                    answeredCount={answeredCount}
+                    notAnsweredCount={notAnsweredCount}
+                    answeredmarkedForReviewCount={answeredmarkedForReviewCount}
+                    markedForReviewCount={markedForReviewCount}
+                    VisitedCount={VisitedCount}
+                    selectedSubject={selectedSubject}
+                    data={data}
+                  />
+                  <button onClick={handleSubmit} id="resume_btn">
+                    Submit
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <p>Loading data...</p>
+            )}
+          </div>
+        </div>
       ) : (
-        <p>Loading data...</p>
+        <div className="result">
+          <h3 id="result_header">Exam Summary</h3>
+          <div className="result_page_links"></div>
+          <div className="result_contents">
+            <p>
+              Total Questions: <span>{data.questions.length}</span>
+            </p>
+            <p>
+              Answered Questions:<span> {data.AnsweredQuestions}</span>
+            </p>
+            <p>
+              Not Answered Questions:<span> {data.NotAnsweredQuestions}</span>
+            </p>
+            <p>
+              Marked for Review Questions:
+              <span> {data.MarkedforReviewQuestions}</span>
+            </p>
+            <p>
+              Answered & Marked for Review Questions:
+              <span> {data.AnsweredAndMarkedforReviewQuestions}</span>
+            </p>
+          </div>
+          <div>
+            <h2>
+              Are you sure you want to submit for final marking? <br />
+              No changes will be allowed after submission.
+            </h2>
+            <button onClick={handleYes}>YES</button>
+            <button>NO</button>
+          </div>
+        </div>
       )}
     </div>
   );

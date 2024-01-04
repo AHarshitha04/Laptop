@@ -23,10 +23,13 @@ body {
   padding-bottom: 10px;
   border-bottom: 2px solid gray;
 }
-.subject-btn {
+.subject_btn{
   background-color: #0394fc;
-  padding: 5px;
+  padding: 10px;
   border-radius: 5px;
+  border: none;
+  color: white;
+  cursor: pointer;
 }
 .second-header {
   display: flex;
@@ -46,7 +49,17 @@ body {
   background-color: rgb(100, 90, 90);
   border-radius: 5px;
   text-align: center;
-  width: 160px;
+  width: 200px;
+  font-weight: 500;
+}
+.type_of_question{
+  /* color: white; */
+  color: black;
+  font-weight: 400;
+  /* background-color: rgb(80, 96, 245); */
+  /* border-radius: 5px; */
+  text-align: center;
+  /* width: 200px; */
   font-weight: 500;
 }
 .marks {
@@ -144,6 +157,13 @@ body {
   padding-left: 500px;
   padding-top: 200px;
 }
+.option_li{
+  display: flex;
+  gap: 1rem;
+}
+.option_contents{
+  display: flex;
+}
 
 /* .quiz-container button:disabled {
     background: #e7e8e9;
@@ -162,17 +182,21 @@ body {
   margin-left: 400px;
   background-color: #0394fc;
   /* padding: 7px; */
-  border-radius: 5px;
-  color: white;
-  width: 400px;
+  padding: 7px;
+  width: 250px;
+  color: black;
 }
+
 .clear-btn {
+
   border-radius: 5px;
   background-color: #b3d2e8;
-  /* padding: 7px; */
+  padding: 7px;
+  width: 250px;
   color: black;
-  width: 300px;
+
 }
+
 .previous-btn {
   border-radius: 5px;
   background-color: #60676b;
@@ -197,16 +221,18 @@ body {
   font-size: 22px;
 }
 .rightsidebar {
-  position: relative;
-  top: 60px;
-  right: 380px;
+  /* position: relative; */
+  /* top: 60px; */
+  /* right: 380px; */
   padding: 10px;
   /* margin-top: 105px; */
   /* margin-left: 290px; */
   text-align: center;
   background-color: #b3cbda;
   border-left: 2px solid rgb(87, 103, 121);
-  /* width: 500px; */
+  height: 55rem;
+  /* width: 45rem; */
+  width: 500px;
   /* width: 300px;
 height: 950px; */
 }
@@ -218,6 +244,11 @@ height: 950px; */
    border-radius: 5px;
    color: white;
    cursor: pointer;
+   margin-top: 10px;
+}
+
+.sidebar-footer{
+  padding-top: 5rem;
 }
 
 /* ---------------------------------------result page styling---------------------------------- */
@@ -249,4 +280,28 @@ height: 950px; */
   text-align: justify;
   font-size: 20px;
   font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+}
+.question_paper_section{
+  width: 90rem;
+  margin-left: 2rem;
+}
+
+
+.qps_button_sections{
+  display: flex;
+}
+
+.question_options_container{
+  height: 40rem;
+}
+
+.buttons_container{
+  height: 30rem;
+}
+
+.btn-ul, .quesAns-btn {
+    cursor: pointer;
+}
+.quesAns-btn {
+  cursor: pointer;
 }

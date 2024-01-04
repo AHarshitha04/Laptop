@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const db1 = require('../databases/db1');
+// const db2 = require('../databases/db2');
+
 const bcrypt = require("bcrypt");
 const fs = require("fs");
 const app = express();
@@ -633,11 +635,11 @@ router.get("/UGhomepageadimcourses", (req, res) => {
           return;
         }
   
-        const token = jwt.sign({ id: user.id }, "your_secret_key", {
+        const token = jwt.sign({ id: user.user_Id }, "your_secret_key", {
           expiresIn: "1h",
         });
-        const { id, email, role } = user;
-        res.status(200).json({ token, user: { id, email, role } });
+        const { user_Id, email, role } = user;
+        res.status(200).json({ token, user: { user_Id, email, role } });
       });
       console.log(`${email}`);
     } catch (error) {
@@ -651,7 +653,7 @@ router.get("/UGhomepageadimcourses", (req, res) => {
     const userId = req.params.userId;
   
     try {
-      const sql = "SELECT * FROM log WHERE id = ?";
+      const sql = "SELECT * FROM log WHERE user_Id = ?";
       db1.query(sql, [userId], (error, results) => {
         if (error || results.length === 0) {
           res.status(404).json({ error: "User not found" });
@@ -670,7 +672,7 @@ router.get("/UGhomepageadimcourses", (req, res) => {
   //------------------- userdetails for user to get logined user data
   router.get("/userdetails/:id", (req, res) => {
     const id = req.params.id;
-    db1.query("SELECT * FROM log WHERE id = ?", id, (err, result) => {
+    db1.query("SELECT * FROM log WHERE user_Id = ?", id, (err, result) => {
       if (err) {
         console.log(err);
       } else {
@@ -693,7 +695,7 @@ router.get("/UGhomepageadimcourses", (req, res) => {
       const decodedToken = jwt.verify(token, "your_secret_key"); // Verify and decode the token
   
       const userId = decodedToken.id; // Get user ID from decoded token
-      const sql = "SELECT id, username, email FROM log WHERE id = ?";
+      const sql = "SELECT user_Id, username, email FROM log WHERE user_Id = ?";
       db1.query(sql, [userId], (error, results) => {
         if (error || results.length === 0) {
           res.status(404).json({ error: "User not found" });
@@ -705,15 +707,15 @@ router.get("/UGhomepageadimcourses", (req, res) => {
       });
     } catch (error) {
       res.status(500).json({ error: "Internal server error" });
-    }
-  });
+    }})
+   
   
   //------------------- sigleuserdetails for user to get logined user data
   
   router.get("/sigleuserdetails/:id", (req, res) => {
     const { id } = req.params;
   
-    const query = "SELECT * FROM users WHERE id = ?"; // Replace 'users' with your table name
+    const query = "SELECT * FROM log WHERE user_Id = ?"; // Replace 'users' with your table name
   
     db1.query(query, [id], (error, results) => {
       if (error) {
@@ -747,7 +749,7 @@ router.get("/UGhomepageadimcourses", (req, res) => {
   
       // Update user details with hashed password
       db1.query(
-        "UPDATE users SET email = ?, username = ?, password = ?, role = ? WHERE id = ?",
+        "UPDATE log SET email = ?, username = ?, password = ?, role = ? WHERE user_Id = ?",
         [email, username, hashedPassword, role, id],
         (err, result) => {
           if (err) {
@@ -769,7 +771,7 @@ router.get("/UGhomepageadimcourses", (req, res) => {
   
   router.delete("/users/:id", (req, res) => {
     const userId = req.params.id;
-    const q = " DELETE FROM log WHERE id = ? ";
+    const q = " DELETE FROM log WHERE user_Id = ? ";
   
     db1.query(q, [userId], (err, data) => {
       if (err) return res.send(err);

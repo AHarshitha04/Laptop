@@ -15,13 +15,13 @@ const FullTest = () => {
     const fetchTestData = async () => {
       try {
         const responseTest = await fetch(
-          `http://localhost:5001/feachingtest/${courseCreationId}`
+          `http://localhost:5001/Cards/feachingtest/${courseCreationId}`
         );
         const testData = await responseTest.json();
         setTestData(testData);
 
         const responseTypeOfTest = await fetch(
-          "http://localhost:5001/feachingtypeoftest"
+          "http://localhost:5001/Cards/feachingtypeoftest"
         );
         const typeOfTestData = await responseTypeOfTest.json();
         setTypeOfTest(typeOfTestData);
@@ -37,7 +37,7 @@ const FullTest = () => {
     try {
       // Fetch tests based on both courseCreationId and typeOfTestId
       const response = await fetch(
-        `http://localhost:5001/feachingtest/${courseCreationId}/${typeOfTestId}`
+        `http://localhost:5001/Cards/feachingtest/${courseCreationId}/${typeOfTestId}`
       );
       const testData = await response.json();
       setTestData(testData);
@@ -49,12 +49,12 @@ const FullTest = () => {
 
   const { subjectId } = useParams();
   const [SubjectData, setSubjectData] = useState([]);
-  const [minsubjectid, setminsubjectid] = useState('');
+  const [minsubjectid, setminsubjectid] = useState("");
   useEffect(() => {
     const fetchSubjects = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5001/subjectData/${courseCreationId}`
+          `http://localhost:5001/Cards/subjectData1/${courseCreationId}`
         );
 
         if (!response.ok) {
@@ -63,6 +63,7 @@ const FullTest = () => {
 
         const data = await response.json();
         setSubjectData(data);
+        console.log();
 
         if (data && data.length > 0) {
           // Find the minimum value of subjectId in the array
@@ -81,28 +82,35 @@ const FullTest = () => {
     fetchSubjects();
   }, [subjectId]);
 
+ 
+  const newWinRef = useRef(null);
+
+const openPopup = () => {
+  newWinRef.current = window.open(
+    testData.map((test) => `/Instructions/${test.testCreationTableId}`).join('\n'),
+    '_blank', // Use '_blank' to open in a new window or tab
+    'width=1000,height=1000'
+  );
+
+  document.onmousedown = focusPopup;
+  document.onkeyup = focusPopup;
+  document.onmousemove = focusPopup;
+};
+
+const focusPopup = () => {
+  if (newWinRef.current && !newWinRef.current.closed) {
+    newWinRef.current.focus();
+  }
+};
+
 
   return (
     <div>
       hello
-      <div>
-        {SubjectData.map((data) => (
-          <>
-            <p>{data.subjectId}</p>
-            <p>{data.minSubjectId}</p>
-          </>
-        ))}
-      </div>
+      
 
 
-      <div>
-        hi
-        <div>
-      {/* Attach the ref to the element */}
-      <div >{minsubjectid}</div>
-    </div>
-  
-      </div>
+      
       {/* <div>
         hi
         {SubjectData.map((data, i) => {
@@ -123,6 +131,25 @@ const FullTest = () => {
           );
         })}
       </div> */}
+       <div>
+        {SubjectData.map((data, i) => {
+          let minSubjectId; // Declare minSubjectId outside the if block
+
+          if (data && data.length > 0) {
+            // Find the minimum value of subjectId in the array
+            minSubjectId = Math.min(...data.map((item) => item.subjectId));
+
+            // Log the minimum value to the console
+            console.log("Minimum subjectId:", minSubjectId);
+          }
+
+          return (
+            <div key={i}>
+              <p>{minSubjectId}</p>
+            </div>
+          );
+        })}
+      </div>
       <ul>
         <div className="header-div2">
           <div className="header-links">
@@ -154,31 +181,39 @@ const FullTest = () => {
                 <span className="material-symbols-outlined">schedule</span>{" "}
                 <p>{test.Duration} Minutes</p>
               </div>
+              <div  className="test-contents2">
+                <span
+                  // style={myComponentStyle1}
+                  class="material-symbols-outlined"
+                >
+                  help
+                </span>
+                <p>{test.TotalQuestions} Questions</p>
+              </div>
+              <div  className="test-contents2">
+                <span
+                  // style={myComponentStyle1}
+                  class="material-symbols-outlined"
+                >
+                  trending_up
+                </span>
+                <p>{test.totalMarks} Marks</p>
+              </div>
               <div className="test-contents2">
                 <li>
-                  {/* <Link
-                    to={`/Instructions/${test.testCreationTableId}/${SubjectData.minSubjectId}`}
-                  >
-                    Start Test
-                  </Link> */}
+                  {/* <Link to={`/Instructions/${test.testCreationTableId}`}  onClick={openPopup}> */}
+                  {/* <Link to={`/Instructions/${test.testCreationTableId}`}> */}
+                  <Link to='#' onClick={openPopup}>
 
-                  <Link 
-                    // to={`/Instructions/${test.testCreationTableId}/${minsubjectid}`}
-
-                    // to={`/General_intructions_page/${test.testCreationTableId}/${minsubjectid}`}
-                    to={`/General_intructions_page/${test.testCreationTableId}/1`}
-
-
-                  >
                     Start Test
                   </Link>
-                  
                 </li>
               </div>
             </li>
           </div>
         ))}
       </ul>
+      
     </div>
   );
 };

@@ -14,7 +14,7 @@ const CoursePage = () => {
   useEffect(() => {
     const fetchCourseDetails = async () => {
       try {
-        const response = await axios.get(`http://localhost:5001/feachingcourse/${examId}`);
+        const response = await axios.get(`http://localhost:5001/Cards/feachingcourse/${examId}`);
         setCourseCard(response.data);
         console.log(examId)
         console.log("API Response:", response.data); // Log the API response
