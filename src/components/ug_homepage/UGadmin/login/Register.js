@@ -121,7 +121,11 @@ const Register = () => {
           <h2>Register</h2>
           <form onSubmit={handleRegister}>
             <label>Username:
+<<<<<<< HEAD
               <input  value={username} onChange={(e) => setUsername(e.target.value)}  />
+=======
+              <input value={username} onChange={(e) => setUsername(e.target.value)}  />
+>>>>>>> 68a70ae5e4dda9d40b96baab08e3ed12626fafef
             </label>
             
             <label>Email:

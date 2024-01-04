@@ -8,6 +8,13 @@
     
 }
 
+ .Dashboard_subcontainer{
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
 .Dashboard_contant{
     /* border: 1px solid; */
     padding: 2rem;
@@ -40,4 +47,29 @@
 .Dashboard_contant:nth-child(4) i{
     color: #ffffff; 
     font-size: 40px;
+}
+
+
+    @media (min-width:300px) and (max-width: 650px){
+
+        .Exam_portal_admin_integration_container {
+            height: auto;
+        }
+        .Dashboard_container {
+            gap: 2rem;
+        }
+        .textColor {
+            font-size: 1.3rem;
+        }
+    .Dashboard_contant{
+        /* border: 1px solid; */
+        padding: 1rem;
+        border-radius: 5px;
+        text-align: center;
+        width: 150px;
+        height: 150px;
+        background: #56738b;
+        color: rgb(255, 255, 255);
+    }
+    
 }

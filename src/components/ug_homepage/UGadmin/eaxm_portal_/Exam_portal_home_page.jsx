@@ -194,7 +194,7 @@ export const Header = () => {
                    Login
                   </button></Link> */}
 
-                    {userRole === "admin" && (
+{(userRole === 'admin' || userRole === 'ugotsadmin' ||  userRole === 'ugadmin') && (
                       <>
                         <li>
                           <button>
@@ -205,7 +205,7 @@ export const Header = () => {
                     )}
                   </div>
                   <div>
-                    <button id="dropdownmenu_foradim_page_btn">
+                    <button id="dropdownmenu_foradim_page_btn" style={{color:"white"}}>
                       {userData.username}
                       <div className="dropdownmenu_foradim_page">
                         {/* <Link to={`/userread/${user.id}`} className="btn btn-success mx-2">Read</Link> */}
