@@ -388,7 +388,7 @@ const [documentData,setDocumentData] = useState([]);
                     <Link className="Ots_-edit " 
 
 
-                         to={`/getSubjectData/${item.subjectId}/${item.testCreationTableId}/${item.sectionId}`}
+                         to={`/getSubjectData/${item.testCreationTableId}/${item.subjectId}/${item.sectionId}`}
                       // to={`/getSubjectData/${item.subjectId}/${item.testCreationTableId}`}
                     >
                       Open Document

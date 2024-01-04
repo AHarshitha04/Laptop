@@ -8,6 +8,9 @@ app.use(express.static("public"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
+const path = require('path');
+const imagesDirectory = path.join(__dirname, 'uploads');
+app.use('/uploads', express.static(imagesDirectory));
 const ughomepage_banner_login = require('./mainWebsitAdmin/ughomepage_banner_login')
 
 //---------------------- databases admin_project imports ----------------------
