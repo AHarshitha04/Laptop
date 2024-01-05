@@ -333,43 +333,127 @@ const QuestionPaper = () => {
           </div>
           <div>
             {currentQuestion && (
-              <div key={currentQuestionIndex} className="question-container" style={{display:"flex"}}>
-               <div>
-               <div>
-                  <h3>Question {currentQuestion.question_id}</h3>
-                  <img
-                    src={`http://localhost:5001/uploads/${currentQuestion.documen_name}/${currentQuestion.questionImgName}`}
-                    alt={`Question ${currentQuestion.question_id}`}
-                  />
+              <div
+                key={currentQuestionIndex}
+                className="question-container"
+                style={{ display: "flex" }}
+              >
+                <div>
                   <div>
-                    {currentQuestion.options.map((option, optionIndex) => (
-                      <div key={optionIndex}>
-                        {String.fromCharCode("a".charCodeAt(0) + optionIndex)}
-                        <img
-                          src={`http://localhost:5001/uploads/${currentQuestion.documen_name}/${option.optionImgName}`}
-                          alt={`Option ${option.option_id}`}
-                        />
-                      </div>
-                    ))}
+                    <h3>Question {currentQuestion.question_id}</h3>
+                    <img
+                      src={`http://localhost:5001/uploads/${currentQuestion.documen_name}/${currentQuestion.questionImgName}`}
+                      alt={`Question ${currentQuestion.question_id}`}
+                    />
+                    <div>
+                    {currentQuestion.options &&
+                        currentQuestion.options
+                          .filter(
+                            (opt) =>
+                              opt.question_id ===
+                              data.questions[currentQuestionIndex]?.question_id
+                          )
+                          
+                          .map((option, optionIndex) => (
+                            <div key={optionIndex}>
+                               
+                              {currentQuestion.qtype &&
+                                typeof currentQuestion.qtype === "string" &&
+                                currentQuestion.qtype.toLowerCase() ===
+                                  "mcq(multiple choice question)" && (
+                                  
+                                  <input
+                                    type="radio"
+                                    name={`question-${currentQuestionIndex}-option`}
+                                    value={String.fromCharCode(
+                                      "A".charCodeAt(0) + optionIndex
+                                    )}
+                                    checked={
+                                      selectedAnswersMap1[
+                                        data.questions[currentQuestionIndex]
+                                          ?.question_id
+                                      ] === optionIndex
+                                    }
+                                    onChange={() =>
+                                      onAnswerSelected1(optionIndex)
+                                    }
+                                  />
+                                )}
+
+                              {currentQuestion.qtype &&
+                                typeof currentQuestion.qtype === "string" &&
+                                currentQuestion.qtype.toLowerCase() ===
+                                  "msq(multiple selection question)" && (
+                                  <input
+                                    type="checkbox"
+                                    name={`question-${currentQuestionIndex}-optionIndex`}
+                                    value={String.fromCharCode(
+                                      "A".charCodeAt(0) + optionIndex
+                                    )}
+                                    checked={
+                                      selectedAnswersMap2[
+                                        data.questions[currentQuestionIndex]
+                                          ?.question_id
+                                      ] &&
+                                      selectedAnswersMap2[
+                                        data.questions[currentQuestionIndex]
+                                          ?.question_id
+                                      ].includes(optionIndex)
+                                    }
+                                    onChange={() =>
+                                      onAnswerSelected2(optionIndex)
+                                    }
+                                  />
+                                )}
+                              {currentQuestion.qtype &&
+                                typeof currentQuestion.qtype === "string" &&
+                                currentQuestion.qtype.toLowerCase() ===
+                                  "nat(numerical answer type)" && (
+                                  <input
+                                    type="text"
+                                    name={`question-${currentQuestionIndex}`}
+                                    value={
+                                      selectedAnswersMap2[
+                                        data.questions[currentQuestionIndex]
+                                          ?.question_id
+                                      ] || ""
+                                    }
+                                    onChange={(e) =>
+                                      onAnswerSelected2(e.target.value)
+                                    }
+                                  />
+                                )}
+                              (
+                              {String.fromCharCode(
+                                "a".charCodeAt(0) + optionIndex
+                              )}
+                              )
+                              <img
+                                src={`http://localhost:5001/uploads/${currentQuestion.documen_name}/${option.optionImgName}`}
+                                alt={`Option ${option.option_id}`}
+                              />
+                            </div>
+                          ))}
+                   
+                    </div>
+                  </div>
+                  <div>
+                    <button className="clear-btn" onClick={markForReview}>
+                      Mark for Review & Next
+                    </button>
+                    <button className="clear-btn" onClick={clearResponse}>
+                      Clear Response
+                    </button>
+                    <button
+                      className="previous-btn"
+                      onClick={handlePreviousClick}
+                      disabled={currentQuestionIndex === 0}
+                    >
+                      <i className="fa-solid fa-angles-left"></i> Previous
+                    </button>
+                    <button onClick={handleNextQuestion}>Next</button>
                   </div>
                 </div>
-                <div>
-                  <button className="clear-btn" onClick={markForReview}>
-                    Mark for Review & Next
-                  </button>
-                  <button className="clear-btn" onClick={clearResponse}>
-                    Clear Response
-                  </button>
-                  <button
-                    className="previous-btn"
-                    onClick={handlePreviousClick}
-                    disabled={currentQuestionIndex === 0}
-                  >
-                    <i className="fa-solid fa-angles-left"></i> Previous
-                  </button>
-                  <button onClick={handleNextQuestion}>Next</button>
-                </div>
-               </div>
                 <div className="rightsidebar">
                   <ButtonsFunctionality
                     onQuestionSelect={handleQuestionSelect}
