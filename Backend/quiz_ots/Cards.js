@@ -32,6 +32,30 @@ router.get("/examData", async (req, res) => {
     }
   });
 
+  router.get('/courses/count', async (req, res) => {
+    try {
+      const [results, fields] = await db.execute(
+        'SELECT examId, COUNT(*) AS numberOfCourses FROM course_creation_table GROUP BY examId;'
+      );
+      res.json(results);
+    } catch (error) {
+      console.error('Error fetching course count:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  });
+
+  router.get('/Test/count', async (req, res) => {
+    try {
+      const [results, fields] = await db.execute(
+        'SELECT courseCreationId, COUNT(*) AS numberOfTests FROM test_creation_table GROUP BY courseCreationId;'
+      );
+      res.json(results);
+    } catch (error) {
+      console.error('Error fetching course count:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  });
+
   
 router.get("/feachingtest/:courseCreationId/:typeOfTestId", async (req, res) => {
   const { courseCreationId, typeOfTestId } = req.params;
