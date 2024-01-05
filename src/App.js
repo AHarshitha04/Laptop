@@ -78,7 +78,7 @@ import Userdeatailedpage from "./components/ug_homepage/UGadmin/login/Userdeatai
 import Exam_portal_home_page from "./components/ug_homepage/UGadmin/eaxm_portal_/Exam_portal_home_page.jsx";
 // ========================================================= ugquiz exam imports ===========================================================
 
-import Paper1 from "./components/ug_homepage/UGadmin/eaxm_portal_/Paper1.jsx";
+import QuestionPaper from "./components/ug_homepage/UGadmin/eaxm_portal_/QuestionPaper.jsx";
 import FullTest from "./components/ug_homepage/UGadmin/eaxm_portal_/FullTest.jsx";
 import Instructions from "./components/ug_homepage/UGadmin/eaxm_portal_/Instructions.jsx";
 
@@ -228,7 +228,7 @@ const App = () => {
           element={<General_intructions_page />}
         />
          
-        <Route path="/getPaperData/:testCreationTableId" element={<Paper1 />} />
+        <Route path="/QuestionPaper/questionOptions/:testCreationTableId" element={<QuestionPaper />} />
         <Route path='/SubmitPage'  element={<SubmitPage />} /> 
         <Route path='/TestResultsPage'  element={<TestResultsPage />} />
         {/* <Route path='/ExamSummary'  element={<ExamSummary />} /> */}

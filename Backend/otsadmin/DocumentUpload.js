@@ -71,81 +71,6 @@ router.get('/tests', async (req, res) => {
   });
   
   
-  // doc upload code -----------------
-  // router.post("/upload", upload.single("document"), async (req, res) => {
-  //   const docxFilePath = `uploads/${req.file.filename}`;
-  //   const outputDir = `uploads/${req.file.originalname}_images`;
-  
-  //   const docName = `${req.file.originalname}`;
-  //   try {
-  //     await fs.mkdir(outputDir, { recursive: true });
-  //     const result = await mammoth.convertToHtml({ path: docxFilePath });
-  //     const htmlContent = result.value;
-  //     const $ = cheerio.load(htmlContent);
-  //     const textResult = await mammoth.extractRawText({ path: docxFilePath });
-  //     const textContent = textResult.value;
-  //     const textSections = textContent.split("\n\n");
-  
-  //     // Insert documentName and get documentId
-  //     const [documentResult] = await db.query("INSERT INTO ots_document SET ?", {
-  //       documen_name: docName,
-  //       testCreationTableId: req.body.testCreationTableId,
-  //       subjectId: req.body.subjectId,
-  //     });
-  //     const document_Id = documentResult.insertId;
-  
-  //     // Get all images in the order they routerear in the HTML
-  //     const images = [];
-  //     $("img").each(function (i, element) {
-  //       const base64Data = $(this)
-  //         .attr("src")
-  //         .replace(/^data:image\/\w+;base64,/, "");
-  //       const imageBuffer = Buffer.from(base64Data, "base64");
-  //       images.push(imageBuffer);
-  //     });
-  
-  //     let j = 0;
-  //     let Question_id;
-  //     for (let i = 0; i < images.length; i++) {
-  //       if (j == 0) {
-  //         const questionRecord = {
-  //           question_img: images[i],
-  //           testCreationTableId: req.body.testCreationTableId,
-  //           sectionId: req.body.sectionId,
-  //           document_Id: document_Id,
-  //           subjectId: req.body.subjectId,
-  //         };
-  //         console.log(j);
-  //         Question_id = await insertRecord("questions", questionRecord);
-  //         j++;
-  //       } else if (j > 0 && j < 5) {
-  //         const optionRecord = {
-  //           option_img: images[i],
-  //           question_id: Question_id,
-  //         };
-  //         console.log(j);
-  //         await insertRecord("options", optionRecord);
-  //         j++;
-  //       } else if (j == 5) {
-  //         const solutionRecord = {
-  //           solution_img: images[i],
-  //           question_id: Question_id,
-  //         };
-  //         console.log(j);
-  //         await insertRecord("solution", solutionRecord);
-  //         j = 0;
-  //       }
-  //     }
-  //     res.send(
-  //       "Text content and images extracted and saved to the database with the selected topic ID successfully."
-  //     );
-  //   } catch (error) {
-  //     console.error(error);
-  //     res
-  //       .status(500)
-  //       .send("Error extracting content and saving it to the database.");
-  //   }
-  // });
   
   router.post("/upload", upload.single("document"), async (req, res) => {
     const docxFilePath = `uploads/${req.file.filename}`;
@@ -463,3 +388,81 @@ router.get('/tests', async (req, res) => {
   //  end for document section code ------------------------------------------/
   
   module.exports = router;
+
+
+  
+  // doc upload code -----------------
+  // router.post("/upload", upload.single("document"), async (req, res) => {
+  //   const docxFilePath = `uploads/${req.file.filename}`;
+  //   const outputDir = `uploads/${req.file.originalname}_images`;
+  
+  //   const docName = `${req.file.originalname}`;
+  //   try {
+  //     await fs.mkdir(outputDir, { recursive: true });
+  //     const result = await mammoth.convertToHtml({ path: docxFilePath });
+  //     const htmlContent = result.value;
+  //     const $ = cheerio.load(htmlContent);
+  //     const textResult = await mammoth.extractRawText({ path: docxFilePath });
+  //     const textContent = textResult.value;
+  //     const textSections = textContent.split("\n\n");
+  
+  //     // Insert documentName and get documentId
+  //     const [documentResult] = await db.query("INSERT INTO ots_document SET ?", {
+  //       documen_name: docName,
+  //       testCreationTableId: req.body.testCreationTableId,
+  //       subjectId: req.body.subjectId,
+  //     });
+  //     const document_Id = documentResult.insertId;
+  
+  //     // Get all images in the order they routerear in the HTML
+  //     const images = [];
+  //     $("img").each(function (i, element) {
+  //       const base64Data = $(this)
+  //         .attr("src")
+  //         .replace(/^data:image\/\w+;base64,/, "");
+  //       const imageBuffer = Buffer.from(base64Data, "base64");
+  //       images.push(imageBuffer);
+  //     });
+  
+  //     let j = 0;
+  //     let Question_id;
+  //     for (let i = 0; i < images.length; i++) {
+  //       if (j == 0) {
+  //         const questionRecord = {
+  //           question_img: images[i],
+  //           testCreationTableId: req.body.testCreationTableId,
+  //           sectionId: req.body.sectionId,
+  //           document_Id: document_Id,
+  //           subjectId: req.body.subjectId,
+  //         };
+  //         console.log(j);
+  //         Question_id = await insertRecord("questions", questionRecord);
+  //         j++;
+  //       } else if (j > 0 && j < 5) {
+  //         const optionRecord = {
+  //           option_img: images[i],
+  //           question_id: Question_id,
+  //         };
+  //         console.log(j);
+  //         await insertRecord("options", optionRecord);
+  //         j++;
+  //       } else if (j == 5) {
+  //         const solutionRecord = {
+  //           solution_img: images[i],
+  //           question_id: Question_id,
+  //         };
+  //         console.log(j);
+  //         await insertRecord("solution", solutionRecord);
+  //         j = 0;
+  //       }
+  //     }
+  //     res.send(
+  //       "Text content and images extracted and saved to the database with the selected topic ID successfully."
+  //     );
+  //   } catch (error) {
+  //     console.error(error);
+  //     res
+  //       .status(500)
+  //       .send("Error extracting content and saving it to the database.");
+  //   }
+  // });

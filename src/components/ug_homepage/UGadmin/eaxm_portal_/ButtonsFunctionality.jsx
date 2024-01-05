@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { useParams } from "react-router-dom";
 import './styles/RightSidebar.css'
-
+ 
 const ButtonsFunctionality = ({
   onQuestionSelect,
   questionStatus,
@@ -13,22 +13,22 @@ const ButtonsFunctionality = ({
   answeredmarkedForReviewCount,
   markedForReviewCount,
   VisitedCount,
-  data,
+  questionData,
 }) => {
-
-
-
+ 
+ 
+ 
   const [wtimer, setWTimer] = useState(0);
  
-
+ 
   const [activeQuestion, setActiveQuestion] = useState(0);
 const [answeredQuestions, setAnsweredQuestions] = useState([]);
 const [isPaused, setIsPaused] = useState(false);
-
-
+ 
+ 
   const handleButtonClick = (questionNumber,status) => {
  
-    
+   
       // Check if the question is already answered, and return early if true
   if (questionStatus[questionNumber - 1] === "answered") {
     // Navigate to the selected question when it's already answered
@@ -36,17 +36,17 @@ const [isPaused, setIsPaused] = useState(false);
     return;
   }
     setActiveQuestion(questionNumber - 1);
-
+ 
     onQuestionSelect(questionNumber);
     setAnsweredQuestions((prevAnsweredQuestions) => [
       ...prevAnsweredQuestions,
       questionNumber,
     ]);
     setIsPaused(false);
-
+ 
     setQuestionStatus((prevQuestionStatus) => {
       const currentStatus = prevQuestionStatus[questionNumber - 1];
-
+ 
       if (currentStatus === "notVisited") {
         return [
           ...prevQuestionStatus.slice(0, questionNumber - 1),
@@ -58,12 +58,12 @@ const [isPaused, setIsPaused] = useState(false);
       return prevQuestionStatus;
     });
    
-
+ 
   };
-
-
-  
-
+ 
+ 
+ 
+ 
   const WformatTime = (seconds) => {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
@@ -72,52 +72,52 @@ const [isPaused, setIsPaused] = useState(false);
       minutes > 9 ? minutes : "0" + minutes
     }:${remainingSeconds > 9 ? remainingSeconds : "0" + remainingSeconds}`;
   };
-
-
+ 
+ 
   useEffect(() => {
     const interval = setInterval(() => {
       setWTimer((prevTimer) => prevTimer - 1);
     }, 1000);
-
+ 
     // Clear the interval and handle time-up logic when timer reaches 0
     if (wtimer <= 0) {
       clearInterval(interval);
       // Handle time-up logic here (e.g., navigate to a different component)
     }
-
+ 
     // Clean up the interval on component unmount or when navigating away
     return () => {
       clearInterval(interval);
     };
   }, [wtimer]);
-
-  const renderQuestionButtons = Array.isArray(data.questions)
-  ? data.questions.map((question, index) => {
+ 
+  const renderQuestionButtons = Array.isArray( questionData.questions)
+  ? questionData.questions.map((question, index) => {
       let className = "right_bar_Buttons ";
       const questionKey = question.id || index;
-
+ 
       if (questionStatus && questionStatus[index] === "answered") {
-        className += "instruction-btn1";
+        className += " instruction-btn1";
       } else if (questionStatus && questionStatus[index] === "notAnswered") {
-        className += "instruction-btn2";
+        className += " instruction-btn2";
       } else if (questionStatus && questionStatus[index] === "marked") {
-        className += "instruction-btn3";
+        className += " instruction-btn3";
       } else if (
         questionStatus &&
         questionStatus[index] === "Answered but marked for review"
       ) {
-        className += "instruction-btn4";
+        className += " instruction-btn4";
       } else if (questionStatus && questionStatus[index] === "Visited") {
-        className += "instruction-btn2";
+        className += " instruction-btn2";
       } else {
-        className += "instruction-btn5"; // Default to instruction-btn5 for not visited
+        className += " instruction-btn5"; // Default to instruction-btn5 for not visited
       }
-
+ 
       // Highlight the current question being displayed
       if (index === activeQuestion) {
         className += " active-question";
       }
-
+ 
       return (
         <li key={questionKey}>
           <button
@@ -130,7 +130,7 @@ const [isPaused, setIsPaused] = useState(false);
       );
     })
   : null;
-
+ 
 //user name
 const [userData, setUserData] = useState({});
 useEffect(() => {
@@ -142,7 +142,7 @@ useEffect(() => {
             Authorization: `Bearer ${token}`, // Attach token to headers for authentication
           },
         });
-
+ 
         if (response.ok) {
           const userData = await response.json();
           setUserData(userData);
@@ -154,10 +154,10 @@ useEffect(() => {
         // Handle other errors
       }
     };
-
+ 
     fetchUserData();
   }, []);
-
+ 
   return (
     <>
       <div className="right-side-bar">
@@ -165,15 +165,15 @@ useEffect(() => {
           <p>Name of the person :  {userData.username}</p>
           <p>Time Left: {WformatTime(wtimer)}</p>
         </div>
-
+ 
         <div className="buttons_container">
          
-
+ 
           <div className="ques-btn">
             <ul className="btn-ul quesAns-btn ">{renderQuestionButtons}</ul>
           </div>
         </div>
-
+ 
         <div className="sidebar-footer">
           <h4 className="sidebar-footer-header">Legend</h4>
           <div className="footer-btns">
@@ -215,30 +215,15 @@ useEffect(() => {
     </>
   );
 };
-
-
+ 
+ 
 ButtonsFunctionality.propTypes = {
   onQuestionSelect: PropTypes.func.isRequired,
   questionStatus: PropTypes.arrayOf(PropTypes.string).isRequired,
   setQuestionStatus: PropTypes.func.isRequired,
-
+ 
 };
-
-
-
+ 
+ 
+ 
 export default ButtonsFunctionality;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

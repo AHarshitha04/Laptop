@@ -628,6 +628,7 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import ButtonsFunctionality from "./ButtonsFunctionality";
 import "./styles/Paper.css";
+import { type } from "@testing-library/user-event/dist/type";
 
 const Paper1 = () => {
   const [data, setData] = useState({ questions: [] });
@@ -791,53 +792,52 @@ const Paper1 = () => {
     fetchUserData();
   }, []);
 
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await fetch(
+  //         `http://localhost:5001/QuestionPaper/getPaperData/${testCreationTableId}`
+  //       );
+  //       const result = await response.json();
+  //       setData(result);
+  //       console.log(data);
+  //       console.log("hello");
+  //       console.log(testCreationTableId);
+  //     } catch (error) {
+  //       console.error("Error fetching data:", error);
+  //     }
+  //   };
 
+  //   fetchData();
+  // }, [testCreationTableId]);
 
-
-
-
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-      
-
-        const response = await fetch(
-          `http://localhost:5001/QuestionPaper/getPaperData/${testCreationTableId}`
-        );
-        const result = await response.json();
-        setData(result);
-        console.log(data);
-         console.log("hello")
-         console.log(testCreationTableId)
-       
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    fetchData();
-  }, [testCreationTableId]);
-
-
-
-
-
-  
   const handleNextClick = async () => {
+    const response = await fetch(
+      `http://localhost:5001/QuestionPaper/getPaperData/${testCreationTableId}`
+    );
+    const result = await response.json();
+    setData(result);
+    console.log(result.testData[0].testCreationTableId);
+    console.log(result.testData)
+    console.log(data);
+    console.log("hello123456788");
+    console.log(testCreationTableId);
+
     console.log("Before state update", currentQuestionIndex);
-  
+
     setCurrentQuestionIndex((prevIndex) => {
       if (prevIndex < data.questions.length - 1) {
         return prevIndex + 1;
       }
     });
     try {
-     
       console.log("User ID:", userData.user_Id);
-      console.log("Test Creation Table ID:", testCreationTableId);
+      console.log(
+        "Test Creation Table ID:",
+        result.testData[0].testCreationTableId
+      );
       console.log("Current Question:", currentQuestion);
-  
+
       const token = localStorage.getItem("token");
       const response = await fetch(
         "http://localhost:5001/ughomepage_banner_login/user",
@@ -846,6 +846,19 @@ const Paper1 = () => {
             Authorization: `Bearer ${token}`, // Attach token to headers for authentication
           },
         }
+<<<<<<< HEAD
+      );
+
+      // const responsetc = await fetch(
+      //   `http://localhost:5001/QuestionPaper/getPaperData/${testCreationTableId}`
+      // );
+      // const result = await responsetc.json();
+      // setData(result);
+      // console.log(data);
+      // console.log("hiii");
+      // console.log(testCreationTableId);
+
+=======
       );   
   
   
@@ -858,31 +871,32 @@ const Paper1 = () => {
       console.log("hiii")
       console.log(testCreationTableId)
   
+>>>>>>> c6b8ad072c2e94e109fce3f58cca3884c61368f4
       // Move these lines to the top to ensure variables are properly declared
       const user_Id = userData.user_Id;
       const testCreationTableId = data.testCreationTableId;
       const currentQuestion = data.questions[currentQuestionIndex];
-  
+
       if (!data || !data.questions) {
         console.error("Data or questions are null or undefined");
         return;
       }
-  
+
       if (isNaN(user_Id) || isNaN(testCreationTableId) || !currentQuestion) {
         console.error("Invalid values or question data");
         return;
       }
-  
+
       const selectedOption1 = selectedAnswersMap1[currentQuestion.question_id];
       const selectedOption2 = selectedAnswersMap2[currentQuestion.question_id];
-  
+
       const optionIndexes1 =
         selectedOption1 !== undefined ? [selectedOption1] : [];
       const optionIndexes2 =
         selectedOption2 !== undefined ? selectedOption2 : [];
-  
+
       const questionId = currentQuestion.question_id;
-  
+
       if (answeredQuestionsMap[questionId]) {
         const updatedResponse = {
           optionIndexes1: optionIndexes1.map((index) =>
@@ -892,14 +906,14 @@ const Paper1 = () => {
             String.fromCharCode("a".charCodeAt(0) + index)
           ),
         };
-  
+
         const updateResponse = await axios.put(
           `http://localhost:5001/QuestionPaper/updateResponse/${questionId}`,
           {
             updatedResponse,
           }
         );
-  
+
         console.log(updateResponse.data);
         console.log("Handle Next Click - Response Updated");
       } else {
@@ -915,23 +929,23 @@ const Paper1 = () => {
             ),
           },
         };
-  
+
         const saveResponse = await axios.post(
           "http://localhost:5001/QuestionPaper/response",
           {
             responses,
           }
         );
-  
+
         console.log(saveResponse.data);
         console.log("Handle Next Click - New Response Saved");
-  
+
         setAnsweredQuestionsMap((prevMap) => ({
           ...prevMap,
           [questionId]: true,
         }));
       }
-  
+
       setClickCount((prevCount) => prevCount + 1);
       if (currentQuestionIndex < data.length - 1) {
         // setCurrentQuestionIndex((prevActiveQuestion) => prevActiveQuestion + 1);
@@ -939,13 +953,10 @@ const Paper1 = () => {
         // setShowResult(true);
         calculateResult();
       }
-    
     } catch (error) {
       console.error("Error handling next click:", error);
     }
   };
-  
-
 
   // const handleNextClick = async () => {
   //   console.log("Before state update", currentQuestionIndex);
@@ -956,7 +967,7 @@ const Paper1 = () => {
   //     }
   //   });
   //   try {
-     
+
   //     console.log("User ID:", userData.user_Id);
   //     console.log("Test Creation Table ID:", testCreationTableId);
   //     console.log("Current Question:", currentQuestion);
@@ -969,8 +980,7 @@ const Paper1 = () => {
   //           Authorization: `Bearer ${token}`, // Attach token to headers for authentication
   //         },
   //       }
-  //     );   
-
+  //     );
 
   //     const responsetc = await fetch(
   //       `http://localhost:5001/QuestionPaper/getPaperData/${testCreationTableId}`
@@ -980,8 +990,6 @@ const Paper1 = () => {
   //     console.log(data);
   //      console.log("hiii")
   //      console.log(testCreationTableId)
-
-
 
   //     // const data = await responsetc.json();
   //     if (response.ok) {
@@ -1068,7 +1076,7 @@ const Paper1 = () => {
   //       // setShowResult(true);
   //       calculateResult();
   //     }
-    
+
   //   } catch (error) {
   //     console.error("Error handling next click:", error);
   //   }
@@ -1143,6 +1151,16 @@ const Paper1 = () => {
 
         const defaultSubjectId = subjectId || leastSubjectId;
 
+<<<<<<< HEAD
+        // const response = await fetch(
+        //   `http://localhost:5001/QuestionPaper/getPaperData/${testCreationTableId}`
+        // );
+        // const result = await response.json();
+        // setData(result);
+        // console.log(data);
+        // console.log("hello");
+        // console.log(testCreationTableId);
+=======
         const response = await fetch(
           `http://localhost:5001/QuestionPaper/getPaperData/${testCreationTableId}`
         );
@@ -1151,6 +1169,7 @@ const Paper1 = () => {
         console.log(data);
          console.log("hello")
          console.log(testCreationTableId)
+>>>>>>> c6b8ad072c2e94e109fce3f58cca3884c61368f4
         const selectedAnswersForSubject =
           selectedAnswersMap1[defaultSubjectId] || [];
         setSelectedAnswers(selectedAnswersForSubject);
@@ -1241,7 +1260,41 @@ const Paper1 = () => {
 
   const markForReview = () => {};
 
+  const [questionData, setQuestionData] = useState({});
+  const { sectionId } = useParams();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:5001/QuestionPaper/questionOptions/${testCreationTableId}`
+        );
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        setQuestionData(data);
+      } catch (error) {
+        console.error("Error fetching question data:", error);
+      }
+    };
+
+    fetchData();
+  }, [testCreationTableId]);
+  const currentQuestion =
+    questionData.questions && questionData.questions[currentQuestionIndex];
+
+  const handleNextQuestion = () => {
+    setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
+  };
+
   return (
+    // <div>
+    //   hello
+
+    // </div>
     <div>
       {!showExamSumary ? (
         <div>
@@ -1258,12 +1311,25 @@ const Paper1 = () => {
             ))}
 
             <h3>
-              Question Type:{" "}
+<<<<<<< HEAD
+              <div>
+                {currentQuestion.qtype && (
+                  <div>
+                    <h3> Question Type:</h3>
+                    {currentQuestion.qtype.qtype_text}
+                  </div>
+                )}
+              </div>
+              {/* Question Type:{" "}
+              
+=======
+              Question Type:
+>>>>>>> c6b8ad072c2e94e109fce3f58cca3884c61368f4
               {questionTypes.map((type) => (
                 <li key={type.quesionTypeId}>
                   <p>{type.typeofQuestion}</p>
                 </li>
-              ))}
+              ))} */}
             </h3>
             <div className="right-header">
               <div className="marks">
@@ -1274,151 +1340,31 @@ const Paper1 = () => {
             </div>
           </div>
           <div>
-            {data !== null && data.questions.length > 0 ? (
-              <div className="qps_button_sections">
-                <div className="question_paper_section">
-                  <div className="question_options_container">
-                    <div className="question">
-                      <h3>{currentQuestionIndex + 1}.</h3>
+            {currentQuestion && (
+              <div key={currentQuestionIndex} className="question-container">
+                <h3>Question {currentQuestion.question_id}</h3>
+                <img
+                  src={`http://localhost:5001/uploads/${currentQuestion.documen_name}/${currentQuestion.questionImgName}`}
+                  alt={`Question ${currentQuestion.question_id}`}
+                />
+
+                {/* Display options */}
+                <div>
+                  {currentQuestion.options.map((option, optionIndex) => (
+                    <div key={optionIndex}>
+                      {String.fromCharCode("a".charCodeAt(0) + optionIndex)}
                       <img
-                        src={`data:image/png;base64,${data.questions[currentQuestionIndex].question_img}`}
-                        alt="Question"
+                        src={`http://localhost:5001/uploads/${currentQuestion.documen_name}/${option.optionImgName}`}
+                        alt={`Option ${option.option_id}`}
                       />
                     </div>
-
-                    {data.options
-                      .filter(
-                        (opt) =>
-                          opt.question_id ===
-                          data.questions[currentQuestionIndex].question_id
-                      )
-                      .map((option, optionIndex) => (
-                        <div className="option" key={option.option_id}>
-                          <li className="option_li" key={optionIndex}>
-                            {currentQuestionType &&
-                              currentQuestionType.typeofQuestion.toLowerCase() ===
-                                "mcq(multiple choice question)" && (
-                                <input
-                                  type="radio"
-                                  name={`question-${currentQuestionIndex}-option`}
-                                  value={String.fromCharCode(
-                                    "A".charCodeAt(0) + optionIndex
-                                  )}
-                                  checked={
-                                    selectedAnswersMap1[
-                                      data.questions[currentQuestionIndex]
-                                        .question_id
-                                    ] === optionIndex
-                                  }
-                                  onChange={() =>
-                                    onAnswerSelected1(optionIndex)
-                                  }
-                                />
-                              )}
-
-                            {currentQuestionType &&
-                              currentQuestionType.typeofQuestion.toLowerCase() ===
-                                "msq(multiple selection question)" && (
-                                <input
-                                  type="checkbox"
-                                  name={`question-${currentQuestionIndex}-optionIndex`}
-                                  value={String.fromCharCode(
-                                    "A".charCodeAt(0) + optionIndex
-                                  )}
-                                  checked={
-                                    selectedAnswersMap2[
-                                      data.questions[currentQuestionIndex]
-                                        .question_id
-                                    ] &&
-                                    selectedAnswersMap2[
-                                      data.questions[currentQuestionIndex]
-                                        .question_id
-                                    ].includes(optionIndex)
-                                  }
-                                  onChange={() =>
-                                    onAnswerSelected2(optionIndex)
-                                  }
-                                />
-                              )}
-
-                            {currentQuestionType &&
-                              currentQuestionType.typeofQuestion.toLowerCase() ===
-                                "nat(numerical answer type)" && (
-                                <input
-                                  type="text"
-                                  name={`question-${currentQuestionIndex}`}
-                                  value={
-                                    selectedAnswersMap2[
-                                      data.questions[currentQuestionIndex]
-                                        .question_id
-                                    ] || ""
-                                  }
-                                  onChange={(e) =>
-                                    onAnswerSelected2(e.target.value)
-                                  }
-                                />
-                              )}
-
-                            {option.option_img && (
-                              <div className="option_contents">
-                                <p>
-                                  (
-                                  {String.fromCharCode(
-                                    "A".charCodeAt(0) + optionIndex
-                                  )}
-                                  )
-                                </p>
-                                <img
-                                  src={`data:image/png;base64,${option.option_img}`}
-                                  alt={`Option-${optionIndex}`}
-                                />
-                              </div>
-                            )}
-                          </li>
-                        </div>
-                      ))}
-                  </div>
-
-                  <div>
-                    <button className="clear-btn" onClick={markForReview}>
-                      Mark for Review & Next
-                    </button>
-                    <button className="clear-btn" onClick={clearResponse}>
-                      Clear Response
-                    </button>
-                    <button
-                      className="previous-btn"
-                      onClick={handlePreviousClick}
-                      disabled={currentQuestionIndex === 0}
-                    >
-                      <i className="fa-solid fa-angles-left"></i> Previous
-                    </button>
-                    <button className="save-btn" onClick={handleNextClick}>
-                      Save and Next <i className="fa-solid fa-angles-right"></i>
-                    </button>
-                  </div>
+                  ))}
                 </div>
+          
 
-                <div className="rightsidebar">
-                  <ButtonsFunctionality
-                    onQuestionSelect={handleQuestionSelect}
-                    questionStatus={questionStatus}
-                    setQuestionStatus={setQuestionStatus}
-                    answeredCount={answeredCount}
-                    notAnsweredCount={notAnsweredCount}
-                    answeredmarkedForReviewCount={answeredmarkedForReviewCount}
-                    markedForReviewCount={markedForReviewCount}
-                    VisitedCount={VisitedCount}
-                    selectedSubject={selectedSubject}
-                    data={data}
-                  />
-                  <button onClick={handleSubmit} id="resume_btn">
-                    Submit
-                  </button>
-                </div>
+                {/* Next button */}
+                <button onClick={handleNextQuestion}>Next</button>
               </div>
-            ) : (
-              <p>Loading data...</p>
             )}
           </div>
         </div>
