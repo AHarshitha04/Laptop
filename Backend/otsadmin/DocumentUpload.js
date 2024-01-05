@@ -106,17 +106,32 @@ router.get('/tests', async (req, res) => {
       let j=0;let image_index=0;
       let que_id=0;let k=1;
       console.log(textSections);
+      let qtypeMappings = {
+                  mcq: 1,
+                  msq: 2,
+                  nat: 3,
+                  'True/False Questions': 4,
+                };
       for (let i = 0; i < textSections.length; i++) {
         if (textSections[i].includes('[qtype]')) {
           // que_id=question_id[j];
           // j++;
           // Save in the qtype table
-          const qtypeRecord = {
-            qtype_text: textSections[i].replace('[qtype]', ''),
-            question_id: que_id
-          };
+          // const qtypeRecord = {
+          //   qtype_text: textSections[i].replace('[qtype]', ''),
+          //   question_id: que_id
+          // };
+          const qtypeText = textSections[i].replace('[qtype]', '').trim().toLowerCase();
+          if (qtypeMappings.hasOwnProperty(qtypeText)){
+            const qtypeRecord = {
+              qtype_text: textSections[i].replace('[qtype]', ''),
+              question_id: que_id,
+              quesionTypeId: qtypeMappings[qtypeText],
+            };
+            await insertRecord('qtype', qtypeRecord);
+          }
           console.log()
-          await insertRecord('qtype', qtypeRecord);
+          
         } else if (textSections[i].includes('[ans]')) {
           // Save in the answer table
           const answerRecord = {
