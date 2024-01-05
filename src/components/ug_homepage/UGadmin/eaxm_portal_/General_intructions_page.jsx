@@ -540,7 +540,8 @@ export const General_intructions_page_container = ({ seconds }) => {
             // to={`/subjects/${testCreationTableId}/${minsubjectid}`}
             // to={`/getPaperData/${testCreationTableId}/${minsubjectid}`}
             //  onClick={openPopup}
-             to={`/getPaperData/${testCreationTableId}`} 
+            //  to={`/getPaperData/${testCreationTableId}`} 
+            to={`/QuestionPaper/questionOptions/${testCreationTableId}`} 
             className="gn_next_btn"
 
             // to={`/General_intructions_page/${test.testCreationTableId}/${minsubjectid}`}

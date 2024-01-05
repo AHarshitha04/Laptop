@@ -13,7 +13,7 @@ const ButtonsFunctionality = ({
   answeredmarkedForReviewCount,
   markedForReviewCount,
   VisitedCount,
-  data,
+  questionData,
 }) => {
 
 
@@ -91,8 +91,8 @@ const [isPaused, setIsPaused] = useState(false);
     };
   }, [wtimer]);
 
-  const renderQuestionButtons = Array.isArray(data.questions)
-  ? data.questions.map((question, index) => {
+  const renderQuestionButtons = Array.isArray( questionData.questions)
+  ? questionData.questions.map((question, index) => {
       let className = "right_bar_Buttons ";
       const questionKey = question.id || index;
 

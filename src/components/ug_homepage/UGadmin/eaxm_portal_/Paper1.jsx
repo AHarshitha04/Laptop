@@ -773,24 +773,24 @@ const Paper1 = () => {
     fetchUserData();
   }, []);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(
-          `http://localhost:5001/QuestionPaper/getPaperData/${testCreationTableId}`
-        );
-        const result = await response.json();
-        setData(result);
-        console.log(data);
-        console.log("hello");
-        console.log(testCreationTableId);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await fetch(
+  //         `http://localhost:5001/QuestionPaper/getPaperData/${testCreationTableId}`
+  //       );
+  //       const result = await response.json();
+  //       setData(result);
+  //       console.log(data);
+  //       console.log("hello");
+  //       console.log(testCreationTableId);
+  //     } catch (error) {
+  //       console.error("Error fetching data:", error);
+  //     }
+  //   };
 
-    fetchData();
-  }, [testCreationTableId]);
+  //   fetchData();
+  // }, [testCreationTableId]);
 
   const handleNextClick = async () => {
     console.log("Before state update", currentQuestionIndex);
@@ -815,14 +815,14 @@ const Paper1 = () => {
         }
       );
 
-      const responsetc = await fetch(
-        `http://localhost:5001/QuestionPaper/getPaperData/${testCreationTableId}`
-      );
-      const result = await responsetc.json();
-      setData(result);
-      console.log(data);
-      console.log("hiii");
-      console.log(testCreationTableId);
+      // const responsetc = await fetch(
+      //   `http://localhost:5001/QuestionPaper/getPaperData/${testCreationTableId}`
+      // );
+      // const result = await responsetc.json();
+      // setData(result);
+      // console.log(data);
+      // console.log("hiii");
+      // console.log(testCreationTableId);
 
       // Move these lines to the top to ensure variables are properly declared
       const user_Id = userData.user_Id;
@@ -1103,14 +1103,14 @@ const Paper1 = () => {
 
         const defaultSubjectId = subjectId || leastSubjectId;
 
-        const response = await fetch(
-          `http://localhost:5001/QuestionPaper/getPaperData/${testCreationTableId}`
-        );
-        const result = await response.json();
-        setData(result);
-        console.log(data);
-        console.log("hello");
-        console.log(testCreationTableId);
+        // const response = await fetch(
+        //   `http://localhost:5001/QuestionPaper/getPaperData/${testCreationTableId}`
+        // );
+        // const result = await response.json();
+        // setData(result);
+        // console.log(data);
+        // console.log("hello");
+        // console.log(testCreationTableId);
         const selectedAnswersForSubject =
           selectedAnswersMap1[defaultSubjectId] || [];
         setSelectedAnswers(selectedAnswersForSubject);
@@ -1202,12 +1202,15 @@ const Paper1 = () => {
   const markForReview = () => {};
 
   const [questionData, setQuestionData] = useState({});
-  const  {  sectionId } = useParams();
+  const { sectionId } = useParams();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`http://localhost:5001/QuestionPaper/fulldocimages/${testCreationTableId}/${subjectId}/${sectionId}`);
+        const response = await fetch(
+          `http://localhost:5001/QuestionPaper/questionOptions/${testCreationTableId}`
+        );
+
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
@@ -1215,14 +1218,24 @@ const Paper1 = () => {
         const data = await response.json();
         setQuestionData(data);
       } catch (error) {
-        console.error('Error fetching question data:', error);
+        console.error("Error fetching question data:", error);
       }
     };
 
     fetchData();
-  }, [testCreationTableId, subjectId, sectionId]); 
+  }, [testCreationTableId]);
+  const currentQuestion =
+    questionData.questions && questionData.questions[currentQuestionIndex];
+
+  const handleNextQuestion = () => {
+    setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
+  };
 
   return (
+    // <div>
+    //   hello
+
+    // </div>
     <div>
       {!showExamSumary ? (
         <div>
@@ -1239,12 +1252,21 @@ const Paper1 = () => {
             ))}
 
             <h3>
-              Question Type:{" "}
+              <div>
+                {currentQuestion.qtype && (
+                  <div>
+                    <h3> Question Type:</h3>
+                    {currentQuestion.qtype.qtype_text}
+                  </div>
+                )}
+              </div>
+              {/* Question Type:{" "}
+              
               {questionTypes.map((type) => (
                 <li key={type.quesionTypeId}>
                   <p>{type.typeofQuestion}</p>
                 </li>
-              ))}
+              ))} */}
             </h3>
             <div className="right-header">
               <div className="marks">
@@ -1255,218 +1277,32 @@ const Paper1 = () => {
             </div>
           </div>
           <div>
-          {questionData.questions.map((question, index) => (
-        <div key={index} className="question-container">
-          <h3>Question {question.question_id}</h3>
-          <img
-            src={`http://localhost:3081/uploads/${question.documen_name}/${question.questionImgName}`}
-            alt={`Question ${question.question_id}`}
-          />
-
-          {/* Display options */}
-          <div>
-            {question.options.map((option, optionIndex) => (
-              <div key={optionIndex}>
-                {String.fromCharCode("a".charCodeAt(0) + optionIndex)}
+            {currentQuestion && (
+              <div key={currentQuestionIndex} className="question-container">
+                <h3>Question {currentQuestion.question_id}</h3>
                 <img
-                  src={`http://localhost:3081/uploads/${question.documen_name}/${option.optionImgName}`}
-                  alt={`Option ${option.option_id}`}
+                  src={`http://localhost:5001/uploads/${currentQuestion.documen_name}/${currentQuestion.questionImgName}`}
+                  alt={`Question ${currentQuestion.question_id}`}
                 />
-              </div>
-            ))}
-          </div>
 
-          {/* Display solution */}
-          {question.solution && (
-            <div>
-              <h3>Solution</h3>
-              <img
-                src={`http://localhost:3081/uploads/${question.documen_name}/${question.solution.solutionImgName}`}
-                alt={`Solution ${question.solution.solution_id}`}
-              />
-            </div>
-          )}
-          <div>
-            {question.qtype && (
-              <div>
-                <h3>qtype</h3>
-                {question.qtype.qtype_text}
-              </div>
-            )}
-          </div>
-          <div>
-            {question.answer && (
-              <div>
-                <h3>ans</h3>
-                {question.answer.answer_text}
-              </div>
-            )}
-          </div>
-          <div>
-            {question.marks && (
-              <div>
-                <h3>Marks</h3>
-                {question.marks.marks_text}
-              </div>
-            )}
-          </div>
-          <div>
-            {question.sortid && (
-              <div>
-                <h3>sortid</h3>
-                {question.sortid.sortid_text}
-              </div>
-            )}
-          </div>
-        
-        </div>
-      ))}
-            {/* {data !== null && data.questions.length > 0 ? (
-              <div className="qps_button_sections">
-                <div className="question_paper_section">
-                  <div className="question_options_container">
-                    <div className="question">
-                      <h3>{currentQuestionIndex + 1}.</h3>
+                {/* Display options */}
+                <div>
+                  {currentQuestion.options.map((option, optionIndex) => (
+                    <div key={optionIndex}>
+                      {String.fromCharCode("a".charCodeAt(0) + optionIndex)}
                       <img
-                        src={`data:image/png;base64,${data.questions[currentQuestionIndex].question_img}`}
-                        alt="Question"
+                        src={`http://localhost:5001/uploads/${currentQuestion.documen_name}/${option.optionImgName}`}
+                        alt={`Option ${option.option_id}`}
                       />
                     </div>
-
-                    {data.options
-                      .filter(
-                        (opt) =>
-                          opt.question_id ===
-                          data.questions[currentQuestionIndex].question_id
-                      )
-                      .map((option, optionIndex) => (
-                        <div className="option" key={option.option_id}>
-                          <li className="option_li" key={optionIndex}>
-                            {currentQuestionType &&
-                              currentQuestionType.typeofQuestion.toLowerCase() ===
-                                "mcq(multiple choice question)" && (
-                                <input
-                                  type="radio"
-                                  name={`question-${currentQuestionIndex}-option`}
-                                  value={String.fromCharCode(
-                                    "A".charCodeAt(0) + optionIndex
-                                  )}
-                                  checked={
-                                    selectedAnswersMap1[
-                                      data.questions[currentQuestionIndex]
-                                        .question_id
-                                    ] === optionIndex
-                                  }
-                                  onChange={() =>
-                                    onAnswerSelected1(optionIndex)
-                                  }
-                                />
-                              )}
-
-                            {currentQuestionType &&
-                              currentQuestionType.typeofQuestion.toLowerCase() ===
-                                "msq(multiple selection question)" && (
-                                <input
-                                  type="checkbox"
-                                  name={`question-${currentQuestionIndex}-optionIndex`}
-                                  value={String.fromCharCode(
-                                    "A".charCodeAt(0) + optionIndex
-                                  )}
-                                  checked={
-                                    selectedAnswersMap2[
-                                      data.questions[currentQuestionIndex]
-                                        .question_id
-                                    ] &&
-                                    selectedAnswersMap2[
-                                      data.questions[currentQuestionIndex]
-                                        .question_id
-                                    ].includes(optionIndex)
-                                  }
-                                  onChange={() =>
-                                    onAnswerSelected2(optionIndex)
-                                  }
-                                />
-                              )}
-
-                            {currentQuestionType &&
-                              currentQuestionType.typeofQuestion.toLowerCase() ===
-                                "nat(numerical answer type)" && (
-                                <input
-                                  type="text"
-                                  name={`question-${currentQuestionIndex}`}
-                                  value={
-                                    selectedAnswersMap2[
-                                      data.questions[currentQuestionIndex]
-                                        .question_id
-                                    ] || ""
-                                  }
-                                  onChange={(e) =>
-                                    onAnswerSelected2(e.target.value)
-                                  }
-                                />
-                              )}
-
-                            {option.option_img && (
-                              <div className="option_contents">
-                                <p>
-                                  (
-                                  {String.fromCharCode(
-                                    "A".charCodeAt(0) + optionIndex
-                                  )}
-                                  )
-                                </p>
-                                <img
-                                  src={`data:image/png;base64,${option.option_img}`}
-                                  alt={`Option-${optionIndex}`}
-                                />
-                              </div>
-                            )}
-                          </li>
-                        </div>
-                      ))}
-                  </div>
-
-                  <div>
-                    <button className="clear-btn" onClick={markForReview}>
-                      Mark for Review & Next
-                    </button>
-                    <button className="clear-btn" onClick={clearResponse}>
-                      Clear Response
-                    </button>
-                    <button
-                      className="previous-btn"
-                      onClick={handlePreviousClick}
-                      disabled={currentQuestionIndex === 0}
-                    >
-                      <i className="fa-solid fa-angles-left"></i> Previous
-                    </button>
-                    <button className="save-btn" onClick={handleNextClick}>
-                      Save and Next <i className="fa-solid fa-angles-right"></i>
-                    </button>
-                  </div>
+                  ))}
                 </div>
+          
 
-                <div className="rightsidebar">
-                  <ButtonsFunctionality
-                    onQuestionSelect={handleQuestionSelect}
-                    questionStatus={questionStatus}
-                    setQuestionStatus={setQuestionStatus}
-                    answeredCount={answeredCount}
-                    notAnsweredCount={notAnsweredCount}
-                    answeredmarkedForReviewCount={answeredmarkedForReviewCount}
-                    markedForReviewCount={markedForReviewCount}
-                    VisitedCount={VisitedCount}
-                    selectedSubject={selectedSubject}
-                    data={data}
-                  />
-                  <button onClick={handleSubmit} id="resume_btn">
-                    Submit
-                  </button>
-                </div>
+                {/* Next button */}
+                <button onClick={handleNextQuestion}>Next</button>
               </div>
-            ) : (
-              <p>Loading data...</p>
-            )} */}
+            )}
           </div>
         </div>
       ) : (
