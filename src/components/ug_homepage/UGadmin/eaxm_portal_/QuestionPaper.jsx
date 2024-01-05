@@ -6,12 +6,13 @@ import "./styles/Paper.css";
 
 const QuestionPaper = () => {
   const [data, setData] = useState({ questions: [] });
+  const [questionData, setQuestionData] = useState({ questions: [] });
   const { subjectId, testCreationTableId } = useParams();
   const [Subjects, setSubjects] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedSubject, setSelectedSubject] = useState(null);
   const [questionStatus, setQuestionStatus] = useState(
-    Array.isArray(data) ? Array(data.questions.length).fill("notAnswered") : []
+    Array.isArray(questionData) ? Array(questionData.questions.length).fill("notAnswered") : []
   );
   const [sections, setSections] = useState([]);
   const [currentQuestionType, setCurrentQuestionType] = useState(null);
@@ -65,7 +66,7 @@ const QuestionPaper = () => {
 
   const clearResponse = async () => {
     try {
-      const questionId = data.questions[currentQuestionIndex].question_id;
+      const questionId = questionData.questions[currentQuestionIndex].question_id;
       console.log("Response cleared successfully");
       // Clear response for radio buttons (MCQ)
       const updatedSelectedAnswersMap1 = { ...selectedAnswersMap1 };
@@ -220,7 +221,7 @@ const QuestionPaper = () => {
   }, [currentQuestionIndex, timers]);
 
   const onAnswerSelected1 = (optionIndex) => {
-    const questionId = data.questions[currentQuestionIndex].question_id;
+    const questionId = currentQuestion.questions[currentQuestionIndex].question_id;
     const charcodeatopt = String.fromCharCode("a".charCodeAt(0) + optionIndex);
     const questionIndex = currentQuestionIndex + 1;
     console.log(`Question Index: ${questionIndex}`);
@@ -236,7 +237,7 @@ const QuestionPaper = () => {
   };
 
   const onAnswerSelected2 = (optionIndex) => {
-    const questionId = data.questions[currentQuestionIndex].question_id;
+    const questionId = currentQuestion.questions[currentQuestionIndex].question_id;
     const charcodeatopt = String.fromCharCode("a".charCodeAt(0) + optionIndex);
     const questionIndex = currentQuestionIndex + 1;
     console.log(`Question Index: ${questionIndex}`);
@@ -258,6 +259,8 @@ const QuestionPaper = () => {
     });
   };
 
+
+
   // const [showExamSumary, setShowExamSumary] = useState(false);
   const calculateResult = () => {
     // // Make sure answeredQuestions is defined before accessing its length
@@ -271,7 +274,7 @@ const QuestionPaper = () => {
 
   const markForReview = () => {};
 
-  const [questionData, setQuestionData] = useState({});
+  // const [questionData, setQuestionData] = useState({});
   const { sectionId } = useParams();
 
   useEffect(() => {
@@ -300,6 +303,9 @@ const QuestionPaper = () => {
   const handleNextQuestion = () => {
     setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
   };
+
+
+  
 
   return (
     <div>
@@ -357,10 +363,11 @@ const QuestionPaper = () => {
                           .map((option, optionIndex) => (
                             <div key={optionIndex}>
                                
-                              {currentQuestion.qtype &&
+                              {currentQuestion && currentQuestion.qtype && currentQuestion.question_id &&
                                 typeof currentQuestion.qtype === "string" &&
                                 currentQuestion.qtype.toLowerCase() ===
                                   "mcq(multiple choice question)" && (
+                                    
                                   
                                   <input
                                     type="radio"
@@ -370,7 +377,7 @@ const QuestionPaper = () => {
                                     )}
                                     checked={
                                       selectedAnswersMap1[
-                                        data.questions[currentQuestionIndex]
+                                        currentQuestion.questions[currentQuestionIndex]
                                           ?.question_id
                                       ] === optionIndex
                                     }
@@ -380,7 +387,7 @@ const QuestionPaper = () => {
                                   />
                                 )}
 
-                              {currentQuestion.qtype &&
+                              {currentQuestion && currentQuestion.qtype && currentQuestion.question_id &&
                                 typeof currentQuestion.qtype === "string" &&
                                 currentQuestion.qtype.toLowerCase() ===
                                   "msq(multiple selection question)" && (
@@ -392,11 +399,11 @@ const QuestionPaper = () => {
                                     )}
                                     checked={
                                       selectedAnswersMap2[
-                                        data.questions[currentQuestionIndex]
+                                        currentQuestion.questions[currentQuestionIndex]
                                           ?.question_id
                                       ] &&
                                       selectedAnswersMap2[
-                                        data.questions[currentQuestionIndex]
+                                        questionData.questions[currentQuestionIndex]
                                           ?.question_id
                                       ].includes(optionIndex)
                                     }
@@ -404,8 +411,8 @@ const QuestionPaper = () => {
                                       onAnswerSelected2(optionIndex)
                                     }
                                   />
-                                )}
-                              {currentQuestion.qtype &&
+                              )}
+                              {currentQuestion && currentQuestion.qtype && currentQuestion.question_id &&
                                 typeof currentQuestion.qtype === "string" &&
                                 currentQuestion.qtype.toLowerCase() ===
                                   "nat(numerical answer type)" && (
@@ -414,7 +421,7 @@ const QuestionPaper = () => {
                                     name={`question-${currentQuestionIndex}`}
                                     value={
                                       selectedAnswersMap2[
-                                        data.questions[currentQuestionIndex]
+                                        currentQuestion.questions[currentQuestionIndex]
                                           ?.question_id
                                       ] || ""
                                     }
@@ -422,7 +429,7 @@ const QuestionPaper = () => {
                                       onAnswerSelected2(e.target.value)
                                     }
                                   />
-                                )}
+                              )}
                               (
                               {String.fromCharCode(
                                 "a".charCodeAt(0) + optionIndex
@@ -481,21 +488,21 @@ const QuestionPaper = () => {
           <div className="result_page_links"></div>
           <div className="result_contents">
             <p>
-              Total Questions: <span>{data.questions.length}</span>
+              Total Questions: <span>{questionData.questions.length}</span>
             </p>
             <p>
-              Answered Questions:<span> {data.AnsweredQuestions}</span>
+              Answered Questions:<span> {questionData.AnsweredQuestions}</span>
             </p>
             <p>
-              Not Answered Questions:<span> {data.NotAnsweredQuestions}</span>
+              Not Answered Questions:<span> {questionData.NotAnsweredQuestions}</span>
             </p>
             <p>
               Marked for Review Questions:
-              <span> {data.MarkedforReviewQuestions}</span>
+              <span> {questionData.MarkedforReviewQuestions}</span>
             </p>
             <p>
               Answered & Marked for Review Questions:
-              <span> {data.AnsweredAndMarkedforReviewQuestions}</span>
+              <span> {questionData.AnsweredAndMarkedforReviewQuestions}</span>
             </p>
           </div>
           <div>
