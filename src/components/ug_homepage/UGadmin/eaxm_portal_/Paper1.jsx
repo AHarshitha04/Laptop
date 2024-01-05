@@ -605,11 +605,30 @@
 
 // export default Paper1;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 import React, { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import ButtonsFunctionality from "./ButtonsFunctionality";
 import "./styles/Paper.css";
+import { type } from "@testing-library/user-event/dist/type";
 
 const Paper1 = () => {
   const [data, setData] = useState({ questions: [] });
@@ -793,6 +812,17 @@ const Paper1 = () => {
   // }, [testCreationTableId]);
 
   const handleNextClick = async () => {
+    const response = await fetch(
+      `http://localhost:5001/QuestionPaper/getPaperData/${testCreationTableId}`
+    );
+    const result = await response.json();
+    setData(result);
+    console.log(result.testData[0].testCreationTableId);
+    console.log(result.testData)
+    console.log(data);
+    console.log("hello123456788");
+    console.log(testCreationTableId);
+
     console.log("Before state update", currentQuestionIndex);
 
     setCurrentQuestionIndex((prevIndex) => {
@@ -802,7 +832,10 @@ const Paper1 = () => {
     });
     try {
       console.log("User ID:", userData.user_Id);
-      console.log("Test Creation Table ID:", testCreationTableId);
+      console.log(
+        "Test Creation Table ID:",
+        result.testData[0].testCreationTableId
+      );
       console.log("Current Question:", currentQuestion);
 
       const token = localStorage.getItem("token");
@@ -813,6 +846,7 @@ const Paper1 = () => {
             Authorization: `Bearer ${token}`, // Attach token to headers for authentication
           },
         }
+<<<<<<< HEAD
       );
 
       // const responsetc = await fetch(
@@ -824,6 +858,20 @@ const Paper1 = () => {
       // console.log("hiii");
       // console.log(testCreationTableId);
 
+=======
+      );   
+  
+  
+      const responsetc = await fetch(
+        `http://localhost:5001/QuestionPaper/getPaperData/${testCreationTableId}`
+      );
+      const result = await responsetc.json();
+      setData(result);
+      console.log(data);
+      console.log("hiii")
+      console.log(testCreationTableId)
+  
+>>>>>>> c6b8ad072c2e94e109fce3f58cca3884c61368f4
       // Move these lines to the top to ensure variables are properly declared
       const user_Id = userData.user_Id;
       const testCreationTableId = data.testCreationTableId;
@@ -1103,6 +1151,7 @@ const Paper1 = () => {
 
         const defaultSubjectId = subjectId || leastSubjectId;
 
+<<<<<<< HEAD
         // const response = await fetch(
         //   `http://localhost:5001/QuestionPaper/getPaperData/${testCreationTableId}`
         // );
@@ -1111,6 +1160,16 @@ const Paper1 = () => {
         // console.log(data);
         // console.log("hello");
         // console.log(testCreationTableId);
+=======
+        const response = await fetch(
+          `http://localhost:5001/QuestionPaper/getPaperData/${testCreationTableId}`
+        );
+        const result = await response.json();
+        setData(result);
+        console.log(data);
+         console.log("hello")
+         console.log(testCreationTableId)
+>>>>>>> c6b8ad072c2e94e109fce3f58cca3884c61368f4
         const selectedAnswersForSubject =
           selectedAnswersMap1[defaultSubjectId] || [];
         setSelectedAnswers(selectedAnswersForSubject);
@@ -1252,6 +1311,7 @@ const Paper1 = () => {
             ))}
 
             <h3>
+<<<<<<< HEAD
               <div>
                 {currentQuestion.qtype && (
                   <div>
@@ -1262,6 +1322,9 @@ const Paper1 = () => {
               </div>
               {/* Question Type:{" "}
               
+=======
+              Question Type:
+>>>>>>> c6b8ad072c2e94e109fce3f58cca3884c61368f4
               {questionTypes.map((type) => (
                 <li key={type.quesionTypeId}>
                   <p>{type.typeofQuestion}</p>
