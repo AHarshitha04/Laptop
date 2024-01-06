@@ -14,8 +14,7 @@ const QuestionPaper = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedSubject, setSelectedSubject] = useState(null);
   const [questionStatus, setQuestionStatus] = useState(
-    Array.isArray(questionData)
-      ? Array(questionData.questions.length).fill("notAnswered")
+    Array.isArray(questionData) ? Array(questionData.questions.length).fill("notAnswered")
       : []
   );
   const [sections, setSections] = useState([]);
@@ -59,13 +58,63 @@ const QuestionPaper = () => {
     };
   };
 
+
+
+  const updateCounters = () => {
+    let answered = 0;
+    let notAnswered = 0;
+    let marked = 0;
+    let markedForReview = 0;
+    let Visited = 0;
+
+    questionStatus.forEach((status) => {
+      if (status === "answered") {
+        answered++;
+      } else if (status === "notAnswered") {
+        notAnswered++;
+      } else if (status === "marked") {
+        marked++;
+      } else if (status === "Answered but marked for review") {
+        markedForReview++;
+      } else if (status === "notVisited") {
+        Visited++;
+      }
+    });
+
+    setAnsweredCount(answered);
+    setNotAnsweredCount(notAnswered);
+    setAnsweredmarkedForReviewCount(marked);
+    setMarkedForReviewCount(markedForReview);
+    setVisitedCount(Visited);
+  };
+
+  useEffect(() => {
+    // Call the updateCounters function initially when the component mounts
+    updateCounters();
+  }, [questionStatus]);
+
+
+  const [selectedAnswers, setSelectedAnswers] = useState(
+    Array(questionData.length).fill("")
+  );
+
   const handleQuestionSelect = (questionNumber) => {
     setCurrentQuestionIndex(questionNumber - 1);
+    setActiveQuestion(questionNumber - 1);
   };
+
+
   const handlePreviousClick = () => {
-    setCurrentQuestionIndex((prevIndex) =>
-      prevIndex > 0 ? prevIndex - 1 : prevIndex
-    );
+    setCurrentQuestionIndex((prevIndex) => {
+      // Save the current timer value for the question
+      const updatedTimers = [...timers];
+      updatedTimers[prevIndex] = timer;
+      setTimers(updatedTimers);
+      // Move to the previous question
+      return prevIndex - 1;
+    });
+
+    setActiveQuestion((prevActiveQuestion) => prevActiveQuestion - 1);
   };
 
   const clearResponse = async () => {
@@ -162,7 +211,6 @@ const QuestionPaper = () => {
 
   const [selectedAnswersMap1, setSelectedAnswersMap1] = useState({});
   const [selectedAnswersMap2, setSelectedAnswersMap2] = useState({});
-  const [selectedAnswers, setSelectedAnswers] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -179,21 +227,12 @@ const QuestionPaper = () => {
 
         const defaultSubjectId = subjectId || leastSubjectId;
 
-        // const response = await fetch(
-        //   `http://localhost:5001/QuestionPaper/getPaperData/${testCreationTableId}`
-        // );
-        // const result = await response.json();
-        // setData(result);
-        // console.log(data);
-        // console.log("hello");
-        // console.log(testCreationTableId);
         const selectedAnswersForSubject =
           selectedAnswersMap1[defaultSubjectId] || [];
         setSelectedAnswers(selectedAnswersForSubject);
 
-        const linkUrl = `/subjects/${testCreationTableId}/${
-          subjectId || leastSubjectId
-        }`;
+        const linkUrl = `/subjects/${testCreationTableId}/${subjectId || leastSubjectId
+          }`;
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -208,9 +247,8 @@ const QuestionPaper = () => {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
     const remainingSeconds = seconds % 60;
-    return `${hours > 9 ? hours : "0" + hours}:${
-      minutes > 9 ? minutes : "0" + minutes
-    }:${remainingSeconds > 9 ? remainingSeconds : "0" + remainingSeconds}`;
+    return `${hours > 9 ? hours : "0" + hours}:${minutes > 9 ? minutes : "0" + minutes
+      }:${remainingSeconds > 9 ? remainingSeconds : "0" + remainingSeconds}`;
   };
 
   useEffect(() => {
@@ -279,7 +317,23 @@ const QuestionPaper = () => {
     navigate("/SubmitPage");
   };
 
-  const markForReview = () => {};
+  const [activeQuestion, setActiveQuestion] = useState(0);
+
+
+  const markForReview = () => {
+    // Update questionStatus for the marked question
+    const updatedQuestionStatus = [...questionStatus];
+    if (selectedAnswers[activeQuestion]) {
+      updatedQuestionStatus[activeQuestion] = "Answered but marked for review";
+      if (selectedAnswers[activeQuestion] === "Answered but marked for review") {
+        updatedQuestionStatus[activeQuestion] = "Answered but marked for review";
+      }
+    } else if (!selectedAnswers[activeQuestion]) {
+      updatedQuestionStatus[activeQuestion] = "marked";
+    }
+
+    setQuestionStatus(updatedQuestionStatus);
+  };
 
   // const [questionData, setQuestionData] = useState({});
   const { sectionId } = useParams();
@@ -338,7 +392,53 @@ const QuestionPaper = () => {
     fetchUserData();
   }, []);
 
+
+  const [answeredQuestions, setAnsweredQuestions] = useState([]);
+  const [isPaused, setIsPaused] = useState(false);
+
+
   const handleNextQuestion = async () => {
+<<<<<<< HEAD
+=======
+
+  // ------------------------------------ button functionality --------------------------------------------
+
+  updateCounters();
+
+  // Get the current question index
+  const questionIndex = currentQuestionIndex;
+
+  // Check if the current question is already answered
+  if (questionStatus[questionIndex] !== "answered") {
+    // If not answered, mark it as answered
+    setQuestionStatus((prevQuestionStatus) => [
+      ...prevQuestionStatus.slice(0, questionIndex),
+      "answered",
+      ...prevQuestionStatus.slice(questionIndex + 1),
+    ]);
+
+    // Update other necessary state or perform additional logic
+    setAnsweredQuestions((prevAnsweredQuestions) => [
+      ...prevAnsweredQuestions,
+      questionIndex + 1,
+    ]);
+    setIsPaused(false);
+  }
+
+  // Move to the next question
+  setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
+
+
+  // --------------------------------end of button functionality --------------------------------------------------
+
+    const response = await fetch(
+      // http://localhost:5001/QuestionPaper/questionType/61
+      `http://localhost:5001/QuestionPaper/questionOptions/${testCreationTableId}`
+    );
+
+    // console.log(testCreationTableId);
+
+>>>>>>> 20640f74e5247923bbb3518a6e2ae24c39cc694f
     try {
       // --------------------------------saving------------------------------
       const response = await fetch(
@@ -347,6 +447,7 @@ const QuestionPaper = () => {
       console.log("User ID:", userData.user_Id);
       console.log("Test Creation Table ID:", testCreationTableId);
 
+<<<<<<< HEAD
       if (!questionData || !questionData.questions) {
         console.error("Data or questions are null or undefined");
         return;
@@ -434,6 +535,9 @@ const QuestionPaper = () => {
     } catch (error) {
       console.error("Error handling next question:", error);
     }
+=======
+    } catch { }
+>>>>>>> 20640f74e5247923bbb3518a6e2ae24c39cc694f
   };
 
   // const handleNextQuestion = async () => {
@@ -546,6 +650,15 @@ const QuestionPaper = () => {
     fetchQuestionTypes();
   }, [questionData, currentQuestionIndex]);
 
+
+
+  const updateQuestionStatus = (index, status) => {
+    // Update the question status in the QuestionPaper component
+    const updatedQuestionStatus = [...questionStatus];
+    updatedQuestionStatus[index] = status;
+    setQuestionStatus(updatedQuestionStatus);
+  };
+
   return (
     <div>
       {!showExamSumary ? (
@@ -624,9 +737,9 @@ const QuestionPaper = () => {
                                       )}
                                       checked={
                                         selectedAnswersMap1[
-                                          questionData.questions[
-                                            currentQuestionIndex
-                                          ]?.question_id
+                                        questionData.questions[
+                                          currentQuestionIndex
+                                        ]?.question_id
                                         ] === optionIndex
                                       }
                                       onChange={() =>
@@ -661,9 +774,9 @@ const QuestionPaper = () => {
                                       )}
                                       checked={
                                         selectedAnswersMap2[
-                                          questionData.questions[
-                                            currentQuestionIndex
-                                          ]?.question_id
+                                        questionData.questions[
+                                          currentQuestionIndex
+                                        ]?.question_id
                                         ] &&
                                         selectedAnswersMap2[
                                           questionData.questions[
@@ -696,9 +809,9 @@ const QuestionPaper = () => {
                                     name={`question-${currentQuestionIndex}`}
                                     value={
                                       selectedAnswersMap2[
-                                        questionData.questions[
-                                          currentQuestionIndex
-                                        ]?.question_id
+                                      questionData.questions[
+                                        currentQuestionIndex
+                                      ]?.question_id
                                       ] || ""
                                     }
                                     onChange={(e) =>
@@ -718,9 +831,9 @@ const QuestionPaper = () => {
                                       value="true"
                                       checked={
                                         selectedAnswersMap1[
-                                          questionData.questions[
-                                            currentQuestionIndex
-                                          ]?.question_id
+                                        questionData.questions[
+                                          currentQuestionIndex
+                                        ]?.question_id
                                         ] === "true"
                                       }
                                       onChange={() => onAnswerSelected1("true")}
@@ -732,9 +845,9 @@ const QuestionPaper = () => {
                                       value="false"
                                       checked={
                                         selectedAnswersMap1[
-                                          questionData.questions[
-                                            currentQuestionIndex
-                                          ]?.question_id
+                                        questionData.questions[
+                                          currentQuestionIndex
+                                        ]?.question_id
                                         ] === "false"
                                       }
                                       onChange={() =>
@@ -745,26 +858,15 @@ const QuestionPaper = () => {
                                   </>
                                 )}
 
-                              {/* {currentQuestion.question_type == "mcq(multiple choice question)" ||
-                              currentQuestion.question_type == "msq(multiple selection question)" ? (
-                                <>
-                                
-                              helo boys
-                                <img
-                                  src={`http://localhost:5001/uploads/${currentQuestion.document_name}/${option.optionImgName}`}
-                                  alt={`Option ${option.option_id}`}
-                                /> 
-                                </>
-                              
-                              ) : null} */}
 
-                              {/* <img
-                                src={`http://localhost:5001/uploads/${currentQuestion.documen_name}/${option.optionImgName}`}
-                                alt={`Option ${option.option_id}`}
-                              /> */}
                             </li>
                           </div>
                         ))}
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 20640f74e5247923bbb3518a6e2ae24c39cc694f
                     </div>
                   </div>
                   <div>
@@ -796,6 +898,7 @@ const QuestionPaper = () => {
                     VisitedCount={VisitedCount}
                     selectedSubject={selectedSubject}
                     questionData={questionData}
+                    updateQuestionStatus={updateQuestionStatus}
                   />
                   <button onClick={handleSubmit} id="resume_btn">
                     Submit
