@@ -209,6 +209,35 @@ router.get('/subjects/:testCreationTableId', async (req, res) => {
     const { testCreationTableId } = req.params;
     try {
       const [rows] = await db.query(`
+<<<<<<< HEAD
+      SELECT 
+      q.question_id, 
+      q.questionImgName, 
+      o.option_id, 
+      o.optionImgName,
+      o.option_index,
+      qt.qtypeId,
+      qt.qtype_text,
+      t.testCreationTableId,
+      doc.document_Id,
+      doc.documen_name,
+      s.sort_id,
+      s.sortid_text
+  FROM 
+      questions q 
+  LEFT OUTER JOIN test_creation_table t ON 
+      q.testCreationTableId = t.testCreationTableId 
+      LEFT OUTER JOIN sortid s ON 
+      q.question_id = s.question_id
+  LEFT OUTER JOIN ots_document doc ON 
+      t.testCreationTableId = doc.testCreationTableId
+  LEFT OUTER JOIN options o ON 
+      q.question_id = o.question_id
+  LEFT OUTER JOIN qtype qt ON 
+      q.question_id = qt.question_id 
+  WHERE 
+      t.testCreationTableId = ?
+=======
 
   SELECT 
   q.question_id, 
@@ -228,7 +257,12 @@ LEFT OUTER JOIN ots_document doc ON
 LEFT OUTER JOIN options o ON 
   q.question_id = o.question_id
 WHERE 
+<<<<<<< HEAD
   t.testCreationTableId = ?
+=======
+  t.testCreationTableId = 1
+>>>>>>> af5e2497ef815012e7d9309cf6a14b8e36a9e6a7
+>>>>>>> 684be6ba9059143531d9d88c155a17e77452e2b5
       `, [testCreationTableId]);
   
       // Check if rows is not empty
@@ -264,6 +298,10 @@ WHERE
               qtype:{
                 qtypeId:row.qtypeId,
                 qtype_text:row.qtype_text,
+              },
+              sortid:{
+                sort_id:row.sort_id,
+                sortid_text:row.sortid_text,
               },
              
             };

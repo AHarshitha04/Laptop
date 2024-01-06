@@ -217,13 +217,5 @@ useEffect(() => {
 };
  
  
-ButtonsFunctionality.propTypes = {
-  onQuestionSelect: PropTypes.func.isRequired,
-  questionStatus: PropTypes.arrayOf(PropTypes.string).isRequired,
-  setQuestionStatus: PropTypes.func.isRequired,
- 
-};
- 
- 
  
 export default ButtonsFunctionality;
