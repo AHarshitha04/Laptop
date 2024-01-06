@@ -181,11 +181,15 @@ router.get('/subjects/:testCreationTableId', async (req, res) => {
       qt.qtype_text,
       t.testCreationTableId,
       doc.document_Id,
-      doc.documen_name
+      doc.documen_name,
+      s.sort_id,
+      s.sortid_text
   FROM 
       questions q 
   LEFT OUTER JOIN test_creation_table t ON 
       q.testCreationTableId = t.testCreationTableId 
+      LEFT OUTER JOIN sortid s ON 
+      q.question_id = s.question_id
   LEFT OUTER JOIN ots_document doc ON 
       t.testCreationTableId = doc.testCreationTableId
   LEFT OUTER JOIN options o ON 
@@ -229,6 +233,10 @@ router.get('/subjects/:testCreationTableId', async (req, res) => {
               qtype:{
                 qtypeId:row.qtypeId,
                 qtype_text:row.qtype_text,
+              },
+              sortid:{
+                sort_id:row.sort_id,
+                sortid_text:row.sortid_text,
               },
              
             };

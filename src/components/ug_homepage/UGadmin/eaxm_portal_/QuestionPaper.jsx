@@ -338,9 +338,11 @@ const QuestionPaper = () => {
                 className="question-container"
                 style={{ display: "flex" }}
               >
+                   
                 <div>
+            
                   <div>
-                    <h3>Question {currentQuestion.question_id}</h3>
+                  <h3>Question {currentQuestion.sortid_text}</h3>
                     <img
                       src={`http://localhost:5001/uploads/${currentQuestion.documen_name}/${currentQuestion.questionImgName}`}
                       alt={`Question ${currentQuestion.question_id}`}
