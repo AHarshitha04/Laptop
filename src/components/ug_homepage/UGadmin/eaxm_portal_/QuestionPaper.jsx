@@ -9,7 +9,7 @@ const QuestionPaper = () => {
   // const [questionData, setQuestionData] = useState({ questions: [] });
   const [questionData, setQuestionData] = useState({});
 
-  const { subjectId, testCreationTableId } = useParams();
+  const { subjectId, testCreationTableId, userId } = useParams();
   const [Subjects, setSubjects] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedSubject, setSelectedSubject] = useState(null);
@@ -226,6 +226,8 @@ const QuestionPaper = () => {
   }, [currentQuestionIndex, timers]);
 
   const onAnswerSelected1 = (optionIndex) => {
+    console.log("User ID:", userData.user_Id);
+    console.log("Test Creation Table ID:", testCreationTableId);
     const questionId = questionData.questions[currentQuestionIndex].question_id;
     const charcodeatopt = String.fromCharCode("a".charCodeAt(0) + optionIndex);
     const questionIndex = currentQuestionIndex + 1;
@@ -242,6 +244,8 @@ const QuestionPaper = () => {
   };
 
   const onAnswerSelected2 = (optionIndex) => {
+    console.log("User ID:", userData.user_Id);
+    console.log("Test Creation Table ID:", testCreationTableId);
     const questionId = questionData.questions[currentQuestionIndex].question_id;
     const charcodeatopt = String.fromCharCode("a".charCodeAt(0) + optionIndex);
     const questionIndex = currentQuestionIndex + 1;
@@ -335,21 +339,184 @@ const QuestionPaper = () => {
   }, []);
 
   const handleNextQuestion = async () => {
-    setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
-
-    const response = await fetch(
-      // http://localhost:5001/QuestionPaper/questionType/61
-      `http://localhost:5001/QuestionPaper/questionOptions/${testCreationTableId}`
-    );
-
-    // console.log(testCreationTableId);
-
     try {
+      // --------------------------------saving------------------------------
+      const response = await fetch(
+        `http://localhost:5001/QuestionPaper/questionOptions/${testCreationTableId}`
+      );
       console.log("User ID:", userData.user_Id);
       console.log("Test Creation Table ID:", testCreationTableId);
-     
-    } catch {}
+
+      if (!questionData || !questionData.questions) {
+        console.error("Data or questions are null or undefined");
+        return;
+      }
+
+      setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
+
+      const currentQuestion = questionData.questions[currentQuestionIndex];
+      const questionId = currentQuestion.question_id;
+
+      const selectedOption1 = selectedAnswersMap1[questionId];
+      const selectedOption2 = selectedAnswersMap2[questionId];
+
+      const optionIndexes1 =
+        selectedOption1 !== undefined ? [selectedOption1] : [];
+      const optionIndexes2 =
+        selectedOption2 !== undefined ? selectedOption2 : [];
+
+      if (answeredQuestionsMap[questionId]) {
+        const updatedResponse = {
+          optionIndexes1: optionIndexes1.map((index) =>
+            String.fromCharCode("a".charCodeAt(0) + index)
+          ),
+          optionIndexes2: optionIndexes2.map((index) =>
+            String.fromCharCode("a".charCodeAt(0) + index)
+          ),
+        };
+
+        const updateResponse = await axios.put(
+          `http://localhost:5001/QuestionPaper/updateResponse/${userId}`,
+          {
+            updatedResponse,
+            user_Id: userData.userId,
+            testCreationTableId: testCreationTableId,
+          }
+        );
+
+        console.log(updateResponse.data);
+        console.log("Handle Next Click - Response Updated");
+      } else {
+        const responses = {
+          [questionId]: {
+            optionIndexes1: optionIndexes1.map((index) =>
+              String.fromCharCode("a".charCodeAt(0) + index)
+            ),
+            optionIndexes2: optionIndexes2.map((index) =>
+              String.fromCharCode("a".charCodeAt(0) + index)
+            ),
+          },
+        };
+
+        const saveResponse = await axios.post(
+          "http://localhost:5001/QuestionPaper/response",
+          {
+            responses: responses, // Make sure to include 'responses'
+            user_Id: userData.user_Id, // Use 'user_Id' from userData
+            testCreationTableId: testCreationTableId,
+          }
+        );
+
+        console.log(saveResponse.data);
+        console.log("Handle Next Click - New Response Saved");
+
+        setAnsweredQuestionsMap((prevMap) => ({
+          ...prevMap,
+          [questionId]: true,
+        }));
+      }
+      console.log("Request Payload:", {
+        // responses,
+        response: response,
+        user_Id: userData.userId,
+        testCreationTableId: testCreationTableId,
+      });
+
+      console.log("Parsed userId:", userId);
+      console.log("Parsed testCreationTableId:", testCreationTableId);
+
+      console.log("User ID:", userData.user_Id); // Check if this is correct
+      console.log("Parsed userId:", userId);
+      // console.log(responses);
+
+      setClickCount((prevCount) => prevCount + 1);
+      // --------------------------------saving------------------------------
+    } catch (error) {
+      console.error("Error handling next question:", error);
+    }
   };
+
+  // const handleNextQuestion = async () => {
+  //   setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
+
+  //   const response = await fetch(
+  //     // http://localhost:5001/QuestionPaper/questionType/61
+  //     `http://localhost:5001/QuestionPaper/questionOptions/${testCreationTableId}`
+  //   );
+
+  //   // console.log(testCreationTableId);
+
+  //   try {
+  //     console.log("User ID:", userData.user_Id);
+  //     console.log("Test Creation Table ID:", testCreationTableId);
+  //     // -------------------------------saving----------------------------
+  //  if (!data || !data.questions) {
+  //   console.error("Data or questions are null or undefined");
+  //   return;
+  // }
+
+  //     const currentQuestion = data.questions[currentQuestionIndex];
+  //     const selectedOption1 = selectedAnswersMap1[currentQuestion.question_id];
+  //     const selectedOption2 = selectedAnswersMap2[currentQuestion.question_id];
+
+  //     const optionIndexes1 =
+  //       selectedOption1 !== undefined ? [selectedOption1] : [];
+  //     const optionIndexes2 =
+  //       selectedOption2 !== undefined ? selectedOption2 : [];
+
+  //     const questionId = currentQuestion.question_id;
+
+  //     if (answeredQuestionsMap[questionId]) {
+  //       const updatedResponse = {
+  //         optionIndexes1: optionIndexes1.map((index) =>
+  //           String.fromCharCode("a".charCodeAt(0) + index)
+  //         ),
+  //         optionIndexes2: optionIndexes2.map((index) =>
+  //           String.fromCharCode("a".charCodeAt(0) + index)
+  //         ),
+  //       };
+
+  //       const updateResponse = await axios.put(
+  //         `http://localhost:5001/QuestionPaper/updateResponse/${userId}`,
+  //         {
+  //           updatedResponse,
+  //         }
+  //       );
+
+  //       console.log(updateResponse.data);
+  //       console.log("Handle Next Click - Response Updated");
+  //     } else {
+  //       const responses = {
+  //         [questionId]: {
+  //           optionIndexes1: optionIndexes1.map((index) =>
+  //             String.fromCharCode("a".charCodeAt(0) + index)
+  //           ),
+  //           optionIndexes2: optionIndexes2.map((index) =>
+  //             String.fromCharCode("a".charCodeAt(0) + index)
+  //           ),
+  //         },
+  //       };
+
+  //       const saveResponse = await axios.post(
+  //         "http://localhost:5001/QuestionPaper/response",
+  //         {
+  //           responses,
+  //         }
+  //       );
+
+  //       console.log(saveResponse.data);
+  //       console.log("Handle Next Click - New Response Saved");
+
+  //       setAnsweredQuestionsMap((prevMap) => ({
+  //         ...prevMap,
+  //         [questionId]: true,
+  //       }));
+  //     }
+
+  //     setClickCount((prevCount) => prevCount + 1);
+  //     // --------------------------------saving------------------------------
+  //   } catch {}
+  // };
 
   const [questionTypes, setQuestionTypes] = useState([]);
 
@@ -598,96 +765,6 @@ const QuestionPaper = () => {
                             </li>
                           </div>
                         ))}
-
-                      {/* {currentQuestion.options &&
-                        currentQuestion.options
-                          .filter(
-                            (opt) =>
-                              opt.question_id ===
-                              data.questions[currentQuestionIndex]?.question_id
-                          )
-
-                          .map((option, optionIndex) => (
-                            <div key={optionIndex}>
-                              {currentQuestionType &&
-                                currentQuestionType.qtype &&
-                                currentQuestionType.qtype.toLowerCase() ===
-                                  "mcq(multiple choice question)" && (
-                                  <input
-                                    type="radio"
-                                    name={`question-${currentQuestionIndex}-option`}
-                                    value={String.fromCharCode(
-                                      "A".charCodeAt(0) + optionIndex
-                                    )}
-                                    checked={
-                                      selectedAnswersMap1[
-                                        questionData.questions[
-                                          currentQuestionIndex
-                                        ]?.question_id
-                                      ] === optionIndex
-                                    }
-                                    onChange={() =>
-                                      onAnswerSelected1(optionIndex)
-                                    }
-                                  />
-                                )}
-                              {currentQuestionType &&
-                                currentQuestionType.qtype &&
-                                currentQuestionType.qtype.toLowerCase() ===
-                                  "msq(multiple selection question)" && (
-                                  <input
-                                    type="checkbox"
-                                    name={`question-${currentQuestionIndex}-optionIndex`}
-                                    value={String.fromCharCode(
-                                      "A".charCodeAt(0) + optionIndex
-                                    )}
-                                    checked={
-                                      selectedAnswersMap2[
-                                        questionData.questions[
-                                          currentQuestionIndex
-                                        ]?.question_id
-                                      ] &&
-                                      selectedAnswersMap2[
-                                        questionData.questions[
-                                          currentQuestionIndex
-                                        ]?.question_id
-                                      ].includes(optionIndex)
-                                    }
-                                    onChange={() =>
-                                      onAnswerSelected2(optionIndex)
-                                    }
-                                  />
-                                )}
-                              {currentQuestionType &&
-                                currentQuestionType.qtype &&
-                                currentQuestionType.qtype.toLowerCase() ===
-                                  "nat(numerical answer type)" && (
-                                  <input
-                                    type="text"
-                                    name={`question-${currentQuestionIndex}`}
-                                    value={
-                                      selectedAnswersMap2[
-                                        questionData.questions[
-                                          currentQuestionIndex
-                                        ]?.question_id
-                                      ] || ""
-                                    }
-                                    onChange={(e) =>
-                                      onAnswerSelected2(e.target.value)
-                                    }
-                                  />
-                                )}
-                              (
-                              {String.fromCharCode(
-                                "a".charCodeAt(0) + optionIndex
-                              )}
-                              )
-                              <img
-                                src={`http://localhost:5001/uploads/${currentQuestion.documen_name}/${option.optionImgName}`}
-                                alt={`Option ${option.option_id}`}
-                              />
-                            </div>
-                          ))} */}
                     </div>
                   </div>
                   <div>
