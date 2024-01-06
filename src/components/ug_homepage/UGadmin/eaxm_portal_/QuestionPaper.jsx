@@ -227,7 +227,7 @@ const QuestionPaper = () => {
 
   const onAnswerSelected1 = (optionIndex) => {
     const questionId =
-      currentQuestion.questions[currentQuestionIndex].question_id;
+    questionData.questions[currentQuestionIndex].question_id;
     const charcodeatopt = String.fromCharCode("a".charCodeAt(0) + optionIndex);
     const questionIndex = currentQuestionIndex + 1;
     console.log(`Question Index: ${questionIndex}`);
@@ -244,7 +244,7 @@ const QuestionPaper = () => {
 
   const onAnswerSelected2 = (optionIndex) => {
     const questionId =
-      currentQuestion.questions[currentQuestionIndex].question_id;
+    questionData.questions[currentQuestionIndex].question_id;
     const charcodeatopt = String.fromCharCode("a".charCodeAt(0) + optionIndex);
     const questionIndex = currentQuestionIndex + 1;
     console.log(`Question Index: ${questionIndex}`);
@@ -338,14 +338,13 @@ const QuestionPaper = () => {
     fetchQuestionTypes();
   }, [questionData, currentQuestionIndex]);
 
-  console.log("hiii")
-  console.log("Current Question Index:", currentQuestionIndex);
-console.log("Current Question Data:", currentQuestion);
+//   console.log("hiii")
+//   console.log("Current Question Index:", currentQuestionIndex);
+// console.log("Current Question Data:", currentQuestion);
 
 
   return (
     <div>
-      <h1>hii</h1>
       {!showExamSumary ? (
         <div>
           <div className="subjects">
@@ -387,7 +386,11 @@ console.log("Current Question Data:", currentQuestion);
                 <div>
             
                   <div>
+<<<<<<< HEAD
+                    <h3>Question {currentQuestion.sortid_text}</h3>
+=======
                   <h3>Question {currentQuestion.sortid_text}</h3>
+>>>>>>> 684be6ba9059143531d9d88c155a17e77452e2b5
                     <img
                       src={`http://localhost:5001/uploads/${currentQuestion.documen_name}/${currentQuestion.questionImgName}`}
                       alt={`Question ${currentQuestion.question_id}`}
@@ -406,13 +409,10 @@ console.log("Current Question Data:", currentQuestion);
                             <div className="option" key={option.option_id}>
                                 <li key={optionIndex}>
                                   
-                                {console.log("Option:", option)}
-                                {console.log("Option Index:", option.option_index)}
+                                {/* {console.log("Option:", option)}
+                                {console.log("Option Index:", option.option_index)} */}
                               {currentQuestionType &&
-                                (console.log(
-                                  "Rendering input for question type:",
-                                  currentQuestionType.typeofQuestion
-                                ),
+                               
                                 currentQuestionType.typeofQuestion &&
                                   currentQuestionType.typeofQuestion
                                     .toLowerCase()
@@ -436,13 +436,10 @@ console.log("Current Question Data:", currentQuestion);
                                         onAnswerSelected1(optionIndex)
                                       }
                                     />
-                                  ))}
+                                  )}
 
                               {currentQuestionType &&
-                                (console.log(
-                                  "Rendering input for question type:",
-                                  currentQuestionType.typeofQuestion
-                                ),
+                               
                                 currentQuestionType.typeofQuestion &&
                                   currentQuestionType.typeofQuestion
                                     .toLowerCase()
@@ -471,13 +468,10 @@ console.log("Current Question Data:", currentQuestion);
                                         onAnswerSelected2(optionIndex)
                                       }
                                     />
-                                  ))}
+                                  )}
 
                               {currentQuestionType &&
-                                (console.log(
-                                  "Rendering input for question type:",
-                                  currentQuestionType.typeofQuestion
-                                ),
+                               
                                 currentQuestionType.typeofQuestion &&
                                   currentQuestionType.typeofQuestion
                                     .toLowerCase()
@@ -496,7 +490,7 @@ console.log("Current Question Data:", currentQuestion);
                                         onAnswerSelected2(e.target.value)
                                       }
                                     />
-                                  ))}
+                                  )}
 
                               {currentQuestionType &&
                                 currentQuestionType.typeofQuestion &&
@@ -541,7 +535,7 @@ console.log("Current Question Data:", currentQuestion);
                                 "a".charCodeAt(0) + optionIndex
                               )}
                               )
-                              {console.log("hello")}
+                              {/* {console.log("hello")} */}
                               <img
                                 src={`http://localhost:5001/uploads/${currentQuestion.documen_name}/${option.optionImgName}`}
                                 alt={`Option ${option.option_id}`}

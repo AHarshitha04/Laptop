@@ -237,7 +237,36 @@ router.get('/subjects/:testCreationTableId', async (req, res) => {
       q.question_id = qt.question_id 
   WHERE 
       t.testCreationTableId = ?
+<<<<<<< HEAD
       
+=======
+=======
+
+  SELECT 
+  q.question_id, 
+  q.questionImgName, 
+  o.option_id, 
+  o.optionImgName,
+  o.option_index,
+  t.testCreationTableId,
+  doc.document_Id,
+  doc.documen_name
+FROM 
+  questions q 
+LEFT OUTER JOIN test_creation_table t ON 
+  q.testCreationTableId = t.testCreationTableId 
+LEFT OUTER JOIN ots_document doc ON 
+  t.testCreationTableId = doc.testCreationTableId
+LEFT OUTER JOIN options o ON 
+  q.question_id = o.question_id
+WHERE 
+<<<<<<< HEAD
+  t.testCreationTableId = ?
+=======
+  t.testCreationTableId = 1
+>>>>>>> af5e2497ef815012e7d9309cf6a14b8e36a9e6a7
+>>>>>>> 684be6ba9059143531d9d88c155a17e77452e2b5
+>>>>>>> 53dd6ff8bf36e562abc36c4d27b58187d5dc0144
       `, [testCreationTableId]);
   
       // Check if rows is not empty
