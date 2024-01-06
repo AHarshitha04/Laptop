@@ -239,10 +239,10 @@ router.get('/subjects/:testCreationTableId', async (req, res) => {
       t.testCreationTableId = ?
 
 
-<<<<<<< HEAD
-=======
 
->>>>>>> 3407e718e1e382c24153b8f4b681ca8ba9449f9e
+
+
+
       `, [testCreationTableId]);
   
       // Check if rows is not empty

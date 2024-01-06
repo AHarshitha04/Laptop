@@ -138,7 +138,6 @@ const QuestionPaper = () => {
 
     fetchUserData();
   }, []);
-  
 
   useEffect(() => {
     const counts = calculateQuestionCounts();
@@ -305,58 +304,51 @@ const QuestionPaper = () => {
   const currentQuestion =
     questionData.questions && questionData.questions[currentQuestionIndex];
 
-    const [userData, setUserData] = useState({});
+  const [userData, setUserData] = useState({});
 
-    useEffect(() => {
-      const fetchUserData = async () => {
-        try {
-          const token = localStorage.getItem("token");
-          const response = await fetch(
-            "http://localhost:5001/ughomepage_banner_login/user",
-            {
-              headers: {
-                Authorization: `Bearer ${token}`, // Attach token to headers for authentication
-              },
-            }
-          );
-  
-          if (response.ok) {
-            const userData = await response.json();
-            setUserData(userData);
-            // console.log(userData);
-          } else {
-            // Handle errors, e.g., if user data fetch fails
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const response = await fetch(
+          "http://localhost:5001/ughomepage_banner_login/user",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Attach token to headers for authentication
+            },
           }
-        } catch (error) {
-          // Handle other errors
-        }
-      };
-  
-      fetchUserData();
-    }, []);
+        );
 
-  const handleNextQuestion = () => {
+        if (response.ok) {
+          const userData = await response.json();
+          setUserData(userData);
+          // console.log(userData);
+        } else {
+          // Handle errors, e.g., if user data fetch fails
+        }
+      } catch (error) {
+        // Handle other errors
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
+  const handleNextQuestion = async () => {
     setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
 
-    try{
+    const response = await fetch(
+      // http://localhost:5001/QuestionPaper/questionType/61
+      `http://localhost:5001/QuestionPaper/questionOptions/${testCreationTableId}`
+    );
+
+    // console.log(testCreationTableId);
+
+    try {
       console.log("User ID:", userData.user_Id);
-      console.log(
-        "Test Creation Table ID:",
-        result.testData[0].testCreationTableId
-      );
-      // const token = localStorage.getItem("token");
-      // const response = await fetch(
-      //   "http://localhost:5001/ughomepage_banner_login/user",
-      //   {
-      //     headers: {
-      //       Authorization: `Bearer ${token}`, // Attach token to headers for authentication
-      //     },})
-
-    }catch{
-
-    }
-   
-      
+      console.log("Test Creation Table ID:", testCreationTableId);
+     
+    } catch {}
   };
 
   const [questionTypes, setQuestionTypes] = useState([]);
@@ -372,7 +364,7 @@ const QuestionPaper = () => {
           );
           const questionTypes = await responseQuestionTypes.json();
           setQuestionTypes(questionTypes);
-          console.log(responseQuestionTypes);
+          // console.log(responseQuestionTypes);
           const currentQuestionType = questionTypes.find(
             (q) => q.question_id === qID
           );
