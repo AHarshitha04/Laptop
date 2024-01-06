@@ -428,14 +428,7 @@ const QuestionPaper = () => {
               >
                 <div>
                   <div>
-<<<<<<< HEAD
                     <h3>Question: {currentQuestion.sortid.sortid_text}</h3>
-=======
-
-                    <h3>Question {currentQuestion.sortid_text}</h3>
-
-                  <h3>Question {currentQuestion.sortid_text}</h3>
->>>>>>> 3407e718e1e382c24153b8f4b681ca8ba9449f9e
 
                     <img
                       src={`http://localhost:5001/uploads/${currentQuestion.documen_name}/${currentQuestion.questionImgName}`}
