@@ -228,7 +228,7 @@ LEFT OUTER JOIN ots_document doc ON
 LEFT OUTER JOIN options o ON 
   q.question_id = o.question_id
 WHERE 
-  t.testCreationTableId = 1
+  t.testCreationTableId = ?
       `, [testCreationTableId]);
   
       // Check if rows is not empty
