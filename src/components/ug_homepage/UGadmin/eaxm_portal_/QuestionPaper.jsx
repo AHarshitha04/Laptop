@@ -110,7 +110,7 @@ const QuestionPaper = () => {
   // /user
 
   //user name
-  const [userData, setUserData] = useState({});
+
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -138,6 +138,7 @@ const QuestionPaper = () => {
 
     fetchUserData();
   }, []);
+  
 
   useEffect(() => {
     const counts = calculateQuestionCounts();
@@ -226,8 +227,7 @@ const QuestionPaper = () => {
   }, [currentQuestionIndex, timers]);
 
   const onAnswerSelected1 = (optionIndex) => {
-    const questionId =
-    questionData.questions[currentQuestionIndex].question_id;
+    const questionId = questionData.questions[currentQuestionIndex].question_id;
     const charcodeatopt = String.fromCharCode("a".charCodeAt(0) + optionIndex);
     const questionIndex = currentQuestionIndex + 1;
     console.log(`Question Index: ${questionIndex}`);
@@ -243,8 +243,7 @@ const QuestionPaper = () => {
   };
 
   const onAnswerSelected2 = (optionIndex) => {
-    const questionId =
-    questionData.questions[currentQuestionIndex].question_id;
+    const questionId = questionData.questions[currentQuestionIndex].question_id;
     const charcodeatopt = String.fromCharCode("a".charCodeAt(0) + optionIndex);
     const questionIndex = currentQuestionIndex + 1;
     console.log(`Question Index: ${questionIndex}`);
@@ -306,8 +305,58 @@ const QuestionPaper = () => {
   const currentQuestion =
     questionData.questions && questionData.questions[currentQuestionIndex];
 
+    const [userData, setUserData] = useState({});
+
+    useEffect(() => {
+      const fetchUserData = async () => {
+        try {
+          const token = localStorage.getItem("token");
+          const response = await fetch(
+            "http://localhost:5001/ughomepage_banner_login/user",
+            {
+              headers: {
+                Authorization: `Bearer ${token}`, // Attach token to headers for authentication
+              },
+            }
+          );
+  
+          if (response.ok) {
+            const userData = await response.json();
+            setUserData(userData);
+            // console.log(userData);
+          } else {
+            // Handle errors, e.g., if user data fetch fails
+          }
+        } catch (error) {
+          // Handle other errors
+        }
+      };
+  
+      fetchUserData();
+    }, []);
+
   const handleNextQuestion = () => {
     setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
+
+    try{
+      console.log("User ID:", userData.user_Id);
+      console.log(
+        "Test Creation Table ID:",
+        result.testData[0].testCreationTableId
+      );
+      // const token = localStorage.getItem("token");
+      // const response = await fetch(
+      //   "http://localhost:5001/ughomepage_banner_login/user",
+      //   {
+      //     headers: {
+      //       Authorization: `Bearer ${token}`, // Attach token to headers for authentication
+      //     },})
+
+    }catch{
+
+    }
+   
+      
   };
 
   const [questionTypes, setQuestionTypes] = useState([]);
@@ -337,11 +386,6 @@ const QuestionPaper = () => {
 
     fetchQuestionTypes();
   }, [questionData, currentQuestionIndex]);
-
-//   console.log("hiii")
-//   console.log("Current Question Index:", currentQuestionIndex);
-// console.log("Current Question Data:", currentQuestion);
-
 
   return (
     <div>
@@ -382,43 +426,37 @@ const QuestionPaper = () => {
                 className="question-container"
                 style={{ display: "flex" }}
               >
-                   
                 <div>
-            
                   <div>
-<<<<<<< HEAD
-                    <h3>Question {currentQuestion.sortid_text}</h3>
-=======
-                  <h3>Question {currentQuestion.sortid_text}</h3>
->>>>>>> 684be6ba9059143531d9d88c155a17e77452e2b5
+                    <h3>Question: {currentQuestion.sortid.sortid_text}</h3>
+
                     <img
                       src={`http://localhost:5001/uploads/${currentQuestion.documen_name}/${currentQuestion.questionImgName}`}
                       alt={`Question ${currentQuestion.question_id}`}
                     />
                     <div>
-                      {currentQuestion.options && Array.isArray(currentQuestion.options) &&
-                      
-                        currentQuestion.options
-                          .filter(
-                            (opt) =>
-                              opt.question_id ===
-                              questionData.questions[currentQuestionIndex]
-                                ?.question_id
-                          )&&
-                          currentQuestion.options.map((option, optionIndex) => (
-                            <div className="option" key={option.option_id}>
-                                <li key={optionIndex}>
-                                  
-                                {/* {console.log("Option:", option)}
+                      {currentQuestion.options &&
+                        Array.isArray(currentQuestion.options) &&
+                        currentQuestion.options.filter(
+                          (opt) =>
+                            opt.question_id ===
+                            questionData.questions[currentQuestionIndex]
+                              ?.question_id
+                        ) &&
+                        currentQuestion.options.map((option, optionIndex) => (
+                          <div className="option" key={option.option_id}>
+                            <li key={optionIndex}>
+                              {/* {console.log("Option:", option)}
                                 {console.log("Option Index:", option.option_index)} */}
                               {currentQuestionType &&
-                               
                                 currentQuestionType.typeofQuestion &&
-                                  currentQuestionType.typeofQuestion
-                                    .toLowerCase()
-                                    .includes(
-                                      "mcq(multiple choice question)"
-                                    ) && (
+                                currentQuestionType.typeofQuestion
+                                  .toLowerCase()
+                                  .includes(
+                                    "mcq(multiple choice question)"
+                                  ) && (
+                                  <div>
+                                    {" "}
                                     <input
                                       type="radio"
                                       name={`question-${currentQuestionIndex}-option`}
@@ -436,16 +474,26 @@ const QuestionPaper = () => {
                                         onAnswerSelected1(optionIndex)
                                       }
                                     />
-                                  )}
-
+                                    (
+                                    {String.fromCharCode(
+                                      "a".charCodeAt(0) + optionIndex
+                                    )}
+                                    )
+                                    <img
+                                      src={`http://localhost:5001/uploads/${currentQuestion.documen_name}/${option.optionImgName}`}
+                                      alt={`Option ${option.option_id}`}
+                                    />
+                                  </div>
+                                )}
                               {currentQuestionType &&
-                               
                                 currentQuestionType.typeofQuestion &&
-                                  currentQuestionType.typeofQuestion
-                                    .toLowerCase()
-                                    .includes(
-                                      "msq(multiple selection question)"
-                                    ) && (
+                                currentQuestionType.typeofQuestion
+                                  .toLowerCase()
+                                  .includes(
+                                    "msq(multiple selection question)"
+                                  ) && (
+                                  <div>
+                                    {" "}
                                     <input
                                       type="checkbox"
                                       name={`question-${currentQuestionIndex}-optionIndex`}
@@ -468,35 +516,42 @@ const QuestionPaper = () => {
                                         onAnswerSelected2(optionIndex)
                                       }
                                     />
-                                  )}
-
-                              {currentQuestionType &&
-                               
-                                currentQuestionType.typeofQuestion &&
-                                  currentQuestionType.typeofQuestion
-                                    .toLowerCase()
-                                    .includes("nat(numerical answer type)") && (
-                                    <input
-                                      type="text"
-                                      name={`question-${currentQuestionIndex}`}
-                                      value={
-                                        selectedAnswersMap2[
-                                          questionData.questions[
-                                            currentQuestionIndex
-                                          ]?.question_id
-                                        ] || ""
-                                      }
-                                      onChange={(e) =>
-                                        onAnswerSelected2(e.target.value)
-                                      }
-                                    />
-                                  )}
-
+                                    (
+                                    {String.fromCharCode(
+                                      "a".charCodeAt(0) + optionIndex
+                                    )}
+                                    )
+                                    <img
+                                      src={`http://localhost:5001/uploads/${currentQuestion.documen_name}/${option.optionImgName}`}
+                                      alt={`Option ${option.option_id}`}
+                                    />{" "}
+                                  </div>
+                                )}
                               {currentQuestionType &&
                                 currentQuestionType.typeofQuestion &&
                                 currentQuestionType.typeofQuestion
                                   .toLowerCase()
-                                  .includes("tf") && (
+                                  .includes("nat(numerical answer type)") && (
+                                  <input
+                                    type="text"
+                                    name={`question-${currentQuestionIndex}`}
+                                    value={
+                                      selectedAnswersMap2[
+                                        questionData.questions[
+                                          currentQuestionIndex
+                                        ]?.question_id
+                                      ] || ""
+                                    }
+                                    onChange={(e) =>
+                                      onAnswerSelected2(e.target.value)
+                                    }
+                                  />
+                                )}
+                              {currentQuestionType &&
+                                currentQuestionType.typeofQuestion &&
+                                currentQuestionType.typeofQuestion
+                                  .toLowerCase()
+                                  .includes("True/False Questions") && (
                                   <>
                                     <input
                                       type="radio"
@@ -530,22 +585,27 @@ const QuestionPaper = () => {
                                     False
                                   </>
                                 )}
-                              (
-                              {String.fromCharCode(
-                                "a".charCodeAt(0) + optionIndex
-                              )}
-                              )
-                              {/* {console.log("hello")} */}
-                              <img
+
+                              {/* {currentQuestion.question_type == "mcq(multiple choice question)" ||
+                              currentQuestion.question_type == "msq(multiple selection question)" ? (
+                                <>
+                                
+                              helo boys
+                                <img
+                                  src={`http://localhost:5001/uploads/${currentQuestion.document_name}/${option.optionImgName}`}
+                                  alt={`Option ${option.option_id}`}
+                                /> 
+                                </>
+                              
+                              ) : null} */}
+
+                              {/* <img
                                 src={`http://localhost:5001/uploads/${currentQuestion.documen_name}/${option.optionImgName}`}
                                 alt={`Option ${option.option_id}`}
-                              />
-                              
-                              
+                              /> */}
                             </li>
-                            </div>
-                          
-                          ))}
+                          </div>
+                        ))}
 
                       {/* {currentQuestion.options &&
                         currentQuestion.options
