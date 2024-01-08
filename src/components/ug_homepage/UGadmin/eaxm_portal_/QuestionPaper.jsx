@@ -398,8 +398,7 @@ const QuestionPaper = () => {
 
 
   const handleNextQuestion = async () => {
-<<<<<<< HEAD
-=======
+
 
   // ------------------------------------ button functionality --------------------------------------------
 
@@ -438,7 +437,7 @@ const QuestionPaper = () => {
 
     // console.log(testCreationTableId);
 
->>>>>>> 20640f74e5247923bbb3518a6e2ae24c39cc694f
+
     try {
       // --------------------------------saving------------------------------
       const response = await fetch(
@@ -447,7 +446,7 @@ const QuestionPaper = () => {
       console.log("User ID:", userData.user_Id);
       console.log("Test Creation Table ID:", testCreationTableId);
 
-<<<<<<< HEAD
+
       if (!questionData || !questionData.questions) {
         console.error("Data or questions are null or undefined");
         return;
@@ -535,9 +534,10 @@ const QuestionPaper = () => {
     } catch (error) {
       console.error("Error handling next question:", error);
     }
-=======
-    } catch { }
->>>>>>> 20640f74e5247923bbb3518a6e2ae24c39cc694f
+
+    }catch (error) {
+      console.error("Error fetching question types:", error);
+    }
   };
 
   // const handleNextQuestion = async () => {
@@ -862,11 +862,10 @@ const QuestionPaper = () => {
                             </li>
                           </div>
                         ))}
-<<<<<<< HEAD
-=======
 
 
->>>>>>> 20640f74e5247923bbb3518a6e2ae24c39cc694f
+
+
                     </div>
                   </div>
                   <div>
