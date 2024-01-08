@@ -16,7 +16,7 @@ import Testcreationadmin from "./Testcreationadmin";
 import DocumentUpload_admin from "./DocumentUpload_admin";
 import Examcreation from "./Examcreation";
 import Coursecreation from "./Coursecreation";
-
+import StdLeftNav from "./StudentDashbord/StdLeftNav";
 // import logo2 from './logo2.jpeg'
 // import HomeLandingPage from "../Frontend/Pages/HomeLandingPage/HomeLandingPage";
 
@@ -183,6 +183,7 @@ const Leftnav = () => {
                 <p>Quiz App</p>
               </Link>
             </li>
+            <li><Link className="LeftnavLinks" to="/StdLeftNav" ><i class="fa-solid fa-chart-line"></i><p>Student Dashbord</p></Link></li>
           </ul>
         </div>
       </div>

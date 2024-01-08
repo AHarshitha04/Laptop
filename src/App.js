@@ -103,8 +103,9 @@ import  GettinggInstructions  from "./components/ug_homepage/exam_portal_admin/G
 import  {UpdateInstruction}  from "./components/ug_homepage/exam_portal_admin/UpdateInstruction.jsx";
 
 
-
-
+//----------------------------------------------------------student Dashbord ----------------------------------------------------------------------
+import StdLeftNav from "./components/ug_homepage/exam_portal_admin/StudentDashbord/StdLeftNav.jsx"
+import StdDashbord from "./components/ug_homepage/exam_portal_admin/StudentDashbord/StdDashbord.jsx"
 
 
 
@@ -264,8 +265,11 @@ const App = () => {
 path="/InstructionPage/editIns/:instructionId/:id"
 element={<UpdateInstruction />} 
 /> 
-
+----------------------------------------------------------------------------Student Dashbord ----------------------------------------------------------------------------
  
+ <Route path="/StdLeftNav" element={<StdLeftNav />}/>
+ <Route path="/StdDashbord"  element={<StdDashbord />}/>
+
 
       </Routes>
 
