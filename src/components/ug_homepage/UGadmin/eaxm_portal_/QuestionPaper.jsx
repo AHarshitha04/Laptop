@@ -5,7 +5,7 @@ import ButtonsFunctionality from "./ButtonsFunctionality";
 import "./styles/Paper.css";
 
 const QuestionPaper = () => {
-  const [data, setData] = useState({ questions: [] });
+  // const [data, setData] = useState({ questions: [] });
   // const [questionData, setQuestionData] = useState({ questions: [] });
   const [questionData, setQuestionData] = useState({});
 
@@ -151,10 +151,10 @@ const QuestionPaper = () => {
   const [clickCount, setClickCount] = useState(0);
 
   const [answeredQuestionsMap, setAnsweredQuestionsMap] = useState({});
-  const correctAnswer =
-    data && data.questions && data.questions[currentQuestionIndex]
-      ? data.questions[currentQuestionIndex].correct_answer
-      : null; // or provide a default value based on your logic
+  // const correctAnswer =
+  //   data && data.questions && data.questions[currentQuestionIndex]
+  //     ? data.questions[currentQuestionIndex].correct_answer
+  //     : null; // or provide a default value based on your logic
 
   // /user
 
@@ -242,7 +242,7 @@ const QuestionPaper = () => {
   }, [testCreationTableId, subjectId, selectedAnswersMap1]);
 
   const [timer, setTimer] = useState(0);
-  const [timers, setTimers] = useState(Array(data));
+  const [timers, setTimers] = useState(Array(questionData));
   const formatTime = (seconds) => {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
@@ -277,6 +277,14 @@ const QuestionPaper = () => {
       ...prevMap,
       [questionId]: [],
     }));
+
+    const updatedSelectedAnswers = [...selectedAnswers];
+    updatedSelectedAnswers[activeQuestion] = optionIndex;
+    setSelectedAnswers(updatedSelectedAnswers);
+
+    const updatedQuestionStatus = [...questionStatus];
+    updatedQuestionStatus[activeQuestion] = "answered";
+    setQuestionStatus(updatedQuestionStatus);
   };
 
   const onAnswerSelected2 = (optionIndex) => {
@@ -300,6 +308,14 @@ const QuestionPaper = () => {
         [questionId]: updatedSelection,
       };
     });
+
+    const updatedSelectedAnswers = [...selectedAnswers];
+    updatedSelectedAnswers[activeQuestion] = optionIndex;
+    setSelectedAnswers(updatedSelectedAnswers);
+
+    const updatedQuestionStatus = [...questionStatus];
+    updatedQuestionStatus[activeQuestion] = "answered";
+    setQuestionStatus(updatedQuestionStatus);
   };
 
   // const [showExamSumary, setShowExamSumary] = useState(false);
@@ -402,25 +418,48 @@ const QuestionPaper = () => {
   // Get the current question index
   const questionIndex = currentQuestionIndex;
 
-  // Check if the current question is already answered
-  if (questionStatus[questionIndex] !== "answered") {
-    // If not answered, mark it as answered
-    setQuestionStatus((prevQuestionStatus) => [
-      ...prevQuestionStatus.slice(0, questionIndex),
-      "answered",
-      ...prevQuestionStatus.slice(questionIndex + 1),
-    ]);
+  const updatedQuestionStatus = [...questionStatus];
 
-    // Update other necessary state or perform additional logic
-    setAnsweredQuestions((prevAnsweredQuestions) => [
-      ...prevAnsweredQuestions,
-      questionIndex + 1,
-    ]);
-    setIsPaused(false);
+  const isAnswered =
+    questionStatus[currentQuestionIndex] === "answered" ||
+    questionStatus[currentQuestionIndex] === "Answered and marked for review";
+
+// Set the status of the current question
+
+updatedQuestionStatus[currentQuestionIndex] = isAnswered ? "answered" : "notAnswered";
+
+
+
+      // If the current question is answered and marked for review, update the status accordingly
+  if (isAnswered && questionStatus[questionIndex] === "Answered and marked for review") {
+    updatedQuestionStatus[questionIndex] = "Answered and marked for review";
   }
+
+      // Set the status for all questions based on whether they are answered or not
+      for (let i = currentQuestionIndex + 1; i < updatedQuestionStatus.length; i++) {
+        updatedQuestionStatus[i] = isAnswered ? "notAnswered" : "notAnswered";
+      }
+
+ // Set the status of the next question based on whether it was answered or not
+ const nextQuestionStatus =
+ isAnswered ? "answered" : "notAnswered";
+
+ // Set the status of the next question
+ updatedQuestionStatus[currentQuestionIndex + 1] = nextQuestionStatus;
+
+
+
+
+
+  // Set the updated question status
+  setQuestionStatus(updatedQuestionStatus);
 
   // Move to the next question
   setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
+
+
+
+
 
 
   // --------------------------------end of button functionality --------------------------------------------------
@@ -438,6 +477,14 @@ const QuestionPaper = () => {
 
     } catch { }
   };
+
+  // useEffect to perform actions after state update
+useEffect(() => {
+  console.log("After Update - Question Status:", questionStatus);
+
+  // Additional logic here...
+
+}, [questionStatus, currentQuestionIndex]); // Make sure to include questionStatus in the dependency array
 
   const [questionTypes, setQuestionTypes] = useState([]);
 
