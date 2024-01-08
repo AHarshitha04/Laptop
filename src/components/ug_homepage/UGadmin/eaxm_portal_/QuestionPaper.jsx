@@ -3,13 +3,13 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import ButtonsFunctionality from "./ButtonsFunctionality";
 import "./styles/Paper.css";
- 
+
 const QuestionPaper = () => {
   // const [data, setData] = useState({ questions: [] });
   // const [questionData, setQuestionData] = useState({ questions: [] });
   const [questionData, setQuestionData] = useState({});
- 
-  const { subjectId, testCreationTableId, userId } = useParams();
+
+  const { subjectId, testCreationTableId } = useParams();
   const [Subjects, setSubjects] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedSubject, setSelectedSubject] = useState(null);
@@ -19,7 +19,7 @@ const QuestionPaper = () => {
   );
   const [sections, setSections] = useState([]);
   const [currentQuestionType, setCurrentQuestionType] = useState(null);
- 
+
   const navigate = useNavigate();
   const [answeredCount, setAnsweredCount] = useState(0);
   const [notAnsweredCount, setNotAnsweredCount] = useState(0);
@@ -34,7 +34,7 @@ const QuestionPaper = () => {
     let markedForReview = 0;
     let answeredmarkedForReviewCount = 0;
     let VisitedCount = 0;
- 
+
     questionStatus.forEach((status, index) => {
       if (status === "answered") {
         answered++;
@@ -48,7 +48,7 @@ const QuestionPaper = () => {
         VisitedCount++;
       }
     });
- 
+
     return {
       answered,
       notAnswered,
@@ -57,16 +57,16 @@ const QuestionPaper = () => {
       VisitedCount,
     };
   };
- 
- 
- 
+
+
+
   const updateCounters = () => {
     let answered = 0;
     let notAnswered = 0;
     let marked = 0;
     let markedForReview = 0;
     let Visited = 0;
- 
+
     questionStatus.forEach((status) => {
       if (status === "answered") {
         answered++;
@@ -80,30 +80,30 @@ const QuestionPaper = () => {
         Visited++;
       }
     });
- 
+
     setAnsweredCount(answered);
     setNotAnsweredCount(notAnswered);
     setAnsweredmarkedForReviewCount(marked);
     setMarkedForReviewCount(markedForReview);
     setVisitedCount(Visited);
   };
- 
+
   useEffect(() => {
     // Call the updateCounters function initially when the component mounts
     updateCounters();
   }, [questionStatus]);
- 
- 
+
+
   const [selectedAnswers, setSelectedAnswers] = useState(
     Array(questionData.length).fill("")
   );
- 
+
   const handleQuestionSelect = (questionNumber) => {
     setCurrentQuestionIndex(questionNumber - 1);
     setActiveQuestion(questionNumber - 1);
   };
- 
- 
+
+
   const handlePreviousClick = () => {
     setCurrentQuestionIndex((prevIndex) => {
       // Save the current timer value for the question
@@ -113,10 +113,10 @@ const QuestionPaper = () => {
       // Move to the previous question
       return prevIndex - 1;
     });
- 
+
     setActiveQuestion((prevActiveQuestion) => prevActiveQuestion - 1);
   };
- 
+
   const clearResponse = async () => {
     try {
       const questionId =
@@ -126,17 +126,17 @@ const QuestionPaper = () => {
       const updatedSelectedAnswersMap1 = { ...selectedAnswersMap1 };
       updatedSelectedAnswersMap1[questionId] = null;
       setSelectedAnswersMap1(updatedSelectedAnswersMap1);
- 
+
       // Clear response for checkboxes (MSQ)
       const updatedSelectedAnswersMap2 = { ...selectedAnswersMap2 };
       updatedSelectedAnswersMap2[questionId] = [];
       setSelectedAnswersMap2(updatedSelectedAnswersMap2);
- 
+
       // Send a request to your server to clear the user's response for the current question
       const response = await axios.delete(
         `http://localhost:5001/QuestionPaper/clearResponse/${questionId}`
       );
- 
+
       if (response.status === 200) {
         console.log("Response cleared successfully");
         // Update any state or perform additional actions as needed
@@ -147,27 +147,19 @@ const QuestionPaper = () => {
       console.error("Error clearing response:", error);
     }
   };
- 
+
   const [clickCount, setClickCount] = useState(0);
- 
+
   const [answeredQuestionsMap, setAnsweredQuestionsMap] = useState({});
-<<<<<<< HEAD
   // const correctAnswer =
   //   data && data.questions && data.questions[currentQuestionIndex]
   //     ? data.questions[currentQuestionIndex].correct_answer
   //     : null; // or provide a default value based on your logic
 
-=======
-  const correctAnswer =
-    data && data.questions && data.questions[currentQuestionIndex]
-      ? data.questions[currentQuestionIndex].correct_answer
-      : null; // or provide a default value based on your logic
- 
->>>>>>> efd1e91a21aa8ad93eee4bab232ed83d42b6aaff
   // /user
- 
+
   //user name
- 
+
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -180,7 +172,7 @@ const QuestionPaper = () => {
             },
           }
         );
- 
+
         if (response.ok) {
           const userData = await response.json();
           setUserData(userData);
@@ -192,10 +184,10 @@ const QuestionPaper = () => {
         // Handle other errors
       }
     };
- 
+
     fetchUserData();
   }, []);
- 
+
   useEffect(() => {
     const counts = calculateQuestionCounts();
     setAnsweredCount(counts.answered);
@@ -204,7 +196,7 @@ const QuestionPaper = () => {
     setAnsweredmarkedForReviewCount(counts.answeredmarkedForReviewCount);
     setVisitedCount(counts.VisitedCount);
   }, [questionStatus]);
- 
+
   const handleSubmit = () => {
     window.alert("Your Test has been Submitted!! Click Ok to See Result.");
     setShowExamSumary(true);
@@ -216,7 +208,7 @@ const QuestionPaper = () => {
     setAnsweredmarkedForReviewCount(counts.answeredmarkedForReviewCount);
     setVisitedCount(counts.VisitedCount);
   };
- 
+
   const [selectedAnswersMap1, setSelectedAnswersMap1] = useState({});
   const [selectedAnswersMap2, setSelectedAnswersMap2] = useState({});
   useEffect(() => {
@@ -227,28 +219,28 @@ const QuestionPaper = () => {
         );
         const subjectsData = await responseSubjects.json();
         setSubjects(subjectsData);
- 
+
         const leastSubjectId =
           subjectsData.length > 0
             ? Math.min(...subjectsData.map((subject) => subject.subjectId))
             : null;
- 
+
         const defaultSubjectId = subjectId || leastSubjectId;
- 
+
         const selectedAnswersForSubject =
           selectedAnswersMap1[defaultSubjectId] || [];
         setSelectedAnswers(selectedAnswersForSubject);
- 
+
         const linkUrl = `/subjects/${testCreationTableId}/${subjectId || leastSubjectId
           }`;
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
- 
+
     fetchData();
   }, [testCreationTableId, subjectId, selectedAnswersMap1]);
- 
+
   const [timer, setTimer] = useState(0);
   const [timers, setTimers] = useState(Array(questionData));
   const formatTime = (seconds) => {
@@ -258,22 +250,20 @@ const QuestionPaper = () => {
     return `${hours > 9 ? hours : "0" + hours}:${minutes > 9 ? minutes : "0" + minutes
       }:${remainingSeconds > 9 ? remainingSeconds : "0" + remainingSeconds}`;
   };
- 
+
   useEffect(() => {
     setTimer(timers[currentQuestionIndex] || 0);
     let interval;
     interval = setInterval(() => {
       setTimer((prevTimer) => prevTimer + 1);
     }, 1000);
- 
+
     return () => {
       clearInterval(interval);
     };
   }, [currentQuestionIndex, timers]);
- 
+
   const onAnswerSelected1 = (optionIndex) => {
-    console.log("User ID:", userData.user_Id);
-    console.log("Test Creation Table ID:", testCreationTableId);
     const questionId = questionData.questions[currentQuestionIndex].question_id;
     const charcodeatopt = String.fromCharCode("a".charCodeAt(0) + optionIndex);
     const questionIndex = currentQuestionIndex + 1;
@@ -296,10 +286,8 @@ const QuestionPaper = () => {
     updatedQuestionStatus[activeQuestion] = "answered";
     setQuestionStatus(updatedQuestionStatus);
   };
- 
+
   const onAnswerSelected2 = (optionIndex) => {
-    console.log("User ID:", userData.user_Id);
-    console.log("Test Creation Table ID:", testCreationTableId);
     const questionId = questionData.questions[currentQuestionIndex].question_id;
     const charcodeatopt = String.fromCharCode("a".charCodeAt(0) + optionIndex);
     const questionIndex = currentQuestionIndex + 1;
@@ -308,13 +296,13 @@ const QuestionPaper = () => {
     setSelectedAnswersMap2((prevMap) => {
       const updatedSelection = [...(prevMap[questionId] || [])];
       const index = updatedSelection.indexOf(optionIndex);
- 
+
       if (index !== -1) {
         updatedSelection.splice(index, 1);
       } else {
         updatedSelection.push(optionIndex);
       }
- 
+
       return {
         ...prevMap,
         [questionId]: updatedSelection,
@@ -329,21 +317,21 @@ const QuestionPaper = () => {
     updatedQuestionStatus[activeQuestion] = "answered";
     setQuestionStatus(updatedQuestionStatus);
   };
- 
+
   // const [showExamSumary, setShowExamSumary] = useState(false);
   const calculateResult = () => {
     // // Make sure answeredQuestions is defined before accessing its length
     // const totalAttempted = answeredQuestions ? answeredQuestions.length : 0;
     // // const totalCorrect = result.correctAnswers;
   };
- 
+
   const handleYes = () => {
     navigate("/SubmitPage");
   };
- 
+
   const [activeQuestion, setActiveQuestion] = useState(0);
- 
- 
+
+
   const markForReview = () => {
     // Update questionStatus for the marked question
     const updatedQuestionStatus = [...questionStatus];
@@ -355,39 +343,39 @@ const QuestionPaper = () => {
     } else if (!selectedAnswers[activeQuestion]) {
       updatedQuestionStatus[activeQuestion] = "marked";
     }
- 
+
     setQuestionStatus(updatedQuestionStatus);
   };
- 
+
   // const [questionData, setQuestionData] = useState({});
   const { sectionId } = useParams();
- 
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await fetch(
           `http://localhost:5001/QuestionPaper/questionOptions/${testCreationTableId}`
         );
- 
+
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
- 
+
         const data = await response.json();
         setQuestionData(data);
       } catch (error) {
         console.error("Error fetching question data:", error);
       }
     };
- 
+
     fetchData();
   }, [testCreationTableId]);
- 
+
   const currentQuestion =
     questionData.questions && questionData.questions[currentQuestionIndex];
- 
+
   const [userData, setUserData] = useState({});
- 
+
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -400,7 +388,7 @@ const QuestionPaper = () => {
             },
           }
         );
- 
+
         if (response.ok) {
           const userData = await response.json();
           setUserData(userData);
@@ -412,25 +400,23 @@ const QuestionPaper = () => {
         // Handle other errors
       }
     };
- 
+
     fetchUserData();
   }, []);
- 
- 
+
+
   const [answeredQuestions, setAnsweredQuestions] = useState([]);
   const [isPaused, setIsPaused] = useState(false);
- 
- 
+
+
   const handleNextQuestion = async () => {
- 
- 
+
   // ------------------------------------ button functionality --------------------------------------------
- 
+
   updateCounters();
- 
+
   // Get the current question index
   const questionIndex = currentQuestionIndex;
-<<<<<<< HEAD
 
   const updatedQuestionStatus = [...questionStatus];
 
@@ -445,18 +431,26 @@ updatedQuestionStatus[currentQuestionIndex] = isAnswered ? "answered" : "notAnsw
 
 
       // If the current question is answered and marked for review, update the status accordingly
-  if (isAnswered && questionStatus[questionIndex] === "Answered and marked for review") {
+  if (isAnswered && updatedQuestionStatus[questionIndex] === "Answered and marked for review") {
     updatedQuestionStatus[questionIndex] = "Answered and marked for review";
   }
 
-      // Set the status for all questions based on whether they are answered or not
-      for (let i = currentQuestionIndex + 1; i < updatedQuestionStatus.length; i++) {
-        updatedQuestionStatus[i] = isAnswered ? "notAnswered" : "notAnswered";
-      }
 
- // Set the status of the next question based on whether it was answered or not
- const nextQuestionStatus =
- isAnswered ? "answered" : "notAnswered";
+    // Set the status for the next unanswered question
+    for (let i = questionIndex + 1; i < updatedQuestionStatus.length; i++) {
+      if (updatedQuestionStatus[i] !== "answered" && updatedQuestionStatus[i] !== "Answered but marked for review") {
+        updatedQuestionStatus[i] = "notAnswered";
+      } else {
+        break; // Stop setting status once we encounter a answered or marked question
+      }
+    }
+
+
+  // Set the status for the next question based on whether it was answered or not
+  const nextQuestionStatus =
+    isAnswered && updatedQuestionStatus[questionIndex + 1] !== "Answered and marked for review"
+      ? "notAnswered"
+      : "notAnswered";
 
  // Set the status of the next question
  updatedQuestionStatus[currentQuestionIndex + 1] = nextQuestionStatus;
@@ -476,48 +470,18 @@ updatedQuestionStatus[currentQuestionIndex] = isAnswered ? "answered" : "notAnsw
 
 
 
-=======
- 
-  // Check if the current question is already answered
-  if (questionStatus[questionIndex] !== "answered") {
-    // If not answered, mark it as answered
-    setQuestionStatus((prevQuestionStatus) => [
-      ...prevQuestionStatus.slice(0, questionIndex),
-      "answered",
-      ...prevQuestionStatus.slice(questionIndex + 1),
-    ]);
- 
-    // Update other necessary state or perform additional logic
-    setAnsweredQuestions((prevAnsweredQuestions) => [
-      ...prevAnsweredQuestions,
-      questionIndex + 1,
-    ]);
-    setIsPaused(false);
-  }
- 
-  // Move to the next question
-  setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
- 
- 
->>>>>>> efd1e91a21aa8ad93eee4bab232ed83d42b6aaff
   // --------------------------------end of button functionality --------------------------------------------------
- 
+
     const response = await fetch(
       // http://localhost:5001/QuestionPaper/questionType/61
       `http://localhost:5001/QuestionPaper/questionOptions/${testCreationTableId}`
     );
- 
+
     // console.log(testCreationTableId);
- 
- 
+
     try {
-      // --------------------------------saving------------------------------
-      const response = await fetch(
-        `http://localhost:5001/QuestionPaper/questionOptions/${testCreationTableId}`
-      );
       console.log("User ID:", userData.user_Id);
       console.log("Test Creation Table ID:", testCreationTableId);
-<<<<<<< HEAD
 
     } catch { }
   };
@@ -530,194 +494,14 @@ useEffect(() => {
 
 }, [questionStatus, currentQuestionIndex]); // Make sure to include questionStatus in the dependency array
 
-=======
- 
- 
-      if (!questionData || !questionData.questions) {
-        console.error("Data or questions are null or undefined");
-        return;
-      }
- 
-      setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
- 
-      const currentQuestion = questionData.questions[currentQuestionIndex];
-      const questionId = currentQuestion.question_id;
- 
-      const selectedOption1 = selectedAnswersMap1[questionId];
-      const selectedOption2 = selectedAnswersMap2[questionId];
- 
-      const optionIndexes1 =
-        selectedOption1 !== undefined ? [selectedOption1] : [];
-      const optionIndexes2 =
-        selectedOption2 !== undefined ? selectedOption2 : [];
- 
-      if (answeredQuestionsMap[questionId]) {
-        const updatedResponse = {
-          optionIndexes1: optionIndexes1.map((index) =>
-            String.fromCharCode("a".charCodeAt(0) + index)
-          ),
-          optionIndexes2: optionIndexes2.map((index) =>
-            String.fromCharCode("a".charCodeAt(0) + index)
-          ),
-        };
- 
-        const updateResponse = await axios.put(
-          `http://localhost:5001/QuestionPaper/updateResponse/${userId}`,
-          {
-            updatedResponse,
-            user_Id: userData.userId,
-            testCreationTableId: testCreationTableId,
-          }
-        );
- 
-        console.log(updateResponse.data);
-        console.log("Handle Next Click - Response Updated");
-      } else {
-        const responses = {
-          [questionId]: {
-            optionIndexes1: optionIndexes1.map((index) =>
-              String.fromCharCode("a".charCodeAt(0) + index)
-            ),
-            optionIndexes2: optionIndexes2.map((index) =>
-              String.fromCharCode("a".charCodeAt(0) + index)
-            ),
-          },
-        };
- 
-        const saveResponse = await axios.post(
-          "http://localhost:5001/QuestionPaper/response",
-          {
-            responses: responses, // Make sure to include 'responses'
-            user_Id: userData.user_Id, // Use 'user_Id' from userData
-            testCreationTableId: testCreationTableId,
-          }
-        );
- 
-        console.log(saveResponse.data);
-        console.log("Handle Next Click - New Response Saved");
- 
-        setAnsweredQuestionsMap((prevMap) => ({
-          ...prevMap,
-          [questionId]: true,
-        }));
-      }
-      console.log("Request Payload:", {
-        // responses,
-        response: response,
-        user_Id: userData.userId,
-        testCreationTableId: testCreationTableId,
-      });
- 
-      console.log("Parsed userId:", userId);
-      console.log("Parsed testCreationTableId:", testCreationTableId);
- 
-      console.log("User ID:", userData.user_Id); // Check if this is correct
-      console.log("Parsed userId:", userId);
-      // console.log(responses);
- 
-      setClickCount((prevCount) => prevCount + 1);
-      // --------------------------------saving------------------------------
-    } catch (error) {
-      console.error("Error handling next question:", error);
-    }
- 
- 
-  }
- 
- 
- 
- 
-  // const handleNextQuestion = async () => {
-  //   setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
- 
-  //   const response = await fetch(
-  //     // http://localhost:5001/QuestionPaper/questionType/61
-  //     `http://localhost:5001/QuestionPaper/questionOptions/${testCreationTableId}`
-  //   );
- 
-  //   // console.log(testCreationTableId);
- 
-  //   try {
-  //     console.log("User ID:", userData.user_Id);
-  //     console.log("Test Creation Table ID:", testCreationTableId);
-  //     // -------------------------------saving----------------------------
-  //  if (!data || !data.questions) {
-  //   console.error("Data or questions are null or undefined");
-  //   return;
-  // }
- 
-  //     const currentQuestion = data.questions[currentQuestionIndex];
-  //     const selectedOption1 = selectedAnswersMap1[currentQuestion.question_id];
-  //     const selectedOption2 = selectedAnswersMap2[currentQuestion.question_id];
- 
-  //     const optionIndexes1 =
-  //       selectedOption1 !== undefined ? [selectedOption1] : [];
-  //     const optionIndexes2 =
-  //       selectedOption2 !== undefined ? selectedOption2 : [];
- 
-  //     const questionId = currentQuestion.question_id;
- 
-  //     if (answeredQuestionsMap[questionId]) {
-  //       const updatedResponse = {
-  //         optionIndexes1: optionIndexes1.map((index) =>
-  //           String.fromCharCode("a".charCodeAt(0) + index)
-  //         ),
-  //         optionIndexes2: optionIndexes2.map((index) =>
-  //           String.fromCharCode("a".charCodeAt(0) + index)
-  //         ),
-  //       };
- 
-  //       const updateResponse = await axios.put(
-  //         `http://localhost:5001/QuestionPaper/updateResponse/${userId}`,
-  //         {
-  //           updatedResponse,
-  //         }
-  //       );
- 
-  //       console.log(updateResponse.data);
-  //       console.log("Handle Next Click - Response Updated");
-  //     } else {
-  //       const responses = {
-  //         [questionId]: {
-  //           optionIndexes1: optionIndexes1.map((index) =>
-  //             String.fromCharCode("a".charCodeAt(0) + index)
-  //           ),
-  //           optionIndexes2: optionIndexes2.map((index) =>
-  //             String.fromCharCode("a".charCodeAt(0) + index)
-  //           ),
-  //         },
-  //       };
- 
-  //       const saveResponse = await axios.post(
-  //         "http://localhost:5001/QuestionPaper/response",
-  //         {
-  //           responses,
-  //         }
-  //       );
- 
-  //       console.log(saveResponse.data);
-  //       console.log("Handle Next Click - New Response Saved");
- 
-  //       setAnsweredQuestionsMap((prevMap) => ({
-  //         ...prevMap,
-  //         [questionId]: true,
-  //       }));
-  //     }
- 
-  //     setClickCount((prevCount) => prevCount + 1);
-  //     // --------------------------------saving------------------------------
-  //   } catch {}
-  // };
- 
->>>>>>> efd1e91a21aa8ad93eee4bab232ed83d42b6aaff
   const [questionTypes, setQuestionTypes] = useState([]);
- 
+
   useEffect(() => {
     const fetchQuestionTypes = async () => {
       try {
         if (questionData && questionData.questions) {
           const qID = questionData.questions[currentQuestionIndex].question_id;
- 
+
           const responseQuestionTypes = await fetch(
             `http://localhost:5001/QuestionPaper/questionType/${qID}`
           );
@@ -727,26 +511,26 @@ useEffect(() => {
           const currentQuestionType = questionTypes.find(
             (q) => q.question_id === qID
           );
- 
+
           setCurrentQuestionType(currentQuestionType);
         }
       } catch (error) {
         console.error("Error fetching question types:", error);
       }
     };
- 
+
     fetchQuestionTypes();
   }, [questionData, currentQuestionIndex]);
- 
- 
- 
+
+
+
   const updateQuestionStatus = (index, status) => {
     // Update the question status in the QuestionPaper component
     const updatedQuestionStatus = [...questionStatus];
     updatedQuestionStatus[index] = status;
     setQuestionStatus(updatedQuestionStatus);
   };
- 
+
   return (
     <div>
       {!showExamSumary ? (
@@ -770,7 +554,7 @@ useEffect(() => {
                 </li>
               ))}
             </h3>
- 
+
             <div className="right-header">
               <div className="marks">
                 Marks: <div className="plus-mark">+1</div>
@@ -789,7 +573,7 @@ useEffect(() => {
                 <div>
                   <div>
                     <h3>Question: {currentQuestion.sortid.sortid_text}</h3>
- 
+
                     <img
                       src={`http://localhost:5001/uploads/${currentQuestion.documen_name}/${currentQuestion.questionImgName}`}
                       alt={`Question ${currentQuestion.question_id}`}
@@ -945,15 +729,13 @@ useEffect(() => {
                                     False
                                   </>
                                 )}
- 
- 
+
+
                             </li>
                           </div>
                         ))}
- 
- 
- 
- 
+
+
                     </div>
                   </div>
                   <div>
@@ -1032,5 +814,5 @@ useEffect(() => {
     </div>
   );
 };
- 
+
 export default QuestionPaper;
