@@ -165,29 +165,7 @@ router.get('/subjects/:testCreationTableId', async (req, res) => {
       res.status(500).json({ error: 'Internal Server Error' });
     }
   });
-  //     SELECT 
-  //     q.question_id, 
-  //     q.questionImgName, 
-  //     o.option_id, 
-  //     o.optionImgName,
-  //     o.option_index,
-  //     qt.qtypeId,
-  //     qt.qtype_text,
-  //     t.testCreationTableId,
-  //     doc.document_Id,
-  //     doc.documen_name
-  // FROM 
-  //     questions q 
-  // LEFT OUTER JOIN test_creation_table t ON 
-  //     q.testCreationTableId = t.testCreationTableId 
-  // LEFT OUTER JOIN ots_document doc ON 
-  //     t.testCreationTableId = doc.testCreationTableId
-  // LEFT OUTER JOIN options o ON 
-  //     q.question_id = o.question_id
-  // LEFT OUTER JOIN qtype qt ON 
-  //     q.question_id = qt.question_id 
-  // WHERE 
-  //     t.testCreationTableId = ?
+  
 
   router.get('/questionType/:questionId', async (req, res) => {
     try {
@@ -308,581 +286,16 @@ router.get('/subjects/:testCreationTableId', async (req, res) => {
 
 
 
-
-
-
-
-  
-// router.get('/fulldocimages/:testCreationTableId/:subjectId/:sectionId', async (req, res) => {
-//   const { testCreationTableId, subjectId, sectionId } = req.params;
-//   try {
-//     const [rows] = await db.query(`
-//       SELECT 
-//         q.question_id, q.questionImgName, 
-//         o.option_id, o.optionImgName,o.option_index,
-//         s.solution_id, s.solutionImgName, 
-//         qt.qtypeId,qt.qtype_text,
-//         ans.answer_id,ans.answer_text,
-//         m.markesId ,m.marks_text,
-//         si.sort_id ,si.sortid_text,
-//         doc.documen_name, doc.sectionId, 
-//         doc.subjectId, doc.testCreationTableId 
-//       FROM 
-//         questions q 
-//         LEFT OUTER JOIN options o ON q.question_id = o.question_id
-//         LEFT OUTER JOIN qtype qt ON q.question_id = qt.question_id 
-//         LEFT OUTER JOIN answer ans ON q.question_id = ans.question_id 
-//         LEFT OUTER JOIN marks m ON q.question_id = m.question_id 
-//         LEFT OUTER JOIN sortid si ON q.question_id = si.question_id 
-//         LEFT OUTER JOIN solution s ON q.question_id = s.question_id 
-//         LEFT OUTER JOIN ots_document doc ON q.testCreationTableId = doc.testCreationTableId 
-//       WHERE 
-//         doc.testCreationTableId = ? AND doc.subjectId = ? AND doc.sectionId = ?;
-//     `, [testCreationTableId, subjectId, sectionId]);
-
-//     // Check if rows is not empty
-//     if (rows.length > 0) {
-//       const questionData = {
-//         questions: [],
-//       };
-
-//       // Organize data into an array of questions
-//       rows.forEach(row => {
-//         const existingQuestion = questionData.questions.find(q => q.question_id === row.question_id);
-
-//         if (existingQuestion) {
-//           // Question already exists, add option to the existing question
-//           existingQuestion.options.push({
-//             option_id: row.option_id,
-//             option_index:row.option_index,
-//             optionImgName: row.optionImgName,
-//           });
-//         } else {
-//           // Question doesn't exist, create a new question
-//           const newQuestion = {
-//             question_id: row.question_id,
-//             questionImgName: row.questionImgName,
-//             documen_name: row.documen_name,
-//             options: [
-//               {
-//                 option_id: row.option_id,
-//                 optionImgName: row.optionImgName,
-//               },
-//             ],
-//             solution: {
-//               solution_id: row.solution_id,
-//               solutionImgName: row.solutionImgName,
-//             },
-//             qtype:{
-//               qtypeId:row.qtypeId,
-//               qtype_text:row.qtype_text,
-//             },
-//             answer:{
-//               answer_id :row.answer_id ,
-//               answer_text:row.answer_text,
-//             },
-//             marks:{
-//               markesId:row.markesId,
-//               marks_text:row.marks_text,
-//             },
-//             sortid:{
-//               sort_id:row.sort_id,
-//               sortid_text:row.sortid_text
-//             }
-//           };
-
-//           questionData.questions.push(newQuestion);
-//         }
-//       });
-
-//       res.json(questionData);
-//     } else {
-//       // Handle the case where no rows are returned (empty result set)
-//       res.status(404).json({ error: 'No data found' });
-//     }
-//   } catch (error) {
-//     console.error('Error fetching question data:', error);
-//     res.status(500).json({ error: 'Internal Server Error' });
-//   }
-// });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  // router.get("/questions/:testCreationTableId", async (req, res) => {
-  //   try {
-  //     const { testCreationTableId } = req.params;
-  
-  //     // Execute the SQL query
-  //     const [rows] = await db.query(`
-  //       SELECT
-  //         q.question_id,
-  //         q.questionImgName,
-  //         o.option_id,
-  //         o.optionImgName,
-  //         qt.qtypeId,
-  //         qt.qtype_text,
-  //         q.testCreationTableId
-  //       FROM
-  //         questions q
-  //       JOIN options o ON
-  //         q.question_id = o.question_id
-  //       JOIN qtype qt ON
-  //         q.question_id = qt.question_id
-  //       WHERE
-  //         q.testCreationTableId = ?;
-  //     `, [testCreationTableId]);
-  
-  //     // Send the result as JSON response
-  //     res.json(rows);
-  //   } catch (error) {
-  //     console.error(error);
-  //     res.status(500).json({ error: "Internal Server Error" });
-  //   }
-  // });
-  // router.get('/questions/:testCreationTableId', async (req, res) => {
-  //   try {
-  //     const testCreationTableId = req.params.testCreationTableId;
-  //     const [results] = await db.query(`
-  //     SELECT
-  //       q.question_id,
-  //       q.questionImgName,
-  //       o.option_id,
-  //       o.optionImgName,
-  //       qt.qtypeId,
-  //       qt.qtype_text,
-  //       q.testCreationTableId
-  //     FROM
-  //       questions q
-  //     JOIN options o ON
-  //       q.question_id = o.question_id
-  //     JOIN qtype qt ON
-  //       q.question_id = qt.question_id
-  //     WHERE
-  //       q.testCreationTableId = ?;
-  //     `, [testCreationTableId]);
-  
-  //     res.json(results);
-  
-  //   } catch (error) {
-  //     console.error('Error:', error.message);
-  //     res.status(500).send('Internal Server Error');
-  //   }
-  // });
-
-
-
-  // router.get('/questions/:testCreationTableId', (req, res) => {
-  //   const testCreationTableId = req.params.testCreationTableId;
-  
-  //   const sql = `
-  //     SELECT
-  //       q.question_id,
-  //       q.questionImgName,
-  //       o.option_id,
-  //       o.optionImgName,
-  //       qt.qtypeId,
-  //       qt.qtype_text,
-  //       q.testCreationTableId
-  //     FROM
-  //       questions q
-  //     LEFT OUTER JOIN options o ON
-  //       q.question_id = o.question_id
-  //     LEFT OUTER JOIN qtype qt ON
-  //       q.question_id = qt.question_id
-  //     WHERE
-  //       q.testCreationTableId = ?;
-  //   `;
-  
-  //   db.query(sql, [testCreationTableId], (err, results) => {
-  //     if (err) {
-  //       res.status(500).json({ error: 'Internal Server Error' });
-  //       throw err;
-  //     }
-  
-  //     res.json(results);
-  //   });
-  // });
-  
-
-  // router.get('/questionOptions/:testCreationTableId', async (req, res) => {
-  //   const { testCreationTableId } = req.params;
-  
-  //   try {
-  //     const [rows] = await db.query(`
-  //       SELECT
-  //         q.question_id,
-  //         q.questionImgName,
-  //         o.option_id,
-  //         o.optionImgName,
-  //         qt.qtypeId,
-  //         qt.qtype_text,
-  //         q.testCreationTableId
-  //       FROM
-  //         questions q
-  //       LEFT OUTER JOIN options o ON
-  //         q.question_id = o.question_id
-  //       LEFT OUTER JOIN qtype qt ON
-  //         q.question_id = qt.question_id
-  //       WHERE
-  //         q.testCreationTableId = ?;
-  //     `, [testCreationTableId]);
-  
-  //     // Check if rows is not empty
-  //     if (rows.length > 0) {
-  //       const questionData = {
-  //         questions: [],
-  //       };
-  
-  //       // Organize data into an array of questions
-  //       rows.forEach(row => {
-  //         const existingQuestion = questionData.questions.find(q => q.question_id === row.question_id);
-  
-  //         if (existingQuestion) {
-  //           // Question already exists, add option to the existing question
-  //           existingQuestion.options.push({
-  //             option_id: row.option_id,
-  //             optionImgName: row.optionImgName,
-  //           });
-  //         } else {
-  //           // Question doesn't exist, create a new question
-  //           const newQuestion = {
-  //             question_id: row.question_id,
-  //             questionImgName: row.questionImgName,
-  //             options: [
-  //               {
-  //                 option_id: row.option_id,
-  //                 optionImgName: row.optionImgName,
-  //               },
-  //             ],
-  //             qtype: {
-  //               qtypeId: row.qtypeId,
-  //               qtype_text: row.qtype_text,
-  //             },
-  //           };
-  
-  //           questionData.questions.push(newQuestion);
-  //         }
-  //       });
-  
-  //       res.json(questionData);
-  //     } else {
-  //       // Handle the case where no rows are returned (empty result set)
-  //       res.status(404).json({ error: 'No data found' });
-  //     }
-  //   } catch (error) {
-  //     console.error('Error fetching question data:', error);
-  //     res.status(500).json({ error: 'Internal Server Error' });
-  //   }
-  // });
-  
-  
- 
-
-  // router.get('/questionOptions/:testCreationTableId', async (req, res) => {
-  //   const { testCreationTableId } = req.params;
-  //   try {
-  //     const [rows] = await db.query(`
-  //     SELECT
-  //     q.question_id,
-  //     q.questionImgName,
-  //     o.option_id,
-  //     o.optionImgName,
-  //     qt.qtypeId,
-  //     qt.qtype_text,
-  //     q.testCreationTableId
-  // FROM
-  //     questions q
-  // LEFT OUTER JOIN OPTIONS o ON
-  //     q.question_id = o.question_id
-  // LEFT OUTER JOIN qtype qt ON
-  //     q.question_id = qt.question_id
-  // WHERE
-  //     q.testCreationTableId = ? ;
-  //     `, [testCreationTableId]);
-  
-  //     // Check if rows is not empty
-  //     if (rows.length > 0) {
-  //       const questionData = {
-  //         questions: [],
-  //       };
-  
-  //       // Organize data into an array of questions
-  //       rows.forEach(row => {
-  //         const existingQuestion = questionData.questions.find(q => q.question_id === row.question_id);
-  
-  //         if (existingQuestion) {
-  //           // Question already exists, add option to the existing question
-  //           existingQuestion.options.push({
-  //             option_id: row.option_id,
-  //             // option_index:row.option_index,
-  //             optionImgName: row.optionImgName,
-  //           });
-  //         } else {
-  //           // Question doesn't exist, create a new question
-  //           const newQuestion = {
-  //             question_id: row.question_id,
-  //             questionImgName: row.questionImgName,
-             
-  //             options: [
-  //               {
-  //                 option_id: row.option_id,
-  //                 optionImgName: row.optionImgName,
-  //               },
-  //             ],
-            
-  //             qtype:{
-  //               qtypeId:row.qtypeId,
-  //               qtype_text:row.qtype_text,
-  //             },
-  //           };
-  //           questionData.questions.push(newQuestion);
-  //         }
-  //       });
-  
-  //       res.json(questionData);
-  //     } else {
-  //       // Handle the case where no rows are returned (empty result set)
-  //       res.status(404).json({ error: 'No data found' });
-  //     }
-  //   } catch (error) {
-  //     console.error('Error fetching question data:', error);
-  //     res.status(500).json({ error: 'Internal Server Error' });
-  //   }
-  // });
-  
-
-
-
-
-
-
-
-
-
-  //old one
-  // router.get("/getPaperData/:testCreationTableId", async (req, res) => {
-  //   try {
-  //     // const subjectId = req.params.subjectId;
-  //     const testCreationTableId = req.params.testCreationTableId;
-   
-  //     // Fetch data from testCreationTableId table
-  //     const testData = await getDataByTestCreationTableId(testCreationTableId);
-   
-  //     // Fetch question data based on subjectId and document_Id
-  //     const questions = await getQuestionsBySubjectAndDocumentId( testCreationTableId);
-   
-  //     // Fetch option data based on questions and document_Id
-  //     const options = await getOptionsByQuestionsAndDocumentId(questions, testCreationTableId);
-   
-  //     // Fetch solution data based on questions and document_Id
-  //     const solutions = await getSolutionsByQuestionsAndDocumentId(questions, testCreationTableId);
-   
-  //     res.json({
-  //       testData,
-  //       questions,
-  //       options,
-  //       solutions,
-  //     });
-  //   } catch (error) {
-  //     console.error(error);
-  //     res.status(500).send('Error fetching data from the database.');
-  //   }
-  // });
-  // // Reusable function to get data from testCreationTableId table
-  // async function getDataByTestCreationTableId(testCreationTableId) {
-  //   try {
-  //     const query = `
-  //       SELECT *
-  //       FROM test_creation_table
-  //       WHERE testCreationTableId = ?  
-  //     `;
-  //     const [results] = await db.query(query, [testCreationTableId]);
-   
-  //     return results; // Adjust this based on your actual table structure
-  //   } catch (err) {
-  //     console.error(`Error fetching data from test_creation_table: ${err}`);
-  //     throw err;
-  //   }
-  // }
-   
-   
-  // // Reusable function to get questions data based on subjectId and document_Id
-  // async function getQuestionsBySubjectAndDocumentId( testCreationTableId) {
-  //   try {
-  //     const query = `
-  //       SELECT question_id, question_img,testCreationTableId
-  //       FROM questions
-  //       WHERE testCreationTableId = ?  
-  //     `;
-  //     const [results] = await db.query(query, [ testCreationTableId]);
-  //     const optionsWithBase64 = results.map(option => ({
-  //       question_id: option.question_id,
-  //       question_img: option.question_img.toString('base64'),
-  //     }));
-  //     return optionsWithBase64;
-  //   } catch (err) {
-  //     console.error(`Error fetching questions: ${err}`);
-  //     throw err;
-  //   }
-  // }
-   
-  // // Reusable function to get options data based on questions and document_Id
-  // async function getOptionsByQuestionsAndDocumentId(questions, testCreationTableId) {
-  //   try {
-  //     const questionIds = questions.map(question => question.question_id);
-  //     const query = `
-  //     SELECT question_id,option_index, option_img
-  //     FROM options
-  //     WHERE question_id IN (?)
-  //     `;
-  //     const [results] = await db.query(query, [questionIds, testCreationTableId]);
-   
-  //     // Convert BLOB data to base64 for sending in the response
-  //     const optionsWithBase64 = results.map(option => ({
-  //       question_id: option.question_id,
-  //       option_img: option.option_img.toString('base64'),
-  //     }));
-   
-  //     return optionsWithBase64;
-  //   } catch (err) {
-  //     console.error(`Error fetching options: ${err.message}`);
-  //     throw err;
-  //   }
-  // }
-   
-   
-  // // Reusable function to get solutions data based on questions and document_Id
-  // async function getSolutionsByQuestionsAndDocumentId(questions, testCreationTableId) {
-  //   try {
-  //     const questionIds = questions.map(question => question.question_id);
-  //     const query = `
-  //       SELECT question_id, solution_img
-  //       FROM solution
-  //       WHERE question_id IN (?)
-  //     `;
-  //     const [results] = await db.query(query, [questionIds, testCreationTableId]);
-   
-  //     // Convert BLOB data to base64 for sending in the response
-  //     const solutionsWithBase64 = results.map(solution => ({
-  //       question_id: solution.question_id,
-  //       solution_img: solution.solution_img.toString('base64'),
-  //     }));
-   
-  //     return solutionsWithBase64;
-  //   } catch (err) {
-  //     console.error(`Error fetching solutions: ${err}`);
-  //     throw err;
-  //   }
-  // }
-   
-  // function combineImage(questions, options, solutions) {
-  //   const combinedImages = [];
-   
-  //   for (let i = 0; i < questions.length; i++) {
-  //     const questionImage = questions[i].question_img;
-  //     const optionImages = options
-  //       .filter((opt) => opt.question_id === questions[i].question_id)
-  //       .map((opt) => opt.option_img);
-  //     const solutionImage = solutions.find(
-  //       (sol) => sol.question_id === questions[i].question_id
-  //     )?.solution_img;
-   
-  //     combinedImages.push({
-  //       questionImage,
-  //       optionImages,
-  //       solutionImage,
-  //     });
-  //   }
-   
-  //   return combinedImages;
-  // }
-  
-  
- 
   
   
   
   // ----------------------------------------------------user reponses----------------------------------------------
   
 
-  // router.post('/responses', async (req, res) => {
-  //   try {
-  //     const { userId, testCreationTableId, questionId, userAnswer } = req.body;
-  
-  //     // Replace 'your_table_name' with the actual table name for user responses
-  //     const query = `
-  //     INSERT INTO user_responses (user_Id,	testCreationTableId	,question_id, user_answer)
-  //       VALUES ($1, $2, $3, $4)
-  //     `;
-  
-  //     await pool.query(query, [userId, testCreationTableId, questionId, userAnswer]);
-  
-  //     res.status(200).json({ success: true, message: 'User response saved successfully' });
-  //   } catch (error) {
-  //     console.error('Error saving user response:', error);
-  //     res.status(500).json({ success: false, message: 'Internal server error' });
-  //   }
-  // });
 
-  // router.post('/response', (req, res) => {
-  //   try {
-  //     const { responses } = req.body;
-  
-  //     console.log('Received responses from client:', responses);
-  
-  //     // Assuming each response has a question_id property
-  //     const sql = 'INSERT INTO user_responses (user_Id,	testCreationTableId	,question_id, user_answer) VALUES (?,?,?,?)';
-  
-  //     // Assuming responses is an object where keys are question_ids
-  //     for (const userId in responses) {
-  //       const userIdNumber = parseInt(userId, 10);
-  
-  //       if (responses[userId] && responses[userId].optionIndexes1 && responses[userId].optionIndexes2) {
-  //         const userAnswer1 = responses[userId].optionIndexes1.join(',');
-  //         const userAnswer2 = responses[userId].optionIndexes2.join(',');
-  
-  //         console.log(`Processing responses for question ${userId}:`, {
-  //           userId: userIdNumber,
-  //           userAnswer1,
-  //           userAnswer2,
-  //         });
-  
-  //         console.log('Executing SQL query:', sql, [userIdNumber, userAnswer1 + ',' + userAnswer2]);
-  
-  //         db.query(sql, [userIdNumber, userAnswer1 +"  "+ userAnswer2], (err, result) => {
-  //           if (err) {
-  //             console.error('Error saving response to database:', err);
-  //           } else {
-  //             console.log(`Response for question ${userIdNumber} saved to database`);
-  //           }
-  //         });
-  //       } else {
-  //         console.error(`Invalid response data for question ${userId}`);
-  //       }
-  //     }
-  
-  //     res.json({ success: true, message: 'Responses saved successfully' });
-  //   } catch (error) {
-  //     console.error('Error handling the request:', error);
-  //     res.status(500).json({ success: false, message: 'Internal server error' });
-  //   }
-  // });
- // In the router.post('/response', ...)
 // router.post('/response', (req, res) => {
 //   try {
-//     const { responses, user_Id, testCreationTableId } = req.body; // Update userId to user_Id
+//     const { responses, user_Id, testCreationTableId } = req.body;
 
 //     // Assuming each response has a question_id property
 //     const sql = 'INSERT INTO user_responses (user_Id, testCreationTableId, question_id, user_answer) VALUES (?,?,?,?)';
@@ -893,28 +306,33 @@ router.get('/subjects/:testCreationTableId', async (req, res) => {
 //       const testCreationTableIdNumber = parseInt(testCreationTableId, 10);
 //       const userIdNumber = parseInt(user_Id, 10);
 
-     
-//       if (responses[questionId] && responses[questionId].optionIndexes1 && responses[questionId].optionIndexes2) {
-//         const user_answer = responses[questionId].optionIndexes1.join(',') + ',' + responses[questionId].optionIndexes2.join(',');
+//       if (!isNaN(questionIdNumber) && !isNaN(testCreationTableIdNumber) && !isNaN(userIdNumber)) {
+//         if (responses[questionId] && responses[questionId].optionIndexes1 && responses[questionId].optionIndexes2) {
+//           const user_answer = responses[questionId].optionIndexes1.join(',') + ',' + responses[questionId].optionIndexes2.join(',');
 
-//         console.log(`Processing responses for question ${questionId}:`, {
-//           user_Id: userIdNumber,
-//           testCreationTableId: testCreationTableIdNumber,
-//           question_id: questionIdNumber,
-//           user_answer,
-//         });
+//           console.log(`Processing responses for question ${questionId}:`, {
+//             user_Id: userIdNumber,
+//             testCreationTableId: testCreationTableIdNumber,
+//             question_id: questionIdNumber,
+//             user_answer,
+//           });
 
-//         console.log('Executing SQL query:', sql, [userIdNumber, testCreationTableIdNumber, questionIdNumber, user_answer]);
+//           const queryValues = [userIdNumber, testCreationTableIdNumber, questionIdNumber, user_answer];
 
-//         db.query(sql, [userIdNumber, testCreationTableIdNumber, questionIdNumber, user_answer], (err, result) => {
-//           if (err) {
-//             console.error('Error saving response to the database:', err);
-//           } else {
-//             console.log(`Response for question ${questionIdNumber} saved to the database`);
-//           }
-//         });
+//           console.log('Executing SQL query:', sql, queryValues);
+
+//           db.query(sql, queryValues, (err, result) => {
+//             if (err) {
+//               console.error('Error saving response to the database:', err);
+//             } else {
+//               console.log(`Response for question ${questionIdNumber} saved to the database`);
+//             }
+//           });
+//         } else {
+//           console.error(`Invalid response data for question ${questionId}`);
+//         }
 //       } else {
-//         console.error(`Invalid response data for question ${questionId}`);
+//         console.error(`Invalid integer value for user_Id, testCreationTableId, or questionId`);
 //       }
 //     }
 
@@ -925,51 +343,218 @@ router.get('/subjects/:testCreationTableId', async (req, res) => {
 //   }
 // });
 
+// router.post('/response', async (req, res) => {
+//   try {
+//     const { responses, user_Id, testCreationTableId } = req.body;
+
+//     // Assuming each response has a question_id property
+//     const sql = 'INSERT INTO user_responses (user_Id, testCreationTableId, question_id, user_answer) VALUES (?,?,?,?)';
+
+//     for (const questionId in responses) {
+//       const questionIdNumber = parseInt(questionId, 10);
+//       const testCreationTableIdNumber = parseInt(testCreationTableId, 10);
+//       const userIdNumber = parseInt(user_Id, 10);
+
+//       if (!isNaN(questionIdNumber) && !isNaN(testCreationTableIdNumber) && !isNaN(userIdNumber)) {
+//         if (responses[questionId] && responses[questionId].optionIndexes1 && responses[questionId].optionIndexes2) {
+//           const user_answer = responses[questionId].optionIndexes1.join(',') + ',' + responses[questionId].optionIndexes2.join(',');
+
+//           console.log(`Processing responses for question ${questionId}:`, {
+//             user_Id: userIdNumber,
+//             testCreationTableId: testCreationTableIdNumber,
+//             question_id: questionIdNumber,
+//             user_answer,
+//           });
+
+//           const queryValues = [userIdNumber, testCreationTableIdNumber, questionIdNumber, user_answer];
+
+//           console.log('Executing SQL query:', sql, queryValues);
+
+//           await new Promise((resolve, reject) => {
+//             db.query(sql, queryValues, (err, result) => {
+//               if (err) {
+//                 console.error('Error saving response to the database:', err);
+//                 reject(err);
+//               } else {
+//                 console.log(`Response for question ${questionIdNumber} saved to the database`);
+//                 resolve(result);
+//               }
+//             });
+//           });
+//         } else {
+//           console.error(`Invalid response data for question ${questionId}`);
+//         }
+//       } else {
+//         console.error(`Invalid integer value for user_Id, testCreationTableId, or questionId`);
+//       }
+//     }
+
+//     res.json({ success: true, message: 'Responses saved successfully' });
+
+//   } catch (error) {
+//     console.error('Error handling the request:', error);
+//     res.status(500).json({ success: false, message: 'Internal server error' });
+//   }
+// });
 
 
-// In the router.post('/response', ...)
-router.post('/response', (req, res) => {
+
+
+// Assuming the rest of your Express app setup is present...
+
+// router.post('/response', async (req, res) => {
+//   try {
+//     const { responses, user_Id, testCreationTableId } = req.body;
+
+//     // Validate data types
+//     const userIdNumber = parseInt(user_Id, 10);
+//     const testCreationTableIdNumber = parseInt(testCreationTableId, 10);
+
+//     if (isNaN(userIdNumber) || isNaN(testCreationTableIdNumber)) {
+//       console.error('Invalid integer value for user_Id, testCreationTableId, or questionId');
+//       return res.status(400).json({ success: false, message: 'Invalid data types' });
+//     }
+
+//     // Continue with processing
+//     const sql = 'INSERT INTO user_responses (user_Id, testCreationTableId, question_id, user_answer) VALUES (?,?,?,?)';
+
+//     for (const questionId in responses) {
+//       const questionIdNumber = parseInt(questionId, 10);
+
+//       if (isNaN(questionIdNumber)) {
+//         console.error(`Invalid integer value for questionId: ${questionId}`);
+//         continue;  // Skip processing this iteration
+//       }
+
+//       const optionIndexes1 = responses[questionId].optionIndexes1.join(',');
+//       const optionIndexes2 = responses[questionId].optionIndexes2.join(',');
+
+//       console.log(`Processing responses for question ${questionId}:`, {
+//         user_Id: userIdNumber,
+//         testCreationTableId: testCreationTableIdNumber,
+//         question_id: questionIdNumber,
+//         user_answer: optionIndexes1 + ',' + optionIndexes2,
+//       });
+
+//       const queryValues = [userIdNumber, testCreationTableIdNumber, questionIdNumber, optionIndexes1 + ',' + optionIndexes2];
+
+//       console.log('Executing SQL query:', sql, queryValues);
+
+//       await new Promise((resolve, reject) => {
+//         db.query(sql, queryValues, (err, result) => {
+//           if (err) {
+//             console.error('Error saving response to the database:', err);
+//             reject(err);
+//           } else {
+//             console.log(`Response for question ${questionIdNumber} saved to the database`);
+//             resolve(result);
+//           }
+//         });
+//       });
+//     }
+
+//     res.json({ success: true, message: 'Responses saved successfully' });
+
+//   } catch (error) {
+//     console.error('Error handling the request:', error);
+//     res.status(500).json({ success: false, message: 'Internal server error' });
+//   }
+// });
+
+// Add other necessary routes and server setup below this code...
+
+
+router.post('/response', async (req, res) => {
   try {
     const { responses, user_Id, testCreationTableId } = req.body;
 
-    // Assuming each response has a question_id property
-    const sql = 'INSERT INTO userquestionsquestions_responses (user_Id, testCreationTableId, question_id, user_answer) VALUES (?,?,?,?)';
+    // Validate data types
+    const userIdNumber = parseInt(user_Id, 10);
+const testCreationTableIdNumber = parseInt(testCreationTableId, 10);
+// const questionIdNumber = parseInt(questionId, 10);
 
-    // Assuming responses is an object where keys are question_ids
+
+    if (isNaN(userIdNumber) || isNaN(testCreationTableIdNumber)) {
+      console.error('Invalid integer value for user_Id, testCreationTableId, or questionId');
+      return res.status(400).json({ success: false, message: 'Invalid data types' });
+    }
+
+    // Continue with processing
+    const sql = 'INSERT INTO user_responses (user_Id, testCreationTableId, question_id, user_answer) VALUES (?,?,?,?)';
+
     for (const questionId in responses) {
       const questionIdNumber = parseInt(questionId, 10);
-      const testCreationTableIdNumber = parseInt(testCreationTableId, 10);
-      const userIdNumber = parseInt(user_Id, 10);
 
-      if (!isNaN(questionIdNumber) && !isNaN(testCreationTableIdNumber) && !isNaN(userIdNumber)) {
-        if (responses[questionId] && responses[questionId].optionIndexes1 && responses[questionId].optionIndexes2) {
-          const user_answer = responses[questionId].optionIndexes1.join(',') + ',' + responses[questionId].optionIndexes2.join(',');
-
-          console.log(`Processing responses for question ${questionId}:`, {
-            user_Id: userIdNumber,
-            testCreationTableId: testCreationTableIdNumber,
-            question_id: questionIdNumber,
-            user_answer,
-          });
-
-          console.log('Executing SQL query:', sql, [userIdNumber, testCreationTableIdNumber, questionIdNumber, user_answer]);
-
-          db.query(sql, [userIdNumber, testCreationTableIdNumber, questionIdNumber, user_answer], (err, result) => {
-            if (err) {
-              console.error('Error saving response to the database:', err);
-            } else {
-              console.log(`Response for question ${questionIdNumber} saved to the database`);
-            }
-          });
-        } else {
-          console.error(`Invalid response data for question ${questionId}`);
-        }
-      } else {
-        console.error(`Invalid integer value for user_Id, testCreationTableId, or questionId`);
+      if (isNaN(questionIdNumber)) {
+        console.error(`Invalid integer value for questionId: ${questionId}`);
+        continue;  // Skip processing this iteration
       }
+
+      const optionIndexes1 = responses[questionId].optionIndexes1.join(',');
+      const optionIndexes2 = responses[questionId].optionIndexes2.join(',');
+
+      console.log(`Processing responses for question ${questionId}:`, {
+        user_Id: userIdNumber,
+        testCreationTableId: testCreationTableIdNumber,
+        question_id: questionIdNumber,
+        user_answer: optionIndexes1 + ',' + optionIndexes2,
+      });
+
+      const queryValues = [userIdNumber, testCreationTableIdNumber, questionIdNumber, optionIndexes1 + ',' + optionIndexes2];
+
+      console.log('Executing SQL query:', sql, queryValues);
+
+      await new Promise((resolve, reject) => {
+        db.query(sql, queryValues, (err, result) => {
+          if (err) {
+            console.error('Error saving response to the database:', err);
+            reject(err);
+          } else {
+            console.log(`Response for question ${questionIdNumber} saved to the database`);
+            resolve(result);
+          }
+        });
+      });
     }
 
     res.json({ success: true, message: 'Responses saved successfully' });
+
+  } catch (error) {
+    console.error('Error handling the request:', error);
+    res.status(500).json({ success: false, message: 'Internal server error' });
+  }
+});
+
+
+router.put('/updateResponse/:userId', (req, res) => {
+  try {
+    const userId = parseInt(req.params.userId, 10);
+    const { updatedResponse } = req.body;
+
+    if (updatedResponse && updatedResponse.optionIndexes1 && updatedResponse.optionIndexes2) {
+      const userAnswer1 = updatedResponse.optionIndexes1.join(',');
+      const userAnswer2 = updatedResponse.optionIndexes2.join(',');
+
+      const sql = 'UPDATE user_responses SET user_answer1 = ?, user_answer2 = ? WHERE user_Id = ?';
+
+      db.query(sql, [userAnswer1, userAnswer2, userId], (err, result) => {
+        if (err) {
+          console.error('Error updating response in the database:', err);
+          res.status(500).json({ success: false, message: 'Internal server error' });
+        } else {
+          if (result.affectedRows > 0) {
+            console.log(`Response for question ${userId} updated successfully`);
+            res.json({ success: true, message: 'Response updated successfully' });
+          } else {
+            console.error(`No records found for question ${userId}`);
+            res.status(404).json({ success: false, message: 'Response not found' });
+          }
+        }
+      });
+    } else {
+      console.error(`Invalid updated response data for question ${userId}`);
+      res.status(400).json({ success: false, message: 'Invalid updated response data' });
+    }
   } catch (error) {
     console.error('Error handling the request:', error);
     res.status(500).json({ success: false, message: 'Internal server error' });
@@ -978,53 +563,10 @@ router.post('/response', (req, res) => {
 
 
 
-// In the router.post('/response', ...)
-// router.post('/response', (req, res) => {
-//   try {
-//     const { responses, user_Id, testCreationTableId } = req.body; // Update userId to user_Id
-
-//     // Assuming each response has a question_id property
-//     const sql = 'INSERT INTO user_responses (user_Id, testCreationTableId, question_id, user_answer) VALUES (?,?,?,?)';
-
-//     // Assuming responses is an object where keys are question_ids
-//     for (const questionId in responses) {
-//       const questionIdNumber = parseInt(questionId, 10);
-
-//       if (responses[questionId] && responses[questionId].optionIndexes1 && responses[questionId].optionIndexes2) {
-//         const userAnswer = responses[questionId].optionIndexes1.join(',') + ',' + responses[questionId].optionIndexes2.join(',');
-
-//         console.log(`Processing responses for question ${questionId}:`, {
-//           user_Id,
-//           testCreationTableId,
-//           questionId: questionIdNumber,
-//           userAnswer,
-//         });
-
-//         console.log('Executing SQL query:', sql, [user_Id, testCreationTableId, questionIdNumber, userAnswer]);
-
-//         db.query(sql, [user_Id, testCreationTableId, questionIdNumber, userAnswer], (err, result) => {
-//           if (err) {
-//             console.error('Error saving response to the database:', err);
-//           } else {
-//             console.log(`Response for question ${questionIdNumber} saved to the database`);
-//           }
-//         });
-//       } else {
-//         console.error(`Invalid response data for question ${questionId}`);
-//       }
-//     }
-
-//     res.json({ success: true, message: 'Responses saved successfully' });
-//   } catch (error) {
-//     console.error('Error handling the request:', error);
-//     res.status(500).json({ success: false, message: 'Internal server error' });
-//   }
-// });
 
 
 
-  
-  
+
   
   // router.put('/updateResponse/:userId', (req, res) => {
   //   try {
