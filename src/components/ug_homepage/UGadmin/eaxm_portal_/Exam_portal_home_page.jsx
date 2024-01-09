@@ -60,7 +60,6 @@ export const Header = () => {
 
   const [password, setPassword] = useState("");
   const [user, setUser] = useState("");
-  const [userData, setUserData] = useState({});
   const Quiz_login = () => {
     setShowloginQuiz(true);
   };
@@ -73,31 +72,44 @@ export const Header = () => {
     setShowloginQuiz(false);
     setShowRegisterQuiz(false);
   };
+  const userRole = localStorage.getItem("userRole");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userData, setUserData] = useState({});
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        const response = await fetch("http://localhost:5001/ughomepage_banner_login/user", {
+   useEffect(() => {
+     const checkLoggedIn = () => {
+       const loggedIn = localStorage.getItem("isLoggedIn");
+       if (loggedIn === "true") {
+         setIsLoggedIn(true);
+         fetchUserData();
+       }
+     };
+     checkLoggedIn();
+   }, []);
+
+
+  const fetchUserData = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(
+        "http://localhost:5001/ughomepage_banner_login/user",
+        {
           headers: {
-            Authorization: `Bearer ${token}`, // Attach token to headers for authentication
+            Authorization: `Bearer ${token}`,
           },
-        });
-
-        if (response.ok) {
-          const userData = await response.json();
-          setUserData(userData);
-          console.log(userData);
-        } else {
-          // Handle errors, e.g., if user data fetch fails
         }
-      } catch (error) {
-        // Handle other errors
-      }
-    };
+      );
 
-    fetchUserData();
-  }, []);
+      if (response.ok) {
+        const userData = await response.json();
+        setUserData(userData);
+      } else {
+        // Handle errors if needed
+      }
+    } catch (error) {
+      // Handle other errors if needed
+    }
+  };
 
   // const [courses, setCourses] = useState([]);
   const [examsug, setExamsug] = useState([0]);
@@ -140,7 +152,8 @@ export const Header = () => {
   };
 
   // ----------------- dashborad ---------------------/
-  const userRole = localStorage.getItem("userRole");
+
+  //  localStorage.setItem("isLoggedIn", "true");
   return (
     <>
       <div className="Quiz_main_page_header">
@@ -161,9 +174,9 @@ export const Header = () => {
               >
                 <ul>
                   <button style={{ background: "none" }}>
-                    <a href="#" className="Quiz__home">
+                    <Link to="/home" className="Quiz__home">
                       Home
-                    </a>
+                    </Link>
                   </button>
                   <li className="courses_btn_continer">
                     <button
@@ -194,7 +207,19 @@ export const Header = () => {
                    Login
                   </button></Link> */}
 
-                    {userRole === "admin" && (
+                    {/* {userRole === "admin"  && (
+                      <>
+                        <li>
+                          <button>
+                            <Link to="/Quiz_dashboard">ADMIN Settings</Link>
+                          </button>
+                        </li>
+                      </>
+                    )} */}
+
+                    {(userRole === "admin" ||
+                      userRole === "ugotsadmin" ||
+                      userRole === "ugadmin") && (
                       <>
                         <li>
                           <button>
@@ -203,19 +228,51 @@ export const Header = () => {
                         </li>
                       </>
                     )}
+
+{userRole === "viewer" && (<>
+<button>
+<Link to="/student_dashboard">DashBoard</Link>
+
+</button>
+
+</>)}
                   </div>
                   <div>
-                    <button id="dropdownmenu_foradim_page_btn">
-                      {userData.username}
-                      <div className="dropdownmenu_foradim_page">
-                        {/* <Link to={`/userread/${user.id}`} className="btn btn-success mx-2">Read</Link> */}
+                    {isLoggedIn === true ? (
+                      <>
+                        <button id="dropdownmenu_foradim_page_btn">
+                          {userData.username}
+                          <div className="dropdownmenu_foradim_page">
+                            {/* <Link to={`/userread/${user.id}`} className="btn btn-success mx-2">Read</Link> */}
+                            {/* <Link to={`/userdeatailspage/${user.id}`} >Account-info</Link> */}
+                            <Link to="/Account_info">Account-info</Link>
+                            <Link onClick={handleLogout}>Logout</Link>
+                          </div>
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <a class="uglogin_btn" href="/UgadminHome">
+                          Login/Registration
+                        </a>
+                      </>
+                    )}
 
-                        {/* <Link to={`/userdeatailspage/${user.id}`} >Acount-info</Link> */}
-                        <Link to="/Account_info">Acount-info</Link>
+                    {isLoggedIn === "flase" && (
+                      <>
+                        <button id="dropdownmenu_foradim_page_btn">
+                          {/* {userData.username} */}
+                          <div className="dropdownmenu_foradim_page">
+                            {/* <Link to={`/userread/${user.id}`} className="btn btn-success mx-2">Read</Link> */}
 
-                        <Link onClick={handleLogout}>Logout</Link>
-                      </div>
-                    </button>
+                            {/* <Link to={`/userdeatailspage/${user.id}`} >Acount-info</Link> */}
+                            {/* <Link to="/Account_info">Acount-info</Link>
+
+                            <Link onClick={handleLogout}>Logout</Link> */}
+                          </div>
+                        </button>
+                      </>
+                    )}
                   </div>
                 </ul>
               </div>
@@ -381,8 +438,7 @@ export const Quiz_Courses = () => {
     setshowcardactive2(true);
   };
 
-
-  // ----------------- h  
+  // ----------------- h
   // const [examCardName, setExamCardName] = useState([]);
 
   // useEffect(() => {
@@ -397,10 +453,9 @@ export const Quiz_Courses = () => {
   // }, []);
 
   // ------------------ quiz exam card api---------------------------------------
-   // Filter exams based on start and end dates
-   
-  // ------------------------exam cards fetching code------------------------------------------
+  // Filter exams based on start and end dates
 
+  // ------------------------exam cards fetching code------------------------------------------
 
   const [examCardName, setExamCardName] = useState([]);
   const [noOfCourses, setNoOfCourses] = useState([]);
@@ -409,7 +464,9 @@ export const Quiz_Courses = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const examResponse = await axios.get(`http://localhost:5001/Cards/examData`);
+        const examResponse = await axios.get(
+          `http://localhost:5001/Cards/examData`
+        );
         setExamCardName(examResponse.data);
 
         const courseResponse = await fetch(
@@ -431,11 +488,11 @@ export const Quiz_Courses = () => {
   }, []);
 
   const currentDate = new Date(); // Get the current date
-   const filteredExams = examCardName.filter(
+  const filteredExams = examCardName.filter(
     (exam) =>
-      new Date(exam.startDate) <= currentDate && currentDate <= new Date(exam.endDate)
+      new Date(exam.startDate) <= currentDate &&
+      currentDate <= new Date(exam.endDate)
   );
-
 
   return (
     <>
@@ -486,57 +543,65 @@ export const Quiz_Courses = () => {
                     coming soon
                     {/* ----------------------------------- h--------------------- */}
                     <div className="CurrentCourses_div">
-        <h1>Current Exams</h1>
+                      <h1>Current Exams</h1>
 
-        <div className="card_container">
-          {/* --------------practice-------------------- */}
+                      <div className="card_container">
+                        {/* --------------practice-------------------- */}
 
-          <div className="first_card">
-            <div className="card">
-              <div className="container">
-                <ul className="card_container_ul">
-                  {loading ? (
-                    <p>Loading...</p>
-                  ) : (
-                    filteredExams.map((cardItem) => (
-                      <React.Fragment key={cardItem.examId}>
-                        <div className="card_container_li">
-                          <img src={iitjee} alt="card" width={350} />
-                          <h3>{cardItem.examName}</h3>
-                          <li>
-                            Validity: ({cardItem.startDate}) to (
-                            {cardItem.endDate})
-                          </li>
-                          <li>
-                            {noOfCourses.map(
-                              (count) =>
-                                count.examId === cardItem.examId && (
-                                  <p key={count.examId}>
-                                    No of Courses: {count.numberOfCourses}
-                                  </p>
-                                )
-                            )}
-                          </li>
-                          <li>
-                            <br />
-                            <div className="start_now">
-                              <Link to={`/feachingcourse/${cardItem.examId}`}>
-                                Start Now
-                              </Link>
+                        <div className="first_card">
+                          <div className="card">
+                            <div className="container">
+                              <ul className="card_container_ul">
+                                {loading ? (
+                                  <p>Loading...</p>
+                                ) : (
+                                  filteredExams.map((cardItem) => (
+                                    <React.Fragment key={cardItem.examId}>
+                                      <div className="card_container_li">
+                                        <img
+                                          src={iitjee}
+                                          alt="card"
+                                          width={350}
+                                        />
+                                        <h3>{cardItem.examName}</h3>
+                                        <li>
+                                          Validity: ({cardItem.startDate}) to (
+                                          {cardItem.endDate})
+                                        </li>
+                                        <li>
+                                          {noOfCourses.map(
+                                            (count) =>
+                                              count.examId ===
+                                                cardItem.examId && (
+                                                <p key={count.examId}>
+                                                  No of Courses:{" "}
+                                                  {count.numberOfCourses}
+                                                </p>
+                                              )
+                                          )}
+                                        </li>
+                                        <li>
+                                          <br />
+                                          <div className="start_now">
+                                            <Link
+                                              to={`/feachingcourse/${cardItem.examId}`}
+                                            >
+                                              Start Now
+                                            </Link>
+                                          </div>
+                                        </li>
+                                      </div>
+                                    </React.Fragment>
+                                  ))
+                                )}
+                              </ul>
                             </div>
-                          </li>
+                          </div>
                         </div>
-                      </React.Fragment>
-                    ))
-                  )}
-                </ul>
-              </div>
-            </div>
-          </div>
 
-          {/* --------------practice-------------------- */}
-        </div>
-      </div>
+                        {/* --------------practice-------------------- */}
+                      </div>
+                    </div>
                     {/* ----------------------------------- h--------------------- */}
                   </div>
                 );
