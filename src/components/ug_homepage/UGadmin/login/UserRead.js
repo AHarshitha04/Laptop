@@ -39,8 +39,8 @@ const Read = () => {
  
   return (
     <>
-       ID: {id}
-     <div className="Quiz_main_page_header">
+      ID: {id}
+      <div className="Quiz_main_page_header">
         {nav.map((nav, index) => {
           return (
             <div key={index} className="Quiz_main_page_navbar">
@@ -57,12 +57,11 @@ const Read = () => {
                 }
               >
                 <ul>
-                  <button style={{background:"none"}}>
-                    <Link to='/Account_info' className="Quiz__home">
+                  <button style={{ background: "none" }}>
+                    <Link to="/Account_info" className="Quiz__home">
                       Home
                     </Link>
                   </button>
-            
 
                   {/* <button className="quiz_sign_UP">                   
                     Sign up
@@ -72,8 +71,6 @@ const Read = () => {
                       <Link to='/'><button onClick={Quiz_login}>
                    Login
                   </button></Link> */}
-
-               
                   </div>
                   <div>
                     <button onClick={handleLogout}>Logout</button>
@@ -81,7 +78,6 @@ const Read = () => {
                 </ul>
               </div>
 
-           
               <div className="quz_menu" onClick={QuiZ_menu}>
                 <div className="lines"></div>
                 <div className="lines"></div>
@@ -91,38 +87,52 @@ const Read = () => {
           );
         })}
       </div>
+      <div className="read_container">
+       
+          
+          
+             
+              <div className="admin_profile_container">
+                
+                  <div  className="admin_profile_box">
+                    {/* <p>{i + 1}</p> */}
+                    <div className="pro_img">
+                      <img
+                        src={user.profile_image}
+                        alt={`Image ${user.user_Id}`}
+                      />
+                    </div>
+                    <div className="admin_profile_box_info">
+                      <p>User ID:{user.username}</p>
+                      <p>Email ID:{user.email}</p>
+                      <p>Role:{user.role}</p>
+                    </div>
+                    <div className="admin_profile_box_btncontainer">
+                      <Link to={`/userread/${user.id}`} className="redbtn ">
+                        Read
+                      </Link>
 
+                      <Link
+                        to={`/userupdate/${user.user_Id}`}
+                        className="update"
+                      >
+                        Edit
+                      </Link>
 
-     <div className="container">
-        <div className='row'>
-        <div className='col-md-12'>
-        <h1>User Details</h1>
-            <table className="table">
-                <thead>
-                    <tr>
-                        <th>S No.</th>
-                        <th>Full Name</th>
-                        <th>Email</th> 
-                        <th>Password</th> 
-
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>{user.id}</td>
-                        <td>{user.username}</td>
-                        <td>{user.email}</td>
-                        <td>{user.password}</td>
-
-                    </tr>
-                </tbody>
-            </table>
-      </div>
-      </div>
-    </div>
-    
+                      <button
+                        onClick={() => handleDelete(user.id)}
+                        className="delete"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+               
+              </div>
+            </div>
+          
+       
     </>
-   
   );
 };
  

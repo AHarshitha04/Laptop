@@ -74,7 +74,10 @@ const handleLogin = async (e) => {
 
                 <div className="exam_login_menu">
                   <li>
-                    <Link to="/home" className={NavData.navlist}>
+                    <Link
+                      to="/Exam_portal_home_page"
+                      className={NavData.navlist}
+                    >
                       {NavData.link1}
                     </Link>
                   </li>

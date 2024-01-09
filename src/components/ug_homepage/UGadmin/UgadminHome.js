@@ -17,27 +17,48 @@ const UgadminHome = () => {
   };
 
   return (
-    <div>      
-
-      {userRole === 'admin' && (
+    <div>
+     
+      {userRole === "admin" && (
         <div>
-          <p>Admin View: Show all features</p>
-          {/* Admin-specific content goes here */}
-          <Quiz_dashboard/>
+          <p>admin View: Show limited features</p>
 
-        </div>
-      )}
+          <Quiz_dashboard />
 
-      {userRole === 'viewer' && (
-        <div>
-          <p>Viewer View: Show limited features</p>
-
-          <Exam_portal_home_page/>
           {/* Viewer-specific content goes here */}
         </div>
       )}
 
-{/* <button onClick={handleLogout}>Logout</button> */}
+      {userRole === "ugotsadmin" && (
+        <div>
+          <p>ugotsadmin View: Show limited features</p>
+
+          <Quiz_dashboard />
+
+          {/* Viewer-specific content goes here */}
+        </div>
+      )}
+
+      {userRole === "ugadmin" && (
+        <div>
+          <p>ugadmin View: Show limited features</p>
+
+          <Quiz_dashboard />
+
+          {/* Viewer-specific content goes here */}
+        </div>
+      )}
+
+      {userRole === "viewer" && (
+        <div>
+          <p>Viewer View: Show limited features</p>
+
+          <Exam_portal_home_page />
+          {/* Viewer-specific content goes here */}
+        </div>
+      )}
+
+      {/* <button onClick={handleLogout}>Logout</button> */}
     </div>
   );
 };
