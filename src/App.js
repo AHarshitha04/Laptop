@@ -107,6 +107,7 @@ import  {UpdateInstruction}  from "./components/ug_homepage/exam_portal_admin/Up
 
 import {Score} from './Score.jsx'
 import Student_dashboard from "./components/ug_homepage/UGadmin/eaxm_portal_/StudentDashboard/Student_dashboard.js";
+import Student_Settings from "./components/ug_homepage/UGadmin/eaxm_portal_/StudentDashboard/Student_Settings.jsx";
 
 
 
@@ -271,8 +272,10 @@ element={<UpdateInstruction />}
 
  <Route
             path="/Student_dashboard"
-            element={<Student_dashboard/>} 
+            element={<Student_dashboard />} 
           />
+
+          <Route path="/Student_Settings" element={<Student_Settings />} />
 <Route path="/Score" element={<Score />}/>
       </Routes>
 
