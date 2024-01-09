@@ -108,23 +108,23 @@ const Read = () => {
                       <p>Role:{user.role}</p>
                     </div>
                     <div className="admin_profile_box_btncontainer">
-                      <Link to={`/userread/${user.id}`} className="redbtn ">
+                      {/* <Link to={`/userread/${user.id}`} className="redbtn ">
                         Read
-                      </Link>
+                      </Link> */}
 
-                      <Link
+                      {/* <Link
                         to={`/userupdate/${user.user_Id}`}
                         className="update"
                       >
                         Edit
-                      </Link>
+                      </Link> */}
 
-                      <button
+                      {/* <button
                         onClick={() => handleDelete(user.id)}
                         className="delete"
                       >
                         Delete
-                      </button>
+                      </button> */}
                     </div>
                   </div>
                
