@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import PropTypes from "prop-types";
 import { useParams } from "react-router-dom";
 import './styles/RightSidebar.css'
@@ -14,6 +14,7 @@ const ButtonsFunctionality = ({
   markedForReviewCount,
   VisitedCount,
   questionData,
+  updateQuestionStatus,
 }) => {
  
  
@@ -24,42 +25,111 @@ const ButtonsFunctionality = ({
   const [activeQuestion, setActiveQuestion] = useState(0);
 const [answeredQuestions, setAnsweredQuestions] = useState([]);
 const [isPaused, setIsPaused] = useState(false);
+
+
+
+
+const renderQuestionButtons = Array.isArray(questionData.questions)
+? questionData.questions.map((question, index) => {
+    let className = "right_bar_Buttons ";
+    const questionKey = question.id || index;
+    const questionStatusAtIndex = questionStatus && questionStatus[index];
+
+
+    if (questionStatusAtIndex === "answered") {
+      className += " instruction-btn1";
+    } else if (questionStatusAtIndex === "notAnswered") {
+      className += " instruction-btn2";
+    } else if (questionStatusAtIndex === "marked") {
+      className += " instruction-btn3";
+    } else if (questionStatusAtIndex === "Answered but marked for review") {
+      className += " instruction-btn4";
+    } else if (questionStatusAtIndex === "notVisited") {
+      className += " instruction-btn6";
+    } 
+
+    // Highlight the current question being displayed
+    if (index === activeQuestion) {
+      className += " active-question";
+    }
+
+
+    return (
+      <li key={questionKey}>
+        <button
+          onClick={() => handleButtonClick(index + 1,)}
+          className={className}
+        >
+          {index + 1}
+        </button>
+      </li>
+    );
+  })
+: null;
  
  
-  const handleButtonClick = (questionNumber,status) => {
- 
-   
-      // Check if the question is already answered, and return early if true
-  if (questionStatus[questionNumber - 1] === "answered") {
-    // Navigate to the selected question when it's already answered
+
+const handleButtonClick = useCallback((questionNumber) => {
+  const questionIndex = questionNumber - 1;
+
+  // Check if the question is already answered
+  if (questionStatus[questionIndex] === "answered") {
+    // If answered, navigate to the selected question
     onQuestionSelect(questionNumber);
-    return;
+  } else {
+    // Check if the button was clicked
+    if (answeredQuestions.includes(questionNumber)) {
+      // If the button was clicked, mark it as answered
+      setQuestionStatus((prevQuestionStatus) => [
+        ...prevQuestionStatus.slice(0, questionIndex),
+        "answered",
+        ...prevQuestionStatus.slice(questionIndex + 1),
+      ]);
+
+      // Update other necessary state or perform additional logic
+      onQuestionSelect(questionNumber);
+      setAnsweredQuestions((prevAnsweredQuestions) => [...prevAnsweredQuestions, questionNumber]);
+      setIsPaused(false);
+    } else {
+      // If the button was not clicked, mark it as not answered
+      setQuestionStatus((prevQuestionStatus) => [
+        ...prevQuestionStatus.slice(0, questionIndex),
+        "notAnswered",
+        ...prevQuestionStatus.slice(questionIndex + 1),
+      ]);
+
+      // Update other necessary state or perform additional logic
+      onQuestionSelect(questionNumber);
+      setIsPaused(false);
+    }
   }
-    setActiveQuestion(questionNumber - 1);
- 
-    onQuestionSelect(questionNumber);
-    setAnsweredQuestions((prevAnsweredQuestions) => [
-      ...prevAnsweredQuestions,
-      questionNumber,
-    ]);
-    setIsPaused(false);
- 
-    setQuestionStatus((prevQuestionStatus) => {
-      const currentStatus = prevQuestionStatus[questionNumber - 1];
- 
-      if (currentStatus === "notVisited") {
-        return [
-          ...prevQuestionStatus.slice(0, questionNumber - 1),
-          "notAnswered",
-          ...prevQuestionStatus.slice(questionNumber),
-        ];
-      }
-      // If none of the conditions are met, return the current state
-      return prevQuestionStatus;
-    });
-   
- 
-  };
+
+  // Update the question status in the QuestionPaper component
+  updateQuestionStatus(questionIndex, "notAnswered");
+
+}, [questionStatus, setQuestionStatus, onQuestionSelect, answeredQuestions, updateQuestionStatus]);
+
+
+
+
+
+  
+ButtonsFunctionality.propTypes = {
+  onQuestionSelect: PropTypes.func.isRequired,
+  questionStatus: PropTypes.arrayOf(PropTypes.string),
+  seconds: PropTypes.number, // Add the appropriate prop type
+  setQuestionStatus: PropTypes.func.isRequired,
+  answeredCount: PropTypes.number, // Add the appropriate prop type
+  notAnsweredCount: PropTypes.number, // Add the appropriate prop type
+  answeredmarkedForReviewCount: PropTypes.number, // Add the appropriate prop type
+  markedForReviewCount: PropTypes.number, // Add the appropriate prop type
+  VisitedCount: PropTypes.number, // Add the appropriate prop type
+  selectedSubject: PropTypes.string, // Add the appropriate prop type
+  updateButtonStatus: PropTypes.func, // Add the appropriate prop type
+  data: PropTypes.object, // Add the appropriate prop type
+  updateQuestionStatus: PropTypes.func.isRequired, // Add the prop type
+
+};
  
  
  
@@ -91,45 +161,11 @@ const [isPaused, setIsPaused] = useState(false);
     };
   }, [wtimer]);
  
-  const renderQuestionButtons = Array.isArray( questionData.questions)
-  ? questionData.questions.map((question, index) => {
-      let className = "right_bar_Buttons ";
-      const questionKey = question.id || index;
- 
-      if (questionStatus && questionStatus[index] === "answered") {
-        className += " instruction-btn1";
-      } else if (questionStatus && questionStatus[index] === "notAnswered") {
-        className += " instruction-btn2";
-      } else if (questionStatus && questionStatus[index] === "marked") {
-        className += " instruction-btn3";
-      } else if (
-        questionStatus &&
-        questionStatus[index] === "Answered but marked for review"
-      ) {
-        className += " instruction-btn4";
-      } else if (questionStatus && questionStatus[index] === "Visited") {
-        className += " instruction-btn2";
-      } else {
-        className += " instruction-btn5"; // Default to instruction-btn5 for not visited
-      }
- 
-      // Highlight the current question being displayed
-      if (index === activeQuestion) {
-        className += " active-question";
-      }
- 
-      return (
-        <li key={questionKey}>
-          <button
-            onClick={() => handleButtonClick(index + 1, "Visited")}
-            className={className}
-          >
-            {index + 1}
-          </button>
-        </li>
-      );
-    })
-  : null;
+
+
+
+
+
  
 //user name
 const [userData, setUserData] = useState({});

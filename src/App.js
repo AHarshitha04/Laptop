@@ -105,7 +105,7 @@ import  {UpdateInstruction}  from "./components/ug_homepage/exam_portal_admin/Up
 
 
 
-
+import {Score} from './Score.jsx'
 
 
 
@@ -266,7 +266,7 @@ element={<UpdateInstruction />}
 /> 
 
  
-
+<Route path="/Score" element={<Score />}/>
       </Routes>
 
       {/* <Footer /> */}
