@@ -209,7 +209,7 @@ router.get('/subjects/:testCreationTableId', async (req, res) => {
     const { testCreationTableId } = req.params;
     try {
       const [rows] = await db.query(`
-<<<<<<< HEAD
+
       SELECT 
       q.question_id, 
       q.questionImgName, 
@@ -237,7 +237,7 @@ router.get('/subjects/:testCreationTableId', async (req, res) => {
       q.question_id = qt.question_id 
   WHERE 
       t.testCreationTableId = ?
-=======
+
 
   SELECT 
   q.question_id, 
@@ -258,7 +258,7 @@ LEFT OUTER JOIN options o ON
   q.question_id = o.question_id
 WHERE 
   t.testCreationTableId = 1
->>>>>>> af5e2497ef815012e7d9309cf6a14b8e36a9e6a7
+
       `, [testCreationTableId]);
   
       // Check if rows is not empty
