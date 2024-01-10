@@ -76,17 +76,16 @@ export const Header = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userData, setUserData] = useState({});
 
-   useEffect(() => {
-     const checkLoggedIn = () => {
-       const loggedIn = localStorage.getItem("isLoggedIn");
-       if (loggedIn === "true") {
-         setIsLoggedIn(true);
-         fetchUserData();
-       }
-     };
-     checkLoggedIn();
-   }, []);
-
+  useEffect(() => {
+    const checkLoggedIn = () => {
+      const loggedIn = localStorage.getItem("isLoggedIn");
+      if (loggedIn === "true") {
+        setIsLoggedIn(true);
+        fetchUserData();
+      }
+    };
+    checkLoggedIn();
+  }, []);
 
   const fetchUserData = async () => {
     try {
@@ -229,13 +228,13 @@ export const Header = () => {
                       </>
                     )}
 
-{userRole === "viewer" && (<>
-<button>
-<Link to="/student_dashboard">DashBoard</Link>
-
-</button>
-
-</>)}
+                    {userRole === "viewer" && (
+                      <>
+                        <button>
+                          <Link to="/student_dashboard">DashBoard</Link>
+                        </button>
+                      </>
+                    )}
                   </div>
                   <div>
                     {isLoggedIn === true ? (

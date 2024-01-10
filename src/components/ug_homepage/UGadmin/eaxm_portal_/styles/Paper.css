@@ -305,3 +305,47 @@ height: 950px; */
 .quesAns-btn {
   cursor: pointer;
 }
+
+/*-----------------------calculator styling---------------- */
+
+
+.calculator {
+  padding: 20px;
+  border-radius: 10px;
+}
+
+form input {
+  border: none;
+  outline: 0;
+  width: 60px;
+  height: 60px;
+  font-size: 16px;
+  background-color: #62b6f3;
+  margin: 2px;
+  border-radius: 10px;
+  color: white;
+  font-weight: bolder;
+  cursor: pointer;
+}
+
+form input[type="button"]:hover {
+  background-color: #03497a;
+}
+
+form .display {
+  justify-content: flex-end;
+  margin: 5px 0px 15px 0px;
+}
+
+form .display input {
+  text-align: right;
+  flex: 1;
+  font-size: 40px;
+  padding: 5px 10px;
+  background-color: #ffffff;
+  color: #000000;
+}
+
+form input.equal{
+  width: 123px;
+}
