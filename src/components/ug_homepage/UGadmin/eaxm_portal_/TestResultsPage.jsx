@@ -28,17 +28,17 @@ const TestResultsPage = () => {
   // const { testCreationTableId } = useParams();
   const [answeredCount, setAnsweredCount] = useState(0);
   const [notAnsweredCount, setNotAnsweredCount] = useState(0);
-<<<<<<< HEAD
 
 
 
 
-=======
+
+
  
  
  
  
->>>>>>> c266cc44d43202730ef390a4f4f7ded444adbdf2
+
   const [questionCount, setQuestionCount] = useState(null);
  
   useEffect(() => {
@@ -59,11 +59,6 @@ const TestResultsPage = () => {
     <div>
       <h2>Score Card</h2>
       <div>
-<<<<<<< HEAD
-
-=======
- 
->>>>>>> c266cc44d43202730ef390a4f4f7ded444adbdf2
         <div>
           <h1>Your Test Performance</h1>
           <p>Your Score</p>
@@ -77,11 +72,6 @@ const TestResultsPage = () => {
         <div>
      
         </div>
-<<<<<<< HEAD
-
-=======
- 
->>>>>>> c266cc44d43202730ef390a4f4f7ded444adbdf2
       </div>
       <table id="customers">
         <tr>

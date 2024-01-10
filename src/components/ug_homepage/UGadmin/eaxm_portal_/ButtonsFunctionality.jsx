@@ -203,6 +203,12 @@ useEffect(() => {
     <>
       <div className="right-side-bar">
         <div className="rightSidebar-topHeader">
+
+        <img
+                            title={userData.username}
+                            src={userData.imageData}
+                            alt={`Image ${userData.user_Id}`}
+                          />
           <p>Name of the person :  {userData.username}</p>
       
           <p>Time Left: {WformatTime(wtimer)}</p>
