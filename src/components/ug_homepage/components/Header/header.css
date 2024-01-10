@@ -6,12 +6,60 @@
 }
 
 
+.logo-header{
+    display: flex;
+    justify-content: space-between;
+    width: 85%;
+    /* height: 4rem; */
+    /* background-color: #000000; */
+    padding: 0.5rem 0;
+    padding: 0.3rem 3rem;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    /* border-radius: 0 30px; */
+}
+
+
 
 .ug_header {
     position: sticky;
-    top: 0.5rem;
+    top: 0.2px;
     z-index: 10;
+    background-color: #fff;
 }
+
+.ughomepage_dropdown_download {
+    position: absolute;
+    left: 0.5rem;
+    background-color: #000;
+    width: 100%;padding:1rem 0.6rem;   
+    display: none;
+}
+#ughomepage_dropdown_download_linK{
+
+    /* color: #000; */
+    animation:none;
+
+ &:hover .ughomepage_dropdown_download{
+
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+   }
+}
+
+
+.ughomepage_dropdown_download li a{
+    font-size: 0.9rem;
+}
+
+.ughomepage_dropdown_download li a:hover{
+    animation: navhover alternate forwards 0.5s;
+}
+
+
 
 .login_menu {
     display: flex;
@@ -76,9 +124,8 @@ body {
     background: #1bddff00;
 }
 
-.header {
+/* .header {
     width: 85%;
-    height: 4rem;
     background-color: #000000;
     padding: 0.5rem 0;
     padding: 0.3rem 3rem;
@@ -87,24 +134,38 @@ body {
     align-items: center;
     justify-content: space-between;
     border-radius: 0 30px;
-}
+} */
 
-.header .logo_img_container {
-    /* width: 150px; */
-}
+
 
 .header .logo_img_container img {
-    background: #fff;
+    /* background: #fff; */
     border-radius: 5px;
-    border: 2px solid #01c3ff;
-    box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.5);
-    height: 45px;
-    width: 150px;
+    /* border: 2px solid #01c3ff; */
+    /* box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.5); */
+    /* height: 70px; */
+    width: 330px;
 }
 
 .header .navbox {
     display: block;
+    /* width: 85%; */
+    /* height: 4rem; */
+    background-color: #000;
+    padding: 0.5rem 0;
+    padding: 0.3rem 3rem;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.5);
+    /* border-radius: 0 30px; */
 
+}
+
+.navbarug{
+    width: 87%;
+    margin: 0 auto;
 }
 
 .header .navbarug {
@@ -120,13 +181,12 @@ body {
 
 .uglogin_btn {
     /* height: 6rem; */
-    display: flex; 
+    display: flex;
     align-items: center;
     justify-content: center;
-    background: #279EFF;
+    background: #01c3ff;
     font-weight: 500;
-    font-size: 1rem;
-    width: 160px;  
+    font-size: 1.3rem;
     box-shadow: 0px 0px 5px 3px rgba(0, 0, 0, 0.2);
     /* border-radius: 0px 30px 30px 0px; */
     border-radius: 0 20px;
@@ -134,9 +194,10 @@ body {
 }
 
 .navlist {
+    position: relative;
     color: #ffffff;
     font-weight: 500;
-    font-size: 1rem;
+    font-size: 1.3rem;
 }
 
 .navlist:hover {
@@ -197,6 +258,18 @@ body {
 }
 
 @media(min-width:300px) and (max-width:1150px) {
+
+    .logo-header{
+        display: flex;
+        justify-content: space-between;       
+        padding: 0;
+        width: 100%;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        /* border-radius: 0 30px; */
+    }
     .ug_header {
         position: sticky;
         top: 0rem;
@@ -205,7 +278,8 @@ body {
     }
 
     .header .logo_img_container img {
-        width: 140px;
+        width: 180px;
+        background-color: #fff;
     }
 
     .uglogin_btn {
@@ -229,9 +303,8 @@ body {
     }
 
     .uglogin_btn {
-
         /* border-radius: 8px; */
-padding: 0.9rem;
+        padding: 0.9rem 0.5rem;
         font-size: 0.7rem;
     }
 
@@ -284,6 +357,21 @@ padding: 0.9rem;
             color: #000000;
         }
     }
+    #ughomepage_dropdown_download_linK{
+
+        /* color: #000; */
+        animation:none;
+    
+     &:hover .ughomepage_dropdown_download{
+    transform: translateX(50px);
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+       }
+    }
+    .ughomepage_dropdown_download {
+        background:none;
+    }
 }
 
 
@@ -294,19 +382,16 @@ padding: 0.9rem;
 
         border-bottom: 2px solid red;
         transform: scale(1.5);
-
-
-
     }
 
     50% {
 
-        border-bottom: 2px solid rgb(255, 255, 255);
+        border-bottom: 2px solid rgb(1, 195, 255);
     }
 
     100% {
         width: 99%;
-        border-bottom: 2px solid rgb(255, 255, 255);
+        border-bottom: 2px solid rgb(1, 195, 255);
 
     }
 }

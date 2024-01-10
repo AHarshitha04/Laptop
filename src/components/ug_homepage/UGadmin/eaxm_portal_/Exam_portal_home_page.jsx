@@ -240,7 +240,11 @@ export const Header = () => {
                     {isLoggedIn === true ? (
                       <>
                         <button id="dropdownmenu_foradim_page_btn">
-                          {userData.username}
+                          <img
+                            title={userData.username}
+                            src={userData.imageData}
+                            alt={`Image ${userData.user_Id}`}
+                          />
                           <div className="dropdownmenu_foradim_page">
                             {/* <Link to={`/userread/${user.id}`} className="btn btn-success mx-2">Read</Link> */}
                             {/* <Link to={`/userdeatailspage/${user.id}`} >Account-info</Link> */}
