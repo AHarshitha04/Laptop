@@ -595,6 +595,69 @@ const profilesimages = multer({ storage: storage_PROimg });
 
 
 
+// router.post(
+//   "/register",
+//   profilesimages.single("profileImage"),
+//   async (req, res) => {
+//     const { username, email, password } = req.body;
+//     const uploadedFile = req.file;
+
+//     try {
+//       // Check if the email already exists in the database...
+//         const checkEmailQuery = "SELECT COUNT(*) AS count FROM log WHERE email = ?";
+//   db1.query(checkEmailQuery, [email], async (err, results) => {
+//     if (err) {
+//       console.error("Error checking email:", err);
+//       res.status(500).json({ error: "Failed to register user" });
+//       return;
+//     }
+    
+//     const emailExists = results[0].count > 0;
+//     if (emailExists) {
+//       res.status(400).json({ error: "Email already exists" });
+//       return;
+//     }
+
+//       let fileContent = null;
+
+//       // Read file asynchronously and handle errors
+//       if (uploadedFile) {
+//         fileContent = fs.readFileSync(uploadedFile.path);
+
+//         // Delete temporary file after reading content
+//         fs.unlinkSync(uploadedFile.path);
+//       }
+
+//       // Hash password
+//       const hashedPassword = await bcrypt.hash(password, 10);
+//       const defaultRole = "viewer";
+
+//       // Insert user data including the profile image into the database
+//       const insertQuery =
+//         "INSERT INTO log (username, email, password, role, profile_image) VALUES (?, ?, ?, ?, ?)";
+//       db1.query(
+//         insertQuery,
+//         [username, email, hashedPassword, defaultRole, fileContent],
+//         (err, result) => {
+//           if (err) {
+//             console.error("Failed to register user:", err);
+//             res.status(500).json({ error: "Failed to register user" });
+//             return;
+//           }
+//           res.status(201).json({ message: "User registered successfully" });
+//         }
+//       );
+//    } catch (error) {
+//       console.error("Internal server error:", error);
+//       res.status(500).json({ error: "Internal server error" });
+//     }
+//   }
+// );
+
+
+
+  //------------------- login for user
+  
 router.post(
   "/register",
   profilesimages.single("profileImage"),
@@ -604,36 +667,51 @@ router.post(
 
     try {
       // Check if the email already exists in the database...
-
-      let fileContent = null;
-
-      // Read file asynchronously and handle errors
-      if (uploadedFile) {
-        fileContent = fs.readFileSync(uploadedFile.path);
-
-        // Delete temporary file after reading content
-        fs.unlinkSync(uploadedFile.path);
-      }
-
-      // Hash password
-      const hashedPassword = await bcrypt.hash(password, 10);
-      const defaultRole = "viewer";
-
-      // Insert user data including the profile image into the database
-      const insertQuery =
-        "INSERT INTO log (username, email, password, role, profile_image) VALUES (?, ?, ?, ?, ?)";
-      db1.query(
-        insertQuery,
-        [username, email, hashedPassword, defaultRole, fileContent],
-        (err, result) => {
-          if (err) {
-            console.error("Failed to register user:", err);
-            res.status(500).json({ error: "Failed to register user" });
-            return;
-          }
-          res.status(201).json({ message: "User registered successfully" });
+      const checkEmailQuery =
+        "SELECT COUNT(*) AS count FROM log WHERE email = ?";
+      db1.query(checkEmailQuery, [email], async (err, results) => {
+        if (err) {
+          console.error("Error checking email:", err);
+          res.status(500).json({ error: "Failed to register user" });
+          return;
         }
-      );
+
+        const emailExists = results[0].count > 0;
+        if (emailExists) {
+          res.status(400).json({ error: "Email already exists " });
+          return;
+        }
+
+        let fileContent = null;
+
+        // Read file asynchronously and handle errors
+        if (uploadedFile) {
+          fileContent = fs.readFileSync(uploadedFile.path);
+
+          // Delete temporary file after reading content
+          fs.unlinkSync(uploadedFile.path);
+        }
+
+        // Hash password
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const defaultRole = "viewer";
+
+        // Insert user data including the profile image into the database
+        const insertQuery =
+          "INSERT INTO log (username, email, password, role, profile_image) VALUES (?, ?, ?, ?, ?)";
+        db1.query(
+          insertQuery,
+          [username, email, hashedPassword, defaultRole, fileContent],
+          (err, result) => {
+            if (err) {
+              console.error("Failed to register user:", err);
+              res.status(500).json({ error: "Failed to register user" });
+              return;
+            }
+            res.status(201).json({ message: "User registered successfully" });
+          }
+        );
+      });
     } catch (error) {
       console.error("Internal server error:", error);
       res.status(500).json({ error: "Internal server error" });
@@ -642,9 +720,6 @@ router.post(
 );
 
 
-
-  //------------------- login for user
-  
   router.post("/login", async (req, res) => {
     const { email, password } = req.body;
   

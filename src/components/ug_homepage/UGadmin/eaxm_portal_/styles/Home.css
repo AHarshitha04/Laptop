@@ -147,27 +147,36 @@
     display: flex;
     flex-direction: column;
     gap: 0.8rem;
-    top: 0rem;
+    top: -0.5rem;
     left: -3rem;
     /* width: 160%; */
     text-align: left;
-    background: rgb(0, 153, 255); /* width: 100%;? */
+    background: rgb(255, 255, 255); /* width: 100%;? */
     padding: 1.45rem;
-    padding-top: 3rem;
+    padding-top:5rem;
     z-index: -1;
     border-radius: 18px;
   }
 }
+#dropdownmenu_foradim_page_btn img{
+  padding: 0.5rem;
+  width: 50px;
+  height:50px;
+  border-radius: 50%;
+  background: #ffffff;
+}
 #dropdownmenu_foradim_page_btn :hover {
-  background: rgb(0, 153, 255); /* width: 100%;? */
+  /* background: rgb(0, 153, 255); width: 100%;? */
 }
 
 .dropdownmenu_foradim_page {
   display: none;
 }
-
+.dropdownmenu_foradim_page a{
+  color: #1900ff;
+}
 .dropdownmenu_foradim_page a:hover {
-  color: blue;
+  /* color: blue; */
   text-decoration: underline;
 }
 
