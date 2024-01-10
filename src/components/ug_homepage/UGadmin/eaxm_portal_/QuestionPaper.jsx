@@ -1,5 +1,4 @@
-<<<<<<< HEAD
-=======
+
 // import React, { useState, useEffect } from "react";
 // import { useParams, Link, useNavigate } from "react-router-dom";
 // import axios from "axios";
@@ -932,7 +931,7 @@
 
 // export default QuestionPaper;
 
->>>>>>> eeb1622fa46bd43aae1ff750ad1675c2dfed3673
+
 import React, { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -958,11 +957,7 @@ const QuestionPaper = () => {
   );
   const [sections, setSections] = useState([]);
   const [currentQuestionType, setCurrentQuestionType] = useState(null);
-<<<<<<< HEAD
   const [value, setValue] = useState('');
-=======
-  const [value, setValue] = useState("");
->>>>>>> eeb1622fa46bd43aae1ff750ad1675c2dfed3673
   const navigate = useNavigate();
   const [answeredCount, setAnsweredCount] = useState(0);
   const [notAnsweredCount, setNotAnsweredCount] = useState(0);
@@ -1566,7 +1561,6 @@ const QuestionPaper = () => {
 
   return (
     <div>
-<<<<<<< HEAD
       {!showExamSumary ? (
         <div>
           <div className="subjects">
@@ -1613,73 +1607,6 @@ const QuestionPaper = () => {
                       alt={`Question ${currentQuestion.question_id}`}
                     />
                     <div>
-=======
-
-      
-      <div className="quiz_exam_interface_header">
-        <div className="quiz_exam_interface_header_LOGO">
-          <img src={logo} alt="" />
-        </div>
-      </div>
-      {!showExamSumary ? (<div className="quiz_exam_interface_body">
-        {/* --------------- quiz examconatiner -------------------- */}
-        <div className="quiz_exam_interface_body_left_container">
-          {/* --------------- quiz sub container -------------------- */}
-      
-          <div class="quiz_exam_interface_SUBJECTS_CONTAINER">
-            <div>
-              <div class="subjects_BTN_container">
-                <li>
-                  <button class="subject_btn">Mathematics</button>
-                </li>
-                <li>
-                  <button class="subject_btn">Physics</button>
-                </li>
-                <li>
-                  <button class="subject_btn">Chemistry</button>
-                </li>
-              </div>
-
-              <h3>
-                Question Type:
-                <span>mcq(multiple choice question)</span>
-              </h3>
-            </div>
-
-            <div class="right-header">
-              <div class="marks">
-                Marks: <div class="plus-mark">+1</div>
-                <div class="minus-mark">-1</div>
-                <span>
-                  {" "}
-                  <p>Timer:</p>
-                  <p>{formatTime(timer)}</p>
-                </span>
-              </div>
-            </div>
-          </div>
-          {/* --------------- quiz question container -------------------- */}
-          <div class="quiz_exam_interface_exam_CONTAINEr">
-            {questionData.questions && questionData.questions.length > 0 && (
-              <>
-                <div className="quiz_exam_interface_exam_subCONTAINEr">
-                  <div className="quiz_exam_interface_exam_qN_Q">
-                    <h3>Question:{currentQuestion.sortid.sortid_text}</h3>
-                    <img
-                      src={`http://localhost:5001/uploads/${currentQuestion.documen_name}/${currentQuestion.questionImgName}`}
-                      alt={`Question ${currentQuestion.question_id}`}
-                    />
-                  </div>
-
-                  {/* <img
-                      src={`http://localhost:5001/uploads/${currentQuestion.documen_name}/${currentQuestion.questionImgName}`}
-                      alt={`Question ${currentQuestion.question_id}`}
-                    /> */}
-
-                  <div>
-                    <div className="quiz_exam_interface_exam_qN_Q_options">
-                      <h3>Options:</h3>
->>>>>>> eeb1622fa46bd43aae1ff750ad1675c2dfed3673
                       {currentQuestion.options &&
                         Array.isArray(currentQuestion.options) &&
                         currentQuestion.options.filter(
@@ -1793,18 +1720,7 @@ const QuestionPaper = () => {
                                     <div className="calculator">
                                       <form action="">
                                         <div className="display">
-<<<<<<< HEAD
                                           <input type="text"  name={`question-${currentQuestionIndex}`} value={value} onChange={(e) => onAnswerSelected3(e)}/>
-=======
-                                          <input
-                                            type="text"
-                                            name={`question-${currentQuestionIndex}`}
-                                            value={value}
-                                            onChange={(e) =>
-                                              onAnswerSelected3(e)
-                                            }
-                                          />
->>>>>>> eeb1622fa46bd43aae1ff750ad1675c2dfed3673
                                           {/* <input
                                       type="text"
                                       name={`question-${currentQuestionIndex}`}
@@ -2010,14 +1926,7 @@ const QuestionPaper = () => {
                 </div>
                 <div className="quiz_btns_contaioner">
                   <div>
-<<<<<<< HEAD
                     <button className="clear-btn" onClick={markForReview}>
-=======
-                    <button
-                      className="Quiz_Save_MarkforReview"
-                      onClick={markForReview}
-                    >
->>>>>>> eeb1622fa46bd43aae1ff750ad1675c2dfed3673
                       Save & Mark for Review
                     </button>
 
@@ -2053,7 +1962,6 @@ const QuestionPaper = () => {
                   </div>
                   <div></div>
                 </div>
-<<<<<<< HEAD
                 <div className="rightsidebar">
                   <ButtonsFunctionality
                     onQuestionSelect={handleQuestionSelect}
@@ -2110,85 +2018,8 @@ const QuestionPaper = () => {
           </div>
         </div>
       )}
-=======
-              </>
-            )}
-          </div>
-
-          {/* --------------- quiz option container -------------------- */}
-
-          {/* --------------- quiz btns container -------------------- */}
-
-          {/* <div className="quiz_exam_interface_exam_CONTAINEr">
-          <div>
-       
-          </div>
-          </div> */}
-        </div>
-
-        <div className="quiz_exam_interface_body_right_container">
-          {/* --------------- right bar -------------------- */}
-          <div className="rightsidebar">
-            <ButtonsFunctionality
-              onQuestionSelect={handleQuestionSelect}
-              questionStatus={questionStatus}
-              setQuestionStatus={setQuestionStatus}
-              answeredCount={answeredCount}
-              notAnsweredCount={notAnsweredCount}
-              answeredmarkedForReviewCount={answeredmarkedForReviewCount}
-              markedForReviewCount={markedForReviewCount}
-              VisitedCount={VisitedCount}
-              selectedSubject={selectedSubject}
-              questionData={questionData}
-              updateQuestionStatus={updateQuestionStatus}
-            />
-            <button onClick={handleSubmit} id="resume_btn">
-              Submit
-            </button>
-          </div>
-        </div>
-      </div>):(
-         <div className="result">
-         <h3 id="result_header">Exam Summary</h3>
-         <div className="result_page_links"></div>
-         <div className="result_contents">
-           <p>
-             Total Questions: <span>{questionData.questions.length}</span>
-           </p>
-           <p>
-             Answered Questions:<span> {answeredCount}</span>
-           </p>
-           <p>
-             Not Answered Questions:
-             <span> {notAnsweredCount}</span>
-           </p>
-           {/* <p>
-             Marked for Review Questions:
-             <span> {questionData.MarkedforReviewQuestions}</span>
-           </p>
-           <p>
-             Answered & Marked for Review Questions:
-             <span> {questionData.AnsweredAndMarkedforReviewQuestions}</span>
-           </p> */}
-         </div>
-         <div>
-           <h2>
-             Are you sure you want to submit for final marking? <br />
-             No changes will be allowed after submission.
-           </h2>
-           <button onClick={handleYes}>YES</button>
-           <button>NO</button>
-         </div>
-       </div>
-      )}
-      
->>>>>>> eeb1622fa46bd43aae1ff750ad1675c2dfed3673
     </div>
   );
 };
 
-<<<<<<< HEAD
 export default QuestionPaper;
-=======
-export default QuestionPaper;
->>>>>>> eeb1622fa46bd43aae1ff750ad1675c2dfed3673

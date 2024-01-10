@@ -30,7 +30,7 @@ const TestResultsPage = () => {
   const [notAnsweredCount, setNotAnsweredCount] = useState(0);
 
 
-<<<<<<< HEAD
+
 
   // const data = [
   //   {
@@ -77,8 +77,6 @@ const TestResultsPage = () => {
   //   },
   // ];
 
-=======
->>>>>>> eeb1622fa46bd43aae1ff750ad1675c2dfed3673
 
 
 
@@ -108,10 +106,6 @@ const TestResultsPage = () => {
     <div>
       <h2>Score Card</h2>
       <div>
-<<<<<<< HEAD
-
-=======
->>>>>>> eeb1622fa46bd43aae1ff750ad1675c2dfed3673
         <div>
           <h1>Your Test Performance</h1>
           <p>Your Score</p>
@@ -125,10 +119,6 @@ const TestResultsPage = () => {
         <div>
      
         </div>
-<<<<<<< HEAD
-
-=======
->>>>>>> eeb1622fa46bd43aae1ff750ad1675c2dfed3673
       </div>
       <table id="customers">
         <tr>
