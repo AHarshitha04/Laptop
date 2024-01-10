@@ -15,6 +15,7 @@ const ButtonsFunctionality = ({
   VisitedCount,
   questionData,
   updateQuestionStatus,
+  
 }) => {
  
  
