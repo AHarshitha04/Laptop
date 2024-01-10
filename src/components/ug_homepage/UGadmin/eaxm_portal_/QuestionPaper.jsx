@@ -430,7 +430,6 @@ const QuestionPaper = () => {
   //   }
   // };
 
-
   // const handleSaveNextQuestion = async () => {
   //   const updatedQuestionStatus = [...questionStatus];
   //   const currentQuestion = questionData.questions[currentQuestionIndex];
@@ -438,122 +437,106 @@ const QuestionPaper = () => {
   //     selectedAnswersMap1[currentQuestion.question_id] !== undefined ||
   //     (selectedAnswersMap2[currentQuestion.question_id] &&
   //       selectedAnswersMap2[currentQuestion.question_id].length > 0);
-  
+
   //   // Update question status for the current question
   //   updatedQuestionStatus[currentQuestionIndex] = isCurrentQuestionAnswered ? "answered" : "notAnswered";
-  
+
   //   // Update status for the next question if it exists
   //   if (currentQuestionIndex < questionData.questions.length - 1) {
   //     updatedQuestionStatus[currentQuestionIndex + 1] = "notAnswered";
   //   }
-  
+
   //   setQuestionStatus(updatedQuestionStatus);
-  
+
   //   updateCounters();
-  
+
   //   setCurrentQuestionIndex((prevIndex) => (prevIndex < questionData.questions.length - 1 ? prevIndex + 1 : prevIndex));
   // };
 
-
   const handleSaveNextQuestion = async () => {
     // ------------------------------------ button functionality --------------------------------------------
-     // Update question status for the current question
-     const updatedQuestionStatus = [...questionStatus];
+    // Update question status for the current question
+    const updatedQuestionStatus = [...questionStatus];
 
-    const currentQuestion = questionData.questions[currentQuestionIndex];
-    const isCurrentQuestionAnswered =
-     selectedAnswersMap1[currentQuestion.question_id] !== undefined ||
-     (selectedAnswersMap2[currentQuestion.question_id] &&
-       selectedAnswersMap2[currentQuestion.question_id].length > 0);
-
-       if(!isCurrentQuestionAnswered) {
-         updatedQuestionStatus[currentQuestionIndex] = "notAnswered";
-         updatedQuestionStatus[currentQuestionIndex + 1] = "notAnswered";
-         setQuestionStatus(updatedQuestionStatus);
-       } else if (isCurrentQuestionAnswered) {
-         // If the current question is not answered, update the status
-         const updatedQuestionStatus = [...questionStatus];
-         updatedQuestionStatus[currentQuestionIndex] = "answered";
-         updatedQuestionStatus[currentQuestionIndex + 1] = "notAnswered";
-         setQuestionStatus(updatedQuestionStatus);
-
-         // You may also show a message or perform other actions to indicate that the question is not answered
-         console.log("Question not answered!");
-       }
-
-
-    updateCounters();
-
-  
-
-    setCurrentQuestionIndex((prevIndex) => {
-     if (prevIndex < questionData.questions.length - 1) {
-       return prevIndex + 1;
-     }
-   });
-
-
-    // --------------------------------end of button functionality --------------------------------------------------
- }
-
-
-  const handleNextQuestion = async () => {
- 
     const currentQuestion = questionData.questions[currentQuestionIndex];
     const isCurrentQuestionAnswered =
       selectedAnswersMap1[currentQuestion.question_id] !== undefined ||
       (selectedAnswersMap2[currentQuestion.question_id] &&
         selectedAnswersMap2[currentQuestion.question_id].length > 0);
- 
+
+    if (!isCurrentQuestionAnswered) {
+      updatedQuestionStatus[currentQuestionIndex] = "notAnswered";
+      setQuestionStatus(updatedQuestionStatus);
+    } else if (isCurrentQuestionAnswered) {
+      // If the current question is not answered, update the status
+      const updatedQuestionStatus = [...questionStatus];
+      updatedQuestionStatus[currentQuestionIndex] = "answered";
+      setQuestionStatus(updatedQuestionStatus);
+
+      // You may also show a message or perform other actions to indicate that the question is not answered
+      console.log("Question not answered!");
+    }
+
+    updateCounters();
+
+    setCurrentQuestionIndex((prevIndex) => {
+      if (prevIndex < questionData.questions.length - 1) {
+        return prevIndex + 1;
+      }
+    });
+
+    // --------------------------------end of button functionality --------------------------------------------------
+  };
+
+  const handleNextQuestion = async () => {
+    const currentQuestion = questionData.questions[currentQuestionIndex];
+    const isCurrentQuestionAnswered =
+      selectedAnswersMap1[currentQuestion.question_id] !== undefined ||
+      (selectedAnswersMap2[currentQuestion.question_id] &&
+        selectedAnswersMap2[currentQuestion.question_id].length > 0);
+
     if (!isCurrentQuestionAnswered) {
       // If the current question is not answered, update the status
       const updatedQuestionStatus = [...questionStatus];
       updatedQuestionStatus[currentQuestionIndex] = "notAnswered";
       updatedQuestionStatus[currentQuestionIndex + 1] = "notAnswered";
       setQuestionStatus(updatedQuestionStatus);
-     
+
       // You may also show a message or perform other actions to indicate that the question is not answered
       console.log("Question not answered!");
-    }else if (isCurrentQuestionAnswered) {
-      // If the current question is not answered, update the status
-      const updatedQuestionStatus = [...questionStatus];
-      updatedQuestionStatus[currentQuestionIndex] = "notAnswered";
-      updatedQuestionStatus[currentQuestionIndex + 1] = "notAnswered";
-      setQuestionStatus(updatedQuestionStatus);
-     
+    } else {
       // You may also show a message or perform other actions to indicate that the question is not answered
       console.log("Question not answered!");
     }
- 
- 
+
     const response = await fetch(
       `http://localhost:5001/QuestionPaper/questionOptions/${testCreationTableId}`
     );
     const result = await response.json();
     setQuestionData(result);
- 
+
     setCurrentQuestionIndex((prevIndex) => {
       if (prevIndex < questionData.questions.length - 1) {
         return prevIndex + 1;
       }
     });
- 
+
     const userId = userData.user_Id;
     const question = questionData.questions[currentQuestionIndex];
     const questionId = question.question_id;
- 
+
     // const currentQuestion = questionData.questions[currentQuestionIndex];
     const selectedOption1 = selectedAnswersMap1[currentQuestion.question_id];
     const selectedOption2 = selectedAnswersMap2[currentQuestion.question_id];
- 
+
     const optionIndexes1 =
       selectedOption1 !== undefined ? [selectedOption1] : [];
     const optionIndexes2 = selectedOption2 !== undefined ? selectedOption2 : [];
- 
+
     try {
       console.log("Test Creation Table ID:", testCreationTableId);
       console.log("Current user_Id:", userId);
- 
+
       const responses = {
         [questionId]: {
           optionIndexes1: optionIndexes1.map((index) =>
@@ -571,10 +554,10 @@ const QuestionPaper = () => {
         updatedTimers[currentQuestionIndex] = timer;
         return updatedTimers;
       });
- 
+
       clearInterval(interval);
       const answeredTime = new Date().toISOString(); // Get the current time
- 
+
       const saveResponse = await axios.post(
         "http://localhost:5001/QuestionPaper/storeUserResponse",
         {
@@ -584,7 +567,7 @@ const QuestionPaper = () => {
           answeredTime,
         }
       );
- 
+
       if (saveResponse.ok) {
         console.log("User response stored successfully");
       } else {
@@ -595,31 +578,30 @@ const QuestionPaper = () => {
     }
   };
 
-const markForReview = () => {
-  const currentQuestion = questionData.questions[currentQuestionIndex];
-  const isCurrentQuestionAnswered =
-    selectedAnswersMap1[currentQuestion.question_id] !== undefined ||
-    (selectedAnswersMap2[currentQuestion.question_id] &&
-      selectedAnswersMap2[currentQuestion.question_id].length > 0);
+  const markForReview = () => {
+    const currentQuestion = questionData.questions[currentQuestionIndex];
+    const isCurrentQuestionAnswered =
+      selectedAnswersMap1[currentQuestion.question_id] !== undefined ||
+      (selectedAnswersMap2[currentQuestion.question_id] &&
+        selectedAnswersMap2[currentQuestion.question_id].length > 0);
 
-  // Update questionStatus for the marked question
-  const updatedQuestionStatus = [...questionStatus];
-  if (isCurrentQuestionAnswered) {
-    updatedQuestionStatus[currentQuestionIndex] = "Answered but marked for review";
-    updatedQuestionStatus[currentQuestionIndex + 1] = "notAnswered";
-  } else {
-    updatedQuestionStatus[currentQuestionIndex] = "marked";
-    updatedQuestionStatus[currentQuestionIndex + 1] = "notAnswered";
-  }
-
-  setQuestionStatus(updatedQuestionStatus);
-
-  setCurrentQuestionIndex((prevIndex) => {
-    if (prevIndex < questionData.questions.length - 1) {
-      return prevIndex + 1;
+    // Update questionStatus for the marked question
+    const updatedQuestionStatus = [...questionStatus];
+    if (isCurrentQuestionAnswered) {
+      updatedQuestionStatus[currentQuestionIndex] =
+        "Answered but marked for review";
+    } else {
+      updatedQuestionStatus[currentQuestionIndex] = "marked";
     }
-  });
-};
+
+    setQuestionStatus(updatedQuestionStatus);
+
+    setCurrentQuestionIndex((prevIndex) => {
+      if (prevIndex < questionData.questions.length - 1) {
+        return prevIndex + 1;
+      }
+    });
+  };
 
   const handleSubmit = () => {
     window.alert("Your Test has been Submitted!! Click Ok to See Result.");
@@ -1223,7 +1205,9 @@ const markForReview = () => {
                     <button className="clear-btn" onClick={clearResponse}>
                       Clear Response
                     </button>
-                    <button onClick={handleSaveNextQuestion}>Save & Next</button>
+                    <button onClick={handleSaveNextQuestion}>
+                      Save & Next
+                    </button>
                     <button
                       className="previous-btn"
                       onClick={handlePreviousClick}
