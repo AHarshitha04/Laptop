@@ -1,8 +1,11 @@
+
 import React, { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import ButtonsFunctionality from "./ButtonsFunctionality";
 import "./styles/Paper.css";
+//logo in header
+import logo from "./asserts/egradtutor_logo.png";
 
 const QuestionPaper = () => {
   // --------------------------------------CONST VARIABLES DECLARATIONS--------------------------
@@ -1213,17 +1216,38 @@ const markForReview = () => {
                         ))}
                     </div>
                   </div>
+                </div>
+                <div className="quiz_btns_contaioner">
                   <div>
                     <button className="clear-btn" onClick={markForReview}>
                       Save & Mark for Review
                     </button>
-                    <button className="clear-btn" onClick={markForReview}>
+
+                    <button
+                      className="Quiz_MarkforReview"
+                      onClick={markForReview}
+                    >
                       Mark for Review & Next
                     </button>
-                    <button className="clear-btn" onClick={clearResponse}>
+                    <button
+                      className="Quiz_clearResponse"
+                      onClick={clearResponse}
+                    >
                       Clear Response
                     </button>
+
+                    <button
+                      className="quizsave_next"
+                      onClick={handleNextQuestion}
+                    >
+                      Save & Next
+                    </button>
+                  </div>
+
+                  <div className="quiz_Next_back">
+
                     <button onClick={handleSaveNextQuestion}>Save & Next</button>
+
                     <button
                       className="previous-btn"
                       onClick={handlePreviousClick}
