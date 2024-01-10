@@ -107,21 +107,18 @@ router.get('/tests', async (req, res) => {
       let que_id=0;let k=1;
       console.log(textSections);
       let qtypeMappings = {
-                  mcq: 1,
-                  msq: 2,
-                  nat: 3,
-                  'True/False Questions': 4,
+        MCQ4: 1,
+        MCQ5: 2,
+        MSQN: 3,
+        MSQ: 4,
+        NATI:5,
+        NATD:6,
+        TF:7,
+        CTQ:8,
                 };
       for (let i = 0; i < textSections.length; i++) {
         if (textSections[i].includes('[qtype]')) {
-          // que_id=question_id[j];
-          // j++;
-          // Save in the qtype table
-          // const qtypeRecord = {
-          //   qtype_text: textSections[i].replace('[qtype]', ''),
-          //   question_id: que_id
-          // };
-          const qtypeText = textSections[i].replace('[qtype]', '').trim().toLowerCase();
+          const qtypeText = textSections[i].replace('[qtype]', '').trim();
           if (qtypeMappings.hasOwnProperty(qtypeText)){
             const qtypeRecord = {
               qtype_text: textSections[i].replace('[qtype]', ''),
@@ -212,6 +209,17 @@ router.get('/tests', async (req, res) => {
           };
           await insertRecord('options', optionRecord);
           
+        }else if (textSections[i].includes('(e)')) {
+          const imageName = `snapshot_${document_Id}_${req.body.subjectId}_option_d_${k}.png`;
+          const imagePath = `${outputDir}/${imageName}`;
+          await fs.writeFile(imagePath, images[image_index]);image_index++;
+          const optionRecord = {
+            optionImgName: imageName,
+            option_index:'e',
+            question_id: que_id
+          };
+          await insertRecord('options', optionRecord);
+          
         }else if (textSections[i].includes('[soln]')) {
           const imageName = `snapshot_${document_Id}_${req.body.subjectId}_solution_${k}.png`;
           const imagePath = `${outputDir}/${imageName}`;
@@ -223,6 +231,7 @@ router.get('/tests', async (req, res) => {
           await insertRecord('solution', solutionRecord);
           
         }
+
       }
    
       res.send('Text content and images extracted and saved to the database with the selected topic ID successfully.');
@@ -292,7 +301,8 @@ router.get('/tests', async (req, res) => {
           m.markesId ,m.marks_text,
           si.sort_id ,si.sortid_text,
           doc.documen_name, doc.sectionId, 
-          doc.subjectId, doc.testCreationTableId 
+          doc.subjectId, doc.testCreationTableId ,
+          P.paragraphImg,p.paragraph_Id
         FROM 
           questions q 
           LEFT OUTER JOIN options o ON q.question_id = o.question_id
@@ -301,6 +311,7 @@ router.get('/tests', async (req, res) => {
           LEFT OUTER JOIN marks m ON q.question_id = m.question_id 
           LEFT OUTER JOIN sortid si ON q.question_id = si.question_id 
           LEFT OUTER JOIN solution s ON q.question_id = s.question_id 
+          LEFT OUTER JOIN paragraph p ON q.question_id = p.question_id
           LEFT OUTER JOIN ots_document doc ON q.testCreationTableId = doc.testCreationTableId 
         WHERE 
           doc.testCreationTableId = ? AND doc.subjectId = ? AND doc.sectionId = ?;
@@ -354,7 +365,7 @@ router.get('/tests', async (req, res) => {
               sortid:{
                 sort_id:row.sort_id,
                 sortid_text:row.sortid_text
-              }
+              },
             };
   
             questionData.questions.push(newQuestion);

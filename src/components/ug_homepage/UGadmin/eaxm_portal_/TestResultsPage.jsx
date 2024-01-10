@@ -133,7 +133,7 @@ const TestResultsPage = () => {
   const [notAnsweredCount, setNotAnsweredCount] = useState(0);
 
 
-<<<<<<< HEAD
+
   // const data = [
   //   {
   //     name: 'Page A', 
@@ -178,8 +178,7 @@ const TestResultsPage = () => {
   //     amt: 2100,
   //   },
   // ];
-=======
->>>>>>> 25d7cca3d24f57f47d052efac6c46dbd9dc5716b
+
 
 
   const [questionCount, setQuestionCount] = useState(null);
@@ -202,7 +201,7 @@ const TestResultsPage = () => {
     <div>
       <h2>Score Card</h2>
       <div>
-<<<<<<< HEAD
+
         <div>
           <h1>Your Test Performance</h1>
           <p>Your Score</p>
@@ -216,9 +215,7 @@ const TestResultsPage = () => {
         <div>
       
         </div>
-=======
-        
->>>>>>> 25d7cca3d24f57f47d052efac6c46dbd9dc5716b
+
       </div>
       <table id="customers">
         <tr>
