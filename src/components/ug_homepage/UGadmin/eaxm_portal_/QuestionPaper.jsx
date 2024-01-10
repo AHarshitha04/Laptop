@@ -935,6 +935,8 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import ButtonsFunctionality from "./ButtonsFunctionality";
 import "./styles/Paper.css";
+//logo in header
+import logo from "./asserts/egradtutor_logo.png";
 
 const QuestionPaper = () => {
   // --------------------------------------CONST VARIABLES DECLARATIONS--------------------------
@@ -953,7 +955,7 @@ const QuestionPaper = () => {
   );
   const [sections, setSections] = useState([]);
   const [currentQuestionType, setCurrentQuestionType] = useState(null);
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState("");
   const navigate = useNavigate();
   const [answeredCount, setAnsweredCount] = useState(0);
   const [notAnsweredCount, setNotAnsweredCount] = useState(0);
@@ -1557,52 +1559,71 @@ const QuestionPaper = () => {
 
   return (
     <div>
-      {!showExamSumary ? (
-        <div>
-          <div className="subjects">
-            {Subjects.map((subjectTitle) => (
-              <li key={subjectTitle.subjectId}>
-                <button
-                  //   onClick={() => handleSubjectsClick(subjectTitle.subjectId)}
-                  className="subject_btn"
-                >
-                  {subjectTitle.subjectName}
-                </button>
-              </li>
-            ))}
-            <h3>
-              Question Type:
-              {questionTypes.map((type) => (
-                <li key={type.quesionTypeId}>
-                  <p>{type.typeofQuestion}</p>
-                </li>
-              ))}
-            </h3>
 
-            <div className="right-header">
-              <div className="marks">
-                Marks: <div className="plus-mark">+1</div>
-                <div className="minus-mark">-1</div>
+      
+      <div className="quiz_exam_interface_header">
+        <div className="quiz_exam_interface_header_LOGO">
+          <img src={logo} alt="" />
+        </div>
+      </div>
+      {!showExamSumary ? (<div className="quiz_exam_interface_body">
+        {/* --------------- quiz examconatiner -------------------- */}
+        <div className="quiz_exam_interface_body_left_container">
+          {/* --------------- quiz sub container -------------------- */}
+      
+          <div class="quiz_exam_interface_SUBJECTS_CONTAINER">
+            <div>
+              <div class="subjects_BTN_container">
+                <li>
+                  <button class="subject_btn">Mathematics</button>
+                </li>
+                <li>
+                  <button class="subject_btn">Physics</button>
+                </li>
+                <li>
+                  <button class="subject_btn">Chemistry</button>
+                </li>
               </div>
-              <div>Timer: {formatTime(timer)}</div>
+
+              <h3>
+                Question Type:
+                <span>mcq(multiple choice question)</span>
+              </h3>
+            </div>
+
+            <div class="right-header">
+              <div class="marks">
+                Marks: <div class="plus-mark">+1</div>
+                <div class="minus-mark">-1</div>
+                <span>
+                  {" "}
+                  <p>Timer:</p>
+                  <p>{formatTime(timer)}</p>
+                </span>
+              </div>
             </div>
           </div>
-          <div>
+          {/* --------------- quiz question container -------------------- */}
+          <div class="quiz_exam_interface_exam_CONTAINEr">
             {questionData.questions && questionData.questions.length > 0 && (
-              <div
-                key={currentQuestionIndex}
-                className="question-container"
-                style={{ display: "flex" }}
-              >
-                <div>
-                  <div>
-                    <h3>Question: {currentQuestion.sortid.sortid_text}</h3>
-
+              <>
+                <div className="quiz_exam_interface_exam_subCONTAINEr">
+                  <div className="quiz_exam_interface_exam_qN_Q">
+                    <h3>Question:{currentQuestion.sortid.sortid_text}</h3>
                     <img
                       src={`http://localhost:5001/uploads/${currentQuestion.documen_name}/${currentQuestion.questionImgName}`}
                       alt={`Question ${currentQuestion.question_id}`}
                     />
-                    <div>
+                  </div>
+
+                  {/* <img
+                      src={`http://localhost:5001/uploads/${currentQuestion.documen_name}/${currentQuestion.questionImgName}`}
+                      alt={`Question ${currentQuestion.question_id}`}
+                    /> */}
+
+                  <div>
+                    <div className="quiz_exam_interface_exam_qN_Q_options">
+                      <h3>Options:</h3>
                       {currentQuestion.options &&
                         Array.isArray(currentQuestion.options) &&
                         currentQuestion.options.filter(
@@ -1716,7 +1737,14 @@ const QuestionPaper = () => {
                                     <div className="calculator">
                                       <form action="">
                                         <div className="display">
-                                          <input type="text"  name={`question-${currentQuestionIndex}`} value={value} onChange={(e) => onAnswerSelected3(e)}/>
+                                          <input
+                                            type="text"
+                                            name={`question-${currentQuestionIndex}`}
+                                            value={value}
+                                            onChange={(e) =>
+                                              onAnswerSelected3(e)
+                                            }
+                                          />
                                           {/* <input
                                       type="text"
                                       name={`question-${currentQuestionIndex}`}
@@ -1919,17 +1947,37 @@ const QuestionPaper = () => {
                         ))}
                     </div>
                   </div>
+                </div>
+                <div className="quiz_btns_contaioner">
                   <div>
-                    <button className="clear-btn" onClick={markForReview}>
+                    <button
+                      className="Quiz_Save_MarkforReview"
+                      onClick={markForReview}
+                    >
                       Save & Mark for Review
                     </button>
-                    <button className="clear-btn" onClick={markForReview}>
+
+                    <button
+                      className="Quiz_MarkforReview"
+                      onClick={markForReview}
+                    >
                       Mark for Review & Next
                     </button>
-                    <button className="clear-btn" onClick={clearResponse}>
+                    <button
+                      className="Quiz_clearResponse"
+                      onClick={clearResponse}
+                    >
                       Clear Response
                     </button>
-                    <button onClick={handleNextQuestion}>Save & Next</button>
+                    <button
+                      className="quizsave_next"
+                      onClick={handleNextQuestion}
+                    >
+                      Save & Next
+                    </button>
+                  </div>
+
+                  <div className="quiz_Next_back">
                     <button
                       className="previous-btn"
                       onClick={handlePreviousClick}
@@ -1939,64 +1987,78 @@ const QuestionPaper = () => {
                     </button>
                     <button onClick={handleNextQuestion}>Next</button>
                   </div>
-                  <div></div>
                 </div>
-                <div className="rightsidebar">
-                  <ButtonsFunctionality
-                    onQuestionSelect={handleQuestionSelect}
-                    questionStatus={questionStatus}
-                    setQuestionStatus={setQuestionStatus}
-                    answeredCount={answeredCount}
-                    notAnsweredCount={notAnsweredCount}
-                    answeredmarkedForReviewCount={answeredmarkedForReviewCount}
-                    markedForReviewCount={markedForReviewCount}
-                    VisitedCount={VisitedCount}
-                    selectedSubject={selectedSubject}
-                    questionData={questionData}
-                    updateQuestionStatus={updateQuestionStatus}
-                  />
-                  <button onClick={handleSubmit} id="resume_btn">
-                    Submit
-                  </button>
-                </div>
-              </div>
+              </>
             )}
           </div>
-        </div>
-      ) : (
-        <div className="result">
-          <h3 id="result_header">Exam Summary</h3>
-          <div className="result_page_links"></div>
-          <div className="result_contents">
-            <p>
-              Total Questions: <span>{questionData.questions.length}</span>
-            </p>
-            <p>
-              Answered Questions:<span> {answeredCount}</span>
-            </p>
-            <p>
-              Not Answered Questions:
-              <span> {notAnsweredCount}</span>
-            </p>
-            {/* <p>
-              Marked for Review Questions:
-              <span> {questionData.MarkedforReviewQuestions}</span>
-            </p>
-            <p>
-              Answered & Marked for Review Questions:
-              <span> {questionData.AnsweredAndMarkedforReviewQuestions}</span>
-            </p> */}
-          </div>
+
+          {/* --------------- quiz option container -------------------- */}
+
+          {/* --------------- quiz btns container -------------------- */}
+
+          {/* <div className="quiz_exam_interface_exam_CONTAINEr">
           <div>
-            <h2>
-              Are you sure you want to submit for final marking? <br />
-              No changes will be allowed after submission.
-            </h2>
-            <button onClick={handleYes}>YES</button>
-            <button>NO</button>
+       
+          </div>
+          </div> */}
+        </div>
+
+        <div className="quiz_exam_interface_body_right_container">
+          {/* --------------- right bar -------------------- */}
+          <div className="rightsidebar">
+            <ButtonsFunctionality
+              onQuestionSelect={handleQuestionSelect}
+              questionStatus={questionStatus}
+              setQuestionStatus={setQuestionStatus}
+              answeredCount={answeredCount}
+              notAnsweredCount={notAnsweredCount}
+              answeredmarkedForReviewCount={answeredmarkedForReviewCount}
+              markedForReviewCount={markedForReviewCount}
+              VisitedCount={VisitedCount}
+              selectedSubject={selectedSubject}
+              questionData={questionData}
+              updateQuestionStatus={updateQuestionStatus}
+            />
+            <button onClick={handleSubmit} id="resume_btn">
+              Submit
+            </button>
           </div>
         </div>
+      </div>):(
+         <div className="result">
+         <h3 id="result_header">Exam Summary</h3>
+         <div className="result_page_links"></div>
+         <div className="result_contents">
+           <p>
+             Total Questions: <span>{questionData.questions.length}</span>
+           </p>
+           <p>
+             Answered Questions:<span> {answeredCount}</span>
+           </p>
+           <p>
+             Not Answered Questions:
+             <span> {notAnsweredCount}</span>
+           </p>
+           {/* <p>
+             Marked for Review Questions:
+             <span> {questionData.MarkedforReviewQuestions}</span>
+           </p>
+           <p>
+             Answered & Marked for Review Questions:
+             <span> {questionData.AnsweredAndMarkedforReviewQuestions}</span>
+           </p> */}
+         </div>
+         <div>
+           <h2>
+             Are you sure you want to submit for final marking? <br />
+             No changes will be allowed after submission.
+           </h2>
+           <button onClick={handleYes}>YES</button>
+           <button>NO</button>
+         </div>
+       </div>
       )}
+      
     </div>
   );
 };
