@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 // import React, { useState, useEffect } from "react";
 // import { useParams, Link, useNavigate } from "react-router-dom";
 // import axios from "axios";
@@ -931,8 +930,6 @@
 
 // export default QuestionPaper;
 
-=======
->>>>>>> f3b293049a06d684c781a9e674fcd9674ab56302
 import React, { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -942,7 +939,6 @@ import "./styles/Paper.css";
 const QuestionPaper = () => {
   // --------------------------------------CONST VARIABLES DECLARATIONS--------------------------
   // const [data, setData] = useState({ questions: [] });
-<<<<<<< HEAD
   const [questionData, setQuestionData] = useState({ questions: [] });
   // const [questionData, setQuestionData] = useState({});
 
@@ -955,222 +951,6 @@ const QuestionPaper = () => {
       ? Array(questionData.questions.length).fill("notAnswered")
       : []
   );
-=======
-  // const [questionData, setQuestionData] = useState({ questions: [] });
-  const [questionData, setQuestionData] = useState({});
- 
-  const { subjectId, testCreationTableId , userId} = useParams();
-  const [Subjects, setSubjects] = useState([]);
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [selectedSubject, setSelectedSubject] = useState(null);
-  // const [questionStatus, setQuestionStatus] = useState(
-  //   Array.isArray(questionData) ? Array(questionData.questions.length).fill("notAnswered")
-  //     : []
-  // );
-
-  const [questionStatus, setQuestionStatus] = useState(Array(questionData?.questions?.length).fill("notAnswered"));
-
-  
-
-  const handleNextQuestion = async () => {
- 
-    // ------------------------------------ button functionality --------------------------------------------
-
-updateCounters();
-
-
-//   const updatedQuestionStatus = [...questionStatus];
-//   // && !markForReview()
-// // Set status of the next question (if any) based on the conditions
-// if (currentQuestionIndex < questionData.questions.length - 1) {
-//   if (!selectedAnswers[currentQuestionIndex]) {
-//     // Not answered and not marked for review
-//     updatedQuestionStatus[currentQuestionIndex + 1] = "notAnswered";
-//   } else if (markForReview()) {
-//     // Marked for review
-//     updatedQuestionStatus[currentQuestionIndex + 1] = "marked";
-//   }else {
-//     // Answered
-//     updatedQuestionStatus[currentQuestionIndex] = "answered";
-//   }
-// }
-
-
-  // Update question status for the current question
-  const updatedQuestionStatus = [...questionStatus];
-
-  // else {
-  //   // Not answered and not marked for review
-  //   updatedQuestionStatus[currentQuestionIndex] = "notAnswered";
-  // }
-  
-
-
-
-  if (currentQuestionIndex < questionData.questions.length - 1) {
-
-      if (selectedAnswers[currentQuestionIndex]) {
-    // If the user has answered the current question
-    updatedQuestionStatus[currentQuestionIndex] = "answered";
-    // updatedQuestionStatus[currentQuestionIndex+1] = "notAnswered";
-    console.log("hello")
-    console.log(" answered")
-  }
-    // Set the status of the next question (if any) based on conditions
-    if (!selectedAnswers[currentQuestionIndex + 1]) {
-      // Not answered and not marked for review
-      updatedQuestionStatus[currentQuestionIndex + 1] = "notAnswered";
-      console.log("notAnswered")
-    } else if (markForReview()) {
-      // Marked for review
-      updatedQuestionStatus[currentQuestionIndex + 1] = "marked";
-      console.log("marked")
-
-    } else {
-      // Answered
-      updatedQuestionStatus[currentQuestionIndex + 1] = "answered";
-      console.log("else answered")
-
-    }
-  }
-
-
-
-
-
-
-
-
-
-  // else if (!selectedAnswers[currentQuestionIndex]) {
-  //       // Not answered and not marked for review
-  //   updatedQuestionStatus[currentQuestionIndex] = "notAnswered";
-
-  //       updatedQuestionStatus[currentQuestionIndex + 1] = "notAnswered";
-  //     }
-      // else if (markForReview()) {
-      //   // Marked for review
-      //   updatedQuestionStatus[currentQuestionIndex + 1] = "marked";
-      // } 
-
-setQuestionStatus(updatedQuestionStatus);
-
-// Move to the next question
-setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
-
-
-// --------------------------------end of button functionality --------------------------------------------------
- 
-    const response = await fetch(
-     
-      `http://localhost:5001/QuestionPaper/questionOptions/${testCreationTableId}`
-    );
- 
-    // console.log(testCreationTableId);
- 
- 
-    try {
-      // --------------------------------saving------------------------------
-      const response = await fetch(
-        `http://localhost:5001/QuestionPaper/questionOptions/${testCreationTableId}`
-      );
-      console.log("User ID:", userData.user_Id);
-      console.log("Test Creation Table ID:", testCreationTableId);
- 
- 
-      if (!questionData || !questionData.questions) {
-        console.error("Data or questions are null or undefined");
-        return;
-      }
- 
-      // setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
- 
-      const currentQuestion = questionData.questions[currentQuestionIndex];
-      const questionId = currentQuestion.question_id;
- 
-      const selectedOption1 = selectedAnswersMap1[questionId];
-      const selectedOption2 = selectedAnswersMap2[questionId];
- 
-      const optionIndexes1 =
-        selectedOption1 !== undefined ? [selectedOption1] : [];
-      const optionIndexes2 =
-        selectedOption2 !== undefined ? selectedOption2 : [];
- 
-      if (answeredQuestionsMap[questionId]) {
-        const updatedResponse = {
-          optionIndexes1: optionIndexes1.map((index) =>
-            String.fromCharCode("a".charCodeAt(0) + index)
-          ),
-          optionIndexes2: optionIndexes2.map((index) =>
-            String.fromCharCode("a".charCodeAt(0) + index)
-          ),
-        };
- 
-        const updateResponse = await axios.put(
-          `http://localhost:5001/QuestionPaper/updateResponse/${userData.userId}`,
-          {
-            updatedResponse,
-            user_Id: userData.userId,
-            testCreationTableId: testCreationTableId,
-          }
-        );
- 
-        console.log(updateResponse.data);
-        console.log("Handle Next Click - Response Updated");
-      } else {
-        const responses = {
-          [questionId]: {
-            optionIndexes1: optionIndexes1.map((index) =>
-              String.fromCharCode("a".charCodeAt(0) + index)
-            ),
-            optionIndexes2: optionIndexes2.map((index) =>
-              String.fromCharCode("a".charCodeAt(0) + index)
-            ),
-          },
-        };
- 
-        const saveResponse = await axios.post(
-          "http://localhost:5001/QuestionPaper/response",
-          {
-            responses: responses, // Make sure to include 'responses'
-            user_Id: userData.user_Id, // Use 'user_Id' from userData
-            testCreationTableId: testCreationTableId,
-          }
-        );
- 
-        console.log(saveResponse.data);
-        console.log("Handle Next Click - New Response Saved");
- 
-        setAnsweredQuestionsMap((prevMap) => ({
-          ...prevMap,
-          [questionId]: true,
-        }));
-      }
-      console.log("Request Payload:", {
-     
-        response: response,
-        user_Id: userData.userId,
-        testCreationTableId: testCreationTableId,
-      });
- 
-      console.log("Parsed userId:", userId);
-      console.log("Parsed testCreationTableId:", testCreationTableId);
- 
-      console.log("User ID:", userData.user_Id); // Check if this is correct
-      console.log("Parsed userId:", userId);
-      // console.log(responses);
- 
-      setClickCount((prevCount) => prevCount + 1);
-      // --------------------------------saving------------------------------
-    } catch (error) {
-      console.error("Error handling next question:", error);
-    }
- 
- 
-  }
-  
-
->>>>>>> f3b293049a06d684c781a9e674fcd9674ab56302
   const [sections, setSections] = useState([]);
   const [currentQuestionType, setCurrentQuestionType] = useState(null);
 
@@ -1248,63 +1028,6 @@ setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
     setCurrentQuestionIndex(questionNumber - 1);
     setActiveQuestion(questionNumber - 1);
   };
-<<<<<<< HEAD
-
-=======
- 
- 
-  const handlePreviousClick = () => {
-    setCurrentQuestionIndex((prevIndex) => {
-      // Save the current timer value for the question
-      const updatedTimers = [...timers];
-      updatedTimers[prevIndex] = timer;
-      setTimers(updatedTimers);
-      // Move to the previous question
-      return prevIndex - 1;
-    });
- 
-    setActiveQuestion((prevActiveQuestion) => prevActiveQuestion - 1);
-  };
- 
-  const clearResponse = async () => {
-
-      // Clear response for the current question
-  const updatedQuestionStatus = [...questionStatus];
-  updatedQuestionStatus[currentQuestionIndex] = "notAnswered";
-  setQuestionStatus(updatedQuestionStatus);
-
-
-    try {
-      const questionId =
-        questionData.questions[currentQuestionIndex].question_id;
-      console.log("Response cleared successfully");
-      // Clear response for radio buttons (MCQ)
-      const updatedSelectedAnswersMap1 = { ...selectedAnswersMap1 };
-      updatedSelectedAnswersMap1[questionId] = null;
-      setSelectedAnswersMap1(updatedSelectedAnswersMap1);
- 
-      // Clear response for checkboxes (MSQ)
-      const updatedSelectedAnswersMap2 = { ...selectedAnswersMap2 };
-      updatedSelectedAnswersMap2[questionId] = [];
-      setSelectedAnswersMap2(updatedSelectedAnswersMap2);
- 
-      // Send a request to your server to clear the user's response for the current question
-      const response = await axios.delete(
-        `http://localhost:5001/QuestionPaper/clearResponse/${questionId}`
-      );
- 
-      if (response.status === 200) {
-        console.log("Response cleared successfully");
-        // Update any state or perform additional actions as needed
-      } else {
-        console.error("Failed to clear response:", response.data);
-      }
-    } catch (error) {
-      console.error("Error clearing response:", error);
-    }
-  };
- 
->>>>>>> f3b293049a06d684c781a9e674fcd9674ab56302
   const [clickCount, setClickCount] = useState(0);
 
   const [answeredQuestionsMap, setAnsweredQuestionsMap] = useState({});
@@ -1312,64 +1035,6 @@ setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
   //   data && data.questions && data.questions[currentQuestionIndex]
   //     ? data.questions[currentQuestionIndex].correct_answer
   //     : null; // or provide a default value based on your logic
-<<<<<<< HEAD
-
-=======
- 
-  // /user
- 
-  //user name
- 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        const response = await fetch(
-          "http://localhost:5001/ughomepage_banner_login/user",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`, // Attach token to headers for authentication
-            },
-          }
-        );
- 
-        if (response.ok) {
-          const userData = await response.json();
-          setUserData(userData);
-          // console.log(userData);
-        } else {
-          // Handle errors, e.g., if user data fetch fails
-        }
-      } catch (error) {
-        // Handle other errors
-      }
-    };
- 
-    fetchUserData();
-  }, []);
- 
-  useEffect(() => {
-    const counts = calculateQuestionCounts();
-    setAnsweredCount(counts.answered);
-    setNotAnsweredCount(counts.notAnswered);
-    setMarkedForReviewCount(counts.markedForReview);
-    setAnsweredmarkedForReviewCount(counts.answeredmarkedForReviewCount);
-    setVisitedCount(counts.VisitedCount);
-  }, [questionStatus]);
- 
-  const handleSubmit = () => {
-    window.alert("Your Test has been Submitted!! Click Ok to See Result.");
-    setShowExamSumary(true);
-    calculateResult();
-    const counts = calculateQuestionCounts();
-    setAnsweredCount(counts.answered);
-    setNotAnsweredCount(counts.notAnswered);
-    setMarkedForReviewCount(counts.markedForReview);
-    setAnsweredmarkedForReviewCount(counts.answeredmarkedForReviewCount);
-    setVisitedCount(counts.VisitedCount);
-  };
- 
->>>>>>> f3b293049a06d684c781a9e674fcd9674ab56302
   const [selectedAnswersMap1, setSelectedAnswersMap1] = useState({});
   const [selectedAnswersMap2, setSelectedAnswersMap2] = useState({});
   const [selectedAnswersMap3, setSelectedAnswersMap3] = useState({});
@@ -1435,7 +1100,6 @@ setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
       ...prevMap,
       [questionId]: [],
     }));
-<<<<<<< HEAD
 
     const updatedSelectedAnswers = [...selectedAnswers];
     updatedSelectedAnswers[activeQuestion] = optionIndex;
@@ -1444,16 +1108,6 @@ setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
     const updatedQuestionStatus = [...questionStatus];
     updatedQuestionStatus[activeQuestion] = "answered";
     setQuestionStatus(updatedQuestionStatus);
-=======
- 
-    const updatedSelectedAnswers = [...selectedAnswers];
-    updatedSelectedAnswers[activeQuestion] = optionIndex;
-    setSelectedAnswers(updatedSelectedAnswers);
- 
-    // const updatedQuestionStatus = [...questionStatus];
-    // updatedQuestionStatus[activeQuestion] = "answered";
-    // setQuestionStatus(updatedQuestionStatus);
->>>>>>> f3b293049a06d684c781a9e674fcd9674ab56302
   };
 
   const onAnswerSelected2 = (optionIndex) => {
@@ -1477,7 +1131,6 @@ setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
         [questionId]: updatedSelection,
       };
     });
-<<<<<<< HEAD
 
     const updatedSelectedAnswers = [...selectedAnswers];
     updatedSelectedAnswers[activeQuestion] = optionIndex;
@@ -1486,16 +1139,6 @@ setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
     const updatedQuestionStatus = [...questionStatus];
     updatedQuestionStatus[activeQuestion] = "answered";
     setQuestionStatus(updatedQuestionStatus);
-=======
- 
-    const updatedSelectedAnswers = [...selectedAnswers];
-    updatedSelectedAnswers[activeQuestion] = optionIndex;
-    setSelectedAnswers(updatedSelectedAnswers);
- 
-    // const updatedQuestionStatus = [...questionStatus];
-    // updatedQuestionStatus[activeQuestion] = "answered";
-    // setQuestionStatus(updatedQuestionStatus);
->>>>>>> f3b293049a06d684c781a9e674fcd9674ab56302
   };
 
   const onAnswerSelected3 = (e) => {
@@ -1693,7 +1336,6 @@ setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
       console.error("Error:", error);
     }
   };
-<<<<<<< HEAD
 
   const markForReview = () => {
     // Update questionStatus for the marked question
@@ -1705,35 +1347,6 @@ setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
       ) {
         updatedQuestionStatus[activeQuestion] =
           "Answered but marked for review";
-=======
- 
-  const [activeQuestion, setActiveQuestion] = useState(0);
- 
- 
-  // const markForReview = () => {
-  //   // Update questionStatus for the marked question
-  //   const updatedQuestionStatus = [...questionStatus];
-  //   if (selectedAnswers[activeQuestion]) {
-  //     updatedQuestionStatus[activeQuestion] = "Answered but marked for review";
-  //     if (selectedAnswers[activeQuestion] === "Answered but marked for review") {
-  //       updatedQuestionStatus[activeQuestion] = "Answered but marked for review";
-  //     }
-  //   } else if (!selectedAnswers[activeQuestion]) {
-  //     updatedQuestionStatus[activeQuestion] = "marked";
-  //   }
- 
-  //   setQuestionStatus(updatedQuestionStatus);
-  // };
-
-
-    const markForReview = () => {
-    // Update questionStatus for the marked question
-    const updatedQuestionStatus = [...questionStatus];
-    if (selectedAnswers[currentQuestionIndex]) {
-      updatedQuestionStatus[currentQuestionIndex] = "Answered but marked for review";
-      if(selectedAnswers[activeQuestion] === "Answered but marked for review"){
-        updatedQuestionStatus[activeQuestion] = "Answered but marked for review";
->>>>>>> f3b293049a06d684c781a9e674fcd9674ab56302
       }
     } else if (!selectedAnswers[currentQuestionIndex]) {
       updatedQuestionStatus[currentQuestionIndex] = "marked";
@@ -1860,7 +1473,6 @@ setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
 
     fetchUserData();
   }, []);
-<<<<<<< HEAD
 
   useEffect(() => {
     const counts = calculateQuestionCounts();
@@ -1924,24 +1536,6 @@ setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
     fetchUserData();
   }, []);
 
-=======
- 
- 
-  const [answeredQuestions, setAnsweredQuestions] = useState([]);
-  const [isPaused, setIsPaused] = useState(false);
- 
- 
- 
- 
-  // useEffect to perform actions after state update
-useEffect(() => {
-  console.log("After Update - Question Status:", questionStatus);
- 
-  // Additional logic here...
- 
-}, [questionStatus, currentQuestionIndex]); // Make sure to include questionStatus in the dependency array
- 
->>>>>>> f3b293049a06d684c781a9e674fcd9674ab56302
   const [questionTypes, setQuestionTypes] = useState([]);
   useEffect(() => {
     const fetchQuestionTypes = async () => {
@@ -1982,9 +1576,10 @@ useEffect(() => {
     updatedQuestionStatus[index] = status;
     setQuestionStatus(updatedQuestionStatus);
   };
-
+console.log(userData)
   return (
     <div>
+      {/* {userData.user_Id} */}
       {!showExamSumary ? (
         <div>
           <div className="subjects">
@@ -2182,26 +1777,25 @@ useEffect(() => {
                             </li>
                           </div>
                         ))}
-<<<<<<< HEAD
-=======
- 
- 
->>>>>>> f3b293049a06d684c781a9e674fcd9674ab56302
                     </div>
                   </div>
                   <div>
+                  <button className="clear-btn" onClick={markForReview}>
+                      Save & Mark for Review
+                    </button>
                     <button className="clear-btn" onClick={markForReview}>
                       Mark for Review & Next
                     </button>
                     <button className="clear-btn" onClick={clearResponse}>
                       Clear Response
                     </button>
+                    <button onClick={handleNextQuestion}>Save & Next</button>
                     <button
                       className="previous-btn"
                       onClick={handlePreviousClick}
                       disabled={currentQuestionIndex === 0}
                     >
-                      <i className="fa-solid fa-angles-left"></i> Previous
+                      <i className="fa-solid fa-angles-left"></i> Back
                     </button>
                     <button onClick={handleNextQuestion}>Next</button>
                   </div>
