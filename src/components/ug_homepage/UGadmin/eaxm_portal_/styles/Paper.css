@@ -425,6 +425,11 @@ height: 950px; */
   padding-top: 5rem;
 }
 
+.opt_btns{
+  margin-right: 0.5rem;
+  
+}
+
 /* ---------------------------------------result page styling---------------------------------- */
 
 .result {
