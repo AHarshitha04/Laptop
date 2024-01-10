@@ -76,17 +76,16 @@ export const Header = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userData, setUserData] = useState({});
 
-   useEffect(() => {
-     const checkLoggedIn = () => {
-       const loggedIn = localStorage.getItem("isLoggedIn");
-       if (loggedIn === "true") {
-         setIsLoggedIn(true);
-         fetchUserData();
-       }
-     };
-     checkLoggedIn();
-   }, []);
-
+  useEffect(() => {
+    const checkLoggedIn = () => {
+      const loggedIn = localStorage.getItem("isLoggedIn");
+      if (loggedIn === "true") {
+        setIsLoggedIn(true);
+        fetchUserData();
+      }
+    };
+    checkLoggedIn();
+  }, []);
 
   const fetchUserData = async () => {
     try {
@@ -229,19 +228,23 @@ export const Header = () => {
                       </>
                     )}
 
-{userRole === "viewer" && (<>
-<button>
-<Link to="/student_dashboard">DashBoard</Link>
-
-</button>
-
-</>)}
+                    {userRole === "viewer" && (
+                      <>
+                        <button>
+                          <Link to="/student_dashboard">DashBoard</Link>
+                        </button>
+                      </>
+                    )}
                   </div>
                   <div>
                     {isLoggedIn === true ? (
                       <>
                         <button id="dropdownmenu_foradim_page_btn">
-                          {userData.username}
+                          <img
+                            title={userData.username}
+                            src={userData.imageData}
+                            alt={`Image ${userData.user_Id}`}
+                          />
                           <div className="dropdownmenu_foradim_page">
                             {/* <Link to={`/userread/${user.id}`} className="btn btn-success mx-2">Read</Link> */}
                             {/* <Link to={`/userdeatailspage/${user.id}`} >Account-info</Link> */}
