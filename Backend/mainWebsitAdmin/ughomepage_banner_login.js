@@ -1,8 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const db1 = require('../databases/db1');
-// const db2 = require('../databases/db2');
-
+// const db2 = require('../databases/
 const bcrypt = require("bcrypt");
 const fs = require("fs");
 const app = express();
@@ -268,6 +267,7 @@ router.get("/UGhomepageadimcourses", (req, res) => {
     const q = "DELETE FROM images WHERE images_id = ?";
   
     db1.query(q, [imageId], (err, data) => {
+      
       if (err) return res.send(err);
       return res.json(data);
     });
@@ -292,6 +292,10 @@ router.get("/UGhomepageadimcourses", (req, res) => {
       }
     });
   });
+
+
+
+  
   
   router.get("/HomeImages", (req, res) => {
     const query = "SELECT * FROM images WHERE section_id=1 ;";
@@ -574,46 +578,71 @@ router.get("/UGhomepageadimcourses", (req, res) => {
   
   // -------------------------------------- login for ug admin and user -----------------------------------------------------
   
-  //------------------- registeration for user
-  router.post("/register", async (req, res) => {
+
+
+
+const storage_PROimg = multer.diskStorage({
+  destination: function (req, file, cb) {
+    // Set up the destination folder for storing uploaded profile images
+    cb(null, "profilesimages/");
+  },
+  filename: function (req, file, cb) {
+    // Define how uploaded files should be named
+    cb(null, Date.now() + "-" + file.originalname);
+  },
+});
+const profilesimages = multer({ storage: storage_PROimg });
+
+
+
+router.post(
+  "/register",
+  profilesimages.single("profileImage"),
+  async (req, res) => {
     const { username, email, password } = req.body;
-  
+    const uploadedFile = req.file;
+
     try {
-      // Check if the email already exists in the database
-      const checkEmailQuery = "SELECT * FROM log WHERE email = ?";
-      db1.query(checkEmailQuery, [email], async (error, results) => {
-        if (error) {
-          res.status(500).json({ error: "Internal server error" });
-          return;
-        }
-  
-        if (results.length > 0) {
-          res.status(400).json({ error: "User already exists with this email" });
-          return;
-        }
-  
-        const hashedPassword = await bcrypt.hash(password, 10); // Hash password
-        const defaultRole = "viewer";
-  
-        const insertQuery =
-          "INSERT INTO log (username, email, password, role) VALUES (?, ?, ?, ?)";
-        db1.query(
-          insertQuery,
-          [username, email, hashedPassword, defaultRole],
-          (err, result) => {
-            if (err) {
-              res.status(500).json({ error: "Failed to register user" });
-              return;
-            }
-            res.status(201).json({ message: "User registered successfully" });
+      // Check if the email already exists in the database...
+
+      let fileContent = null;
+
+      // Read file asynchronously and handle errors
+      if (uploadedFile) {
+        fileContent = fs.readFileSync(uploadedFile.path);
+
+        // Delete temporary file after reading content
+        fs.unlinkSync(uploadedFile.path);
+      }
+
+      // Hash password
+      const hashedPassword = await bcrypt.hash(password, 10);
+      const defaultRole = "viewer";
+
+      // Insert user data including the profile image into the database
+      const insertQuery =
+        "INSERT INTO log (username, email, password, role, profile_image) VALUES (?, ?, ?, ?, ?)";
+      db1.query(
+        insertQuery,
+        [username, email, hashedPassword, defaultRole, fileContent],
+        (err, result) => {
+          if (err) {
+            console.error("Failed to register user:", err);
+            res.status(500).json({ error: "Failed to register user" });
+            return;
           }
-        );
-      });
+          res.status(201).json({ message: "User registered successfully" });
+        }
+      );
     } catch (error) {
+      console.error("Internal server error:", error);
       res.status(500).json({ error: "Internal server error" });
     }
-  });
-  
+  }
+);
+
+
+
   //------------------- login for user
   
   router.post("/login", async (req, res) => {
@@ -626,7 +655,7 @@ router.get("/UGhomepageadimcourses", (req, res) => {
           res.status(401).json({ error: "Invalid credentials" });
           return;
         }
-  
+
         const user = results[0];
         const passwordMatch = await bcrypt.compare(password, user.password);
   
@@ -672,42 +701,136 @@ router.get("/UGhomepageadimcourses", (req, res) => {
   //------------------- userdetails for user to get logined user data
   router.get("/userdetails/:id", (req, res) => {
     const id = req.params.id;
-    db1.query("SELECT * FROM log WHERE user_Id = ?", id, (err, result) => {
+    db1.query("SELECT * FROM log WHERE user_Id = ?", id, (err, results) => {
       if (err) {
         console.log(err);
-      } else {
-        res.send(result);
       }
+
+      if (!results || results.length === 0) {
+        console.log("No data found.");
+        return res.status(404).send("No data found.");
+      }
+      const dataWithImages = results
+        .map((result) => {
+          if (!result.profile_image) {
+            console.log("Image data is missing for a row.");
+            return null; // Skip this entry or handle it accordingly
+          }
+
+          const base64 = result.profile_image.toString("base64");
+          // Add all the fields along with the profile_image in the response
+          return {
+            id: result.user_Id,
+            username: result.username,
+            email: result.email,
+            role: result.role,
+            // Add other fields as needed
+            profile_image: `data:image/png;base64,${base64}`,
+          };
+        })
+        .filter((item) => item !== null); // Remove null entries
+
+      console.log("Retrieved data from log table:");
+      // console.log(dataWithImages);
+
+      res.json(dataWithImages); // Sending the processed data with images as a response
     });
   });
   
   //------------------- user for user to get logined user data
   
-  router.get("/user", async (req, res) => {
-    try {
-      const authHeader = req.headers.authorization;
-      if (!authHeader || !authHeader.startsWith("Bearer ")) {
-        res.status(401).json({ error: "Unauthorized" });
-        return;
+  // router.get("/user", async (req, res) => {
+  //   try {
+  //     const authHeader = req.headers.authorization;
+  //     if (!authHeader || !authHeader.startsWith("Bearer ")) {
+  //       res.status(401).json({ error: "Unauthorized" });
+  //       return;
+  //     }
+  
+  //     const token = authHeader.split(" ")[1]; // Extract token from Authorization header
+  //     const decodedToken = jwt.verify(token, "your_secret_key"); // Verify and decode the token
+  
+  //     const userId = decodedToken.id; // Get user ID from decoded token
+  //     const sql = "SELECT * FROM log WHERE user_Id = ?";
+  //     db1.query(sql, [userId], (error, results) => {
+  //       // if (error || results.length === 0) {
+  //       //   res.status(404).json({ error: "User not found" });
+  //       //   return;
+  //       // }
+  //       if (error || results.length === 0) {
+  //         console.error("Error fetching images:", err);
+  //         res.status(500).send("Internal Server Error");
+  //          res.status(404).json({ error: "User not found" });
+  //          return;
+  //       } else {
+  //         const imageArray = results.map((result) => {
+  //           const base64 = result.profile_image.toString("base64");
+  //           return {
+  //             id: result.user_Id,
+  //             imageData: `data:image/png;base64,${base64}`,
+  //           };
+  //         });
+
+  //         res.json(imageArray);
+  //       }
+  
+  //       const userData = results[0];
+  //       res.status(200).json(userData); // Send user data as JSON response
+  //     });
+  //   } catch (error) {
+  //     res.status(500).json({ error: "Internal server error" });
+  //   }})
+
+
+
+router.get("/user", async (req, res) => {
+  try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    const token = authHeader.split(" ")[1]; // Extract token from Authorization header
+    const decodedToken = jwt.verify(token, "your_secret_key"); // Verify and decode the token
+
+    const userId = decodedToken.id; // Get user ID from decoded token
+    const sql = "SELECT * FROM log WHERE user_Id = ?";
+    db1.query(sql, [userId], (error, results) => {
+      if (error || results.length === 0) {
+        console.error("Error fetching images:", error);
+        return res.status(500).send("Internal Server Error");
       }
-  
-      const token = authHeader.split(" ")[1]; // Extract token from Authorization header
-      const decodedToken = jwt.verify(token, "your_secret_key"); // Verify and decode the token
-  
-      const userId = decodedToken.id; // Get user ID from decoded token
-      const sql = "SELECT user_Id, username, email FROM log WHERE user_Id = ?";
-      db1.query(sql, [userId], (error, results) => {
-        if (error || results.length === 0) {
-          res.status(404).json({ error: "User not found" });
-          return;
-        }
-  
-        const userData = results[0];
-        res.status(200).json(userData); // Send user data as JSON response
-      });
-    } catch (error) {
-      res.status(500).json({ error: "Internal server error" });
-    }})
+
+      // Convert BLOB data to base64
+      const userData = results[0];
+      const base64Image = Buffer.from(
+        userData.profile_image,
+        "binary"
+      ).toString("base64");
+
+      const imageData = {
+        id: userData.user_Id,
+        username: userData.username,
+        email: userData.email,
+        imageData: `data:image/png;base64,${base64Image}`,
+      };
+
+      res.status(200).json(imageData); // Send user data with image data as JSON response
+    });
+  } catch (error) {
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+
+
+
+
+
+
+
+
+
    
   
   //------------------- sigleuserdetails for user to get logined user data
@@ -735,38 +858,107 @@ router.get("/UGhomepageadimcourses", (req, res) => {
   
   //------------------- user to get and update  register detaile by admin
   
-  router.put("/users/:id", async (req, res) => {
-    const id = req.params.id; // Extract the userId from request params
-    const { email, username, password, role } = req.body;
-  
+ 
+const storage_PROimg1 = multer.diskStorage({
+  destination: function (req, file, cb) {
+    // Set up the destination folder for storing uploaded profile images
+    cb(null, "profilesimages/");
+  },
+  filename: function (req, file, cb) {
+    // Define how uploaded files should be named
+    cb(null, Date.now() + "-" + file.originalname);
+  },
+});
+const profilesimages1 = multer({ storage: storage_PROimg1 });
+
+router.put(
+  "/users/:id",
+  profilesimages1.single("profileImage"), // Ensure 'profileImage' matches the 'name' attribute in the form
+  async (req, res) => {
+    const userId = req.params.id;
+    const { username, email, password, role } = req.body;
+    const uploadedFile = req.file;
+
     try {
-      // Hash the password if a new password is provided
-      let hashedPassword = password; // Use the provided password as default
-  
-      if (password) {
-        hashedPassword = await bcrypt.hash(password, 10);
+      let fileContent = null;
+
+      if (uploadedFile) {
+        // Read file asynchronously and handle errors
+        fileContent = fs.readFileSync(uploadedFile.path);
+
+        // Delete temporary file after reading content
+        fs.unlinkSync(uploadedFile.path);
       }
-  
-      // Update user details with hashed password
-      db1.query(
-        "UPDATE log SET email = ?, username = ?, password = ?, role = ? WHERE user_Id = ?",
-        [email, username, hashedPassword, role, id],
-        (err, result) => {
-          if (err) {
-            console.error("Error updating user:", err);
-            res.status(500).send("Error updating user");
-          } else {
-            console.log("User updated successfully");
-            res.status(200).send("User updated successfully");
-          }
+
+      // Hash password
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      // Prepare SQL query based on whether profile image is provided or not
+      let updateQuery;
+      let queryValues;
+
+      if (fileContent) {
+        updateQuery =
+          "UPDATE log SET username = ?, email = ?, password = ?, role = ?, profile_image = ? WHERE user_Id = ?";
+        queryValues = [
+          username,
+          email,
+          hashedPassword,
+          role,
+          fileContent,
+          userId,
+        ];
+      }
+
+      else {
+        updateQuery =
+          "UPDATE log SET username = ?, email = ?, password = ?, role = ? WHERE user_Id = ?";
+        queryValues = [username, email, hashedPassword, role, userId];
+      }
+      
+
+      // Execute the SQL query to update user details
+      db1.query(updateQuery, queryValues, (err, result) => {
+        if (err) {
+          console.error("Error updating user:", err);
+          res.status(500).json({ error: "Error updating user" });
+        } else {
+          res.status(200).json({ message: "User updated successfully" });
         }
-      );
+      });
     } catch (error) {
-      console.error("Error during user update:", error);
-      res.status(500).send("Error updating user");
+      console.error("Internal server error:", error);
+      res.status(500).json({ error: "Internal server error" });
     }
-  });
+  }
+);
   
+
+
+
+// router.put("/users/:id/username", async (req, res) => {
+//   const userId = req.params.id;
+//   const { username } = req.body;
+
+//   try {
+//     // Prepare SQL query to update username
+//     const updateQuery = "UPDATE log SET username = ? WHERE user_Id = ?";
+//     const queryValues = [username, userId];
+
+//     // Execute the SQL query to update username
+//     db1.query(updateQuery, queryValues, (err, result) => {
+//       if (err) {
+//         console.error("Error updating username:", err);
+//         res.status(500).json({ error: "Error updating username" });
+//       } else {
+//         res.status(200).json({ message: "Username updated successfully" });
+//       }
+//     });
+//   } catch (error) {
+//     console.error("Internal server error:", error);
+//     res.status(500).json({ error: "Internal server error" });
+//   }
+// });
   //------------------- user to get and delete  register detaile by admin
   
   router.delete("/users/:id", (req, res) => {
@@ -781,23 +973,82 @@ router.get("/UGhomepageadimcourses", (req, res) => {
   
   //------------------- user to get and all  register  user detail by admin
   
-  router.get("/act_info", (req, res) => {
-    // const query = 'SELECT course_name,course_id FROM 1egquiz_courses';
-    const query = "SELECT  * FROM log ";
+  // router.get("/act_info", (req, res) => {
+  //   // const query = 'SELECT course_name,course_id FROM 1egquiz_courses';
+  //   const query = "SELECT  * FROM log ";
   
-    db1.query(query, (error, results) => {
-      if (error) {
-        console.error("Error executing query: " + error.stack);
-        res.status(500).send("Error retrieving data from database.");
-        return;
-      }
-      console.log("Retrieved data from test table:");
-      console.log(results);
-      // Send the retrieved data as JSON response
-      res.json(results);
-    });
+  //   db1.query(query, (error, results) => {
+  //     if (error) {
+  //       console.error("Error executing query: " + error.stack);
+  //       res.status(500).send("Error retrieving data from database.");
+  //       return;
+  //     }
+  //     // const imageArray = results.map((result) => {
+  //     //     const base64 = result.image_data.toString("base64");
+  //     //     return {
+  //     //       id: result.images_id,
+  //     //       imageData: `data:image/png;base64,${base64}`,
+  //     //     };
+
+  //     else{
+  //        const imageArray = results.map((result) => {
+  //          const base64 = result.image_data.toString("base64");
+  //          return {
+  //            id: result.user_Id,
+  //            imageData: `data:image/png;base64,${base64}`,
+  //          };
+  //        });
+
+  //       res.json(imageArray);
+  //     }
+  //     console.log("Retrieved data from test table:");
+  //     console.log(results);
+  //     // Send the retrieved data as JSON response
+  //     res.json(results);
+  //   });
+  // });
+  
+router.get("/act_info", (req, res) => {
+  const query = "SELECT * FROM log";
+
+  db1.query(query, (error, results) => {
+    if (error) {
+      console.error("Error executing query: " + error.stack);
+      return res.status(500).send("Error retrieving data from database.");
+    }
+
+    if (!results || results.length === 0) {
+      console.log("No data found.");
+      return res.status(404).send("No data found.");
+    }
+
+    const dataWithImages = results
+      .map((result) => {
+        if (!result.profile_image) {
+          console.log("Image data is missing for a row.");
+          return null; // Skip this entry or handle it accordingly
+        }
+
+        const base64 = result.profile_image.toString("base64");
+        // Add all the fields along with the profile_image in the response
+        return {
+          id: result.user_Id,
+          username: result.username,
+          email: result.email,
+          role:result.role,
+          // Add other fields as needed
+          profile_image: `data:image/png;base64,${base64}`,
+        };
+      })
+      .filter((item) => item !== null); // Remove null entries
+
+    // console.log("Retrieved data from log table:");
+    // console.log(dataWithImages);
+
+    res.json(dataWithImages); // Sending the processed data with images as a response
   });
-  
+});
+
   // --------------------------------------login end ----------------------------------------------------
   
 

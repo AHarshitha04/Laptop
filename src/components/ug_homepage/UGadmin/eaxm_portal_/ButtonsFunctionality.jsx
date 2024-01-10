@@ -15,10 +15,15 @@ const ButtonsFunctionality = ({
   VisitedCount,
   questionData,
   updateQuestionStatus,
+  
 }) => {
  
  
  
+
+
+
+  
   const [wtimer, setWTimer] = useState(0);
  
  
@@ -69,32 +74,46 @@ const renderQuestionButtons = Array.isArray(questionData.questions)
  
  
 
-  const handleButtonClick = useCallback((questionNumber) => {
-        
-    const questionIndex = questionNumber - 1;
+const handleButtonClick = useCallback((questionNumber) => {
+  const questionIndex = questionNumber - 1;
 
-        // Check if the question is already answered
-        if (questionStatus[questionIndex] === "answered") {
-            // If answered, navigate to the selected question
-            onQuestionSelect(questionNumber);
-        } else {
-            // If not answered, mark it as answered
-            setQuestionStatus((prevQuestionStatus) => [
-                ...prevQuestionStatus.slice(0, questionIndex),
-                "notAnswered",
-                ...prevQuestionStatus.slice(questionIndex + 1),
-            ]);
-    
-            // Update other necessary state or perform additional logic
-            onQuestionSelect(questionNumber);
-            setAnsweredQuestions((prevAnsweredQuestions) => [...prevAnsweredQuestions, questionNumber]);
-            setIsPaused(false);
-        }
+  // Check if the question is already answered
+  if (questionStatus[questionIndex] === "answered") {
+    // If answered, navigate to the selected question
+    onQuestionSelect(questionNumber);
+  } else {
+    // Check if the button was clicked
+    if (answeredQuestions.includes(questionNumber)) {
+      // If the button was clicked, mark it as answered
+      setQuestionStatus((prevQuestionStatus) => [
+        ...prevQuestionStatus.slice(0, questionIndex),
+        "answered",
+        ...prevQuestionStatus.slice(questionIndex + 1),
+      ]);
 
-         // Update the question status in the QuestionPaper component
-    updateQuestionStatus(questionIndex, "notAnswered");
+      // Update other necessary state or perform additional logic
+      onQuestionSelect(questionNumber);
+      setAnsweredQuestions((prevAnsweredQuestions) => [...prevAnsweredQuestions, questionNumber]);
+      setIsPaused(false);
+    } else {
+      // If the button was not clicked, mark it as not answered
+      setQuestionStatus((prevQuestionStatus) => [
+        ...prevQuestionStatus.slice(0, questionIndex),
+        "notAnswered",
+        ...prevQuestionStatus.slice(questionIndex + 1),
+      ]);
 
-}, [questionStatus, setQuestionStatus, onQuestionSelect, updateQuestionStatus]);
+      // Update other necessary state or perform additional logic
+      onQuestionSelect(questionNumber);
+      setIsPaused(false);
+    }
+  }
+
+  // Update the question status in the QuestionPaper component
+  updateQuestionStatus(questionIndex, "notAnswered");
+
+}, [questionStatus, setQuestionStatus, onQuestionSelect, answeredQuestions, updateQuestionStatus]);
+
 
 
 
@@ -185,6 +204,7 @@ useEffect(() => {
       <div className="right-side-bar">
         <div className="rightSidebar-topHeader">
           <p>Name of the person :  {userData.username}</p>
+      
           <p>Time Left: {WformatTime(wtimer)}</p>
         </div>
  

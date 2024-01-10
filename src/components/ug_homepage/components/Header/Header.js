@@ -64,10 +64,10 @@ const Header = () => {
                   >
                     {NavData.btn1}
                   </a> */}
-                <Link
-                  to='/uglogin'
-                  className={NavData.login}
-                >
+                {/* <Link to="/uglogin" className={NavData.login}>
+                  {NavData.btn1}
+                </Link> */}
+                <Link to="/Exam_portal_home_page" className={NavData.login}>
                   {NavData.btn1}
                 </Link>
                 <div
