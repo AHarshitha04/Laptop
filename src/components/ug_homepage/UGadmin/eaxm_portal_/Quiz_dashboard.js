@@ -91,7 +91,7 @@ const [showcard2, setshowcard2] = useState(false);
     setshowcardactive2(true);
     setshowcardactive1(false);
     setshowcard1(true)
-console.log("hello");
+// console.log("hello");
     setshowcard2(false)
 
   };
@@ -103,19 +103,24 @@ console.log("hello");
     setshowcard2(true)
 
   };
+
+    const userRole = localStorage.getItem("userRole");
   return (
     <>
       <div className="Quiz_main_page_container">
         <div className="Quiz_main_page_container_btns">
-          <button
-            className={
-              showcardactive2 ? "showcardactive" : "showcardactivenone"
-            }
-            onClick={UG_HOMEadim_btn}
-          >
-            UG Page Admin
-          </button>
-
+          {/*-----------------  admin login ---------------------------------  */}
+          {userRole === "admin" && (
+            <>
+              <button
+                className={
+                  showcardactive2 ? "showcardactive" : "showcardactivenone"
+                }
+                onClick={UG_HOMEadim_btn}
+              >
+                UG Page Admin
+              </button>
+              
           <button
             className={
               showcardactive1 ? "showcardactive" : "showcardactivenone"
@@ -124,32 +129,42 @@ console.log("hello");
           >
             UG Quiz Admin
           </button>
+        
+            </>
+          )}
+
         </div>
 
+        {userRole === "admin" && (
+          <>
+            {showcard1 ? (
+              <div className="UGhomepageadmin">
+                <UploadPage />
+              </div>
+            ) : null}
+            {showcard2 ? (
+              <div className="UGQUizadmin">
+                <Exam_portal_admin_integration />
+              </div>
+            ) : null}
+          </>
+        )}
 
-
-        {showcard1 ? (
-          <div className="UGhomepageadmin">
-          <UploadPage />
-        </div>
-
-
-) : null}
-       
-
-       
-
-       
-       {showcard2 ? (
-          <div className="UGQUizadmin">
+        {userRole === "ugadmin" && (
+          <>
          
-        <Exam_portal_admin_integration/>
 
-        </div>
-
-
-) : null}
-</div>
+            <UploadPage />
+          </>
+        )}
+        {/* --------------------- ugotsadmin ------------------------------- */}
+        {userRole === "ugotsadmin" && (
+          <>
+            <h3>Online Test Creation Admin</h3>
+            <Exam_portal_admin_integration />
+          </>
+        )}
+      </div>
     </>
   );
 };

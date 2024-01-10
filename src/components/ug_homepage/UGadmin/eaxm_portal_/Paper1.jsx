@@ -846,7 +846,7 @@ const Paper1 = () => {
             Authorization: `Bearer ${token}`, // Attach token to headers for authentication
           },
         }
-<<<<<<< HEAD
+
       );
 
       // const responsetc = await fetch(
@@ -858,9 +858,9 @@ const Paper1 = () => {
       // console.log("hiii");
       // console.log(testCreationTableId);
 
-=======
-      );   
-  
+
+      
+
   
       const responsetc = await fetch(
         `http://localhost:5001/QuestionPaper/getPaperData/${testCreationTableId}`
@@ -871,7 +871,7 @@ const Paper1 = () => {
       console.log("hiii")
       console.log(testCreationTableId)
   
->>>>>>> c6b8ad072c2e94e109fce3f58cca3884c61368f4
+
       // Move these lines to the top to ensure variables are properly declared
       const user_Id = userData.user_Id;
       const testCreationTableId = data.testCreationTableId;

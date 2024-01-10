@@ -143,7 +143,7 @@ export const Users = () => {
               Add new users
             </Link>
           </p>
-          <table className="table table-bordered">
+          {/* <table className="table table-bordered">
             <thead className="otsGEt_-contantHead otc_-table_-header">
               <tr>
                 <th>S No.</th>
@@ -151,6 +151,8 @@ export const Users = () => {
                 <th>Email</th>
                 <th>Password</th>
                 <th>Role</th>
+                <th>profile Img</th>
+
                 <th>Actions</th>
               </tr>
             </thead>
@@ -166,11 +168,18 @@ export const Users = () => {
                     <td>{user.email} </td>
                     <td>{user.password} </td>
                     <td>{user.role} </td>
+                    <td>
+                      <img src={user.profile_image} alt={`Image ${user.id}`} />
+                    </td>
+                    <img
+                      src={user.profile_image}
+                      alt={`Image ${user.user_Id}`}
+                    />
 
                     <td>
                       <button>
                         <Link
-                          to={`/userread/${user.user_Id}`}
+                          to={`/userread/${user.id}`}
                           className="btn btn-success mx-2"
                         >
                           Read
@@ -197,12 +206,107 @@ export const Users = () => {
                 );
               })}
             </tbody>
-          </table>
+          </table> */}
+        </div>
+
+        <div>
+          <h1>All users</h1>
+          <div className="admin_profile_container">
+            {users.map((user, i) => (
+              <div key={i} className="admin_profile_box">
+                {/* <p>{i + 1}</p> */}
+                <div className="pro_img">
+                  <img src={user.profile_image} alt={`Image ${user.user_Id}`} />
+                </div>
+                <div className="admin_profile_box_info">
+                  <p>User ID:{user.username}</p>
+                  <p>Email ID:{user.email}</p>
+                  <p>Role:{user.role}</p>
+                </div>
+                <div className="admin_profile_box_btncontainer">
+                  <Link to={`/userread/${user.id}`} className="redbtn ">
+                    Read
+                  </Link>
+
+                  <Link to={`/userupdate/${user.id}`} className="update">
+                    Edit
+                  </Link>
+
+                  <button
+                    onClick={() => handleDelete(user.id)}
+                    className="delete"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>
   );
 };
+
+// export const Users_info = () => {
+//   const [userData, setUserData] = useState({});
+//   useEffect(() => {
+//     const fetchUserData = async () => {
+//       try {
+//         const token = localStorage.getItem("token");
+//         const response = await fetch(
+//           "http://localhost:5001/ughomepage_banner_login/user",
+//           {
+//             headers: {
+//               Authorization: `Bearer ${token}`, // Attach token to headers for authentication
+//             },
+//           }
+//         );
+
+//         if (response.ok) {
+//           const userData = await response.json();
+//           setUserData(userData);
+//           console.log(userData);
+//         } else {
+//           // Handle errors, e.g., if user data fetch fails
+//         }
+//       } catch (error) {
+//         // Handle other errors
+//       }
+//     };
+
+//     fetchUserData();
+//   }, []);
+
+//   //localhost:5001/ughomepage_banner_login/act_info
+//   http: return (
+//     <>
+//       {/* <img
+//         src={`http://localhost:5001/uploads/${question.documen_name}/${option.optionImgName}`}
+//         alt={`Option ${option.option_id}`}
+//       /> */}
+//       <div className="profilepic">
+//         <p>User ID: {userData.user_Id}</p>
+//         <h2>Username: {userData.username}</h2>
+//         <p>Email: {userData.email}</p>
+//         {/* <img
+//           src={`http://localhost:5001/profilesimages/${profileImage_1704542933934.jpg}`}
+//           alt={`Option ${option.option_id}`}
+//         /> */}
+
+//         <img
+//           key={userData.user_Id}
+//           src={userData.profile_image}
+//           alt={`Image ${userData.user_Id}`}
+//         />
+//         <img src={userData.profile_image} alt="Profile" />
+//       </div>
+//     </>
+//   );
+// };
+
+
+
 
 export const Users_info = () => {
   const [userData, setUserData] = useState({});
@@ -234,15 +338,30 @@ export const Users_info = () => {
     fetchUserData();
   }, []);
 
-  return (
-    <>
-      <div>
-        <div className="profilepic">
-          <p>User ID: {userData.user_Id}</p>
-          <h2>Username: {userData.username}</h2>
-          <p>Email: {userData.email}</p>
-        </div>
-      </div>
-    </>
-  );
+  console.log(userData.profile_image);
+
+   return (
+     <>
+       {/* <img
+        src={`http://localhost:5001/uploads/${question.documen_name}/${option.optionImgName}`}
+        alt={`Option ${option.option_id}`}
+      /> */}
+       <div className="profilepic">
+         <p>User ID: {userData.user_Id}</p>
+         <h2>Username: {userData.username}</h2>
+         <p>Email: {userData.email}</p>
+         {/* <img
+          src={`http://localhost:5001/profilesimages/${profileImage_1704542933934.jpg}`}
+          alt={`Option ${option.option_id}`}
+        /> */}
+         <img src={userData.imageData} alt={`Image ${userData.user_Id}`} />
+         {/* <img
+          key={userData.user_Id}
+          src={userData.profile_image}
+          alt={`Image ${userData.user_Id}`}
+        /> */}
+         {/* <img src={userData.profile_image} alt="Profile" /> */}
+       </div>
+     </>
+   );
 };
