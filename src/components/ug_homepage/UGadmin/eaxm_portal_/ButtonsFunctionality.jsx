@@ -75,7 +75,10 @@ const renderQuestionButtons = Array.isArray(questionData.questions)
  
 
 const handleButtonClick = useCallback((questionNumber) => {
+
+  
   const questionIndex = questionNumber - 1;
+
 
   // Check if the question is already answered
   if (questionStatus[questionIndex] === "answered") {
