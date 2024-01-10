@@ -228,6 +228,14 @@ export const Header = () => {
                         </li>
                       </>
                     )}
+
+{userRole === "viewer" && (<>
+<button>
+<Link to="/student_dashboard">DashBoard</Link>
+
+</button>
+
+</>)}
                   </div>
                   <div>
                     {isLoggedIn === true ? (

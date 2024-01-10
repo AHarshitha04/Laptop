@@ -15,10 +15,15 @@ const ButtonsFunctionality = ({
   VisitedCount,
   questionData,
   updateQuestionStatus,
+  
 }) => {
  
  
  
+
+
+
+  
   const [wtimer, setWTimer] = useState(0);
  
  
@@ -199,6 +204,7 @@ useEffect(() => {
       <div className="right-side-bar">
         <div className="rightSidebar-topHeader">
           <p>Name of the person :  {userData.username}</p>
+      
           <p>Time Left: {WformatTime(wtimer)}</p>
         </div>
  

@@ -1,0 +1,26 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    text-decoration: none;
+    list-style: none;
+  }
+  .std-ul{
+    background-color: aquamarine;
+    color: black;
+  }
+
+  .std-ul li a{
+    color: black;
+  }
+
+  .student_DB_Details{
+    display: flex;
+    /* flex-direction: row-reverse; */
+  }
+
+  .student_DB_Details img{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+  }
