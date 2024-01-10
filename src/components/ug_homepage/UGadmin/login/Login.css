@@ -1,3 +1,26 @@
+.ug_quizheader{
+    display: flex;
+    /* background: #000; */
+    justify-content: space-between;
+    padding:  0.5rem 1rem;
+}
+
+.ug_quizheader .logo{
+    background: #ffffff;
+ }
+
+ .ug_quizheader a{
+    color: #000;
+    &:hover{
+        color: #000;
+    }
+ }
+ .ug_quizheader .uglogin_btn{ width: 100px;}
+
+  .ug_quizheader .uglogin_btn a{
+    color: #fff;
+
+  }
 .ug_logincontainer {
     /* background: #d30707; */
     width: 100%;
@@ -85,9 +108,12 @@
     font-size: 1.5rem;
     /* border: 1px solid #e6e6e6 ; */
     border-radius: 18px;
-    outline: none;
-}
+    outline: none;color: #242121;
 
+}
+.ug_logincontainer_box form input[type="file"]{
+  font-size: 0.8rem;
+}
 .ug_logincontainer_box form button {
     /* background: #000; */
     background: #2f2467;
