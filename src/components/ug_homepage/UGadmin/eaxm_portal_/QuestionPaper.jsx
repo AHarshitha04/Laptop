@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 
+=======
+>>>>>>> cc679ef973e8ca7074f1b4bc7897389ce91daca8
 // import React, { useState, useEffect } from "react";
 // import { useParams, Link, useNavigate } from "react-router-dom";
 // import axios from "axios";
@@ -938,12 +941,252 @@ import ButtonsFunctionality from "./ButtonsFunctionality";
 import "./styles/Paper.css";
 
 const QuestionPaper = () => {
+<<<<<<< HEAD
 
+=======
+  // --------------------------------------CONST VARIABLES DECLARATIONS--------------------------
+  // const [data, setData] = useState({ questions: [] });
+  const [questionData, setQuestionData] = useState({ questions: [] });
+  // const [questionData, setQuestionData] = useState({});
+
+  const { subjectId, testCreationTableId, userId } = useParams();
+  const [Subjects, setSubjects] = useState([]);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [selectedSubject, setSelectedSubject] = useState(null);
+  const [questionStatus, setQuestionStatus] = useState(
+    Array.isArray(questionData)
+      ? Array(questionData.questions.length).fill("notAnswered")
+      : []
+  );
+<<<<<<< HEAD
+=======
+=======
+  // const [questionData, setQuestionData] = useState({ questions: [] });
+>>>>>>> cc679ef973e8ca7074f1b4bc7897389ce91daca8
   const [questionData, setQuestionData] = useState({});
   const [Subjects, setSubjects] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedSubject, setSelectedSubject] = useState(null);
   const [questionStatus, setQuestionStatus] = useState(Array(questionData?.questions?.length).fill("notAnswered"));
+<<<<<<< HEAD
+=======
+
+  // <h3>Question: {currentQuestion.sortid.sortid_text}</h3>
+
+  const handleNextQuestion = async () => {
+console.log(activeQuestion)
+    // ------------------------------------ button functionality --------------------------------------------
+    setClickCount((prevCount) => prevCount + 1);
+    updateCounters();
+    //   const updatedQuestionStatus = [...questionStatus];
+    //   // && !markForReview()
+    // // Set status of the next question (if any) based on the conditions
+    // if (currentQuestionIndex < questionData.questions.length - 1) {
+    //   if (!selectedAnswers[currentQuestionIndex]) {
+    //     // Not answered and not marked for review
+    //     updatedQuestionStatus[currentQuestionIndex + 1] = "notAnswered";
+    //   } else if (markForReview()) {
+    //     // Marked for review
+    //     updatedQuestionStatus[currentQuestionIndex + 1] = "marked";
+    //   }else {
+    //     // Answered
+    //     updatedQuestionStatus[currentQuestionIndex] = "answered";
+    //   }
+    // }
+
+
+    // Update question status for the current question
+    const updatedQuestionStatus = [...questionStatus];
+    const questionIndex = currentQuestionIndex;
+
+
+    if (currentQuestionIndex < questionData.questions.length - 1) {
+
+      setQuestionStatus(updatedQuestionStatus);
+    console.log(updatedQuestionStatus)
+    }
+
+
+    else {
+      console.log("No more questions available.");
+    }
+ 
+    if (currentQuestionIndex < questionData.questions.length - 1) {
+      console.log("omg")
+      console.log(currentQuestionIndex)
+
+
+      if (markForReview()) {
+        // Marked for review
+        updatedQuestionStatus[currentQuestionIndex + 1] = "marked";
+        console.log("marked")
+
+      }
+      else if (selectedAnswers[activeQuestion]) {
+        // If the user has answered the current question
+        updatedQuestionStatus[currentQuestionIndex] = "answered";
+        updatedQuestionStatus[currentQuestionIndex + 1] = "notAnswered";
+        console.log("hello")
+        console.log(" answered")
+      }
+
+      else {
+        // Answered
+
+        updatedQuestionStatus[currentQuestionIndex+1] = "notAnswered";
+
+        console.log("else answered")
+
+      }
+    }
+
+    console.log(selectedAnswers)
+
+
+
+
+
+
+
+    // else if (!selectedAnswers[currentQuestionIndex]) {
+    //       // Not answered and not marked for review
+    //   updatedQuestionStatus[currentQuestionIndex] = "notAnswered";
+
+    //       updatedQuestionStatus[currentQuestionIndex + 1] = "notAnswered";
+    //     }
+    // else if (markForReview()) {
+    //   // Marked for review
+    //   updatedQuestionStatus[currentQuestionIndex + 1] = "marked";
+    // } 
+
+    setQuestionStatus(updatedQuestionStatus);
+
+    // Move to the next question
+    setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
+
+
+    // --------------------------------end of button functionality --------------------------------------------------
+
+    const response = await fetch(
+
+      `http://localhost:5001/QuestionPaper/questionOptions/${testCreationTableId}`
+    );
+
+    // console.log(testCreationTableId);
+
+
+    try {
+      // --------------------------------saving------------------------------
+      const response = await fetch(
+        `http://localhost:5001/QuestionPaper/questionOptions/${testCreationTableId}`
+      );
+      console.log("User ID:", userData.user_Id);
+      console.log("Test Creation Table ID:", testCreationTableId);
+
+
+      if (!questionData || !questionData.questions) {
+        console.error("Data or questions are null or undefined");
+        return;
+      }
+
+      // setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
+
+      const currentQuestion = questionData.questions[currentQuestionIndex];
+      const questionId = currentQuestion.question_id;
+
+      const selectedOption1 = selectedAnswersMap1[questionId];
+      const selectedOption2 = selectedAnswersMap2[questionId];
+
+      const optionIndexes1 =
+        selectedOption1 !== undefined ? [selectedOption1] : [];
+      const optionIndexes2 =
+        selectedOption2 !== undefined ? selectedOption2 : [];
+
+      if (answeredQuestionsMap[questionId]) {
+        const updatedResponse = {
+          optionIndexes1: optionIndexes1.map((index) =>
+            String.fromCharCode("a".charCodeAt(0) + index)
+          ),
+          optionIndexes2: optionIndexes2.map((index) =>
+            String.fromCharCode("a".charCodeAt(0) + index)
+          ),
+        };
+
+        const updateResponse = await axios.put(
+          `http://localhost:5001/QuestionPaper/updateResponse/${userData.userId}`,
+          {
+            updatedResponse,
+            user_Id: userData.userId,
+            testCreationTableId: testCreationTableId,
+          }
+        );
+
+        console.log(updateResponse.data);
+        console.log("Handle Next Click - Response Updated");
+      } else {
+        const responses = {
+          [questionId]: {
+            optionIndexes1: optionIndexes1.map((index) =>
+              String.fromCharCode("a".charCodeAt(0) + index)
+            ),
+            optionIndexes2: optionIndexes2.map((index) =>
+              String.fromCharCode("a".charCodeAt(0) + index)
+            ),
+          },
+        };
+
+        const saveResponse = await axios.post(
+          "http://localhost:5001/QuestionPaper/response",
+          {
+            responses: responses, // Make sure to include 'responses'
+            user_Id: userData.user_Id, // Use 'user_Id' from userData
+            testCreationTableId: testCreationTableId,
+          }
+        );
+
+        console.log(saveResponse.data);
+        console.log("Handle Next Click - New Response Saved");
+
+        setAnsweredQuestionsMap((prevMap) => ({
+          ...prevMap,
+          [questionId]: true,
+        }));
+      }
+      console.log("Request Payload:", {
+
+        response: response,
+        user_Id: userData.userId,
+        testCreationTableId: testCreationTableId,
+      });
+
+      console.log("Parsed userId:", userId);
+      console.log("Parsed testCreationTableId:", testCreationTableId);
+
+      console.log("User ID:", userData.user_Id); // Check if this is correct
+      console.log("Parsed userId:", userId);
+      // console.log(responses);
+
+
+      // --------------------------------saving------------------------------
+    } catch (error) {
+      console.error("Error handling next question:", error);
+    }
+
+
+  }
+
+
+
+
+
+
+
+
+
+
+>>>>>>> f3b293049a06d684c781a9e674fcd9674ab56302
+>>>>>>> 579422b214793788390e2ee664fbbfd2d2e7668b
+>>>>>>> cc679ef973e8ca7074f1b4bc7897389ce91daca8
   const [sections, setSections] = useState([]);
   const [currentQuestionType, setCurrentQuestionType] = useState(null);
   const navigate = useNavigate();
@@ -1040,6 +1283,12 @@ const QuestionPaper = () => {
       ]);
     }
   };
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> cc679ef973e8ca7074f1b4bc7897389ce91daca8
 
   const handlePreviousClick = () => {
     setCurrentQuestionIndex((prevIndex) => {
@@ -1092,9 +1341,27 @@ const QuestionPaper = () => {
     }
   };
 
+<<<<<<< HEAD
   const [clickCount, setClickCount] = useState(0);
 
   const [answeredQuestionsMap, setAnsweredQuestionsMap] = useState({});
+=======
+=======
+ 
+>>>>>>> f3b293049a06d684c781a9e674fcd9674ab56302
+>>>>>>> 25d7cca3d24f57f47d052efac6c46dbd9dc5716b
+>>>>>>> 579422b214793788390e2ee664fbbfd2d2e7668b
+  const [clickCount, setClickCount] = useState(0);
+
+  const [answeredQuestionsMap, setAnsweredQuestionsMap] = useState({});
+  // const correctAnswer =
+  //   data && data.questions && data.questions[currentQuestionIndex]
+  //     ? data.questions[currentQuestionIndex].correct_answer
+  //     : null; // or provide a default value based on your logic
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> cc679ef973e8ca7074f1b4bc7897389ce91daca8
 
 
   useEffect(() => {
@@ -1179,6 +1446,14 @@ const QuestionPaper = () => {
     fetchData();
   }, [testCreationTableId, subjectId, selectedAnswersMap1]);
 
+<<<<<<< HEAD
+=======
+=======
+ 
+>>>>>>> f3b293049a06d684c781a9e674fcd9674ab56302
+>>>>>>> 579422b214793788390e2ee664fbbfd2d2e7668b
+  const [selectedAnswersMap1, setSelectedAnswersMap1] = useState({});
+>>>>>>> cc679ef973e8ca7074f1b4bc7897389ce91daca8
   const [selectedAnswersMap2, setSelectedAnswersMap2] = useState({});
   const [selectedAnswersMap3, setSelectedAnswersMap3] = useState({});
 
@@ -1232,14 +1507,41 @@ const QuestionPaper = () => {
       ...prevMap,
       [questionId]: [],
     }));
+<<<<<<< HEAD
+=======
 
-    const updatedQuestionStatus = [...questionStatus];
-    updatedQuestionStatus[activeQuestion] = "answered";
-    setQuestionStatus(updatedQuestionStatus);
+=======
+<<<<<<< HEAD
 
     const updatedSelectedAnswers = [...selectedAnswers];
     updatedSelectedAnswers[activeQuestion] = optionIndex;
     setSelectedAnswers(updatedSelectedAnswers);
+>>>>>>> cc679ef973e8ca7074f1b4bc7897389ce91daca8
+
+    const updatedQuestionStatus = [...questionStatus];
+    updatedQuestionStatus[activeQuestion] = "answered";
+    setQuestionStatus(updatedQuestionStatus);
+<<<<<<< HEAD
+
+    const updatedSelectedAnswers = [...selectedAnswers];
+    updatedSelectedAnswers[activeQuestion] = optionIndex;
+    setSelectedAnswers(updatedSelectedAnswers);
+=======
+<<<<<<< HEAD
+=======
+=======
+ 
+>>>>>>> 25d7cca3d24f57f47d052efac6c46dbd9dc5716b
+    const updatedSelectedAnswers = [...selectedAnswers];
+    updatedSelectedAnswers[activeQuestion] = optionIndex;
+    setSelectedAnswers(updatedSelectedAnswers);
+
+    // const updatedQuestionStatus = [...questionStatus];
+    // updatedQuestionStatus[activeQuestion] = "answered";
+    // setQuestionStatus(updatedQuestionStatus);
+>>>>>>> f3b293049a06d684c781a9e674fcd9674ab56302
+>>>>>>> 579422b214793788390e2ee664fbbfd2d2e7668b
+>>>>>>> cc679ef973e8ca7074f1b4bc7897389ce91daca8
   };
 
   const onAnswerSelected2 = (optionIndex) => {
@@ -1263,15 +1565,41 @@ const QuestionPaper = () => {
         [questionId]: updatedSelection,
       };
     });
+<<<<<<< HEAD
+=======
 
-    const updatedQuestionStatus = [...questionStatus];
-    updatedQuestionStatus[activeQuestion] = "answered";
-    setQuestionStatus(updatedQuestionStatus);
+=======
+<<<<<<< HEAD
 
     const updatedSelectedAnswers = [...selectedAnswers];
     updatedSelectedAnswers[activeQuestion] = optionIndex;
     setSelectedAnswers(updatedSelectedAnswers);
+>>>>>>> cc679ef973e8ca7074f1b4bc7897389ce91daca8
 
+    const updatedQuestionStatus = [...questionStatus];
+    updatedQuestionStatus[activeQuestion] = "answered";
+    setQuestionStatus(updatedQuestionStatus);
+<<<<<<< HEAD
+
+=======
+<<<<<<< HEAD
+=======
+=======
+ 
+>>>>>>> 25d7cca3d24f57f47d052efac6c46dbd9dc5716b
+>>>>>>> cc679ef973e8ca7074f1b4bc7897389ce91daca8
+    const updatedSelectedAnswers = [...selectedAnswers];
+    updatedSelectedAnswers[activeQuestion] = optionIndex;
+    setSelectedAnswers(updatedSelectedAnswers);
+
+<<<<<<< HEAD
+=======
+    // const updatedQuestionStatus = [...questionStatus];
+    // updatedQuestionStatus[activeQuestion] = "answered";
+    // setQuestionStatus(updatedQuestionStatus);
+>>>>>>> f3b293049a06d684c781a9e674fcd9674ab56302
+>>>>>>> 579422b214793788390e2ee664fbbfd2d2e7668b
+>>>>>>> cc679ef973e8ca7074f1b4bc7897389ce91daca8
   };
 
   const calculateResult = () => {
@@ -1422,6 +1750,26 @@ const QuestionPaper = () => {
       console.error("Error:", error);
     }
   };
+<<<<<<< HEAD
+=======
+
+  const markForReview = () => {
+    // Update questionStatus for the marked question
+    const updatedQuestionStatus = [...questionStatus];
+    if (selectedAnswers[activeQuestion]) {
+      updatedQuestionStatus[activeQuestion] = "Answered but marked for review";
+      if (
+        selectedAnswers[activeQuestion] === "Answered but marked for review"
+      ) {
+        updatedQuestionStatus[activeQuestion] =
+          "Answered but marked for review";
+<<<<<<< HEAD
+=======
+=======
+ 
+>>>>>>> 25d7cca3d24f57f47d052efac6c46dbd9dc5716b
+  const [activeQuestion, setActiveQuestion] = useState(0);
+>>>>>>> cc679ef973e8ca7074f1b4bc7897389ce91daca8
 
 
 
@@ -1437,7 +1785,13 @@ const QuestionPaper = () => {
 
       if(selectedAnswers[activeQuestion] === "Answered but marked for review"){
         updatedQuestionStatus[activeQuestion] = "Answered but marked for review";
+<<<<<<< HEAD
 
+=======
+>>>>>>> f3b293049a06d684c781a9e674fcd9674ab56302
+>>>>>>> 25d7cca3d24f57f47d052efac6c46dbd9dc5716b
+>>>>>>> 579422b214793788390e2ee664fbbfd2d2e7668b
+>>>>>>> cc679ef973e8ca7074f1b4bc7897389ce91daca8
       }
     } else if (!selectedAnswers[activeQuestion]) {
       updatedQuestionStatus[currentQuestionIndex] = "marked";
@@ -1580,6 +1934,13 @@ const QuestionPaper = () => {
 
     fetchUserData();
   }, []);
+<<<<<<< HEAD
+=======
+
+
+=======
+<<<<<<< HEAD
+>>>>>>> cc679ef973e8ca7074f1b4bc7897389ce91daca8
 
   useEffect(() => {
     const counts = calculateQuestionCounts();
@@ -1643,6 +2004,15 @@ const QuestionPaper = () => {
     fetchUserData();
   }, []);
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+=======
+ 
+ 
+>>>>>>> 25d7cca3d24f57f47d052efac6c46dbd9dc5716b
+>>>>>>> cc679ef973e8ca7074f1b4bc7897389ce91daca8
   const [answeredQuestions, setAnsweredQuestions] = useState([]);
   const [isPaused, setIsPaused] = useState(false);
 
@@ -1662,6 +2032,13 @@ useEffect(() => {
  
 }, [questionStatus, currentQuestionIndex]); // Make sure to include questionStatus in the dependency array
  
+<<<<<<< HEAD
+=======
+>>>>>>> f3b293049a06d684c781a9e674fcd9674ab56302
+>>>>>>> 579422b214793788390e2ee664fbbfd2d2e7668b
+  const [questionTypes, setQuestionTypes] = useState([]);
+>>>>>>> 25d7cca3d24f57f47d052efac6c46dbd9dc5716b
+>>>>>>> cc679ef973e8ca7074f1b4bc7897389ce91daca8
   useEffect(() => {
     const fetchQuestionTypes = async () => {
       try {
@@ -1702,9 +2079,16 @@ useEffect(() => {
     updatedQuestionStatus[index] = status;
     setQuestionStatus(updatedQuestionStatus);
   };
+<<<<<<< HEAD
+console.log(userData)
+  return (
+    <div>
+      {/* {userData.user_Id} */}
+=======
 
   return (
     <div>
+<<<<<<< HEAD
     {!showExamSumary ? (
       <div>
         <div className="subjects">
@@ -1723,6 +2107,22 @@ useEffect(() => {
             {questionTypes.map((type) => (
               <li key={type.quesionTypeId}>
                 <p>{type.typeofQuestion}</p>
+=======
+      <h1>{questionData.currentQuestionIndex}</h1>
+
+>>>>>>> 579422b214793788390e2ee664fbbfd2d2e7668b
+      {!showExamSumary ? (
+        <div>
+          <div className="subjects">
+            {Subjects.map((subjectTitle) => (
+              <li key={subjectTitle.subjectId}>
+                <button
+                  //   onClick={() => handleSubjectsClick(subjectTitle.subjectId)}
+                  className="subject_btn"
+                >
+                  {subjectTitle.subjectName}
+                </button>
+>>>>>>> cc679ef973e8ca7074f1b4bc7897389ce91daca8
               </li>
             ))}
           </h3>
@@ -1906,6 +2306,43 @@ useEffect(() => {
                       ))}
 
 
+<<<<<<< HEAD
+=======
+=======
+                            </li>
+                          </div>
+                        ))}
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+ 
+ 
+>>>>>>> f3b293049a06d684c781a9e674fcd9674ab56302
+>>>>>>> 25d7cca3d24f57f47d052efac6c46dbd9dc5716b
+>>>>>>> 579422b214793788390e2ee664fbbfd2d2e7668b
+                    </div>
+                  </div>
+                  <div>
+                  <button className="clear-btn" onClick={markForReview}>
+                      Save & Mark for Review
+                    </button>
+                    <button className="clear-btn" onClick={markForReview}>
+                      Mark for Review & Next
+                    </button>
+                    <button className="clear-btn" onClick={clearResponse}>
+                      Clear Response
+                    </button>
+                    <button onClick={handleNextQuestion}>Save & Next</button>
+                    <button
+                      className="previous-btn"
+                      onClick={handlePreviousClick}
+                      disabled={currentQuestionIndex === 0}
+                    >
+                      <i className="fa-solid fa-angles-left"></i> Back
+                    </button>
+                    <button onClick={handleNextQuestion}>Next</button>
+>>>>>>> cc679ef973e8ca7074f1b4bc7897389ce91daca8
                   </div>
                 </div>
                 <div>

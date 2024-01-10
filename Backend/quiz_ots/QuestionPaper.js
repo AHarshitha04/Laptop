@@ -518,63 +518,63 @@ router.get('/subjects/:testCreationTableId', async (req, res) => {
 //   }
 // });
 
-router.post('/storeUserResponse', (req, res) => {
-  try {
-    const { userId, testCreationTableId, responses, timer } = req.body;
+// router.post('/storeUserResponse', (req, res) => {
+//   try {
+//     const { userId, testCreationTableId, responses, timer } = req.body;
 
-    console.log('Received responses and timer from client:', responses, timer);
+//     console.log('Received responses and timer from client:', responses, timer);
 
-    // Assuming each response has a question_id property and userAnswer as an object with optionIndexes1 and optionIndexes2
-    const sql = 'INSERT INTO user_responses (user_Id, testCreationTableId, question_id, user_answer, answered_time) VALUES (?, ?, ?, ?, ?)';
+//     // Assuming each response has a question_id property and userAnswer as an object with optionIndexes1 and optionIndexes2
+//     const sql = 'INSERT INTO user_responses (user_Id, testCreationTableId, question_id, user_answer, answered_time) VALUES (?, ?, ?, ?, ?)';
 
-    // Iterate over the keys of the responses object (question IDs)
-    for (const questionId in responses) {
-      if (responses.hasOwnProperty(questionId)) {
-        const userAnswer = responses[questionId];
+//     // Iterate over the keys of the responses object (question IDs)
+//     for (const questionId in responses) {
+//       if (responses.hasOwnProperty(questionId)) {
+//         const userAnswer = responses[questionId];
 
-        if (userAnswer.optionIndexes1 && userAnswer.optionIndexes2) {
-          const userAnswer1 = userAnswer.optionIndexes1.join(',');
-          const userAnswer2 = userAnswer.optionIndexes2.join(',');
+//         if (userAnswer.optionIndexes1 && userAnswer.optionIndexes2) {
+//           const userAnswer1 = userAnswer.optionIndexes1.join(',');
+//           const userAnswer2 = userAnswer.optionIndexes2.join(',');
 
-          const userAnswerJSON = {
-            optionIndexes1: userAnswer1,
-            optionIndexes2: userAnswer2,
-            // Add other input types as needed
-          };
+//           const userAnswerJSON = {
+//             optionIndexes1: userAnswer1,
+//             optionIndexes2: userAnswer2,
+//             // Add other input types as needed
+//           };
 
-          const userAnswerStringified = JSON.stringify(userAnswerJSON);
-          const answeredTime = new Date().toISOString().slice(0, 19).replace('T', ' '); // Format as 'YYYY-MM-DD HH:MM:SS'
+//           const userAnswerStringified = JSON.stringify(userAnswerJSON);
+//           const answeredTime = new Date().toISOString().slice(0, 19).replace('T', ' '); // Format as 'YYYY-MM-DD HH:MM:SS'
 
-          console.log(`Processing response for question ${questionId}:`, {
-            userId,
-            testCreationTableId,
-            questionId,
-            userAnswer: userAnswerJSON,
-            answeredTime,
+//           console.log(`Processing response for question ${questionId}:`, {
+//             userId,
+//             testCreationTableId,
+//             questionId,
+//             userAnswer: userAnswerJSON,
+//             answeredTime,
            
-          });
+//           });
 
-          console.log('Executing SQL query:', sql, [userId, testCreationTableId, questionId, userAnswerStringified, answeredTime, timer]);
+//           console.log('Executing SQL query:', sql, [userId, testCreationTableId, questionId, userAnswerStringified, answeredTime, timer]);
 
-          db.query(sql, [userId, testCreationTableId, questionId, userAnswerStringified, answeredTime, timer], (err, result) => {
-            if (err) {
-              console.error('Error saving response to the database:', err);
-            } else {
-              console.log(`Response for question ${questionId} saved to the database`);
-            }
-          });
-        } else {
-          console.error(`Invalid response data for question ${questionId}`);
-        }
-      }
-    }
+//           db.query(sql, [userId, testCreationTableId, questionId, userAnswerStringified, answeredTime, timer], (err, result) => {
+//             if (err) {
+//               console.error('Error saving response to the database:', err);
+//             } else {
+//               console.log(`Response for question ${questionId} saved to the database`);
+//             }
+//           });
+//         } else {
+//           console.error(`Invalid response data for question ${questionId}`);
+//         }
+//       }
+//     }
 
-    res.json({ success: true, message: 'Responses saved successfully' });
-  } catch (error) {
-    console.error('Error handling the request:', error);
-    res.status(500).json({ success: false, message: 'Internal server error' });
-  }
-});
+//     res.json({ success: true, message: 'Responses saved successfully' });
+//   } catch (error) {
+//     console.error('Error handling the request:', error);
+//     res.status(500).json({ success: false, message: 'Internal server error' });
+//   }
+// });
 
 
 
