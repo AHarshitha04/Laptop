@@ -186,7 +186,7 @@ const Header = () => {
                       id="ughomepage_dropdown_download_linK"
                       className={NavData.navlist}
                     >
-                      {NavData.link7}1
+                      {NavData.link7}
                       <ul className="ughomepage_dropdown_download">
                         <li>
                           <a href="#">{NavData.link7_dp1}</a>

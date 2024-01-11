@@ -64,38 +64,39 @@ const handleLogin = async (e) => {
         <div className="ugexam_header">
           {NavData.map((NavData, index) => {
             return (
-              <div className="header ug_exam_header" key={index}>
-                <div className={NavData.logo_img_container}>
-                  <Link to={"/"}>
-                    {" "}
-                    <img src={NavData.logo} alt="" />
-                  </Link>
-                </div>
-
-                <div className="exam_login_menu">
-                  <li>
-                    <Link
-                      to="/Exam_portal_home_page"
-                      className={NavData.navlist}
-                    >
-                      {NavData.link1}
+              <>
+                <div className="header  ug_quizheader" key={index}>
+                  <div className={NavData.logo_img_container}>
+                    <Link to={"/"}>
+                      <img src={NavData.logo} alt="" />
                     </Link>
-                  </li>
-                  <Link
-                    to="/Register"
-                    href="https://online-ug.egradtutor.in"
-                    className={NavData.login}
-                  >
-                    Registration
-                  </Link>
-                  {/* <div className="mobile_menu mobile_menu_non"onClick={() => setshowMenu(!showMenu)}  >
+                  </div>
+
+                  <div className="exam_login_menu">
+                    <li>
+                      <Link
+                        to="/Exam_portal_home_page"
+                        className={NavData.navlist}
+                      >
+                        {NavData.link1}
+                      </Link>
+                    </li>
+                    <Link
+                      to="/Register"
+                      
+                      className={NavData.login}
+                    >
+                      Register
+                    </Link>
+                    {/* <div className="mobile_menu mobile_menu_non"onClick={() => setshowMenu(!showMenu)}  >
               <div className={showMenu ? "rotate_right  " :"lines "}></div>
               <div className={showMenu ? "no_lines  " :"lines "}></div>
               <div className={showMenu ? "rotate_left  " :"lines "}></div>
               </div> */}
-                  {/* <a href="#"><AiOutlineMenu/></a> */}{" "}
+                    {/* <a href="#"><AiOutlineMenu/></a> */}{" "}
+                  </div>
                 </div>
-              </div>
+              </>
             );
           })}
         </div>
@@ -114,27 +115,42 @@ const handleLogin = async (e) => {
 
             <div className="login_from_continer">
               <form>
-              {message && <p style={{
-                color:"green"
-              }}>{message}</p>}
+                {message && (
+                  <p
+                    style={{
+                      color: "green",
+                    }}
+                  >
+                    {message}
+                  </p>
+                )}
                 <label>
                   <MdAlternateEmail />
-                  <input type="email"  placeholder="EMAIL ID" value={email} onChange={(e) => setEmail(e.target.value)} required />
-             
+                  <input
+                    type="email"
+                    placeholder="EMAIL ID"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                  />
                 </label>
                 <br />
                 <label>
                   <FaLock />
-                  <input type="password"    placeholder="PASSWORD" value={password} onChange={(e) => setPassword(e.target.value)} required />
-              
+                  <input
+                    type="password"
+                    placeholder="PASSWORD"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                  />
                 </label>
                 <button type="button" onClick={handleLogin}>
                   Login
                 </button>
               </form>
               <p>
-                Don't have an account ?
-                <Link to="/Register">Register here</Link>
+                Don't have an account ?<Link to="/Register">Register here</Link>
               </p>
             </div>
           </div>

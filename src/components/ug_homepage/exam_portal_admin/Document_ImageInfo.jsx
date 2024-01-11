@@ -64,7 +64,9 @@ function Document_ImageInfo() {
               />
             </div>
           )}
+         
             <div>
+
            {question.qtype && (
             <div>
               <h3>qtype</h3>
@@ -95,6 +97,7 @@ function Document_ImageInfo() {
               {question.sortid.sortid_text}
             </div>
           )}
+          
           </div>
           <p>_____________________________________________________________________________________________________________</p>
         </div>
