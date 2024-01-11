@@ -312,7 +312,7 @@ router.get('/tests', async (req, res) => {
           LEFT OUTER JOIN sortid si ON q.question_id = si.question_id 
           LEFT OUTER JOIN solution s ON q.question_id = s.question_id 
           LEFT OUTER JOIN paragraph p ON q.question_id = p.question_id
-          LEFT OUTER JOIN ots_document doc ON q.testCreationTableId = doc.testCreationTableId 
+          LEFT OUTER JOIN ots_document doc ON q.document_Id  = doc.document_Id  
         WHERE 
           doc.testCreationTableId = ? AND doc.subjectId = ? AND doc.sectionId = ?;
       `, [testCreationTableId, subjectId, sectionId]);
