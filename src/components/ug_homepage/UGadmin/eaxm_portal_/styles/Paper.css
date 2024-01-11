@@ -97,7 +97,8 @@ gap: 2rem;
 .quiz_btns_contaioner >div{
   display: flex;
   flex-wrap: wrap;
-  /* gap: 2rem; */
+  justify-content: space-between;
+  gap: 0.8rem;
 }
 
 .quiz_btns_contaioner >div button{
