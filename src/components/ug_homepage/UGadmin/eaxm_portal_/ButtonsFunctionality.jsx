@@ -229,36 +229,36 @@ useEffect(() => {
           <h4 className="sidebar-footer-header">Legend</h4>
           <div className="footer-btns">
             <div className="inst-btns">
-              <button className="instruction-btn1">{answeredCount}</button>
-              <p>Answerd</p>
-              <br />
+              <button className="instruction-btn1 r_S_B_BTNS">{answeredCount}</button>
+              <span>Answerd</span>
+             
             </div>
-            <br />
+           
             <div className="inst-btns">
-              <button className="instruction-btn2">{notAnsweredCount}</button>
-              <p>Not Answered</p>
-              <br />
+              <button className="instruction-btn2 r_S_B_BTNS">{notAnsweredCount}</button>
+              <span>Not Answered</span>
+           
             </div>
-            <br />
+            
             <div className="inst-btns">
-              <button className="instruction-btn3">
+              <button className="instruction-btn3 r_S_B_BTNS">
                 {answeredmarkedForReviewCount}
               </button>
-              <p>Marked</p>
-              <br />
+              <span>Marked</span>
+             
             </div>
-            <br />
+           
             <div className="inst-btns">
-              <button className="instruction-btn4">
+              <button className="instruction-btn4 r_S_B_BTNS">
                 {markedForReviewCount}
               </button>
-              <p>Answered but marked for review</p>
+              <span>Answered but marked for review</span>
             </div>{" "}
-            <br />{" "}
+          
             <div className="inst-btns">
               {" "}
-              <button className="instruction-btn5">{VisitedCount}</button>
-              <p>Not Visited</p>
+              <button className="instruction-btn5 r_S_B_BTNS">{VisitedCount}</button>
+              <span>Not Visited</span>
             </div>
           </div>
         </div>
