@@ -151,7 +151,7 @@
     left: -3rem;
     /* width: 160%; */
     text-align: left;
-    background: rgb(255, 255, 255); /* width: 100%;? */
+    background: rgb(0, 0, 0); /* width: 100%;? */
     padding: 1.45rem;
     padding-top:5rem;
     z-index: -1;
@@ -173,7 +173,7 @@
   display: none;
 }
 .dropdownmenu_foradim_page a{
-  color: #1900ff;
+  color: #ffffff;
 }
 .dropdownmenu_foradim_page a:hover {
   /* color: blue; */
@@ -182,8 +182,16 @@
 
 /* ------------------------------------------------------------------------- home section --------------------------------------------- */
 .quiz__Home_continer {
+  position: relative;
   width: 100%;
   background: #0000000f;
+}
+
+.quiz__Home_continer h2{
+  position: absolute;
+  top: 5rem;
+  left: 10%;
+  /* text-align: center; */
 }
 
 .quiz__Home_continer > div {

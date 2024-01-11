@@ -253,7 +253,7 @@ const Userupdate = () => {
 const handleImageChange = (e) => {
   setUser((prev) => ({ ...prev, profile_image: e.target.files[0] }));
 };
-
+  const userRole = localStorage.getItem('userRole');
 const handleClick = async (e) => {
   e.preventDefault();
   try {
@@ -278,10 +278,12 @@ const handleClick = async (e) => {
       );
 
       
- 
-   
-  
-    navigate("/Account_info");
+      // if (userRole === "viewer"){
+      // navigate("/student_dashboard");
+
+      // } 
+      
+      navigate("/Account_info");
   } catch (err) {
     console.log(err);
   }
@@ -383,13 +385,15 @@ const handleClick = async (e) => {
               onChange={handleImageChange}
             />
           </div>
-          <button
-            type="submit"
-            className="btn btn-primary"
-            onClick={handleClick}
-          >
-            Update
-          </button>
+          {userRole === "admin" && (
+            <button
+              type="submit"
+              className="btn btn-primary"
+              onClick={handleClick}
+            >
+              Update
+            </button>
+          )}
         </form>
         <div className="container d-flex justify-content-center">
           <Link to="/">See all users</Link>
