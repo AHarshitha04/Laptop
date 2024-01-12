@@ -273,7 +273,7 @@ const handleRegister = async (e) => {
           {NavData.map((NavData, index) => {
             return (
               <>
-                <div className="header ug_exam_header" key={index}>
+                <div className="header  ug_quizheader" key={index}>
                   <div className={NavData.logo_img_container}>
                     <Link to={"/"}>
                       <img src={NavData.logo} alt="" />
@@ -282,7 +282,10 @@ const handleRegister = async (e) => {
 
                   <div className="exam_login_menu">
                     <li>
-                      <Link to="/home" className={NavData.navlist}>
+                      <Link
+                        to="/Exam_portal_home_page"
+                        className={NavData.navlist}
+                      >
                         {NavData.link1}
                       </Link>
                     </li>

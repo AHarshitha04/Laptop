@@ -287,66 +287,66 @@ router.get('/subjects/:testCreationTableId', async (req, res) => {
   // ----------------------------------------------------user reponses----------------------------------------------
   
 //main working code
-// router.post('/response', async (req, res) => {
-//   try {
-//     const { responses, user_Id, testCreationTableId } = req.body;
+router.post('/response', async (req, res) => {
+  try {
+    const { responses, user_Id, testCreationTableId } = req.body;
 
-//     // Validate data types
-//     const userIdNumber = parseInt(user_Id, 10);
-// const testCreationTableIdNumber = parseInt(testCreationTableId, 10);
-// // const questionIdNumber = parseInt(questionId, 10);
+    // Validate data types
+    const userIdNumber = parseInt(user_Id, 10);
+const testCreationTableIdNumber = parseInt(testCreationTableId, 10);
+// const questionIdNumber = parseInt(questionId, 10);
 
 
-//     if (isNaN(userIdNumber) || isNaN(testCreationTableIdNumber)) {
-//       console.error('Invalid integer value for user_Id, testCreationTableId, or questionId');
-//       return res.status(400).json({ success: false, message: 'Invalid data types' });
-//     }
+    if (isNaN(userIdNumber) || isNaN(testCreationTableIdNumber)) {
+      console.error('Invalid integer value for user_Id, testCreationTableId, or questionId');
+      return res.status(400).json({ success: false, message: 'Invalid data types' });
+    }
 
-//     // Continue with processing
-//     const sql = 'INSERT INTO user_responses (user_Id, testCreationTableId, question_id, user_answer) VALUES (?,?,?,?)';
+    // Continue with processing
+    const sql = 'INSERT INTO user_responses (user_Id, testCreationTableId, question_id, user_answer) VALUES (?,?,?,?)';
 
-//     for (const questionId in responses) {
-//       const questionIdNumber = parseInt(questionId, 10);
+    for (const questionId in responses) {
+      const questionIdNumber = parseInt(questionId, 10);
 
-//       if (isNaN(questionIdNumber)) {
-//         console.error(`Invalid integer value for questionId: ${questionId}`);
-//         continue;  // Skip processing this iteration
-//       }
+      if (isNaN(questionIdNumber)) {
+        console.error(`Invalid integer value for questionId: ${questionId}`);
+        continue;  // Skip processing this iteration
+      }
 
-//       const optionIndexes1 = responses[questionId].optionIndexes1.join(',');
-//       const optionIndexes2 = responses[questionId].optionIndexes2.join(',');
+      const optionIndexes1 = responses[questionId].optionIndexes1.join(',');
+      const optionIndexes2 = responses[questionId].optionIndexes2.join(',');
 
-//       console.log(`Processing responses for question ${questionId}:`, {
-//         user_Id: userIdNumber,
-//         testCreationTableId: testCreationTableIdNumber,
-//         question_id: questionIdNumber,
-//         user_answer: optionIndexes1 + ' ' + optionIndexes2,
-//       });
+      console.log(`Processing responses for question ${questionId}:`, {
+        user_Id: userIdNumber,
+        testCreationTableId: testCreationTableIdNumber,
+        question_id: questionIdNumber,
+        user_answer: optionIndexes1 + ' ' + optionIndexes2,
+      });
 
-//       const queryValues = [userIdNumber, testCreationTableIdNumber, questionIdNumber, optionIndexes1 + ',' + optionIndexes2];
+      const queryValues = [userIdNumber, testCreationTableIdNumber, questionIdNumber, optionIndexes1 + ',' + optionIndexes2];
 
-//       console.log('Executing SQL query:', sql, queryValues);
+      console.log('Executing SQL query:', sql, queryValues);
 
-//       await new Promise((resolve, reject) => {
-//         db.query(sql, queryValues, (err, result) => {
-//           if (err) {
-//             console.error('Error saving response to the database:', err);
-//             reject(err);
-//           } else {
-//             console.log(`Response for question ${questionIdNumber} saved to the database`);
-//             resolve(result);
-//           }
-//         });
-//       });
-//     }
+      await new Promise((resolve, reject) => {
+        db.query(sql, queryValues, (err, result) => {
+          if (err) {
+            console.error('Error saving response to the database:', err);
+            reject(err);
+          } else {
+            console.log(`Response for question ${questionIdNumber} saved to the database`);
+            resolve(result);
+          }
+        });
+      });
+    }
 
-//     res.json({ success: true, message: 'Responses saved successfully' });
+    res.json({ success: true, message: 'Responses saved successfully' });
 
-//   } catch (error) {
-//     console.error('Error handling the request:', error);
-//     res.status(500).json({ success: false, message: 'Internal server error' });
-//   }
-// });
+  } catch (error) {
+    console.error('Error handling the request:', error);
+    res.status(500).json({ success: false, message: 'Internal server error' });
+  }
+});
 
 
 
@@ -576,6 +576,51 @@ router.get('/subjects/:testCreationTableId', async (req, res) => {
 //   }
 // });
 
+// router.post('/response', (req, res) => {
+//   try {
+//     const { userId, testCreationTableId, responses } = req.body;
+
+//     console.log('Received responses from client:', responses);
+
+//     // Assuming each response has a question_id property
+//     const sql = 'INSERT INTO user_responses (user_Id, testCreationTableId, question_id, user_answer, answered_time) VALUES (?, ?, ?, ?, ?)';
+
+//     // Assuming responses is an object where keys are question_ids
+//     for (const questionId in responses) {
+//       const questionIdNumber = parseInt(questionId, 10);
+
+//       if (responses[questionId] && responses[questionId].optionIndexes1 && responses[questionId].optionIndexes2) {
+//         const userAnswer1 = responses[questionId].optionIndexes1.join(',');
+//         const userAnswer2 = responses[questionId].optionIndexes2.join(',');
+
+//         console.log(`Processing responses for question ${questionId}:`, {
+//           userId,
+//           testCreationTableId,
+//           questionId: questionIdNumber,
+//           userAnswer1,
+//           userAnswer2,
+//         });
+
+//         console.log('Executing SQL query:', sql, [userId, testCreationTableId, questionIdNumber, userAnswer1 + ',' + userAnswer2]);
+
+//         db.query(sql, [userId, testCreationTableId, questionIdNumber, userAnswer1 + ',' + userAnswer2], (err, result) => {
+//           if (err) {
+//             console.error('Error saving response to database:', err);
+//           } else {
+//             console.log(`Response for question ${questionIdNumber} saved to database`);
+//           }
+//         });
+//       } else {
+//         console.error(`Invalid response data for question ${questionId}`);
+//       }
+//     }
+
+//     res.json({ success: true, message: 'Responses saved successfully' });
+//   } catch (error) {
+//     console.error('Error handling the request:', error);
+//     res.status(500).json({ success: false, message: 'Internal server error' });
+//   }
+// });
 
 
 

@@ -1,26 +1,30 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    text-decoration: none;
-    list-style: none;
-  }
-  .std-ul{
-    background-color: aquamarine;
-    color: black;
-  }
+.ugquiz_StudentDashbordconatiner{
+  width:100%;
+  display: grid;
+  grid-template-columns: 15% 85%;
+}
 
-  .std-ul li a{
-    color: black;
-  }
+.ugquiz_StudentDashbordconatiner_left{
+  background: #00b7ff;
+  height: 100vh;
+}
 
-  .student_DB_Details{
-    display: flex;
-    /* flex-direction: row-reverse; */
-  }
+    /* background: #2f2467;
+    color: white; */
+.ugquiz_StudentDashbordconatiner_left .ugquiz_StudentDashbordconatiner_left_menu{
+  padding: 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
 
-  .student_DB_Details img{
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-  }
+.ugquiz_StudentDashbordconatiner_right{
+  /* background: #ff2a2a; */
+  display: flex;
+  /* justify-content: center; */
+  /* align-items: center; */
+}
+.studentDashbordconatinereditfrombtns{
+  display: flex;
+  gap: 1rem;
+}

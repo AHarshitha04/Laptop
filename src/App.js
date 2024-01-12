@@ -106,8 +106,11 @@ import  {UpdateInstruction}  from "./components/ug_homepage/exam_portal_admin/Up
 
 
 import {Score} from './Score.jsx'
+
+// ------------------------- studdent dash ------------------
 import Student_dashboard from "./components/ug_homepage/UGadmin/eaxm_portal_/StudentDashboard/Student_dashboard.js";
 import Student_Settings from "./components/ug_homepage/UGadmin/eaxm_portal_/StudentDashboard/Student_Settings.jsx";
+import Student_profileUpdate from "./components/ug_homepage/UGadmin/eaxm_portal_/StudentDashboard/Student_profileUpdate.js";
 
 
 
@@ -197,45 +200,36 @@ const App = () => {
         {/* Remove the following line, as it always redirects to the login page */}
         <Route path="/uglogin" element={<Login />} />
         {/* ========================================================= ugdashboard ====================================================================== */}
-
         <Route
           path="/Exam_portal_home_page"
           element={<Exam_portal_home_page />}
         />
-
         <Route path="/Quiz_dashboard" element={<Quiz_dashboard />} />
         <Route path="/Account_info" element={<Account_info />} />
         <Route path="/userread/:id" element={<UserRead />} />
         <Route path="/Userupdate/:id" element={<Userupdate />} />
         <Route path="/userdetails" element={<Userdeatailedpage />} />
         {/* <Route path="/Quiz_dashboard" element={<Quiz_dashboard />} /> */}
-
         {/* ========================================================= ughomepage ====================================================================== */}
         <Route path="/ImageFetching" element={<ImageFetching />} />
-
         {/* ========================================================= quiz exam routes ====================================================================== */}
-
-
-
-
         <Route path="/feachingcourse/:examId" element={<CoursePage />} />
         <Route path="/Test_List/:courseCreationId" element={<FullTest />} />
         <Route
           path="/Instructions/:testCreationTableId"
           element={<Instructions />}
         />
-       
-
         <Route
           path="/General_intructions_page/:testCreationTableId"
           element={<General_intructions_page />}
         />
-         
-        <Route path="/QuestionPaper/questionOptions/:testCreationTableId" element={<QuestionPaper />} />
-        <Route path='/SubmitPage'  element={<SubmitPage />} /> 
-        <Route path='/TestResultsPage'  element={<TestResultsPage />} />
+        <Route
+          path="/QuestionPaper/questionOptions/:testCreationTableId"
+          element={<QuestionPaper />}
+        />
+        <Route path="/SubmitPage" element={<SubmitPage />} />
+        <Route path="/TestResultsPage" element={<TestResultsPage />} />
         {/* <Route path='/ExamSummary'  element={<ExamSummary />} /> */}
-         
         {/* ---------------------------------  Exam_portal_admin_integration ------------- */}
         <Route
           path="/ExamUpdataion_admin/:examId"
@@ -245,38 +239,35 @@ const App = () => {
           path="/Coureseupdate_admin/:courseCreationId"
           element={<Coureseupdate_admin />}
         />
-
         <Route
           path="/TestUpdateadmin/:testCreationTableId"
           element={<TestUpdateadmin />}
         />
-
-<Route
-              path="/getSubjectData/:testCreationTableId/:subjectId/:sectionId"
-              element={<Document_ImageInfo />}
-            />
-{/* <Route
+        <Route
+          path="/getSubjectData/:testCreationTableId/:subjectId/:sectionId"
+          element={<Document_ImageInfo />}
+        />
+        {/* <Route
             path="/getSubjectData/:subjectId/:testCreationTableId"
             element={<Document_ImageInfo />}
           /> */}
-    <Route
-            path="/Instruction/editIns/:instructionId/"
-            element={<GettinggInstructions />} 
-          />
-          <Route
-path="/InstructionPage/editIns/:instructionId/:id"
-element={<UpdateInstruction />} 
-/> 
-
- // -------------------------- student_dashboard-------------------------//
-
- <Route
-            path="/Student_dashboard"
-            element={<Student_dashboard />} 
-          />
-
-          <Route path="/Student_Settings" element={<Student_Settings />} />
-<Route path="/Score" element={<Score />}/>
+        <Route
+          path="/Instruction/editIns/:instructionId/"
+          element={<GettinggInstructions />}
+        />
+        <Route
+          path="/InstructionPage/editIns/:instructionId/:id"
+          element={<UpdateInstruction />}
+        />
+        // --------------------------
+        student_dashboard-------------------------//
+        <Route path="/Student_dashboard" element={<Student_dashboard />} />
+       
+        <Route
+          path="/Student_profileUpdate"
+          element={<Student_profileUpdate />}
+        />
+        <Route path="/Score" element={<Score />} />
       </Routes>
 
       {/* <Footer /> */}

@@ -239,19 +239,71 @@ export const Header = () => {
                   <div>
                     {isLoggedIn === true ? (
                       <>
-                        <button id="dropdownmenu_foradim_page_btn">
+                        {userRole === "ugotsadmin" && (
+                          <>
+                            <button id="dropdownmenu_foradim_page_btn">
+                              <img
+                                title={userData.username}
+                                src={userData.imageData}
+                                alt={`Image ${userData.user_Id}`}
+                              />
+                              <div className="dropdownmenu_foradim_page">
+                                {/* <Link to={`/userread/${user.id}`} className="btn btn-success mx-2">Read</Link> */}
+                                {/* <Link to={`/userdeatailspage/${user.id}`} >Account-info</Link> */}
+                                <Link to="/Account_info">My profile</Link>
+                                <Link onClick={handleLogout}>Logout</Link>
+                              </div>
+                            </button>
+                          </>
+                        )}
+
+                        {userRole === "ugadmin" && (
+                          <>
+                            <button id="dropdownmenu_foradim_page_btn">
+                              <img
+                                title={userData.username}
+                                src={userData.imageData}
+                                alt={`Image ${userData.user_Id}`}
+                              />
+                              <div className="dropdownmenu_foradim_page">
+                                {/* <Link to={`/userread/${user.id}`} className="btn btn-success mx-2">Read</Link> */}
+                                {/* <Link to={`/userdeatailspage/${user.id}`} >Account-info</Link> */}
+                                <Link to="/Account_info">My profile</Link>
+                                <Link onClick={handleLogout}>Logout</Link>
+                              </div>
+                            </button>
+                          </>
+                        )}
+
+                        {userRole === "viewer" && (
+                          <>
+                            <button id="dropdownmenu_foradim_page_btn">
+                              <img
+                                title={userData.username}
+                                src={userData.imageData}
+                                alt={`Image ${userData.user_Id}`}
+                              />
+                              <div className="dropdownmenu_foradim_page">
+                                {/* <Link to={`/userread/${user.id}`} className="btn btn-success mx-2">Read</Link> */}
+                                {/* <Link to={`/userdeatailspage/${user.id}`} >Account-info</Link> */}
+                                <Link to="/student_dashboard">My profile</Link>
+                                <Link onClick={handleLogout}>Logout</Link>
+                              </div>
+                            </button>
+                          </>
+                        )}
+                        {/* <button id="dropdownmenu_foradim_page_btn">
                           <img
                             title={userData.username}
                             src={userData.imageData}
                             alt={`Image ${userData.user_Id}`}
                           />
                           <div className="dropdownmenu_foradim_page">
-                            {/* <Link to={`/userread/${user.id}`} className="btn btn-success mx-2">Read</Link> */}
-                            {/* <Link to={`/userdeatailspage/${user.id}`} >Account-info</Link> */}
-                            <Link to="/Account_info">Account-info</Link>
+                           
+                            <Link to="/Account_info">My profile</Link>
                             <Link onClick={handleLogout}>Logout</Link>
                           </div>
-                        </button>
+                        </button> */}
                       </>
                     ) : (
                       <>
@@ -297,9 +349,48 @@ export const Header = () => {
 // ------------------------------------------------------------------------- home section ---------------------------------------------
 
 export const Home_section = () => {
+   const userRole = localStorage.getItem("userRole");
+   const [isLoggedIn, setIsLoggedIn] = useState(false);
+   const [userData, setUserData] = useState({});
+
+   useEffect(() => {
+     const checkLoggedIn = () => {
+       const loggedIn = localStorage.getItem("isLoggedIn");
+       if (loggedIn === "true") {
+         setIsLoggedIn(true);
+         fetchUserData();
+       }
+     };
+     checkLoggedIn();
+   }, []);
+
+   const fetchUserData = async () => {
+     try {
+       const token = localStorage.getItem("token");
+       const response = await fetch(
+         "http://localhost:5001/ughomepage_banner_login/user",
+         {
+           headers: {
+             Authorization: `Bearer ${token}`,
+           },
+         }
+       );
+
+       if (response.ok) {
+         const userData = await response.json();
+         setUserData(userData);
+       } else {
+         // Handle errors if needed
+       }
+     } catch (error) {
+       // Handle other errors if needed
+     }
+   };
   return (
     <>
       <div className="quiz__Home_continer">
+        <h2>welcomes <span>{userData.username}</span> to EGRADTUTOR</h2>
+
         <div>
           <div className="quiz__Home_continer_left">
             {quiz__Home_continer_left.map((home, index) => {
