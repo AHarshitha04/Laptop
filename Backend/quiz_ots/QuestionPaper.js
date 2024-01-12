@@ -187,34 +187,32 @@ router.get('/subjects/:testCreationTableId', async (req, res) => {
     const { testCreationTableId } = req.params;
     try {
       const [rows] = await db.query(`
-
       SELECT 
-      q.question_id, 
-      q.questionImgName, 
-      o.option_id, 
-      o.optionImgName,
-      o.option_index,
-      qt.qtypeId,
-      qt.qtype_text,
-      t.testCreationTableId,
-      doc.document_Id,
-      doc.documen_name,
-      s.sort_id,
-      s.sortid_text
-  FROM 
-      questions q 
-  LEFT OUTER JOIN test_creation_table t ON 
-      q.testCreationTableId = t.testCreationTableId 
-      LEFT OUTER JOIN sortid s ON 
-      q.question_id = s.question_id
-  LEFT OUTER JOIN ots_document doc ON 
-      t.testCreationTableId = doc.testCreationTableId
-  LEFT OUTER JOIN options o ON 
-      q.question_id = o.question_id
-  LEFT OUTER JOIN qtype qt ON 
-      q.question_id = qt.question_id 
-  WHERE 
-      t.testCreationTableId = ?
+    q.question_id, q.questionImgName, 
+    o.option_id, o.optionImgName,o.option_index,
+    s.solution_id, s.solutionImgName, 
+    qt.qtypeId, qt.qtype_text,
+    ans.answer_id, ans.answer_text,
+    m.markesId, m.marks_text,
+    si.sort_id, si.sortid_text,
+    doc.documen_name, doc.sectionId, 
+    doc.subjectId, doc.testCreationTableId,
+    P.paragraphImg, p.paragraph_Id,
+    pq.paragraphQNo_Id, pq.paragraphQNo
+FROM 
+    questions q 
+    LEFT OUTER JOIN options o ON q.question_id = o.question_id
+    LEFT OUTER JOIN qtype qt ON q.question_id = qt.question_id 
+    LEFT OUTER JOIN answer ans ON q.question_id = ans.question_id 
+    LEFT OUTER JOIN marks m ON q.question_id = m.question_id 
+    LEFT OUTER JOIN sortid si ON q.question_id = si.question_id 
+    LEFT OUTER JOIN solution s ON q.question_id = s.solution_id 
+    LEFT OUTER JOIN paragraph p ON q.document_Id = p.document_Id
+    LEFT OUTER JOIN paragraphqno pq ON p.paragraph_Id = pq.paragraph_Id AND q.question_id = pq.question_id
+    LEFT OUTER JOIN ots_document doc ON q.document_Id = doc.document_Id  
+WHERE 
+    doc.testCreationTableId = ?
+ORDER BY q.question_id ASC;
 
       `, [testCreationTableId]);
   
@@ -227,37 +225,63 @@ router.get('/subjects/:testCreationTableId', async (req, res) => {
         // Organize data into an array of questions
         rows.forEach(row => {
           const existingQuestion = questionData.questions.find(q => q.question_id === row.question_id);
-  
+          const option = {
+            option_id: row.option_id,
+            option_index: row.option_index,
+            optionImgName: row.optionImgName,
+          };
           if (existingQuestion) {
+            const existingOption = existingQuestion.options.find(opt => opt.option_id === option.option_id);
             // Question already exists, add option to the existing question
-            existingQuestion.options.push({
-              option_id: row.option_id,
-              option_index:row.option_index,
-              optionImgName: row.optionImgName,
-            });
+            // existingQuestion.options.push({
+            //   option_id: row.option_id,
+            //   option_index:row.option_index,
+            //   optionImgName: row.optionImgName,
+            // });
+
+            if (!existingOption) {
+              existingQuestion.options.push(option);
+            }
+
           } else {
             // Question doesn't exist, create a new question
             const newQuestion = {
               question_id: row.question_id,
               questionImgName: row.questionImgName,
               documen_name: row.documen_name,
-              options: [
-                {
-                  option_id: row.option_id,
-                  optionImgName: row.optionImgName,
-                },
-              ],
-             
-              qtype:{
-                qtypeId:row.qtypeId,
-                qtype_text:row.qtype_text,
+              options: [option],
+              
+              qtype: {
+                qtypeId: row.qtypeId,
+                qtype_text: row.qtype_text,
               },
-              sortid:{
-                sort_id:row.sort_id,
-                sortid_text:row.sortid_text,
+              answer: {
+                answer_id: row.answer_id,
+                answer_text: row.answer_text,
               },
-             
+              marks: {
+                markesId: row.markesId,
+                marks_text: row.marks_text,
+              },
+              sortid: {
+                sort_id: row.sort_id,
+                sortid_text: row.sortid_text,
+              },
+              paragraph: {},
+              paragraphqno: {},
             };
+
+            if (row.paragraph_Id && row.paragraphQNo) {
+              newQuestion.paragraph = {
+                paragraph_Id: row.paragraph_Id,
+                paragraphImg: row.paragraphImg,
+              };
+       
+              newQuestion.paragraphqno = {
+                paragraphQNo_Id: row.paragraphQNo_Id,
+                paragraphQNo: row.paragraphQNo,
+              };
+            }
   
             questionData.questions.push(newQuestion);
           }
@@ -266,7 +290,6 @@ router.get('/subjects/:testCreationTableId', async (req, res) => {
   
         res.json(questionData);
       } else {
-        // Handle the case where no rows are returned (empty result set)
         res.status(404).json({ error: 'No data found' });
       }
     } catch (error) {
@@ -274,14 +297,148 @@ router.get('/subjects/:testCreationTableId', async (req, res) => {
       res.status(500).json({ error: 'Internal Server Error' });
     }
   });
-  
 
 
 
+  // router.get('/fulldocimages/:testCreationTableId/:subjectId/:sectionId', async (req, res) => {
+  //   const { testCreationTableId, subjectId, sectionId } = req.params;
+  //   try {
+  //     const [rows] = await db.query(`
+  //     SELECT DISTINCT
+  //     q.question_id, q.questionImgName,
+  //     o.option_id, o.optionImgName, o.option_index,
+  //     s.solution_id, s.solutionImgName,
+  //     qt.qtypeId, qt.qtype_text,
+  //     ans.answer_id, ans.answer_text,
+  //     m.markesId, m.marks_text,
+  //     si.sort_id, si.sortid_text,
+  //     doc.documen_name, doc.sectionId,
+  //     doc.subjectId, doc.testCreationTableId,
+  //     P.paragraphImg, p.paragraph_Id,
+  //     pq.paragraphQNo_Id, pq.paragraphQNo
+  // FROM
+  //     questions q
+  //     LEFT OUTER JOIN options o ON q.question_id = o.question_id
+  //     LEFT OUTER JOIN qtype qt ON q.question_id = qt.question_id
+  //     LEFT OUTER JOIN answer ans ON q.question_id = ans.question_id
+  //     LEFT OUTER JOIN marks m ON q.question_id = m.question_id
+  //     LEFT OUTER JOIN sortid si ON q.question_id = si.question_id
+  //     LEFT OUTER JOIN solution s ON q.question_id = s.question_id
+  //     LEFT OUTER JOIN paragraph p ON q.document_Id = p.document_Id
+  //     LEFT OUTER JOIN paragraphqno pq ON p.paragraph_Id = pq.paragraph_Id AND q.question_id = pq.question_id
+  //     LEFT OUTER JOIN ots_document doc ON q.document_Id = doc.document_Id  
+  // WHERE
+  //     doc.testCreationTableId = ? AND doc.subjectId = ? AND doc.sectionId = ?;
+ 
+  //     `, [testCreationTableId, subjectId, sectionId]);
+ 
+  //     // Check if rows is not empty
+  //     if (rows.length > 0) {
+  //       const questionData = {
+  //         questions: [],
+  //       };
+ 
+  //       // Organize data into an array of questions
+  //       rows.forEach(row => {
+  //         const existingQuestion = questionData.questions.find(q => q.question_id === row.question_id);
+         
+  //         const option = {
+  //           option_id: row.option_id,
+  //           option_index: row.option_index,
+  //           optionImgName: row.optionImgName,
+  //         };
+       
+  //         if (existingQuestion) {
+  //           const existingOption = existingQuestion.options.find(opt => opt.option_id === option.option_id);
+       
+  //           if (!existingOption) {
+  //             existingQuestion.options.push(option);
+  //           }
+  //         } else {
+  //           const newQuestion = {
+  //             question_id: row.question_id,
+  //             questionImgName: row.questionImgName,
+  //             documen_name: row.documen_name,
+  //             options: [option],
+  //             solution: {
+  //               solution_id: row.solution_id,
+  //               solutionImgName: row.solutionImgName,
+  //             },
+  //             qtype: {
+  //               qtypeId: row.qtypeId,
+  //               qtype_text: row.qtype_text,
+  //             },
+  //             answer: {
+  //               answer_id: row.answer_id,
+  //               answer_text: row.answer_text,
+  //             },
+  //             marks: {
+  //               markesId: row.markesId,
+  //               marks_text: row.marks_text,
+  //             },
+  //             sortid: {
+  //               sort_id: row.sort_id,
+  //               sortid_text: row.sortid_text,
+  //             },
+  //             paragraph: {},
+  //             paragraphqno: {},
+  //           };
+       
+  //           // Check if paragraphqno data exists for the question
+  //           if (row.paragraph_Id && row.paragraphQNo) {
+  //             newQuestion.paragraph = {
+  //               paragraph_Id: row.paragraph_Id,
+  //               paragraphImg: row.paragraphImg,
+  //             };
+       
+  //             newQuestion.paragraphqno = {
+  //               paragraphQNo_Id: row.paragraphQNo_Id,
+  //               paragraphQNo: row.paragraphQNo,
+  //             };
+  //           }
+       
+  //           questionData.questions.push(newQuestion);
+  //         }
+  //       });
+ 
+  //       res.json(questionData);
+  //     } else {
+  //       // Handle the case where no rows are returned (empty result set)
+  //       res.status(404).json({ error: 'No data found' });
+  //     }
+  //   } catch (error) {
+  //     console.error('Error fetching question data:', error);
+  //     res.status(500).json({ error: 'Internal Server Error' });
+  //   }
+  // });
+  // SELECT 
+  //     q.question_id, 
+  //     q.questionImgName, 
+  //     o.option_id, 
+  //     o.optionImgName,
+  //     o.option_index,
+  //     qt.qtypeId,
+  //     qt.qtype_text,
+  //     t.testCreationTableId,
+  //     doc.document_Id,
+  //     doc.documen_name,
+  //     s.sort_id,
+  //     s.sortid_text
+  // FROM 
+  //     questions q 
+  // LEFT OUTER JOIN test_creation_table t ON 
+  //     q.testCreationTableId = t.testCreationTableId 
+  //     LEFT OUTER JOIN sortid s ON 
+  //     q.question_id = s.question_id
+  // LEFT OUTER JOIN ots_document doc ON 
+  //     t.testCreationTableId = doc.testCreationTableId
+  // LEFT OUTER JOIN options o ON 
+  //     q.question_id = o.question_id
+  // LEFT OUTER JOIN qtype qt ON 
+  //     q.question_id = qt.question_id 
+  // WHERE 
+  //     t.testCreationTableId = ?
 
-
-
-  
   
   
   // ----------------------------------------------------user reponses----------------------------------------------
