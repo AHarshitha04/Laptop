@@ -239,25 +239,10 @@ export const Header = () => {
                   <div>
                     {isLoggedIn === true ? (
                       <>
-                        {userRole === "ugotsadmin" && (
-                          <>
-                            <button id="dropdownmenu_foradim_page_btn">
-                              <img
-                                title={userData.username}
-                                src={userData.imageData}
-                                alt={`Image ${userData.user_Id}`}
-                              />
-                              <div className="dropdownmenu_foradim_page">
-                                {/* <Link to={`/userread/${user.id}`} className="btn btn-success mx-2">Read</Link> */}
-                                {/* <Link to={`/userdeatailspage/${user.id}`} >Account-info</Link> */}
-                                <Link to="/Account_info">My profile</Link>
-                                <Link onClick={handleLogout}>Logout</Link>
-                              </div>
-                            </button>
-                          </>
-                        )}
-
-                        {userRole === "ugadmin" && (
+                     
+                        {(userRole === "admin" ||
+                          userRole === "ugotsadmin" ||
+                          userRole === "ugadmin") && (
                           <>
                             <button id="dropdownmenu_foradim_page_btn">
                               <img
