@@ -3763,7 +3763,7 @@ const QuestionPaper = () => {
         selectedAnswersMap2[currentQuestion.question_id].length > 0);
 
     // Update questionStatus for the marked question
-    const updatedQuestionStatus = [...questionStatus];
+
     if (isCurrentQuestionAnswered) {
       updatedQuestionStatus[currentQuestionIndex] =
         "Answered but marked for review";
