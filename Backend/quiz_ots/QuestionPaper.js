@@ -446,18 +446,17 @@ ORDER BY q.question_id ASC;
 //main working code
 router.post('/response', async (req, res) => {
   try {
-    const { responses, user_Id, testCreationTableId } = req.body;
-
+    const { responses, userId, testCreationTableId } = req.body;
+    console.log('Received data::', { responses, userId, testCreationTableId });
     // Validate data types
-    const userIdNumber = parseInt(user_Id, 10);
-const testCreationTableIdNumber = parseInt(testCreationTableId, 10);
-// const questionIdNumber = parseInt(questionId, 10);
-
-
+    const userIdNumber = parseInt(userId, 10);
+    const testCreationTableIdNumber = parseInt(testCreationTableId, 10);
+    
     if (isNaN(userIdNumber) || isNaN(testCreationTableIdNumber)) {
       console.error('Invalid integer value for user_Id, testCreationTableId, or questionId');
       return res.status(400).json({ success: false, message: 'Invalid data types' });
     }
+    
 
     // Continue with processing
     const sql = 'INSERT INTO user_responses (user_Id, testCreationTableId, question_id, user_answer) VALUES (?,?,?,?)';
