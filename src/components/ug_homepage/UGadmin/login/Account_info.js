@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { nav } from "../eaxm_portal_/DATA/Data";
+
+import { MdAlternateEmail } from "react-icons/md";
+import { FaLock, FaUserAlt, FaImage } from "react-icons/fa";
+import { IoIosCloseCircleOutline } from "react-icons/io";
 import axios from "axios";
 import "./Account_info.css";
 
@@ -134,83 +138,165 @@ export const Users = () => {
     }
   };
 
+
+
+
+  const handleRegister = async (e) => {
+    e.preventDefault();
+
+    if (!isEmailValid(email)) {
+      setMessage("Please enter a valid email address.");
+      return;
+    }
+
+    if (!isPasswordValid(password)) {
+      setMessage("Password should be at least 6 characters long.");
+      return;
+    }
+
+    if (!isUsernameValid(username)) {
+      setMessage("Username should be at least 3 characters long.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("username", username);
+    formData.append("email", email);
+    formData.append("password", password);
+    if (profileImage) {
+      formData.append("profileImage", profileImage, profileImage.name); // Append the image file with its name
+    }
+
+    try {
+      const response = await axios.post(
+        "http://localhost:5001/ughomepage_banner_login/register",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      console.log("123");
+      console.log(formData);
+
+      if (response.status === 201) {
+        // Check for successful registration status
+        setSMessage("User registered successfully!");
+        setMessage("");
+        setUsername("");
+        setEmail("");
+        setPassword("");
+        setProfileImage(null);
+        window.location.href = "/uglogin";
+      }
+  setAdminadduser(false)
+window.location.reload();
+    } catch (error) {
+      setMessage(error.response?.data?.error || "Error registering user");
+      console.error("Error:", error);
+    }
+  };
+const handleRegisterclose=()=>{
+  setAdminadduser(false)
+}
+    const [username, setUsername] = useState("");    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [profileImage, setProfileImage] = useState(null);
+    const [message, setMessage] = useState("");
+    const [smessage, setSMessage] = useState("");
+
+    const isEmailValid = (email) => {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return emailRegex.test(email);
+    };
+
+    const isPasswordValid = (password) => {
+      return password.length >= 6;
+    };
+
+    const isUsernameValid = (username) => {
+      return username.length >= 3;
+    };
+
+const [adminadduser, setAdminadduser] = useState(false);
+  const handleadminadduser = () => {
+    setAdminadduser(true)
+  };
   return (
     <div className="act_infocontainer">
-      <div className="row">
-        <div className="col-md-12">
-          <p>
-            <Link to="/add" className="btn btn-success">
-              Add new users
-            </Link>
-          </p>
-          {/* <table className="table table-bordered">
-            <thead className="otsGEt_-contantHead otc_-table_-header">
-              <tr>
-                <th>S No.</th>
-                <th>Full Name</th>
-                <th>Email</th>
-                <th>Password</th>
-                <th>Role</th>
-                <th>profile Img</th>
-
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody className="otc_-table_-tBody">
-              {users.map((user, i) => {
-                return (
-                  <tr
-                    key={i}
-                    className={user.id % 2 === 0 ? "color1" : "color2"}
-                  >
-                    <td>{i + 1}</td>
-                    <td>{user.username} </td>
-                    <td>{user.email} </td>
-                    <td>{user.password} </td>
-                    <td>{user.role} </td>
-                    <td>
-                      <img src={user.profile_image} alt={`Image ${user.id}`} />
-                    </td>
-                    <img
-                      src={user.profile_image}
-                      alt={`Image ${user.user_Id}`}
-                    />
-
-                    <td>
-                      <button>
-                        <Link
-                          to={`/userread/${user.id}`}
-                          className="btn btn-success mx-2"
-                        >
-                          Read
-                        </Link>
-                      </button>
-
-                      <button>
-                        <Link
-                          to={`/userupdate/${user.user_Id}`}
-                          className="btn btn-info mx-2"
-                        >
-                          Edit
-                        </Link>
-                      </button>
-
-                      <button
-                        onClick={() => handleDelete(user.id)}
-                        className="btn btn-danger"
-                      >
-                        Delete
-                      </button>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table> */}
+      <div className="admin_profile_superparentcontainer">
+        <div className="admin_profile_superparentcontainer_addnew_user">
+          <button onClick={handleadminadduser}>Add new users</button>
         </div>
+        {adminadduser ? (
+          <div className="ug_adminregistercontainer">
+            <div className=" ug_adminregistersubcontainer">
+              <div className="ug_logincontainer_box">
+                <div className="ug_logincontainer_box_close">
+                  <button onClick={handleRegisterclose}>
+                    <IoIosCloseCircleOutline />
+                  </button>
+                </div>
 
-        <div>
-          <h1>All users</h1>
+                <h2>Register</h2>
+                <form onSubmit={handleRegister}>
+                  <label>
+                    <FaUserAlt />
+                    <input
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value)}
+                      placeholder="Username"
+                    />
+                  </label>
+
+                  <label>
+                    <MdAlternateEmail />
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="Email"
+                    />
+                  </label>
+
+                  <label>
+                    <FaLock />
+                    <input
+                      type="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder="Password"
+                    />
+                  </label>
+
+                  {/* Input for profile image */}
+                  <label>
+                    <FaImage />
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => setProfileImage(e.target.files[0])}
+                    />
+                  </label>
+
+                  <br />
+                  {message && <p style={{ color: "red" }}>{message}</p>}
+                  {smessage && <p style={{ color: "green" }}>{smessage}</p>}
+
+                  <button type="submit">Register</button>
+                </form>
+                {/* <p>
+                  Already have an account? <Link to="/uglogin">Login here</Link>
+                </p> */}
+              </div>
+            </div>
+          </div>
+        ) : null}
+
+        <div className="admin_profile_parentcontainer">
+          <h3>All users</h3>
           <div className="admin_profile_container">
             {users.map((user, i) => (
               <div key={i} className="admin_profile_box">
