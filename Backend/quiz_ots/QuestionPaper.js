@@ -506,285 +506,6 @@ router.post('/response', async (req, res) => {
 
 
 
-// router.post('/storeUserResponse', (req, res) => {
-//   try {
-//     const { userId, testCreationTableId, responses, answeredTime } = req.body;
-
-//     console.log('Received responses from client:', responses);
-
-//     // Assuming each response has a question_id property and userAnswer as an object with optionIndexes1 and optionIndexes2
-//     const sql = 'INSERT INTO user_responses (user_Id, testCreationTableId, question_id, user_answer, answered_time) VALUES (?, ?, ?, ?, ?)';
-
-//     // Iterate over the keys of the responses object (question IDs)
-//     for (const questionId in responses) {
-//       if (responses.hasOwnProperty(questionId)) {
-//         const userAnswer = responses[questionId];
-
-//         if (userAnswer.optionIndexes1 && userAnswer.optionIndexes2) {
-//           const userAnswer1 = userAnswer.optionIndexes1.join(',');
-//           const userAnswer2 = userAnswer.optionIndexes2.join(',');
-
-//           const userAnswerJSON = {
-//             optionIndexes1: userAnswer1,
-//             optionIndexes2: userAnswer2,
-//             // Add other input types as needed
-//           };
-
-//           console.log(`Processing response for question ${questionId}:`, {
-//             userId,
-//             testCreationTableId,
-//             questionId,
-//             userAnswer: userAnswerJSON,
-//             answeredTime,
-//           });
-
-//           console.log('Executing SQL query:', sql, [userId, testCreationTableId, questionId, userAnswerJSON, answeredTime]);
-
-//           db.query(sql, [userId, testCreationTableId, questionId, userAnswerJSON, answeredTime], (err, result) => {
-//             if (err) {
-//               console.error('Error saving response to database:', err);
-//             } else {
-//               console.log(`Response for question ${questionId} saved to database`);
-//             }
-//           });
-//         } else {
-//           console.error(`Invalid response data for question ${questionId}`);
-//         }
-//       }
-//     }
-
-//     res.json({ success: true, message: 'Responses saved successfully' });
-//   } catch (error) {
-//     console.error('Error handling the request:', error);
-//     res.status(500).json({ success: false, message: 'Internal server error' });
-//   }
-// });
-
-// router.post('/storeUserResponse', (req, res) => {
-//   try {
-//     const { userId, testCreationTableId, responses, answeredTime } = req.body;
-
-//     console.log('Received responses from client:', responses);
-
-//     // Assuming each response has a question_id property and userAnswer as an object with optionIndexes1 and optionIndexes2
-//     const sql = 'INSERT INTO user_responses (user_Id, testCreationTableId, question_id, user_answer, answered_time) VALUES (?, ?, ?, ?, ?)';
-
-//     // Iterate over the keys of the responses object (question IDs)
-//     for (const questionId in responses) {
-//       if (responses.hasOwnProperty(questionId)) {
-//         const userAnswer = responses[questionId];
-
-//         if (userAnswer.optionIndexes1 && userAnswer.optionIndexes2) {
-//           const userAnswer1 = userAnswer.optionIndexes1.join(',');
-//           const userAnswer2 = userAnswer.optionIndexes2.join(',');
-
-//           const userAnswerJSON = {
-//             optionIndexes1: userAnswer1,
-//             optionIndexes2: userAnswer2,
-//             // Add other input types as needed
-//           };
-
-//           const userAnswerStringified = JSON.stringify(userAnswerJSON);
-
-//           console.log(`Processing response for question ${questionId}:`, {
-//             userId,
-//             testCreationTableId,
-//             questionId,
-//             userAnswer: userAnswerJSON,
-//             answeredTime,
-//           });
-
-//           console.log('Executing SQL query:', sql, [userId, testCreationTableId, questionId, userAnswerStringified, answeredTime]);
-
-//           db.query(sql, [userId, testCreationTableId, questionId, userAnswerStringified, answeredTime], (err, result) => {
-//             if (err) {
-//               console.error('Error saving response to database:', err);
-//             } else {
-//               console.log(`Response for question ${questionId} saved to the database`);
-//             }
-//           });
-//         } else {
-//           console.error(`Invalid response data for question ${questionId}`);
-//         }
-//       }
-//     }
-
-//     res.json({ success: true, message: 'Responses saved successfully' });
-//   } catch (error) {
-//     console.error('Error handling the request:', error);
-//     res.status(500).json({ success: false, message: 'Internal server error' });
-//   }
-// });
-
-// router.post('/storeUserResponse', (req, res) => {
-//   try {
-//     const { userId, testCreationTableId, responses } = req.body;
-
-//     console.log('Received responses from client:', responses);
-
-//     // Assuming each response has a question_id property and userAnswer as an object with optionIndexes1 and optionIndexes2
-//     const sql = 'INSERT INTO user_responses (user_Id, testCreationTableId, question_id, user_answer, answered_time) VALUES (?, ?, ?, ?, ?)';
-
-//     // Iterate over the keys of the responses object (question IDs)
-//     for (const questionId in responses) {
-//       if (responses.hasOwnProperty(questionId)) {
-//         const userAnswer = responses[questionId];
-
-//         if (userAnswer.optionIndexes1 && userAnswer.optionIndexes2) {
-//           const userAnswer1 = userAnswer.optionIndexes1.join(',');
-//           const userAnswer2 = userAnswer.optionIndexes2.join(',');
-
-//           const userAnswerJSON = {
-//             optionIndexes1: userAnswer1,
-//             optionIndexes2: userAnswer2,
-//             // Add other input types as needed
-//           };
-
-//           const userAnswerStringified = JSON.stringify(userAnswerJSON);
-//           const answeredTime = new Date().toISOString().slice(0, 19).replace('T', ' '); // Format as 'YYYY-MM-DD HH:MM:SS'
-
-
-//           console.log(`Processing response for question ${questionId}:`, {
-//             userId,
-//             testCreationTableId,
-//             questionId,
-//             userAnswer: userAnswerJSON,
-//             answeredTime,
-//           });
-
-//           console.log('Executing SQL query:', sql, [userId, testCreationTableId, questionId, userAnswerStringified, answeredTime]);
-
-//           db.query(sql, [userId, testCreationTableId, questionId, userAnswerStringified, answeredTime], (err, result) => {
-//             if (err) {
-//               console.error('Error saving response to database:', err);
-//             } else {
-//               console.log(`Response for question ${questionId} saved to the database`);
-//             }
-//           });
-//         } else {
-//           console.error(`Invalid response data for question ${questionId}`);
-//         }
-//       }
-//     }
-
-//     res.json({ success: true, message: 'Responses saved successfully' });
-//   } catch (error) {
-//     console.error('Error handling the request:', error);
-//     res.status(500).json({ success: false, message: 'Internal server error' });
-//   }
-// });
-
-// router.post('/storeUserResponse', (req, res) => {
-//   try {
-//     const { userId, testCreationTableId, responses, timer } = req.body;
-
-//     console.log('Received responses and timer from client:', responses, timer);
-
-//     // Assuming each response has a question_id property and userAnswer as an object with optionIndexes1 and optionIndexes2
-//     const sql = 'INSERT INTO user_responses (user_Id, testCreationTableId, question_id, user_answer, answered_time) VALUES (?, ?, ?, ?, ?)';
-
-//     // Iterate over the keys of the responses object (question IDs)
-//     for (const questionId in responses) {
-//       if (responses.hasOwnProperty(questionId)) {
-//         const userAnswer = responses[questionId];
-
-//         if (userAnswer.optionIndexes1 && userAnswer.optionIndexes2) {
-//           const userAnswer1 = userAnswer.optionIndexes1.join(',');
-//           const userAnswer2 = userAnswer.optionIndexes2.join(',');
-
-//           const userAnswerJSON = {
-//             optionIndexes1: userAnswer1,
-//             optionIndexes2: userAnswer2,
-//             // Add other input types as needed
-//           };
-
-//           const userAnswerStringified = JSON.stringify(userAnswerJSON);
-//           const answeredTime = new Date().toISOString().slice(0, 19).replace('T', ' '); // Format as 'YYYY-MM-DD HH:MM:SS'
-
-//           console.log(`Processing response for question ${questionId}:`, {
-//             userId,
-//             testCreationTableId,
-//             questionId,
-//             userAnswer: userAnswerJSON,
-//             answeredTime,
-           
-//           });
-
-//           console.log('Executing SQL query:', sql, [userId, testCreationTableId, questionId, userAnswerStringified, answeredTime, timer]);
-
-//           db.query(sql, [userId, testCreationTableId, questionId, userAnswerStringified, answeredTime, timer], (err, result) => {
-//             if (err) {
-//               console.error('Error saving response to the database:', err);
-//             } else {
-//               console.log(`Response for question ${questionId} saved to the database`);
-//             }
-//           });
-//         } else {
-//           console.error(`Invalid response data for question ${questionId}`);
-//         }
-//       }
-//     }
-
-//     res.json({ success: true, message: 'Responses saved successfully' });
-//   } catch (error) {
-//     console.error('Error handling the request:', error);
-//     res.status(500).json({ success: false, message: 'Internal server error' });
-//   }
-// });
-
-// router.post('/response', (req, res) => {
-//   try {
-//     const { userId, testCreationTableId, responses } = req.body;
-
-//     console.log('Received responses from client:', responses);
-
-//     // Assuming each response has a question_id property
-//     const sql = 'INSERT INTO user_responses (user_Id, testCreationTableId, question_id, user_answer, answered_time) VALUES (?, ?, ?, ?, ?)';
-
-//     // Assuming responses is an object where keys are question_ids
-//     for (const questionId in responses) {
-//       const questionIdNumber = parseInt(questionId, 10);
-
-//       if (responses[questionId] && responses[questionId].optionIndexes1 && responses[questionId].optionIndexes2) {
-//         const userAnswer1 = responses[questionId].optionIndexes1.join(',');
-//         const userAnswer2 = responses[questionId].optionIndexes2.join(',');
-
-//         console.log(`Processing responses for question ${questionId}:`, {
-//           userId,
-//           testCreationTableId,
-//           questionId: questionIdNumber,
-//           userAnswer1,
-//           userAnswer2,
-//         });
-
-//         console.log('Executing SQL query:', sql, [userId, testCreationTableId, questionIdNumber, userAnswer1 + ',' + userAnswer2]);
-
-//         db.query(sql, [userId, testCreationTableId, questionIdNumber, userAnswer1 + ',' + userAnswer2], (err, result) => {
-//           if (err) {
-//             console.error('Error saving response to database:', err);
-//           } else {
-//             console.log(`Response for question ${questionIdNumber} saved to database`);
-//           }
-//         });
-//       } else {
-//         console.error(`Invalid response data for question ${questionId}`);
-//       }
-//     }
-
-//     res.json({ success: true, message: 'Responses saved successfully' });
-//   } catch (error) {
-//     console.error('Error handling the request:', error);
-//     res.status(500).json({ success: false, message: 'Internal server error' });
-//   }
-// });
-
-
-
-
-
-
-
-
 
 
 
@@ -901,42 +622,42 @@ router.get('/questionCount', async (req, res) => {
 
 
 
-router.put('/updateResponse/:user_Id/:testCreationTableId/:questionId', (req, res) => {
-  try {
-    const user_Id = parseInt(req.params.user_Id, 10);
-    const testCreationTableId = parseInt(req.params.testCreationTableId, 10);
-    const questionId = parseInt(req.params.questionId, 10);
-    const { updatedResponse } = req.body;
+// router.put('/updateResponse/:user_Id/:testCreationTableId/:questionId', (req, res) => {
+//   try {
+//     const user_Id = parseInt(req.params.user_Id, 10);
+//     const testCreationTableId = parseInt(req.params.testCreationTableId, 10);
+//     const questionId = parseInt(req.params.questionId, 10);
+//     const { updatedResponse } = req.body;
 
-    if (updatedResponse && updatedResponse.optionIndexes1 && updatedResponse.optionIndexes2) {
-      const userAnswer1 = updatedResponse.optionIndexes1.join(',');
-      const userAnswer2 = updatedResponse.optionIndexes2.join(',');
+//     if (updatedResponse && updatedResponse.optionIndexes1 && updatedResponse.optionIndexes2) {
+//       const userAnswer1 = updatedResponse.optionIndexes1.join(',');
+//       const userAnswer2 = updatedResponse.optionIndexes2.join(',');
 
-      const sql = 'UPDATE user_responses SET user_answer = ? WHERE user_Id = ? AND testCreationTableId = ? AND question_id = ?';
+//       const sql = 'UPDATE user_responses SET user_answer = ? WHERE user_Id = ? AND testCreationTableId = ? AND question_id = ?';
 
-      db.query(sql, [userAnswer1 + ',' + userAnswer2, user_Id, testCreationTableId, questionId], (err, result) => {
-        if (err) {
-          console.error('Error updating response in the database:', err);
-          res.status(500).json({ success: false, message: 'Internal server error' });
-        } else {
-          if (result.affectedRows > 0) {
-            console.log(`Response for question ${questionId} updated successfully`);
-            res.json({ success: true, message: 'Response updated successfully' });
-          } else {
-            console.error(`No records found for question ${questionId}`);
-            res.status(404).json({ success: false, message: 'Response not found' });
-          }
-        }
-      });
-    } else {
-      console.error(`Invalid updated response data for question ${questionId}`);
-      res.status(400).json({ success: false, message: 'Invalid updated response data' });
-    }
-  } catch (error) {
-    console.error('Error handling the request:', error);
-    res.status(500).json({ success: false, message: 'Internal server error' });
-  }
-});
+//       db.query(sql, [userAnswer1 + ',' + userAnswer2, user_Id, testCreationTableId, questionId], (err, result) => {
+//         if (err) {
+//           console.error('Error updating response in the database:', err);
+//           res.status(500).json({ success: false, message: 'Internal server error' });
+//         } else {
+//           if (result.affectedRows > 0) {
+//             console.log(`Response for question ${questionId} updated successfully`);
+//             res.json({ success: true, message: 'Response updated successfully' });
+//           } else {
+//             console.error(`No records found for question ${questionId}`);
+//             res.status(404).json({ success: false, message: 'Response not found' });
+//           }
+//         }
+//       });
+//     } else {
+//       console.error(`Invalid updated response data for question ${questionId}`);
+//       res.status(400).json({ success: false, message: 'Invalid updated response data' });
+//     }
+//   } catch (error) {
+//     console.error('Error handling the request:', error);
+//     res.status(500).json({ success: false, message: 'Internal server error' });
+//   }
+// });
 
 
 
