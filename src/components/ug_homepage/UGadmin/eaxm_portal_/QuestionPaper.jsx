@@ -3192,7 +3192,7 @@ import axios from "axios";
 import ButtonsFunctionality from "./ButtonsFunctionality";
 import "./styles/Paper.css";
 //logo in header
-import logo from "./asserts/egradtutor_logo.png";
+// import logo from "./asserts/egradtutor_logo.png";
 
 const QuestionPaper = () => {
   // --------------------------------------CONST VARIABLES DECLARATIONS--------------------------
@@ -3849,9 +3849,9 @@ const QuestionPaper = () => {
   return (
     <div>
       <div className="quiz_exam_interface_header">
-        <div className="quiz_exam_interface_header_LOGO">
+        {/* <div className="quiz_exam_interface_header_LOGO">
           <img src={logo} alt="" />
-        </div>
+        </div> */}
       </div>
       {!showExamSumary ? (
         <div className="quiz_exam_interface_body">
