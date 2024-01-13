@@ -11,13 +11,13 @@ const QuestionPaper = () => {
   // const [data, setData] = useState({ questions: [] });
   const [questionData, setQuestionData] = useState({ questions: [] });
   // const [questionData, setQuestionData] = useState({});
-  // const [value, setValue] = useState("");
-  const [value, setValue] = useState(() => {
-    const savedValue = localStorage.getItem("calculatorInputValue");
-    return savedValue ? savedValue : "";
-  });
-  console.log("hello")
-console.log("savedValue", value.savedValue);
+  const [value, setValue] = useState("");
+  // const [value, setValue] = useState(() => {
+  //   const savedValue = localStorage.getItem("calculatorInputValue");
+  //   return savedValue ? savedValue : "";
+  // });
+//   console.log("hello")
+// console.log("savedValue", value.savedValue);
 
   const { subjectId, testCreationTableId, userId } = useParams();
   const [Subjects, setSubjects] = useState([]);
@@ -682,23 +682,24 @@ console.log("hiii")
           console.error("Data or questions are null or undefined");
           return;
         }
-
+        const calculatorInputValue = value;
         const currentQuestion = questionData.questions[currentQuestionIndex];
         const selectedOption1 =
           selectedAnswersMap1[currentQuestion.question_id];
         const selectedOption2 =
           selectedAnswersMap2[currentQuestion.question_id];
         // its for NATD( Numeric Answer type of questions with Decimal values)
-        // const selectedOption3 =
-        //   selectedAnswersMap3[currentQuestion.question_id];
-        const calculatorInputValue = value;
+        const selectedOption3 =
+          selectedAnswersMap3[currentQuestion.question_id];
+        
           // const calculatorInputValue = selectedAnswersMap3[currentQuestion.question_id];
           console.log("Calculator Input Value:", value);
         const optionIndexes1 =
           selectedOption1 !== undefined ? [selectedOption1] : [];
         const optionIndexes2 =
           selectedOption2 !== undefined ? selectedOption2 : [];
-
+          const optionIndexes3 =
+          selectedOption3 !== undefined ? selectedOption3 : [];
         const questionId = currentQuestion.question_id;
 
         // console.log("Responses to be sent:", responses);
@@ -716,7 +717,10 @@ console.log("hiii")
            
           },
         };
+console.log('fdkojgodskjgpokjdsogjpdosogkpdkgopk')
+        console.log(responses.selectedOption3)
 
+        // console.log(calculatorInputValue)
         const saveResponse = await axios.post(
           "http://localhost:5001/QuestionPaper/response",
           {
