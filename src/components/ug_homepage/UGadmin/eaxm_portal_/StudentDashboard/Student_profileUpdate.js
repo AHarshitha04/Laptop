@@ -91,23 +91,23 @@ const Student_profileUpdate = () => {
       formData.append("profileImage", user.profile_image);
 
       // Check if the current password matches the user's current password
-      if (user.currentPassword !== user.password) {
-        console.log(user.currentPassword);
-        console.log(user.password);
+      // if (user.currentPassword !== user.password) {
+      //   console.log(user.currentPassword);
+      //   console.log(user.password);
 
-        console.log("Old password does not match");
-        return;
-      }
+      //   console.log("Old password does not match");
+      //   return;
+      // }
 
       // Check if the new password is different from the current password
-      if (user.newPassword === user.password) {
-        console.log(
-          "New password should be different from the current password"
-        );
-        console.log(user.newPassword);
-        console.log(user.password);
-        return;
-      }
+      // if (user.newPassword === user.password) {
+      //   console.log(
+      //     "New password should be different from the current password"
+      //   );
+      //   console.log(user.newPassword);
+      //   console.log(user.password);
+      //   return;
+      // }
 
       // if (user.newPassword === user.password) {
       //   console.log(
@@ -118,12 +118,12 @@ const Student_profileUpdate = () => {
       //   return;
       // }
 
-      if (user.newPassword === user.confirmpassword) {
-        console.log("New password as changed changed successfully");
-        console.log(user.newPassword);
-        console.log(user.confirmpassword);
-        return;
-      }
+      // if (user.newPassword === user.confirmpassword) {
+      //   console.log("New password as changed changed successfully");
+      //   console.log(user.newPassword);
+      //   console.log(user.confirmpassword);
+      //   return;
+      // }
 
       const response = await fetch(
         `http://localhost:5001/ughomepage_banner_login/profile/${user.id}`,
@@ -138,14 +138,108 @@ const Student_profileUpdate = () => {
 
       if (response.ok) {
         window.location.reload();
-        console.log("User details updated successfully");
+        setpasswordchangemessage(false)
+         setSuceessupdatechangemessage("User details updated successfully");
+        // console.log("User details updated successfully");
       } else {
-        console.log("Failed to update user details");
+        setpasswordchangemessage("Failed to update user details");
+        // console.log("Failed to update user details");
       }
     } catch (err) {
       console.log(err);
     }
   };
+const [passwordchangemessage, setpasswordchangemessage] = useState("");
+const [suceessupdatechangemessage, setSuceessupdatechangemessage] =
+  useState("");
+
+const handlePASSWORDClick = async (e) => {
+  e.preventDefault();
+
+  try {
+    const token = localStorage.getItem("token");
+    const formData = new FormData();
+
+    // Append other user details  
+     formData.append("username", user.username);
+     formData.append("email", user.email);
+     formData.append("password", user.password);
+     formData.append("role", user.role);
+    formData.append("currentPassword", user.currentPassword);
+  formData.append("newPassword", user.newPassword);
+  formData.append("confirmpassword", user.confirmpassword);
+
+    // Append the profile image
+    formData.append("profileImage", user.profile_image);
+
+    // Check if the current password matches the user's current password
+    if (user.currentPassword !== user.password) {
+      // console.log(user.currentPassword);
+      // console.log(user.password);
+setpasswordchangemessage("Old password does not match");
+      // console.log("Old password does not match");
+      return;
+    }
+
+    // Check if the new password is different from the current password
+    if (user.newPassword === user.password) {
+
+      setpasswordchangemessage(
+        "New password should be different from the current password"
+      );
+      // console.log(
+      //   "New password should be different from the current password"
+      // );
+      // console.log(user.newPassword);
+      // console.log(user.password);
+      return;
+    }
+
+  if (user.newPassword === user.currentPassword) {
+
+      setpasswordchangemessage(
+        "New password should be different from the current password"
+      );
+    // console.log("New password should be different from the current password");
+    return;
+  }
+
+if (user.newPassword !== user.confirmpassword) {
+  // console.log(" password does not match");
+ setpasswordchangemessage(" password does not match");
+
+  // console.log(user.newPassword);
+  // console.log(user.confirmpassword);
+  return;
+}
+
+    const response = await fetch(
+      `http://localhost:5001/ughomepage_banner_login/studentprofilepassword/${user.id}`,
+      {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      }
+    );
+
+    if (response.ok) {
+      window.location.reload();
+        setpasswordchangemessage(false);
+
+      setSuceessupdatechangemessage("User details updated successfully");
+      // console.log("User details updated successfully");
+    } else {
+      setpasswordchangemessage("Failed to update user details");
+      // console.log("Failed to update user details");
+    }
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+    
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -249,6 +343,11 @@ const Student_profileUpdate = () => {
         {studentDashbordeditformnwithoutpassword ? (
           <form className="Student_profileUpdate_editsubconatiner_from">
             <div>
+            {passwordchangemessage}</div>
+            <div style={{ color: "green" }}>
+              {suceessupdatechangemessage}
+            </div>
+            <div>
               <label className="form-label"> ID:</label>
               <input
                 type="text"
@@ -331,6 +430,11 @@ const Student_profileUpdate = () => {
         ) : null}
         {studentDashbordeditformnwithpassword ? (
           <>
+            <div style={{ color: "red" }}>{passwordchangemessage}</div>
+            <div style={{ color: "green" }}>
+              {suceessupdatechangemessage}
+            </div>
+         
             <div>
               <label className="form-label">Current Password:</label>
               <input
@@ -364,7 +468,7 @@ const Student_profileUpdate = () => {
                 onChange={handleChange}
               />
             </div>
-            <button type="submit" onClick={handleClick}>
+            <button type="submit" onClick={handlePASSWORDClick}>
               Update
             </button>
           </>

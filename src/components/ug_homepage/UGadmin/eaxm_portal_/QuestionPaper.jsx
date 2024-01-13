@@ -4248,8 +4248,7 @@ const QuestionPaper = () => {
                         className="quizsave_next"
 
                         onClick={handleNextQuestion}
-
-                        onClick={handleSaveNextQuestion}
+                      
 
                       >
                         Save & Next

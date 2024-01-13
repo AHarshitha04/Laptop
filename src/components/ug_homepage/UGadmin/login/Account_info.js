@@ -36,53 +36,7 @@ const Account_info = () => {
 
   return (
     <>
-      <div className="Quiz_main_page_header">
-        {nav.map((nav, index) => {
-          return (
-            <div key={index} className="Quiz_main_page_navbar">
-              <div className="Quizzlogo">
-                <img src={nav.logo} alt="" />
-              </div>
-              {/* <li  className={showcardactive1?"showcardactive":"showcardactivenone"}> */}
-
-              <div
-                className={
-                  !showQuizmobilemenu
-                    ? "Quiz_main_page_navbar_SUBpart Quiz_main_page_navbar_SUBpart_mobile"
-                    : "Quiz_main_page_navbar_SUBpart_mobile"
-                }
-              >
-                <ul>
-                  <button style={{ background: "none" }}>
-                    <Link to="/UgadminHome" className="Quiz__home">
-                      Home
-                    </Link>
-                  </button>
-
-                  {/* <button className="quiz_sign_UP">                   
-                    Sign up
-                  </button> */}
-                  <div className="Quiz_main_page_login_signUp_btn">
-                    {/* 
-                      <Link to='/'><button onClick={Quiz_login}>
-                   Login
-                  </button></Link> */}
-                  </div>
-                  <div>
-                    <button onClick={handleLogout}>Logout</button>
-                  </div>
-                </ul>
-              </div>
-
-              <div className="quz_menu" onClick={QuiZ_menu}>
-                <div className="lines"></div>
-                <div className="lines"></div>
-                <div className="lines"></div>
-              </div>
-            </div>
-          );
-        })}
-      </div>
+     
       {userRole === "admin" && (
         <div>
           <p>Admin View: Show all features</p>
@@ -307,7 +261,7 @@ const [adminadduser, setAdminadduser] = useState(false);
                 <div className="admin_profile_box_info">
                   <p>User ID:{user.username}</p>
                   <p>Email ID:{user.email}</p>
-                  <p>Role:{user.role}</p>
+                  {/* <p>Role:{user.role}</p> */}
                 </div>
                 <div className="admin_profile_box_btncontainer">
                   <Link to={`/userread/${user.id}`} className="redbtn ">
@@ -450,4 +404,56 @@ export const Users_info = () => {
        </div>
      </>
    );
-};
+}; 
+
+
+
+// headers
+
+//  <div className="Quiz_main_page_header">
+//    {nav.map((nav, index) => {
+//      return (
+//        <div key={index} className="Quiz_main_page_navbar">
+//          <div className="Quizzlogo">
+//            <img src={nav.logo} alt="" />
+//          </div>
+//          {/* <li  className={showcardactive1?"showcardactive":"showcardactivenone"}> */}
+
+//          <div
+//            className={
+//              !showQuizmobilemenu
+//                ? "Quiz_main_page_navbar_SUBpart Quiz_main_page_navbar_SUBpart_mobile"
+//                : "Quiz_main_page_navbar_SUBpart_mobile"
+//            }
+//          >
+//            <ul>
+//              <button style={{ background: "none" }}>
+//                <Link to="/UgadminHome" className="Quiz__home">
+//                  Home
+//                </Link>
+//              </button>
+
+//              {/* <button className="quiz_sign_UP">                   
+//                     Sign up
+//                   </button> */}
+//              <div className="Quiz_main_page_login_signUp_btn">
+//                {/* 
+//                       <Link to='/'><button onClick={Quiz_login}>
+//                    Login
+//                   </button></Link> */}
+//              </div>
+//              <div>
+//                <button onClick={handleLogout}>Logout</button>
+//              </div>
+//            </ul>
+//          </div>
+
+//          <div className="quz_menu" onClick={QuiZ_menu}>
+//            <div className="lines"></div>
+//            <div className="lines"></div>
+//            <div className="lines"></div>
+//          </div>
+//        </div>
+//      );
+//    })}
+//  </div>;

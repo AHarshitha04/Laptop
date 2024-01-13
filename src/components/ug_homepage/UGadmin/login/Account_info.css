@@ -53,6 +53,8 @@ border: none;
 /* height: 100%; */
 }
 .admin_profile_superparentcontainer_addnew_user button {
+  position: fixed;
+/* right: 8.5rem; */
   color: #fff;
   background-color: #198754;
   border-color: #198754;

@@ -239,7 +239,6 @@ export const Header = () => {
                   <div>
                     {isLoggedIn === true ? (
                       <>
-                     
                         {(userRole === "admin" ||
                           userRole === "ugotsadmin" ||
                           userRole === "ugadmin") && (
@@ -253,7 +252,7 @@ export const Header = () => {
                               <div className="dropdownmenu_foradim_page">
                                 {/* <Link to={`/userread/${user.id}`} className="btn btn-success mx-2">Read</Link> */}
                                 {/* <Link to={`/userdeatailspage/${user.id}`} >Account-info</Link> */}
-                                <Link to="/Account_info">My profile</Link>
+                                <Link to="/student_dashboard">My profile</Link>
                                 <Link onClick={handleLogout}>Logout</Link>
                               </div>
                             </button>
@@ -371,10 +370,19 @@ export const Home_section = () => {
        // Handle other errors if needed
      }
    };
+
+
   return (
     <>
       <div className="quiz__Home_continer">
-        <h2>welcomes <span>{userData.username}</span> to EGRADTUTOR</h2>
+
+        {isLoggedIn === true ? (
+<>
+  <h2>welcomes <span>{userData.username}</span> to EGRADTUTOR</h2>
+</>
+           ):null}
+
+      
 
         <div>
           <div className="quiz__Home_continer_left">
@@ -507,6 +515,7 @@ export const Quiz_Courses = () => {
     setshowcard2(false);
     setshowcardactive1(true);
     setshowcardactive2(false);
+   
   };
 
   // ---------------------------------------------------------- onclick displaycurrentexamsug function--------------------------------------------------------
@@ -515,6 +524,7 @@ export const Quiz_Courses = () => {
     setshowcard2(true);
     setshowcardactive1(false);
     setshowcardactive2(true);
+    
   };
 
   // ----------------- h
@@ -540,31 +550,34 @@ export const Quiz_Courses = () => {
   const [noOfCourses, setNoOfCourses] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const examResponse = await axios.get(
-          `http://localhost:5001/Cards/examData`
-        );
-        setExamCardName(examResponse.data);
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const examResponse = await axios.get(
+        `http://localhost:5001/Cards/examData`
+      );
+      setExamCardName(examResponse.data);
 
-        const courseResponse = await fetch(
-          "http://localhost:5001/Cards/courses/count"
-        );
-        if (!courseResponse.ok) {
-          throw new Error("Network response was not ok");
-        }
-        const courseData = await courseResponse.json();
-        setNoOfCourses(courseData);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      } finally {
-        setLoading(false);
+      const courseResponse = await fetch(
+        "http://localhost:5001/Cards/courses/count"
+      );
+
+      if (!courseResponse.ok) {
+        throw new Error("Network response was not ok");
       }
-    };
 
-    fetchData();
-  }, []);
+      const courseData = await courseResponse.json();
+      setNoOfCourses(courseData);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setNoexam(true); // Set Noexam to true if there is an error
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchData();
+}, []);
 
   const currentDate = new Date(); // Get the current date
   const filteredExams = examCardName.filter(
@@ -573,6 +586,7 @@ export const Quiz_Courses = () => {
       currentDate <= new Date(exam.endDate)
   );
 
+  const [noexam,setNoexam]=useState(false)
   return (
     <>
       <div className="Quiz_cards_page">
@@ -619,67 +633,61 @@ export const Quiz_Courses = () => {
                 return (
                   <div key={examsug.exam_id}>
                     {/* <a href=""><h1>{e.exam_name}</h1> </a>  */}
-                    coming soon
+
                     {/* ----------------------------------- h--------------------- */}
                     <div className="CurrentCourses_div">
                       <h1>Current Exams</h1>
+                      {noexam ? (
+                        <p>coming soon</p>
+                      ) : (
+                        <>
+                        <div className="card_container">
+                        
 
-                      <div className="card_container">
-                        {/* --------------practice-------------------- */}
-
-                        <div className="first_card">
-                          <div className="card">
-                            <div className="container">
-                              <ul className="card_container_ul">
-                                {loading ? (
-                                  <p>Loading...</p>
-                                ) : (
-                                  filteredExams.map((cardItem) => (
-                                    <React.Fragment key={cardItem.examId}>
-                                      <div className="card_container_li">
-                                        <img
-                                          src={iitjee}
-                                          alt="card"
-                                          width={350}
-                                        />
-                                        <h3>{cardItem.examName}</h3>
-                                        <li>
-                                          Validity: ({cardItem.startDate}) to (
-                                          {cardItem.endDate})
-                                        </li>
-                                        <li>
-                                          {noOfCourses.map(
-                                            (count) =>
-                                              count.examId ===
-                                                cardItem.examId && (
-                                                <p key={count.examId}>
-                                                  No of Courses:{" "}
-                                                  {count.numberOfCourses}
-                                                </p>
-                                              )
-                                          )}
-                                        </li>
-                                        <li>
-                                          <br />
-                                          <div className="start_now">
-                                            <Link
-                                              to={`/feachingcourse/${cardItem.examId}`}
-                                            >
-                                              Start Now
-                                            </Link>
-                                          </div>
-                                        </li>
+                          <div className="first_card">
+                            {loading ? (
+                              <p>Loading...</p>
+                            ) : (
+                              filteredExams.map((cardItem) => (
+                                <React.Fragment key={cardItem.examId}>
+                                  <div>
+                                    <img src={iitjee} alt="card" width={350} />
+                                    <h3>{cardItem.examName}</h3>
+                                    <li>
+                                      Validity: ({cardItem.startDate}) to (
+                                      {cardItem.endDate})
+                                    </li>
+                                    <li>
+                                      {noOfCourses.map(
+                                        (count) =>
+                                          count.examId === cardItem.examId && (
+                                            <p key={count.examId}>
+                                              No of Courses:{" "}
+                                              {count.numberOfCourses}
+                                            </p>
+                                          )
+                                      )}
+                                    </li>
+                                    <li>
+                                      <br />
+                                      <div className="start_now">
+                                        <Link
+                                          to={`/feachingcourse/${cardItem.examId}`}
+                                        >
+                                          Start Now
+                                        </Link>
                                       </div>
-                                    </React.Fragment>
-                                  ))
-                                )}
-                              </ul>
-                            </div>
+                                    </li>
+                                  </div>
+                                </React.Fragment>
+                              ))
+                            )}
                           </div>
-                        </div>
 
-                        {/* --------------practice-------------------- */}
-                      </div>
+                        </div>
+                        </>
+                        
+                      )}
                     </div>
                     {/* ----------------------------------- h--------------------- */}
                   </div>
