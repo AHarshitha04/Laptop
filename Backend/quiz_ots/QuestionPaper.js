@@ -444,6 +444,66 @@ ORDER BY q.question_id ASC;
   // ----------------------------------------------------user reponses----------------------------------------------
   
 //main working code
+// router.post('/response', async (req, res) => {
+//   try {
+//     const { responses, userId, testCreationTableId } = req.body;
+//     console.log('Received data::', { responses, userId, testCreationTableId });
+//     // Validate data types
+//     const userIdNumber = parseInt(userId, 10);
+//     const testCreationTableIdNumber = parseInt(testCreationTableId, 10);
+    
+//     if (isNaN(userIdNumber) || isNaN(testCreationTableIdNumber)) {
+//       console.error('Invalid integer value for user_Id, testCreationTableId, or questionId');
+//       return res.status(400).json({ success: false, message: 'Invalid data types' });
+//     }
+    
+
+//     // Continue with processing
+//     const sql = 'INSERT INTO user_responses (user_Id, testCreationTableId, question_id, user_answer) VALUES (?,?,?,?)';
+
+//     for (const questionId in responses) {
+//       const questionIdNumber = parseInt(questionId, 10);
+
+//       if (isNaN(questionIdNumber)) {
+//         console.error(`Invalid integer value for questionId: ${questionId}`);
+//         continue;  // Skip processing this iteration
+//       }
+
+//       const optionIndexes1 = responses[questionId].optionIndexes1.join(',');
+//       const optionIndexes2 = responses[questionId].optionIndexes2.join(',');
+
+//       console.log(`Processing responses for question ${questionId}:`, {
+//         user_Id: userIdNumber,
+//         testCreationTableId: testCreationTableIdNumber,
+//         question_id: questionIdNumber,
+//         user_answer: optionIndexes1 + ' ' + optionIndexes2,
+//       });
+
+//       const queryValues = [userIdNumber, testCreationTableIdNumber, questionIdNumber, optionIndexes1 + ',' + optionIndexes2];
+
+//       console.log('Executing SQL query:', sql, queryValues);
+
+//       await new Promise((resolve, reject) => {
+//         db.query(sql, queryValues, (err, result) => {
+//           if (err) {
+//             console.error('Error saving response to the database:', err);
+//             reject(err);
+//           } else {
+//             console.log(`Response for question ${questionIdNumber} saved to the database`);
+//             resolve(result);
+//           }
+//         });
+//       });
+//     }
+
+//     res.json({ success: true, message: 'Responses saved successfully' });
+
+//   } catch (error) {
+//     console.error('Error handling the request:', error);
+//     res.status(500).json({ success: false, message: 'Internal server error' });
+//   }
+// });
+
 router.post('/response', async (req, res) => {
   try {
     const { responses, userId, testCreationTableId } = req.body;
@@ -451,12 +511,11 @@ router.post('/response', async (req, res) => {
     // Validate data types
     const userIdNumber = parseInt(userId, 10);
     const testCreationTableIdNumber = parseInt(testCreationTableId, 10);
-    
+
     if (isNaN(userIdNumber) || isNaN(testCreationTableIdNumber)) {
       console.error('Invalid integer value for user_Id, testCreationTableId, or questionId');
       return res.status(400).json({ success: false, message: 'Invalid data types' });
     }
-    
 
     // Continue with processing
     const sql = 'INSERT INTO user_responses (user_Id, testCreationTableId, question_id, user_answer) VALUES (?,?,?,?)';
@@ -471,15 +530,16 @@ router.post('/response', async (req, res) => {
 
       const optionIndexes1 = responses[questionId].optionIndexes1.join(',');
       const optionIndexes2 = responses[questionId].optionIndexes2.join(',');
+      const calculatorInputValue = responses[questionId].calculatorInputValue;
 
       console.log(`Processing responses for question ${questionId}:`, {
         user_Id: userIdNumber,
         testCreationTableId: testCreationTableIdNumber,
         question_id: questionIdNumber,
-        user_answer: optionIndexes1 + ' ' + optionIndexes2,
+        user_answer: optionIndexes1 + ' ' + optionIndexes2 + ' ' + calculatorInputValue,
       });
 
-      const queryValues = [userIdNumber, testCreationTableIdNumber, questionIdNumber, optionIndexes1 + ',' + optionIndexes2];
+      const queryValues = [userIdNumber, testCreationTableIdNumber, questionIdNumber, optionIndexes1 + ',' + optionIndexes2 + ' ' + calculatorInputValue];
 
       console.log('Executing SQL query:', sql, queryValues);
 

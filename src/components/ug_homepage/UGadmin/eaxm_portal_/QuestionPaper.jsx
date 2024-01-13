@@ -713,7 +713,7 @@ console.log("hiii")
             optionIndexes2: optionIndexes2.map((index) =>
               String.fromCharCode("a".charCodeAt(0) + index)
             ),
-            selectedOption3: calculatorInputValue, // Add the calculator value to responses
+            calculatorInputValue: calculatorInputValue, // Add the calculator value to responses
            
           },
         };
