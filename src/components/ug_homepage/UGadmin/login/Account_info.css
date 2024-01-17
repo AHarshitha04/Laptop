@@ -1,5 +1,5 @@
 .act_infocontainer {
-  width: 80%;
+  /* width: 80%; */
   margin: 0 auto;
 }
 .table {
@@ -54,7 +54,7 @@ border: none;
 /* height: 100%; */
 }
 .admin_profile_superparentcontainer_addnew_user button {
-  position: fixed;
+
 /* right: 8.5rem; */
   color: #fff;
   background-color: #198754;

@@ -30,6 +30,7 @@ tr th{
     position: relative;
     background: #cfecf55b;
     height: 100%;
+    width: 100%;
     overflow-y: scroll;
     display: flex;
     justify-content: center;
