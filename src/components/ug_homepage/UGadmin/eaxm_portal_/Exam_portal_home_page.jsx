@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import iitjee from "../../../../Images/iit-jee-course.jpg";
 import axios from "axios";
 
-import { Link, useParams } from "react-router-dom";
+import { Link, Navigate, useParams } from "react-router-dom";
 import { Carousel } from "react-responsive-carousel";
 import { AiOutlineForm, AiFillDelete } from "react-icons/ai";
 

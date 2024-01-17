@@ -48,7 +48,35 @@ export const EmployeePortalHomepageLogin = () => {
 
   const handleempolyeeportalregisterSubmit = async (e) => {
     e.preventDefault();
-
+    // Check if the Empoyeename contains only letters
+    if (!containsOnlyLetters(formData.Empoyeename)) {
+      setFormData({
+        ...formData,
+        error: "Empoyeename must contain only letters.",
+      });
+      return;
+    }
+    // Perform client-side validation for individual fields
+    if (!isValidEmail(formData.EmpoyeeEmail)) {
+      setFormData({
+        ...formData,
+        error: "Please enter a valid egradtutor.in email.",
+      });
+      return;
+    }
+  
+    // Check if the password contains a combination of letters and numbers
+    if (!containsLetterAndNumber(formData.EmpoyeePassword)) {
+      setFormData({
+        ...formData,
+        error: "Password must contain a combination of letters and numbers.",
+      });
+      return;
+    }
+  
+  
+  
+    // If all individual field validations pass, proceed with form submission
     try {
       const response = await fetch(
         "http://localhost:5001/Empoyee_protal/Employeeportal_register",
@@ -60,7 +88,7 @@ export const EmployeePortalHomepageLogin = () => {
           body: JSON.stringify(formData),
         }
       );
-
+  
       if (response.ok) {
         console.log("Employee registered successfully");
         window.location.reload();
@@ -69,7 +97,8 @@ export const EmployeePortalHomepageLogin = () => {
         if (responseData.error === "Email already exists") {
           setFormData({
             ...formData,
-            error: "Email already exists. Please use a different email.",
+            error:
+              "Email already exists. Please use a different egradtutor.in email.",
           });
         } else {
           console.error("Failed to register employee");
@@ -79,8 +108,30 @@ export const EmployeePortalHomepageLogin = () => {
       console.error("Error during registration:", error);
     }
   };
+  
+  const isValidEmail = (email) => {
+    // Check if the email is a valid egradtutor.com email
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@egradtutor\.in$/;
+    return emailPattern.test(email);
+  };
+  
+  const containsLetterAndNumber = (password) => {
+    // Check if the password contains at least one letter and one number
+    const letterPattern = /[a-zA-Z]/;
+    const numberPattern = /[0-9]/;
+    return letterPattern.test(password) && numberPattern.test(password);
+  };
+  
+  const containsOnlyLetters = (name) => {
+    // Check if the name contains only letters
+    const letterPattern = /^[a-zA-Z]+$/;
+    return letterPattern.test(name);
+  };
+  
+  
 
   // Frontend: Update login fetch request
+  // Frontend code
 const handleempolyeeportalloginSubmit = async (e) => {
   e.preventDefault();
 
@@ -107,25 +158,6 @@ const handleempolyeeportalloginSubmit = async (e) => {
       localStorage.setItem("token", token);
       localStorage.setItem("isLoggedIn", "true");
 
-      // Get the current date and time
-      const currentDateTime = new Date();
-
-      // Extract day name, month name, and format date
-      const options = {
-        weekday: "long",
-        month: "long",
-        day: "numeric",
-        year: "numeric",
-        hour: "numeric",
-        minute: "numeric",
-        second: "numeric",
-        timeZoneName: "short",
-      };
-      const formattedDateTime = currentDateTime.toLocaleDateString(
-        "en-US",
-        options
-      );
-
       // Call the login history API after a successful login
       await fetch("http://localhost:5001/Empoyee_protal/login_history", {
         method: "POST",
@@ -135,8 +167,7 @@ const handleempolyeeportalloginSubmit = async (e) => {
         },
         body: JSON.stringify({
           Empoye_ID: employee.Empoye_ID,
-          login_time: formattedDateTime,
-          employee_name: employee.Empoyeename,
+          employee_name: employee.Empoyeename, // Make sure the key matches the backend expectation
         }),
       });
 
@@ -155,7 +186,6 @@ const handleempolyeeportalloginSubmit = async (e) => {
     });
   }
 };
-
 
 
   return (

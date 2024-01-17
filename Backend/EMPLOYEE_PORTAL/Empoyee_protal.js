@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const db1 = require("../databases/db1");
 // const db2 = require('../databases/
-const bcrypt = require("bcrypt");
+// const bcrypt = require("bcrypt");
 const fs = require("fs");
 const app = express();
 const path = require("path");
@@ -103,31 +103,73 @@ router.post("/Employeeportal_login", async (req, res) => {
 
 // login_history API
 router.post("/login_history", async (req, res) => {
-  const { Empoye_ID, employee_name } = req.body;
+  const { Empoye_ID } = req.body;
 
   try {
-    const loginInsertSql =
-      "INSERT INTO login_history (employee_id, login_time, employee_name) VALUES (?, NOW(), ?)";
-    db1.query(
-      loginInsertSql,
-      [Empoye_ID, employee_name],
-      (loginError, loginResult) => {
-        if (loginError) {
-          console.error("Error inserting login data:", loginError);
-          res.status(500).json({ error: "Internal server error" });
-          return;
-        }
-
-        res
-          .status(200)
-          .json({ message: "Login history recorded successfully" });
+    // Fetch employee name based on Empoye_ID
+    const fetchEmployeeSql =
+      "SELECT Empoyeename FROM egardtutor_employees_registration WHERE Empoye_ID = ?";
+    db1.query(fetchEmployeeSql, [Empoye_ID], (fetchError, fetchResult) => {
+      if (fetchError || fetchResult.length === 0) {
+        console.error("Error fetching employee name:", fetchError);
+        res.status(500).json({ error: "Internal server error" });
+        return;
       }
-    );
+
+      const employee_name = fetchResult[0].Empoyeename;
+
+      // Now you have the employee_name, proceed with inserting into login_history
+      const currentDate = new Date();
+      const dayName = new Intl.DateTimeFormat('en-US', { weekday: 'long' }).format(currentDate);
+      const monthName = new Intl.DateTimeFormat('en-US', { month: 'long' }).format(currentDate);
+
+      const loginInsertSql =
+        "INSERT INTO login_history (employee_id, login_time, employee_name, day_name, month_name, logout_time) VALUES (?, NOW(), ?, ?, ?, null)";
+      
+      db1.query(
+        loginInsertSql,
+        [Empoye_ID, employee_name, dayName, monthName],
+        (loginError, loginResult) => {
+          if (loginError) {
+            console.error("Error inserting login data:", loginError);
+            res.status(500).json({ error: "Internal server error" });
+            return;
+          }
+
+          res
+            .status(200)
+            .json({ message: "Login history recorded successfully" });
+        }
+      );
+    });
   } catch (error) {
     console.error("Error recording login history:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 });
+
+router.post("/logout_history", async (req, res) => {
+  const { Empoye_ID } = req.body;
+
+  try {
+    const logoutInsertSql =
+      "UPDATE login_history SET logout_time = NOW() WHERE employee_id = ? AND logout_time IS NULL";
+
+    db1.query(logoutInsertSql, [Empoye_ID], (logoutError, logoutResult) => {
+      if (logoutError) {
+        console.error("Error updating logout time:", logoutError);
+        res.status(500).json({ error: "Internal server error" });
+        return;
+      }
+
+      res.status(200).json({ message: "Logout history updated successfully" });
+    });
+  } catch (error) {
+    console.error("Error updating logout history:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 
 
 
