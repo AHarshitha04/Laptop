@@ -1380,7 +1380,7 @@ router.delete("/users/:id", (req, res) => {
 // });
 
 router.get("/act_info", (req, res) => {
-  const query = "SELECT * FROM log";
+  const query = "SELECT * FROM log WHERE role = 'viewer' ";
 
   db1.query(query, (error, results) => {
     if (error) {

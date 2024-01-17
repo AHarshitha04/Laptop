@@ -23,7 +23,7 @@ const ButtonsFunctionality = ({
 
 
 
-  
+
   const [wtimer, setWTimer] = useState(0);
  
  
