@@ -103,6 +103,8 @@ export const Header = () => {
         const userData = await response.json();
         setUserData(userData);
       } else {
+        setLogin(false);
+
         // Handle errors if needed
       }
     } catch (error) {

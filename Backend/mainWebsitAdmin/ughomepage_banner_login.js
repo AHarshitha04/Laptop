@@ -11,6 +11,8 @@ const sizeOf = require("image-size");
 const bodyParser = require("body-parser");
 const multer = require("multer");
 const { register } = require("module");
+const nodemailer = require("nodemailer");
+const logoPath = path.resolve(__dirname, "../logo/logo.png");
 
 app.use(bodyParser.json());
 
@@ -707,6 +709,67 @@ const profilesimages = multer({ storage: storage_PROimg });
 // );
 
 //without hash password
+// router.post(
+//   "/register",
+//   profilesimages.single("profileImage"),
+//   async (req, res) => {
+//     const { username, email, password } = req.body;
+//     const uploadedFile = req.file;
+
+//     try {
+//       // Check if the email already exists in the database...
+//       const checkEmailQuery =
+//         "SELECT COUNT(*) AS count FROM log WHERE email = ?";
+//       db1.query(checkEmailQuery, [email], async (err, results) => {
+//         if (err) {
+//           console.error("Error checking email:", err);
+//           res.status(500).json({ error: "Failed to register user" });
+//           return;
+//         }
+
+//         const emailExists = results[0].count > 0;
+//         if (emailExists) {
+//           res.status(400).json({ error: "Email already exists " });
+//           return;
+//         }
+
+//         let fileContent = null;
+
+//         // Read file asynchronously and handle errors
+//         if (uploadedFile) {
+//           fileContent = fs.readFileSync(uploadedFile.path);
+
+//           // Delete temporary file after reading content
+//           fs.unlinkSync(uploadedFile.path);
+//         }
+
+//         // Hash password
+//         // const hashedPassword = await bcrypt.hash(password, 10);
+//         const defaultRole = "viewer";
+
+//         // Insert user data including the profile image into the database
+//         const insertQuery =
+//           "INSERT INTO log (username, email, password, role, profile_image) VALUES (?, ?, ?, ?, ?)";
+//         db1.query(
+//           insertQuery,
+//           [username, email, password, defaultRole, fileContent],
+//           (err, result) => {
+//             if (err) {
+//               console.error("Failed to register user:", err);
+//               res.status(500).json({ error: "Failed to register user" });
+//               return;
+//             }
+//             res.status(201).json({ message: "User registered successfully" });
+//           }
+//         );
+//       });
+//     } catch (error) {
+//       console.error("Internal server error:", error);
+//       res.status(500).json({ error: "Internal server error" });
+//     }
+//   }
+// );
+
 router.post(
   "/register",
   profilesimages.single("profileImage"),
@@ -751,12 +814,75 @@ router.post(
         db1.query(
           insertQuery,
           [username, email, password, defaultRole, fileContent],
-          (err, result) => {
+          async (err, result) => {
             if (err) {
               console.error("Failed to register user:", err);
               res.status(500).json({ error: "Failed to register user" });
               return;
             }
+
+            // Send registration email
+            try {
+              const transporter = nodemailer.createTransport({
+                // configure your email provider here
+                service: "gmail",
+                auth: {
+                  user: "webdriveegate@gmail.com",
+                  pass: "qftimcrkpkbjugav",
+                },
+              });
+
+              const mailOptions = {
+                from: "webdriveegate@gmail.com",
+                to: email,
+                subject: "Welcome to Egradtutor",
+                //   text: "Thank you for registering on Your App. We hope you enjoy our service!",
+                //   attachments: [
+                //     {
+                //       filename: "profileImage.jpg",
+                //       content: fileContent,
+                //       encoding: "base64",
+                //     },
+                //   ],
+                //   text: req.body.username,
+                //   text: req.body.email,
+                //   text: req.body.password,
+                // };
+
+                html: `
+              <img src="cid:defaultLogo" alt="Profile Image" style="width: 100%; height: auto;" />
+               <p style="font-size: 16px; color: #333;">Thank you for registering on Egradtutor. We hope you enjoy our service!</p>
+              <div style="margin-top: 10px; text-align: center;">
+                <img src="cid:profileImage" alt="Profile Image" style="width: 150px; height: 150px; border-radius: 50%; margin: 0.5rem auto; display: block;" />
+                  <div style=" margin: 0.5rem auto; border: 1px solid rgba(0, 0, 0, 0.5); border-radius: 18px;">
+                 <p style="font-size: 14px; color: #666; margin: 0.5rem ;">Username: ${username}</p>
+                 <p style="font-size: 14px; color: #666; margin: 0.5rem ;">Email: ${email}</p>
+                 <p style="font-size: 14px; color: #666; margin: 0.5rem ;">Password: ${password}</p>
+              </div>
+              </div>
+
+                
+                `,
+                attachments: [
+                  {
+                    filename: "logo.png",
+                    path: logoPath,
+                    cid: "defaultLogo",
+                  },
+                  {
+                    filename: "profileImage.jpg",
+                    content: fileContent,
+                    encoding: "base64",
+                    cid: "profileImage",
+                  },
+                ],
+              };
+
+              await transporter.sendMail(mailOptions);
+            } catch (emailError) {
+              console.error("Failed to send registration email:", emailError);
+            }
+
             res.status(201).json({ message: "User registered successfully" });
           }
         );
@@ -799,7 +925,6 @@ router.post(
 //   }
 // });
 
-
 // without hash password
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
@@ -821,7 +946,7 @@ router.post("/login", async (req, res) => {
       }
 
       const token = jwt.sign({ id: user.user_Id }, "your_secret_key", {
-        expiresIn: "10h",
+        expiresIn: "1min",
       });
       const { user_Id, email, role } = user;
       res.status(200).json({ token, user: { user_Id, email, role } });
@@ -880,7 +1005,7 @@ router.get("/userdetails/:id", (req, res) => {
           username: result.username,
           email: result.email,
           role: result.role,
-          password:result.password,
+          password: result.password,
           // Add other fields as needed
           profile_image: `data:image/png;base64,${base64}`,
         };
@@ -932,7 +1057,7 @@ router.get("/userdetails/:id", (req, res) => {
 //       }
 
 //       const userData = results[0];
-      // res.status(200).json(userData); // Send user data as JSON response
+// res.status(200).json(userData); // Send user data as JSON response
 //     });
 //   } catch (error) {
 //     res.status(500).json({ error: "Internal server error" });
@@ -1074,7 +1199,7 @@ const profilesimages1 = multer({ storage: storage_PROimg1 });
 //   profilesimages1.single("profileImage"), // Ensure 'profileImage' matches the 'name' attribute in the form
 //   async (req, res) => {
 //     const userId = req.params.id;
-    
+
 //     const { username, email, password, role } = req.body;
 //     const uploadedFile = req.file;
 
@@ -1182,18 +1307,12 @@ router.put(
   }
 );
 
-
-
-
-
-
-
 router.put(
   "/profile/:id",
   profilesimages1.single("profileImage"), // Ensure 'profileImage' matches the 'name' attribute in the form
   async (req, res) => {
     const userId = req.params.id;
-   const { username, email, password, role } = req.body;
+    const { username, email, password, role } = req.body;
 
     const uploadedFile = req.file;
 
@@ -1240,8 +1359,6 @@ router.put(
     }
   }
 );
-
-
 
 //password code
 router.put(
@@ -1326,9 +1443,6 @@ router.put(
     }
   }
 );
-
-
-
 
 //------------------- user to get and delete  register detaile by admin
 
