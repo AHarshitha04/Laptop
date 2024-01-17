@@ -207,7 +207,6 @@ const App = () => {
         <Route
           path="/Quiz_dashboard"
           element={<PrivateRoute element={<Quiz_dashboard />} />}
-    
         />
         <Route
           path="/Account_info"
@@ -234,12 +233,10 @@ const App = () => {
         {/* ========================================================= quiz exam routes ====================================================================== */}
         <Route
           path="/feachingcourse/:examId"
-         
           element={<PrivateRoute element={<CoursePage />} />}
         />
         <Route
           path="/Test_List/:courseCreationId"
-     
           element={<PrivateRoute element={<FullTest />} />}
         />
         <Route
@@ -252,7 +249,6 @@ const App = () => {
         />
         <Route
           path="/QuestionPaper/questionOptions/:testCreationTableId"
-      
           element={<PrivateRoute element={<QuestionPaper />} />}
         />
         <Route
@@ -294,16 +290,16 @@ const App = () => {
           element={<PrivateRoute element={<UpdateInstruction />} />}
         />
         // --------------------------
-        student_dashboard-------------------------// 
+        student_dashboard-------------------------//
         <Route
           path="/Student_dashboard"
           element={<PrivateRoute element={<Student_dashboard />} />}
         />
+     
         <Route
           path="/Student_profileUpdate"
           element={<PrivateRoute element={<Student_profileUpdate />} />}
         />
-        
         <Route path="/Score" element={<PrivateRoute element={<Score />} />} />
       </Routes>
 
