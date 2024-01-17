@@ -204,48 +204,45 @@ const App = () => {
           path="/Exam_portal_home_page"
           element={<Exam_portal_home_page />}
         />
-        <Route path="/Quiz_dashboard" element={<Quiz_dashboard />} />
-        <Route path="/Account_info" element={<Account_info />} />
-        <Route path="/userread/:id" element={<UserRead />} />
-        <Route path="/Userupdate/:id" element={<Userupdate />} />
-        <Route path="/userdetails" element={<Userdeatailedpage />} />
+        <Route path="/Quiz_dashboard" element={<PrivateRoute />} />
+        <Route path="/Account_info" element={<PrivateRoute />} />
+        <Route path="/userread/:id" element={<PrivateRoute />} />
+        <Route path="/Userupdate/:id" element={<PrivateRoute />} />
+        <Route path="/userdetails" element={<PrivateRoute />} />
         {/* <Route path="/Quiz_dashboard" element={<Quiz_dashboard />} /> */}
         {/* ========================================================= ughomepage ====================================================================== */}
-        <Route path="/ImageFetching" element={<ImageFetching />} />
+        <Route path="/ImageFetching" element={<PrivateRoute />} />
         {/* ========================================================= quiz exam routes ====================================================================== */}
-        <Route path="/feachingcourse/:examId" element={<CoursePage />} />
-        <Route path="/Test_List/:courseCreationId" element={<FullTest />} />
+        <Route path="/feachingcourse/:examId" element={<PrivateRoute />} />
+        <Route path="/Test_List/:courseCreationId" element={<PrivateRoute />} />
         <Route
           path="/Instructions/:testCreationTableId"
-          element={<Instructions />}
+          element={<PrivateRoute />}
         />
         <Route
           path="/General_intructions_page/:testCreationTableId"
-          element={<General_intructions_page />}
+          element={<PrivateRoute />}
         />
         <Route
           path="/QuestionPaper/questionOptions/:testCreationTableId"
-          element={<QuestionPaper />}
+          element={<PrivateRoute />}
         />
-        <Route path="/SubmitPage" element={<SubmitPage />} />
-        <Route path="/TestResultsPage" element={<TestResultsPage />} />
+        <Route path="/SubmitPage" element={<PrivateRoute />} />
+        <Route path="/TestResultsPage" element={<PrivateRoute />} />
         {/* <Route path='/ExamSummary'  element={<ExamSummary />} /> */}
         {/* ---------------------------------  Exam_portal_admin_integration ------------- */}
-        <Route
-          path="/ExamUpdataion_admin/:examId"
-          element={<ExamUpdataion_admin />}
-        />
+        <Route path="/ExamUpdataion_admin/:examId" element={<PrivateRoute />} />
         <Route
           path="/Coureseupdate_admin/:courseCreationId"
-          element={<Coureseupdate_admin />}
+          element={<PrivateRoute />}
         />
         <Route
           path="/TestUpdateadmin/:testCreationTableId"
-          element={<TestUpdateadmin />}
+          element={<PrivateRoute />}
         />
         <Route
           path="/getSubjectData/:testCreationTableId/:subjectId/:sectionId"
-          element={<Document_ImageInfo />}
+          element={<PrivateRoute />}
         />
         {/* <Route
             path="/getSubjectData/:subjectId/:testCreationTableId"
@@ -253,21 +250,20 @@ const App = () => {
           /> */}
         <Route
           path="/Instruction/editIns/:instructionId/"
-          element={<GettinggInstructions />}
+          element={<PrivateRoute />}
         />
         <Route
           path="/InstructionPage/editIns/:instructionId/:id"
-          element={<UpdateInstruction />}
+          element={<PrivateRoute />}
         />
         // --------------------------
         student_dashboard-------------------------//
-        <Route path="/Student_dashboard" element={<Student_dashboard />} />
-       
+        <Route path="/Student_dashboard" element={<PrivateRoute />} />
         <Route
           path="/Student_profileUpdate"
           element={<Student_profileUpdate />}
         />
-        <Route path="/Score" element={<Score />} />
+        <Route path="/Score" element={<PrivateRoute />} />
       </Routes>
 
       {/* <Footer /> */}
@@ -276,11 +272,32 @@ const App = () => {
   );
 };
 
-const PrivateRoute = () => {
+export const PrivateRoute = () => {
   const isAuthenticated = localStorage.getItem("isLoggedIn");
   return isAuthenticated ? (
     <>
       <UgadminHome />
+      <Account_info />
+      <Userupdate />
+      <UserRead />
+      <Userdeatailedpage />
+      <ImageFetching />
+      <CoursePage />
+      <FullTest />
+      <Instructions />
+      <General_intructions_page />
+      <SubmitPage />
+      <QuestionPaper />
+      <TestResultsPage />
+      <ExamUpdataion_admin />
+      <Coureseupdate_admin />
+      <TestUpdateadmin />
+      <Document_ImageInfo />
+      <GettinggInstructions />
+      <UpdateInstruction />
+      <Student_dashboard />
+      <Student_profileUpdate />
+      <Score />
     </>
   ) : (
     <Navigate to="/uglogin" />
