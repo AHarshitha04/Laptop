@@ -75,7 +75,6 @@ export const Header = () => {
   const userRole = localStorage.getItem("userRole");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userData, setUserData] = useState({});
-
   useEffect(() => {
     const checkLoggedIn = () => {
       const loggedIn = localStorage.getItem("isLoggedIn");
@@ -99,16 +98,24 @@ export const Header = () => {
         }
       );
 
-      if (response.ok) {
-        const userData = await response.json();
-        setUserData(userData);
-      } else {
-        setLogin(false);
+      if (!response.ok) {
+        // Token is expired or invalid, redirect to login page
+        localStorage.removeItem("isLoggedIn");
+        localStorage.removeItem("token");
+        setIsLoggedIn(false);
+        Navigate("/uglogin"); // Assuming you have the 'navigate' function available
 
-        // Handle errors if needed
+        return;
+      }
+
+      if (response.ok) {
+        // Token is valid, continue processing user data
+     const userData = await response.json();
+     setUserData(userData);
+        // ... process userData
       }
     } catch (error) {
-      // Handle other errors if needed
+      console.error("Error fetching user data:", error);
     }
   };
 
@@ -153,6 +160,8 @@ export const Header = () => {
   };
 
   // ----------------- dashborad ---------------------/
+
+
 
   //  localStorage.setItem("isLoggedIn", "true");
   return (
@@ -217,8 +226,9 @@ export const Header = () => {
                         </li>
                       </>
                     )} */}
-
-                    {(userRole === "admin" ||
+{isLoggedIn === true ? (
+  <>
+     {(userRole === "admin" ||
                       userRole === "ugotsadmin" ||
                       userRole === "ugadmin") && (
                       <>
@@ -229,14 +239,18 @@ export const Header = () => {
                         </li>
                       </>
                     )}
-
-                    {userRole === "viewer" && (
+                     {userRole === "viewer" && (
                       <>
                         <button>
                           <Link to="/student_dashboard">DashBoard</Link>
                         </button>
                       </>
                     )}
+  </>
+):null}
+
+
+                   
                   </div>
                   <div>
                     {isLoggedIn === true ? (
@@ -264,11 +278,11 @@ export const Header = () => {
                         {userRole === "viewer" && (
                           <>
                             <button id="dropdownmenu_foradim_page_btn">
-                              <img
-                                title={userData.username}
-                                src={userData.imageData}
-                                alt={`Image ${userData.user_Id}`}
-                              />
+                           <img
+  title={userData.username}
+  src={userData.imageData}
+  alt={`Image ${userData.user_Id}`}
+/>
                               <div className="dropdownmenu_foradim_page">
                                 {/* <Link to={`/userread/${user.id}`} className="btn btn-success mx-2">Read</Link> */}
                                 {/* <Link to={`/userdeatailspage/${user.id}`} >Account-info</Link> */}
@@ -339,16 +353,16 @@ export const Home_section = () => {
    const [isLoggedIn, setIsLoggedIn] = useState(false);
    const [userData, setUserData] = useState({});
 
-   useEffect(() => {
-     const checkLoggedIn = () => {
-       const loggedIn = localStorage.getItem("isLoggedIn");
-       if (loggedIn === "true") {
-         setIsLoggedIn(true);
-         fetchUserData();
-       }
-     };
-     checkLoggedIn();
-   }, []);
+  useEffect(() => {
+    const checkLoggedIn = () => {
+      const loggedIn = localStorage.getItem("isLoggedIn");
+      if (loggedIn === "true") {
+        setIsLoggedIn(true);
+        fetchUserData();
+      }
+    };
+    checkLoggedIn();
+  }, []);
 
    const fetchUserData = async () => {
      try {
@@ -362,14 +376,24 @@ export const Home_section = () => {
          }
        );
 
+       if (!response.ok) {
+         // Token is expired or invalid, redirect to login page
+         localStorage.removeItem("isLoggedIn");
+         localStorage.removeItem("token");
+         setIsLoggedIn(false);
+         Navigate("/uglogin"); // Assuming you have the 'navigate' function available
+
+         return;
+       }
+
        if (response.ok) {
+         // Token is valid, continue processing user data
          const userData = await response.json();
          setUserData(userData);
-       } else {
-         // Handle errors if needed
+         // ... process userData
        }
      } catch (error) {
-       // Handle other errors if needed
+       console.error("Error fetching user data:", error);
      }
    };
 
@@ -1054,6 +1078,7 @@ export const Footer = () => {
       <i class="fa-brands fa-youtube"></i>          
       </div>
     </div>  */}
+    
       </div>
     </div>
   );

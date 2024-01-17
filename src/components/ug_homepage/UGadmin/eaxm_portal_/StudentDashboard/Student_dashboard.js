@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { nav } from "../DATA/Data";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import "./StudentDashbord.css";
 import Student_profileUpdate from "./Student_profileUpdate";
 
@@ -185,28 +185,39 @@ export const StudentDashbordheader = () => {
     checkLoggedIn();
   }, []);
 
-  const fetchUserData = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      const response = await fetch(
-        "http://localhost:5001/ughomepage_banner_login/user",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      if (response.ok) {
-        const userData = await response.json();
-        setUserData(userData);
-      } else {
-        // Handle errors if needed
+const fetchUserData = async () => {
+  try {
+    const token = localStorage.getItem("token");
+    const response = await fetch(
+      "http://localhost:5001/ughomepage_banner_login/user",
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       }
-    } catch (error) {
-      // Handle other errors if needed
+    );
+
+    if (!response.ok) {
+      // Token is expired or invalid, redirect to login page
+      localStorage.removeItem("isLoggedIn");
+      localStorage.removeItem("token");
+      setIsLoggedIn(false);
+      Navigate("/uglogin"); // Assuming you have the 'navigate' function available
+
+      return;
     }
-  };
+
+    if (response.ok) {
+      // Token is valid, continue processing user data
+      const userData = await response.json();
+      setUserData(userData)
+      // ... process userData
+    }
+  } catch (error) {
+    console.error("Error fetching user data:", error);
+  }
+};
+
 
  const handlestudentDashbordsettings = () => {}
   return (
@@ -301,34 +312,54 @@ export const StudentDashbordbookmark = () => {
 };
 
 export const StudentDashbordsettings = () => {
-    const [user, setUserData] = useState({});
-    useEffect(() => {
-      const fetchUserData = async () => {
-        try {
-          const token = localStorage.getItem("token");
-          const response = await fetch(
-            "http://localhost:5001/ughomepage_banner_login/user",
-            {
-              headers: {
-                Authorization: `Bearer ${token}`, // Attach token to headers for authentication
-              },
-            }
-          );
+  const userRole = localStorage.getItem("userRole");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUserData] = useState({});
+    
+     useEffect(() => {
+       const checkLoggedIn = () => {
+         const loggedIn = localStorage.getItem("isLoggedIn");
+         if (loggedIn === "true") {
+           setIsLoggedIn(true);
+           fetchUserData();
+         }
+       };
+       checkLoggedIn();
+     }, []);
 
-          if (response.ok) {
-            const user = await response.json();
-            setUserData(user);
-            console.log(user);
-          } else {
-            // Handle errors, e.g., if user data fetch fails
-          }
-        } catch (error) {
-          // Handle other errors
-        }
-      };
+     const fetchUserData = async () => {
+       try {
+         const token = localStorage.getItem("token");
+         const response = await fetch(
+           "http://localhost:5001/ughomepage_banner_login/user",
+           {
+             headers: {
+               Authorization: `Bearer ${token}`,
+             },
+           }
+         );
 
-      fetchUserData();
-    }, []);
+         if (!response.ok) {
+           // Token is expired or invalid, redirect to login page
+           localStorage.removeItem("isLoggedIn");
+           localStorage.removeItem("token");
+           setIsLoggedIn(false);
+           Navigate("/uglogin"); // Assuming you have the 'navigate' function available
+
+           return;
+         }
+
+         if (response.ok) {
+           // Token is valid, continue processing user data
+           const userData = await response.json();
+           setUserData(userData);
+           // ... process userData
+         }
+       } catch (error) {
+         console.error("Error fetching user data:", error);
+       }
+     };
+
   return (
     <div className="StudentDashbordsettings_conatiner">
       {/* StudentDashbordsettings */}

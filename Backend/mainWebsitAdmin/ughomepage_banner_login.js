@@ -946,7 +946,7 @@ router.post("/login", async (req, res) => {
       }
 
       const token = jwt.sign({ id: user.user_Id }, "your_secret_key", {
-        expiresIn: "1min",
+        expiresIn: "1hr",
       });
       const { user_Id, email, role } = user;
       res.status(200).json({ token, user: { user_Id, email, role } });

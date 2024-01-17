@@ -108,6 +108,12 @@ import Student_dashboard from "./components/ug_homepage/UGadmin/eaxm_portal_/Stu
 import Student_Settings from "./components/ug_homepage/UGadmin/eaxm_portal_/StudentDashboard/Student_Settings.jsx";
 import Student_profileUpdate from "./components/ug_homepage/UGadmin/eaxm_portal_/StudentDashboard/Student_profileUpdate.js";
 
+// ------------------------- EmployeePortal  ------------------
+
+
+import EmployeePortal from "./components/EmployeePortal/EmployeePortal.js";
+import EmployeeDashboard from "./components/EmployeePortal/EmployeeDashboard.js";
+
 const PrivateRoute = ({ element }) => {
   const isAuthenticated = localStorage.getItem("isLoggedIn");
   return isAuthenticated ? element : <Navigate to="/uglogin" />;
@@ -277,10 +283,6 @@ const App = () => {
           path="/getSubjectData/:testCreationTableId/:subjectId/:sectionId"
           element={<PrivateRoute element={<Document_ImageInfo />} />}
         />
-        {/* <Route
-            path="/getSubjectData/:subjectId/:testCreationTableId"
-            element={<Document_ImageInfo />}
-          /> */}
         <Route
           path="/Instruction/editIns/:instructionId/"
           element={<PrivateRoute element={<GettinggInstructions />} />}
@@ -289,18 +291,22 @@ const App = () => {
           path="/InstructionPage/editIns/:instructionId/:id"
           element={<PrivateRoute element={<UpdateInstruction />} />}
         />
-        // --------------------------
-        student_dashboard-------------------------//
+        {/* // --------------------------
+        student_dashboard-------------------------// */}
         <Route
           path="/Student_dashboard"
           element={<PrivateRoute element={<Student_dashboard />} />}
         />
-     
         <Route
           path="/Student_profileUpdate"
           element={<PrivateRoute element={<Student_profileUpdate />} />}
         />
         <Route path="/Score" element={<PrivateRoute element={<Score />} />} />
+        {/* ---------------------------EmployeePortalHomepage----------------------- */}
+        {/* ---------- EmployeePortal_login ------------- */}
+        <Route path="/EmployeePortal" element={<EmployeePortal />} />
+        {/* ---------- EmployeeDashboard ------------- */}
+        <Route path="/Employee_dashboard" element={<EmployeeDashboard />} />
       </Routes>
 
       {/* <Footer /> */}
