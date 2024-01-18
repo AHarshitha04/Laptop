@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const db1 = require("../databases/db1");
 // const db2 = require('../databases/
-const bcrypt = require("bcrypt");
+// const bcrypt = require("bcrypt");
 const fs = require("fs");
 const app = express();
 const path = require("path");
@@ -11,6 +11,8 @@ const sizeOf = require("image-size");
 const bodyParser = require("body-parser");
 const multer = require("multer");
 const { register } = require("module");
+const nodemailer = require("nodemailer");
+const logoPath = path.resolve(__dirname, "../logo/logo.png");
 
 app.use(bodyParser.json());
 
@@ -644,6 +646,129 @@ const profilesimages = multer({ storage: storage_PROimg });
 // );
 
 //------------------- login for user
+//with hash password
+// router.post(
+//   "/register",
+//   profilesimages.single("profileImage"),
+//   async (req, res) => {
+//     const { username, email, password } = req.body;
+//     const uploadedFile = req.file;
+
+//     try {
+//       // Check if the email already exists in the database...
+//       const checkEmailQuery =
+//         "SELECT COUNT(*) AS count FROM log WHERE email = ?";
+//       db1.query(checkEmailQuery, [email], async (err, results) => {
+//         if (err) {
+//           console.error("Error checking email:", err);
+//           res.status(500).json({ error: "Failed to register user" });
+//           return;
+//         }
+
+//         const emailExists = results[0].count > 0;
+//         if (emailExists) {
+//           res.status(400).json({ error: "Email already exists " });
+//           return;
+//         }
+
+//         let fileContent = null;
+
+//         // Read file asynchronously and handle errors
+//         if (uploadedFile) {
+//           fileContent = fs.readFileSync(uploadedFile.path);
+
+//           // Delete temporary file after reading content
+//           fs.unlinkSync(uploadedFile.path);
+//         }
+
+//         // Hash password
+//         const hashedPassword = await bcrypt.hash(password, 10);
+//         const defaultRole = "viewer";
+
+//         // Insert user data including the profile image into the database
+//         const insertQuery =
+//           "INSERT INTO log (username, email, password, role, profile_image) VALUES (?, ?, ?, ?, ?)";
+//         db1.query(
+//           insertQuery,
+//           [username, email, hashedPassword, defaultRole, fileContent],
+//           (err, result) => {
+//             if (err) {
+//               console.error("Failed to register user:", err);
+//               res.status(500).json({ error: "Failed to register user" });
+//               return;
+//             }
+//             res.status(201).json({ message: "User registered successfully" });
+//           }
+//         );
+//       });
+//     } catch (error) {
+//       console.error("Internal server error:", error);
+//       res.status(500).json({ error: "Internal server error" });
+//     }
+//   }
+// );
+
+//without hash password
+// router.post(
+//   "/register",
+//   profilesimages.single("profileImage"),
+//   async (req, res) => {
+//     const { username, email, password } = req.body;
+//     const uploadedFile = req.file;
+
+//     try {
+//       // Check if the email already exists in the database...
+//       const checkEmailQuery =
+//         "SELECT COUNT(*) AS count FROM log WHERE email = ?";
+//       db1.query(checkEmailQuery, [email], async (err, results) => {
+//         if (err) {
+//           console.error("Error checking email:", err);
+//           res.status(500).json({ error: "Failed to register user" });
+//           return;
+//         }
+
+//         const emailExists = results[0].count > 0;
+//         if (emailExists) {
+//           res.status(400).json({ error: "Email already exists " });
+//           return;
+//         }
+
+//         let fileContent = null;
+
+//         // Read file asynchronously and handle errors
+//         if (uploadedFile) {
+//           fileContent = fs.readFileSync(uploadedFile.path);
+
+//           // Delete temporary file after reading content
+//           fs.unlinkSync(uploadedFile.path);
+//         }
+
+//         // Hash password
+//         // const hashedPassword = await bcrypt.hash(password, 10);
+//         const defaultRole = "viewer";
+
+//         // Insert user data including the profile image into the database
+//         const insertQuery =
+//           "INSERT INTO log (username, email, password, role, profile_image) VALUES (?, ?, ?, ?, ?)";
+//         db1.query(
+//           insertQuery,
+//           [username, email, password, defaultRole, fileContent],
+//           (err, result) => {
+//             if (err) {
+//               console.error("Failed to register user:", err);
+//               res.status(500).json({ error: "Failed to register user" });
+//               return;
+//             }
+//             res.status(201).json({ message: "User registered successfully" });
+//           }
+//         );
+//       });
+//     } catch (error) {
+//       console.error("Internal server error:", error);
+//       res.status(500).json({ error: "Internal server error" });
+//     }
+//   }
+// );
 
 router.post(
   "/register",
@@ -680,7 +805,7 @@ router.post(
         }
 
         // Hash password
-        const hashedPassword = await bcrypt.hash(password, 10);
+        // const hashedPassword = await bcrypt.hash(password, 10);
         const defaultRole = "viewer";
 
         // Insert user data including the profile image into the database
@@ -688,13 +813,76 @@ router.post(
           "INSERT INTO log (username, email, password, role, profile_image) VALUES (?, ?, ?, ?, ?)";
         db1.query(
           insertQuery,
-          [username, email, hashedPassword, defaultRole, fileContent],
-          (err, result) => {
+          [username, email, password, defaultRole, fileContent],
+          async (err, result) => {
             if (err) {
               console.error("Failed to register user:", err);
               res.status(500).json({ error: "Failed to register user" });
               return;
             }
+
+            // Send registration email
+            try {
+              const transporter = nodemailer.createTransport({
+                // configure your email provider here
+                service: "gmail",
+                auth: {
+                  user: "webdriveegate@gmail.com",
+                  pass: "qftimcrkpkbjugav",
+                },
+              });
+
+              const mailOptions = {
+                from: "webdriveegate@gmail.com",
+                to: email,
+                subject: "Welcome to Egradtutor",
+                //   text: "Thank you for registering on Your App. We hope you enjoy our service!",
+                //   attachments: [
+                //     {
+                //       filename: "profileImage.jpg",
+                //       content: fileContent,
+                //       encoding: "base64",
+                //     },
+                //   ],
+                //   text: req.body.username,
+                //   text: req.body.email,
+                //   text: req.body.password,
+                // };
+
+                html: `
+              <img src="cid:defaultLogo" alt="Profile Image" style="width: 100%; height: auto;" />
+               <p style="font-size: 16px; color: #333;">Thank you for registering on Egradtutor. We hope you enjoy our service!</p>
+              <div style="margin-top: 10px; text-align: center;">
+                <img src="cid:profileImage" alt="Profile Image" style="width: 150px; height: 150px; border-radius: 50%; margin: 0.5rem auto; display: block;" />
+                  <div style=" margin: 0.5rem auto; border: 1px solid rgba(0, 0, 0, 0.5); border-radius: 18px;">
+                 <p style="font-size: 14px; color: #666; margin: 0.5rem ;">Username: ${username}</p>
+                 <p style="font-size: 14px; color: #666; margin: 0.5rem ;">Email: ${email}</p>
+                 <p style="font-size: 14px; color: #666; margin: 0.5rem ;">Password: ${password}</p>
+              </div>
+              </div>
+
+                
+                `,
+                attachments: [
+                  {
+                    filename: "logo.png",
+                    path: logoPath,
+                    cid: "defaultLogo",
+                  },
+                  {
+                    filename: "profileImage.jpg",
+                    content: fileContent,
+                    encoding: "base64",
+                    cid: "profileImage",
+                  },
+                ],
+              };
+
+              await transporter.sendMail(mailOptions);
+            } catch (emailError) {
+              console.error("Failed to send registration email:", emailError);
+            }
+
             res.status(201).json({ message: "User registered successfully" });
           }
         );
@@ -705,7 +893,39 @@ router.post(
     }
   }
 );
+//with hashpawword
+// router.post("/login", async (req, res) => {
+//   const { email, password } = req.body;
 
+//   try {
+//     const sql = "SELECT * FROM log WHERE email = ?";
+//     db1.query(sql, [email], async (error, results) => {
+//       if (error || results.length === 0) {
+//         res.status(401).json({ error: "Invalid credentials" });
+//         return;
+//       }
+
+//       const user = results[0];
+//       const passwordMatch = await bcrypt.compare(password, user.password);
+
+//       if (!passwordMatch) {
+//         res.status(401).json({ error: "Invalid credentials" });
+//         return;
+//       }
+
+//       const token = jwt.sign({ id: user.user_Id }, "your_secret_key", {
+//         expiresIn: "10h",
+//       });
+//       const { user_Id, email, role } = user;
+//       res.status(200).json({ token, user: { user_Id, email, role } });
+//     });
+//     console.log(`${email}`);
+//   } catch (error) {
+//     res.status(500).json({ error: "Internal server error" });
+//   }
+// });
+
+// without hash password
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
@@ -718,15 +938,15 @@ router.post("/login", async (req, res) => {
       }
 
       const user = results[0];
-      const passwordMatch = await bcrypt.compare(password, user.password);
+      // const passwordMatch = await bcrypt.compare(password, user.password);
 
-      if (!passwordMatch) {
+      if (!password) {
         res.status(401).json({ error: "Invalid credentials" });
         return;
       }
 
       const token = jwt.sign({ id: user.user_Id }, "your_secret_key", {
-        expiresIn: "10h",
+        expiresIn: "1hr",
       });
       const { user_Id, email, role } = user;
       res.status(200).json({ token, user: { user_Id, email, role } });
@@ -785,6 +1005,7 @@ router.get("/userdetails/:id", (req, res) => {
           username: result.username,
           email: result.email,
           role: result.role,
+          password: result.password,
           // Add other fields as needed
           profile_image: `data:image/png;base64,${base64}`,
         };
@@ -836,7 +1057,7 @@ router.get("/userdetails/:id", (req, res) => {
 //       }
 
 //       const userData = results[0];
-//       res.status(200).json(userData); // Send user data as JSON response
+// res.status(200).json(userData); // Send user data as JSON response
 //     });
 //   } catch (error) {
 //     res.status(500).json({ error: "Internal server error" });
@@ -920,64 +1141,57 @@ const storage_PROimg1 = multer.diskStorage({
 });
 const profilesimages1 = multer({ storage: storage_PROimg1 });
 
-router.put(
-  "/users/:id",
-  profilesimages1.single("profileImage"), // Ensure 'profileImage' matches the 'name' attribute in the form
-  async (req, res) => {
-    const userId = req.params.id;
-    const { username, email, password, role } = req.body;
-    const uploadedFile = req.file;
+// router.put(
+//   "/users/:id",
+//   profilesimages1.single("profileImage"), // Ensure 'profileImage' matches the 'name' attribute in the form
+//   async (req, res) => {
+//     const userId = req.params.id;
+//     const { username, email, password, role } = req.body;
+//     const uploadedFile = req.file;
 
-    try {
-      let fileContent = null;
+//     try {
+//       let fileContent = null;
 
-      if (uploadedFile) {
-        // Read file asynchronously and handle errors
-        fileContent = fs.readFileSync(uploadedFile.path);
+//       if (uploadedFile) {
+//         // Read file asynchronously and handle errors
+//         fileContent = fs.readFileSync(uploadedFile.path);
 
-        // Delete temporary file after reading content
-        fs.unlinkSync(uploadedFile.path);
-      }
+//         // Delete temporary file after reading content
+//         fs.unlinkSync(uploadedFile.path);
+//       }
 
-      // Hash password
-      const hashedPassword = await bcrypt.hash(password, 10);
+//       // Hash password
+//       // const hashedPassword = await bcrypt.hash(password, 10);
 
-      // Prepare SQL query based on whether profile image is provided or not
-      let updateQuery;
-      let queryValues;
+//       // Prepare SQL query based on whether profile image is provided or not
+//       let updateQuery;
+//       let queryValues;
 
-      if (fileContent) {
-        updateQuery =
-          "UPDATE log SET username = ?, email = ?, password = ?, role = ?, profile_image = ? WHERE user_Id = ?";
-        queryValues = [
-          username,
-          email,
-          hashedPassword,
-          role,
-          fileContent,
-          userId,
-        ];
-      } else {
-        updateQuery =
-          "UPDATE log SET username = ?, email = ?, password = ?, role = ? WHERE user_Id = ?";
-        queryValues = [username, email, hashedPassword, role, userId];
-      }
+//       if (fileContent) {
+//         updateQuery =
+//           "UPDATE log SET username = ?, email = ?, password = ?, role = ?, profile_image = ? WHERE user_Id = ?";
+//         queryValues = [username, email, password, role, fileContent, userId];
+//       } else {
+//         updateQuery =
+//           "UPDATE log SET username = ?, email = ?, password = ?, role = ? WHERE user_Id = ?";
+//         queryValues = [username, email, passwordstud, role, userId];
+//       }
 
-      // Execute the SQL query to update user details
-      db1.query(updateQuery, queryValues, (err, result) => {
-        if (err) {
-          console.error("Error updating user:", err);
-          res.status(500).json({ error: "Error updating user" });
-        } else {
-          res.status(200).json({ message: "User updated successfully" });
-        }
-      });
-    } catch (error) {
-      console.error("Internal server error:", error);
-      res.status(500).json({ error: "Internal server error" });
-    }
-  }
-);
+//       // Execute the SQL query to update user details
+//       db1.query(updateQuery, queryValues, (err, result) => {
+//         if (err) {
+//           console.error("Error updating user:", err);
+//           res.status(500).json({ error: "Error updating user" });
+//         } else {
+//           res.status(200).json({ message: "User updated successfully" });
+//         }
+//       });
+//     } catch (error) {
+//       console.error("Internal server error:", error);
+//       res.status(500).json({ error: "Internal server error" });
+//     }
+//   }
+// );
 //------------------- user to get and update  register detaile by user
 
 // router.put(
@@ -985,7 +1199,7 @@ router.put(
 //   profilesimages1.single("profileImage"), // Ensure 'profileImage' matches the 'name' attribute in the form
 //   async (req, res) => {
 //     const userId = req.params.id;
-    
+
 //     const { username, email, password, role } = req.body;
 //     const uploadedFile = req.file;
 
@@ -1041,12 +1255,12 @@ router.put(
 // );
 
 router.put(
-  "/profile/:id",
+  "/users/:id",
   profilesimages1.single("profileImage"), // Ensure 'profileImage' matches the 'name' attribute in the form
   async (req, res) => {
     const userId = req.params.id;
-
     const { username, email, password, role } = req.body;
+
     const uploadedFile = req.file;
 
     try {
@@ -1061,7 +1275,137 @@ router.put(
       }
 
       // Hash password
-      const hashedPassword = await bcrypt.hash(password, 10);
+      // const hashedPassword = await bcrypt.hash(password, 10);
+
+      // Prepare SQL query based on whether profile image is provided or not
+      let updateQuery;
+      let queryValues;
+
+      if (fileContent) {
+        updateQuery =
+          "UPDATE log SET username = ?, email = ?, password = ?, role = ?, profile_image = ? WHERE user_Id = ?";
+        queryValues = [username, email, password, role, fileContent, userId];
+      } else {
+        updateQuery =
+          "UPDATE log SET username = ?, email = ?, password = ?, role = ? WHERE user_Id = ?";
+        queryValues = [username, email, password, role, userId];
+      }
+
+      // Execute the SQL query to update user details
+      db1.query(updateQuery, queryValues, (err, result) => {
+        if (err) {
+          console.error("Error updating user:", err);
+          res.status(500).json({ error: "Error updating user" });
+        } else {
+          res.status(200).json({ message: "User updated successfully" });
+        }
+      });
+    } catch (error) {
+      console.error("Internal server error:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  }
+);
+
+router.put(
+  "/profile/:id",
+  profilesimages1.single("profileImage"), // Ensure 'profileImage' matches the 'name' attribute in the form
+  async (req, res) => {
+    const userId = req.params.id;
+    const { username, email, password, role } = req.body;
+
+    const uploadedFile = req.file;
+
+    try {
+      let fileContent = null;
+
+      if (uploadedFile) {
+        // Read file asynchronously and handle errors
+        fileContent = fs.readFileSync(uploadedFile.path);
+
+        // Delete temporary file after reading content
+        fs.unlinkSync(uploadedFile.path);
+      }
+
+      // Hash password
+      // const hashedPassword = await bcrypt.hash(password, 10);
+
+      // Prepare SQL query based on whether profile image is provided or not
+      let updateQuery;
+      let queryValues;
+
+      if (fileContent) {
+        updateQuery =
+          "UPDATE log SET username = ?, email = ?, password = ?, role = ?, profile_image = ? WHERE user_Id = ?";
+        queryValues = [username, email, password, role, fileContent, userId];
+      } else {
+        updateQuery =
+          "UPDATE log SET username = ?, email = ?, password = ?, role = ? WHERE user_Id = ?";
+        queryValues = [username, email, password, role, userId];
+      }
+
+      // Execute the SQL query to update user details
+      db1.query(updateQuery, queryValues, (err, result) => {
+        if (err) {
+          console.error("Error updating user:", err);
+          res.status(500).json({ error: "Error updating user" });
+        } else {
+          res.status(200).json({ message: "User updated successfully" });
+        }
+      });
+    } catch (error) {
+      console.error("Internal server error:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  }
+);
+
+//password code
+router.put(
+  "/studentprofilepassword/:id",
+  profilesimages1.single("profileImage"),
+  async (req, res) => {
+    const userId = req.params.id;
+
+    const {
+      username,
+      email,
+      password,
+      role,
+      currentPassword,
+      newPassword,
+      confirmpassword,
+    } = req.body;
+
+    const uploadedFile = req.file;
+
+    try {
+      let fileContent = null;
+
+      if (uploadedFile) {
+        fileContent = fs.readFileSync(uploadedFile.path);
+        fs.unlinkSync(uploadedFile.path);
+      }
+
+      // Check if the current password matches the user's current password
+      if (currentPassword !== password) {
+        res.status(401).json({ error: "Current password is incorrect" });
+        return;
+      }
+
+      // Check if the new password is different from the current password
+      if (newPassword === currentPassword) {
+        res.status(400).json({
+          error: "New password should be different from the current password",
+        });
+        return;
+      }
+
+      // Check if the new password matches the confirmed password
+      if (newPassword !== confirmpassword) {
+        res.status(400).json({ error: "New password does not match" });
+        return;
+      }
 
       // Prepare SQL query based on whether profile image is provided or not
       let updateQuery;
@@ -1073,7 +1417,7 @@ router.put(
         queryValues = [
           username,
           email,
-          hashedPassword,
+          newPassword, // Assuming you're not hashing the password
           role,
           fileContent,
           userId,
@@ -1081,7 +1425,7 @@ router.put(
       } else {
         updateQuery =
           "UPDATE log SET username = ?, email = ?, password = ?, role = ? WHERE user_Id = ?";
-        queryValues = [username, email, hashedPassword, role, userId];
+        queryValues = [username, email, newPassword, role, userId];
       }
 
       // Execute the SQL query to update user details
@@ -1150,7 +1494,7 @@ router.delete("/users/:id", (req, res) => {
 // });
 
 router.get("/act_info", (req, res) => {
-  const query = "SELECT * FROM log";
+  const query = "SELECT * FROM log WHERE role = 'viewer' ";
 
   db1.query(query, (error, results) => {
     if (error) {

@@ -268,7 +268,7 @@ const handleClick = async (e) => {
     // Send a PUT request to the server with the FormData
     
       await axios.put(
-        `http://localhost:5001/ughomepage_banner_login/users/${userId}`,
+        `http://localhost:5001/ughomepage_banner_login/users/${user.id}`,
         formData,
         {
           headers: {
@@ -283,7 +283,7 @@ const handleClick = async (e) => {
 
       // } 
       
-      navigate("/Account_info");
+      navigate("/Quiz_dashboard");
   } catch (err) {
     console.log(err);
   }

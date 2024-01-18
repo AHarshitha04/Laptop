@@ -34,8 +34,10 @@ const Exam_portal_admin_Dashboard = () => {
   const examCount = useFetchCount("http://localhost:5001/Dashboard/exam/count");
   const courseCount = useFetchCount("http://localhost:5001/Dashboard/courses/count");
   const testCount = useFetchCount("http://localhost:5001/Dashboard/test/count");
+  const userCount = useFetchCount("http://localhost:5001/Dashboard/user/count");
   const questionCount = useFetchCount("http://localhost:5001/Dashboard/question/count");
-console.log(examCount)
+
+
   return (
     
     <div className="Dashboard_container">
@@ -59,6 +61,11 @@ console.log(examCount)
         <i className="fa-solid fa-person-chalkboard"></i>
         <h2>Total Tests</h2>
         <h2 className="examCount"> {testCount}</h2>
+      </div>
+      <div className="Dashboard_contant">
+      <i class="fa-solid fa-users"></i>
+        <h2>user Registrations </h2>
+        <h2 className="examCount">{userCount}</h2>
       </div>
       <div className="Dashboard_contant">
         <i className="fa-solid fa-file-lines"></i>

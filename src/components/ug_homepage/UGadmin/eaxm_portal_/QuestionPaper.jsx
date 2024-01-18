@@ -124,7 +124,9 @@ console.log("hiii")
   const [selectedAnswersMap1, setSelectedAnswersMap1] = useState({});
   const [selectedAnswersMap2, setSelectedAnswersMap2] = useState({});
   const [selectedAnswersMap3, setSelectedAnswersMap3] = useState({});
- 
+
+  const [selectedAnswersMap4, setSelectedAnswersMap4] = useState({});
+
   const [answeredQuestions, setAnsweredQuestions] = useState([]);
   const [isPaused, setIsPaused] = useState(false);
   // const [showExamSumary, setShowExamSumary] = useState(false);
@@ -249,6 +251,41 @@ console.log("hiii")
   //   console.log('Calculator Value:', inputValue);
   // };
 
+
+  const onAnswerSelected3 = (e) => {
+    const inputValue = e.target.value;
+    const parsedValue = parseFloat(inputValue); // Parse the input value to a float if it's supposed to be a number
+    const questionId = questionData.questions[currentQuestionIndex].question_id;
+    const questionIndex = currentQuestionIndex + 1;
+    console.log(`Question Index: ${questionIndex}`);
+    console.log(`Entered Text: ${parsedValue}`);
+
+    setSelectedAnswersMap3((prevMap) => {
+      // Update the selected answers map with the parsed value
+      return {
+        ...prevMap,
+        [questionId]: parsedValue,
+      };
+    });
+    setCalculatorValue(parsedValue.toString()); // Update the calculator value as a string if needed
+    console.log("Calculator Value:", parsedValue);
+  };
+
+  const onAnswerSelected4 = (e, value) => {
+    const inputValue = value;
+    const questionId =
+      questionData.questions[currentQuestionIndex]?.question_id;
+
+    setSelectedAnswersMap4((prevMap) => {
+      // Update the selected answers map with the radio button value
+      return {
+        ...prevMap,
+        [questionId]: inputValue,
+      };
+    });
+
+    console.log("True/False Value:", inputValue);
+
   // const onAnswerSelected3 = (e) => {
   //   const inputValue = e.target.value;
   //   const parsedValue = parseFloat(inputValue); // Parse the input value to a float if it's supposed to be a number
@@ -283,6 +320,7 @@ console.log("hiii")
 
     // Log the input value to the console
     console.log("Calculator Input Text Box Value:", inputValue);
+
   };
   
 
@@ -743,8 +781,14 @@ console.log("hiii")
       console.error("Error handling next click:", error);
     }
 
+
+    fetchData();
+  }, [testCreationTableId]);
+  //end questionOptions use effect code
+
     // --------------------------------end of button functionality --------------------------------------------------
   };
+
 
 
 
@@ -758,10 +802,22 @@ console.log("hiii")
 //     const currentQuestion = questionData.questions[currentQuestionIndex];
 
 
+
+  const [originalStatuses, setOriginalStatuses] = useState(
+    Array(questionData.questions.length).fill("notVisited")
+  );
+  const [questionTypes, setQuestionTypes] = useState([]);
+  useEffect(() => {
+    const fetchQuestionTypes = async () => {
+      try {
+        if (questionData && questionData.questions) {
+          const qID = questionData.questions[currentQuestionIndex].question_id;
+
 //     const isCurrentQuestionAnswered =
 //       selectedAnswersMap1[currentQuestion.question_id] !== undefined ||
 //       (selectedAnswersMap2[currentQuestion.question_id] &&
 //         selectedAnswersMap2[currentQuestion.question_id].length > 0) ||   value !== undefined;
+
 
 //      const isResponseCleared =
 //       selectedAnswersMap1[currentQuestion.question_id] === null ||
@@ -803,6 +859,292 @@ console.log("hiii")
 //         `http://localhost:5001/QuestionPaper/questionOptions/${testCreationTableId}`
 //       );
 //       const result = await response.json();
+
+
+  // Reset calculator value when the question changes
+  useEffect(() => {
+    setValue(""); // Reset calculator value when the question changes
+  }, [currentQuestionIndex]); // Assuming currentQuestionIndex is the dependency indicating question change
+
+  useEffect(() => {
+    console.log("Updated Map in useEffect:", selectedAnswersMap3);
+  }, [selectedAnswersMap3]);
+
+  //main working code save &next btn start
+  // const handleSaveNextQuestion = async () => {
+  //   // ------------------------------------ button functionality --------------------------------------------
+  //   // Update question status for the current question
+  //   const updatedQuestionStatus = [...questionStatus];
+
+  //   const currentQuestion = questionData.questions[currentQuestionIndex];
+  //   const isCurrentQuestionAnswered =
+  //     selectedAnswersMap1[currentQuestion.question_id] !== undefined ||
+  //     (selectedAnswersMap2[currentQuestion.question_id] &&
+  //       selectedAnswersMap2[currentQuestion.question_id].length > 0);
+
+  //    const isResponseCleared =
+  //     selectedAnswersMap1[currentQuestion.question_id] === null ||
+  //     selectedAnswersMap2[currentQuestion.question_id]?.length === 0;
+
+  //   if (!isCurrentQuestionAnswered) {
+  //     // updatedQuestionStatus[currentQuestionIndex] = "notAnswered";
+  //     // setQuestionStatus(updatedQuestionStatus);
+  //     window.alert("Please answer the question before proceeding.");
+  //   } else if (isCurrentQuestionAnswered) {
+  //     // If the current question is not answered, update the status
+  //     const updatedQuestionStatus = [...questionStatus];
+  //     updatedQuestionStatus[currentQuestionIndex] = "answered";
+  //     setQuestionStatus(updatedQuestionStatus);
+
+  //     setCurrentQuestionIndex((prevIndex) => {
+  //       if (prevIndex < questionData.questions.length - 1) {
+  //         return prevIndex + 1;
+  //       }
+  //     });
+  //     // updatedQuestionStatus[currentQuestionIndex] = "notAnswered"
+  //     // You may also show a message or perform other actions to indicate that the question is not answered
+  //     console.log("Question not answered!");
+  //   } else if (isCurrentQuestionAnswered === markForReview()) {
+  //     updatedQuestionStatus[currentQuestionIndex] =
+  //       "Answered but marked for review";
+  //     updateCounters();
+
+  //     setCurrentQuestionIndex((prevIndex) => {
+  //       if (prevIndex < questionData.questions.length - 1) {
+  //         return prevIndex + 1;
+  //       }
+  //     });
+  //   }
+
+  //   try {
+  //     const response = await fetch(
+  //       `http://localhost:5001/QuestionPaper/questionOptions/${testCreationTableId}`
+  //     );
+  //     const result = await response.json();
+
+  //     setQuestionData(result);
+
+  //     const token = localStorage.getItem("token");
+  //     const response_user = await fetch(
+  //       "http://localhost:5001/ughomepage_banner_login/user",
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`, // Attach token to headers for authentication
+  //         },
+  //       }
+  //     );
+
+  //     if (response_user.ok) {
+  //       const userData = await response_user.json();
+  //       setUserData(userData);
+
+  //       const userId = userData.id; // Move this line here to ensure userId is defined
+
+  //       console.log("Test Creation Table ID:", testCreationTableId);
+  //       console.log("Current user_Id:", userId); // Now userId should be defined
+
+  //       if (!questionData || !questionData.questions) {
+  //         console.error("Data or questions are null or undefined");
+  //         return;
+  //       }
+
+  //       const currentQuestion = questionData.questions[currentQuestionIndex];
+  //       const selectedOption1 =
+  //         selectedAnswersMap1[currentQuestion.question_id];
+  //       const selectedOption2 =
+  //         selectedAnswersMap2[currentQuestion.question_id];
+  //       // its for NATD( Numeric Answer type of questions with Decimal values)
+  //       const selectedOption3 =
+  //         selectedAnswersMap3[currentQuestion.question_id];
+
+  //       const optionIndexes1 =
+  //         selectedOption1 !== undefined ? [selectedOption1] : [];
+  //       const optionIndexes2 =
+  //         selectedOption2 !== undefined ? selectedOption2 : [];
+
+  //       const questionId = currentQuestion.question_id;
+
+  //       // console.log("Responses to be sent:", responses);
+  //       const responses = {
+  //         userId: userId,
+  //         testCreationTableId: testCreationTableId,
+  //         [questionId]: {
+  //           optionIndexes1: optionIndexes1.map((index) =>
+  //             String.fromCharCode("a".charCodeAt(0) + index)
+  //           ),
+  //           optionIndexes2: optionIndexes2.map((index) =>
+  //             String.fromCharCode("a".charCodeAt(0) + index)
+  //           ),
+  //           selectedOption3: calculatorValue, // Add the calculator value to responses
+  //           isRadioType: true,
+  //           value: selectedAnswersMap4[questionId],
+  //         },
+  //       };
+
+  //       const saveResponse = await axios.post(
+  //         "http://localhost:5001/QuestionPaper/response",
+  //         {
+  //           responses,
+  //           userId,
+  //           testCreationTableId,
+  //         }
+  //       );
+
+  //       console.log(saveResponse.data);
+  //       console.log("Handle Next Click - New Response Saved");
+
+  //       setAnsweredQuestionsMap((prevMap) => ({
+  //         ...prevMap,
+  //         [questionId]: true,
+  //       }));
+
+  //       setClickCount((prevCount) => prevCount + 1);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error handling next click:", error);
+  //   }
+
+  //   // --------------------------------end of button functionality --------------------------------------------------
+  // };
+
+  //practice
+  const handleSaveNextQuestion = async () => {
+    // ------------------------------------ button functionality --------------------------------------------
+    // Update question status for the current question
+    const updatedQuestionStatus = [...questionStatus];
+    const currentQuestion = questionData.questions[currentQuestionIndex];
+
+    const isRadioType = currentQuestion.type === "TF(True or False)";
+    const isCurrentQuestionAnswered =
+      selectedAnswersMap1[currentQuestion.question_id] !== undefined ||
+      (selectedAnswersMap2[currentQuestion.question_id] &&
+        selectedAnswersMap2[currentQuestion.question_id].length > 0);
+
+     const isResponseCleared =
+      selectedAnswersMap1[currentQuestion.question_id] === null ||
+      selectedAnswersMap2[currentQuestion.question_id]?.length === 0;
+
+    if (!isCurrentQuestionAnswered && !isRadioType) {
+      // updatedQuestionStatus[currentQuestionIndex] = "notAnswered";
+      // setQuestionStatus(updatedQuestionStatus);
+      window.alert("Please answer the question before proceeding.");
+    } else if (isCurrentQuestionAnswered) {
+      // If the current question is not answered, update the status
+      const updatedQuestionStatus = [...questionStatus];
+      updatedQuestionStatus[currentQuestionIndex] = "answered";
+      setQuestionStatus(updatedQuestionStatus);
+
+      setCurrentQuestionIndex((prevIndex) => {
+        if (prevIndex < questionData.questions.length - 1) {
+          return prevIndex + 1;
+        }
+      }
+      );
+      // updatedQuestionStatus[currentQuestionIndex] = "notAnswered"
+      // You may also show a message or perform other actions to indicate that the question is not answered
+      console.log("Question not answered!");
+    } else if (isRadioType && selectedAnswersMap4[currentQuestion.question_id] === undefined) {
+      // If it's a true/false question and no value is selected
+      window.alert("Please answer the true/false question before proceeding.");
+    } else if (isCurrentQuestionAnswered === markForReview()) {
+      updatedQuestionStatus[currentQuestionIndex] =
+        "Answered but marked for review";
+      updateCounters();
+
+      setCurrentQuestionIndex((prevIndex) => {
+        if (prevIndex < questionData.questions.length - 1) {
+          return prevIndex + 1;
+        }
+      });
+    }
+
+    try {
+      const response = await fetch(
+        `http://localhost:5001/QuestionPaper/questionOptions/${testCreationTableId}`
+      );
+      const result = await response.json();
+
+      setQuestionData(result);
+
+      const token = localStorage.getItem("token");
+      const response_user = await fetch(
+        "http://localhost:5001/ughomepage_banner_login/user",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Attach token to headers for authentication
+          },
+        }
+      );
+
+      if (response_user.ok) {
+        const userData = await response_user.json();
+        setUserData(userData);
+
+        const userId = userData.id; // Move this line here to ensure userId is defined
+
+        console.log("Test Creation Table ID:", testCreationTableId);
+        console.log("Current user_Id:", userId); // Now userId should be defined
+
+        if (!questionData || !questionData.questions) {
+          console.error("Data or questions are null or undefined");
+          return;
+        }
+
+        const currentQuestion = questionData.questions[currentQuestionIndex];
+        const selectedOption1 =
+          selectedAnswersMap1[currentQuestion.question_id];
+        const selectedOption2 =
+          selectedAnswersMap2[currentQuestion.question_id];
+        // its for NATD( Numeric Answer type of questions with Decimal values)
+        const selectedOption3 =
+          selectedAnswersMap3[currentQuestion.question_id];
+
+        const optionIndexes1 =
+          selectedOption1 !== undefined ? [selectedOption1] : [];
+        const optionIndexes2 =
+          selectedOption2 !== undefined ? selectedOption2 : [];
+
+        const questionId = currentQuestion.question_id;
+
+        // console.log("Responses to be sent:", responses);
+        const responses = {
+          userId: userId,
+          testCreationTableId: testCreationTableId,
+          [questionId]: {
+            optionIndexes1: optionIndexes1.map((index) =>
+              String.fromCharCode("a".charCodeAt(0) + index)
+            ),
+            optionIndexes2: optionIndexes2.map((index) =>
+              String.fromCharCode("a".charCodeAt(0) + index)
+            ),
+            selectedOption3: calculatorValue, // Add the calculator value to responses
+            isRadioType: isRadioType,
+            value: isRadioType ? selectedAnswersMap4[questionId] === "true" : undefined,
+          },
+        };
+
+        const saveResponse = await axios.post(
+          "http://localhost:5001/QuestionPaper/response",
+          {
+            responses,
+            userId,
+            testCreationTableId,
+          }
+        );
+
+        console.log(saveResponse.data);
+        console.log("Handle Next Click - New Response Saved");
+
+        setAnsweredQuestionsMap((prevMap) => ({
+          ...prevMap,
+          [questionId]: true,
+        }));
+
+        setClickCount((prevCount) => prevCount + 1);
+      }
+    } catch (error) {
+      console.error("Error handling next click:", error);
+    }
 
 //       setQuestionData(result);
 
@@ -877,8 +1219,10 @@ console.log("hiii")
 //           }
 //         );
 
+
 //         console.log(saveResponse.data);
 //         console.log("Handle Next Click - New Response Saved");
+
 
 //         setAnsweredQuestionsMap((prevMap) => ({
 //           ...prevMap,
@@ -893,6 +1237,7 @@ console.log("hiii")
 
 //     // --------------------------------end of button functionality --------------------------------------------------
 //   };
+
 
   const handleNextQuestion = async () => {
     const currentQuestion = questionData.questions[currentQuestionIndex];
@@ -1125,6 +1470,94 @@ console.log("hiii")
       console.error("Error handling mark for review:", error);
     }
 
+
+    setQuestionStatus(updatedQuestionStatus);
+
+    try {
+      const response = await fetch(
+        `http://localhost:5001/QuestionPaper/questionOptions/${testCreationTableId}`
+      );
+      const result = await response.json();
+
+      setQuestionData(result);
+
+      const token = localStorage.getItem("token");
+      const response_user = await fetch(
+        "http://localhost:5001/ughomepage_banner_login/user",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Attach token to headers for authentication
+          },
+        }
+      );
+
+      if (response_user.ok) {
+        const userData = await response_user.json();
+        setUserData(userData);
+
+        const userId = userData.id; // Move this line here to ensure userId is defined
+
+        console.log("Test Creation Table ID:", testCreationTableId);
+        console.log("Current user_Id:", userId); // Now userId should be defined
+
+        if (!questionData || !questionData.questions) {
+          console.error("Data or questions are null or undefined");
+          return;
+        }
+
+        const currentQuestion = questionData.questions[currentQuestionIndex];
+        const selectedOption1 =
+          selectedAnswersMap1[currentQuestion.question_id];
+        const selectedOption2 =
+          selectedAnswersMap2[currentQuestion.question_id];
+
+        const optionIndexes1 =
+          selectedOption1 !== undefined ? [selectedOption1] : [];
+        const optionIndexes2 =
+          selectedOption2 !== undefined ? selectedOption2 : [];
+
+        const questionId = currentQuestion.question_id;
+        console.log("Responses to be sent:");
+
+        // Move the 'responses' variable declaration here
+        const responses = {
+          userId: userId,
+          testCreationTableId: testCreationTableId,
+          [questionId]: {
+            optionIndexes1: optionIndexes1.map((index) =>
+              String.fromCharCode("a".charCodeAt(0) + index)
+            ),
+            optionIndexes2: optionIndexes2.map((index) =>
+              String.fromCharCode("a".charCodeAt(0) + index)
+            ),
+          },
+        };
+
+        const saveResponse = await axios.post(
+          "http://localhost:5001/QuestionPaper/response",
+          {
+            responses,
+            userId,
+            testCreationTableId,
+          }
+        );
+
+        console.log(saveResponse.data);
+        console.log("Mark for Review - New Response Saved");
+
+        setAnsweredQuestionsMap((prevMap) => ({
+          ...prevMap,
+          [questionId]: true,
+        }));
+
+        setClickCount((prevCount) => prevCount + 1);
+      } else {
+        // Handle errors, e.g., if user data fetch fails
+      }
+    } catch (error) {
+      console.error("Error handling mark for review:", error);
+    }
+
     setCurrentQuestionIndex((prevIndex) => {
       if (prevIndex < questionData.questions.length - 1) {
         return prevIndex + 1;
@@ -1248,10 +1681,12 @@ console.log("hiii")
     }));
   };
 
+
    // Update local storage when the 'value' state changes
    useEffect(() => {
     localStorage.setItem("calculatorInputValue", value);
   }, [value]);
+
 
   return (
     <div>
@@ -1478,6 +1913,12 @@ console.log("hiii")
                                     "MSQ(MSQ without -ve marking)"
                                   ) && (
                                     <div>
+
+                                      <input
+                                        className="opt_btns"
+                                        type="checkbox"
+                                        name={`question-${currentQuestionIndex}-optionIndex`}
+
                                       <input
                                         className="opt_btns"
                                         type="checkbox"
@@ -1886,6 +2327,418 @@ console.log("hiii")
                                         className="opt_btns"
                                         type="radio"
                                         name={`question-${currentQuestionIndex}-option`}
+
+                                        value={String.fromCharCode(
+                                          "A".charCodeAt(0) + optionIndex
+                                        )}
+                                        checked={
+                                          selectedAnswersMap2[
+                                            questionData.questions[
+                                              currentQuestionIndex
+                                            ]?.question_id
+
+                                          ] &&
+                                          selectedAnswersMap2[
+                                            questionData.questions[
+                                              currentQuestionIndex
+                                            ]?.question_id
+                                          ].includes(optionIndex)
+                                        }
+                                        onChange={() =>
+                                          onAnswerSelected2(optionIndex)
+
+                                          ] === optionIndex
+                                        }
+                                        onChange={() =>
+                                          onAnswerSelected1(optionIndex)
+
+                                        }
+                                      />
+                                      (
+                                      {String.fromCharCode(
+                                        "a".charCodeAt(0) + optionIndex
+                                      )}
+                                      )
+                                      <img
+                                        src={`http://localhost:5001/uploads/${currentQuestion.documen_name}/${option.optionImgName}`}
+                                        alt={`Option ${option.option_id}`}
+
+                                      />{" "}
+                                    </div>
+                                  )}
+                                {currentQuestionType &&
+                                  currentQuestionType.typeofQuestion &&
+                                  currentQuestionType.typeofQuestion.includes(
+                                    "NATD( Numeric Answer type of questions with Decimal values)"
+                                  ) && (
+                                    <div className="calculator">
+                                      <form action="">
+                                        <div className="display">
+                                          <input
+                                            type="text"
+                                            name={`question-${currentQuestionIndex}`}
+                                            value={value}
+                                            onChange={(e) =>
+                                              onAnswerSelected3(e)
+                                            }
+                                          />
+                                        </div>
+                                        <div>
+                                          <input
+                                            type="button"
+                                            value="AC"
+                                            onClick={(e) => setValue("")}
+                                          />
+                                          <input
+                                            type="button"
+                                            value="DE"
+                                            onClick={(e) =>
+                                              setValue(value.slice(0, -1))
+                                            }
+                                          />
+                                          {/* <input
+                                              type="button"
+                                              value="."
+                                              onClick={(e) =>
+                                                setValue(value + e.target.value)
+                                              }
+                                            /> */}
+                                          <input
+                                            type="button"
+                                            value="/"
+                                            onClick={(e) =>
+                                              setValue(value + e.target.value)
+                                            }
+                                          />
+                                        </div>
+                                        <div>
+                                          <input
+                                            type="button"
+                                            value="7"
+                                            onClick={(e) =>
+                                              setValue(value + e.target.value)
+                                            }
+                                          />
+                                          <input
+                                            type="button"
+                                            value="8"
+                                            onClick={(e) =>
+                                              setValue(value + e.target.value)
+                                            }
+                                          />
+                                          <input
+                                            type="button"
+                                            value="9"
+                                            onClick={(e) =>
+                                              setValue(value + e.target.value)
+                                            }
+                                          />
+                                          <input
+                                            type="button"
+                                            value="*"
+                                            onClick={(e) =>
+                                              setValue(value + e.target.value)
+                                            }
+                                          />
+                                        </div>
+                                        <div>
+                                          <input
+                                            type="button"
+                                            value="4"
+                                            onClick={(e) =>
+                                              setValue(value + e.target.value)
+                                            }
+                                          />
+                                          <input
+                                            type="button"
+                                            value="5"
+                                            onClick={(e) =>
+                                              setValue(value + e.target.value)
+                                            }
+                                          />
+                                          <input
+                                            type="button"
+                                            value="6"
+                                            onClick={(e) =>
+                                              setValue(value + e.target.value)
+                                            }
+                                          />
+                                          <input
+                                            type="button"
+                                            value="+"
+                                            onClick={(e) =>
+                                              setValue(value + e.target.value)
+                                            }
+                                          />
+                                        </div>
+                                        <div>
+                                          <input
+                                            type="button"
+                                            value="1"
+                                            onClick={(e) =>
+                                              setValue(value + e.target.value)
+                                            }
+                                          />
+                                          <input
+                                            type="button"
+                                            value="2"
+                                            onClick={(e) =>
+                                              setValue(value + e.target.value)
+                                            }
+                                          />
+                                          <input
+                                            type="button"
+                                            value="3"
+                                            onClick={(e) =>
+                                              setValue(value + e.target.value)
+                                            }
+                                          />
+                                          <input
+                                            type="button"
+                                            value="-"
+                                            onClick={(e) =>
+                                              setValue(value + e.target.value)
+                                            }
+                                          />
+                                        </div>
+                                        <div>
+                                          <input
+                                            type="button"
+                                            value="00"
+                                            onClick={(e) =>
+                                              setValue(value + e.target.value)
+                                            }
+                                          />
+                                          <input
+                                            type="button"
+                                            value="0"
+                                            onClick={(e) =>
+                                              setValue(value + e.target.value)
+                                            }
+                                          />
+                                          <input
+                                            type="button"
+                                            value="="
+                                            className="equal"
+                                            onClick={(e) =>
+                                              setValue(eval(value))
+                                            }
+                                          />
+                                        </div>
+                                      </form>
+                                    </div>
+                                  )}
+
+                                {currentQuestionType &&
+                                  currentQuestionType.typeofQuestion &&
+                                  currentQuestionType.typeofQuestion.includes(
+                                    "NATI( Numeric Answer type of questions with integer values)"
+                                  ) && (
+                                    <div className="calculator">
+                                      <form action="">
+                                        <div className="display">
+                                          <input
+                                            type="text"
+                                            name={`question-${currentQuestionIndex}`}
+                                            value={value}
+                                            onChange={(e) =>
+                                              onAnswerSelected3(e)
+                                            }
+                                          />
+                                        </div>
+                                        <div>
+                                          <input
+                                            type="button"
+                                            value="AC"
+                                            onClick={(e) => setValue("")}
+                                          />
+                                          <input
+                                            type="button"
+                                            value="DE"
+                                            onClick={(e) =>
+                                              setValue(value.slice(0, -1))
+                                            }
+                                          />
+                                          <input
+                                            type="button"
+                                            value="."
+                                            onClick={(e) =>
+                                              setValue(value + e.target.value)
+                                            }
+                                          />
+                                          <input
+                                            type="button"
+                                            value="/"
+                                            onClick={(e) =>
+                                              setValue(value + e.target.value)
+                                            }
+                                          />
+                                        </div>
+                                        <div>
+                                          <input
+                                            type="button"
+                                            value="7"
+                                            onClick={(e) =>
+                                              setValue(value + e.target.value)
+                                            }
+                                          />
+                                          <input
+                                            type="button"
+                                            value="8"
+                                            onClick={(e) =>
+                                              setValue(value + e.target.value)
+                                            }
+                                          />
+                                          <input
+                                            type="button"
+                                            value="9"
+                                            onClick={(e) =>
+                                              setValue(value + e.target.value)
+                                            }
+                                          />
+                                          <input
+                                            type="button"
+                                            value="*"
+                                            onClick={(e) =>
+                                              setValue(value + e.target.value)
+                                            }
+                                          />
+                                        </div>
+                                        <div>
+                                          <input
+                                            type="button"
+                                            value="4"
+                                            onClick={(e) =>
+                                              setValue(value + e.target.value)
+                                            }
+                                          />
+                                          <input
+                                            type="button"
+                                            value="5"
+                                            onClick={(e) =>
+                                              setValue(value + e.target.value)
+                                            }
+                                          />
+                                          <input
+                                            type="button"
+                                            value="6"
+                                            onClick={(e) =>
+                                              setValue(value + e.target.value)
+                                            }
+                                          />
+                                          <input
+                                            type="button"
+                                            value="+"
+                                            onClick={(e) =>
+                                              setValue(value + e.target.value)
+                                            }
+                                          />
+                                        </div>
+                                        <div>
+                                          <input
+                                            type="button"
+                                            value="1"
+                                            onClick={(e) =>
+                                              setValue(value + e.target.value)
+                                            }
+                                          />
+                                          <input
+                                            type="button"
+                                            value="2"
+                                            onClick={(e) =>
+                                              setValue(value + e.target.value)
+                                            }
+                                          />
+                                          <input
+                                            type="button"
+                                            value="3"
+                                            onClick={(e) =>
+                                              setValue(value + e.target.value)
+                                            }
+                                          />
+                                          <input
+                                            type="button"
+                                            value="-"
+                                            onClick={(e) =>
+                                              setValue(value + e.target.value)
+                                            }
+                                          />
+                                        </div>
+                                        <div>
+                                          <input
+                                            type="button"
+                                            value="00"
+                                            onClick={(e) =>
+                                              setValue(value + e.target.value)
+                                            }
+                                          />
+                                          <input
+                                            type="button"
+                                            value="0"
+                                            onClick={(e) =>
+                                              setValue(value + e.target.value)
+                                            }
+                                          />
+                                          <input
+                                            type="button"
+                                            value="="
+                                            className="equal"
+                                            onClick={(e) =>
+                                              setValue(eval(value))
+                                            }
+                                          />
+                                        </div>
+                                      </form>
+                                    </div>
+                                  )}
+                                {currentQuestionType &&
+                                  currentQuestionType.typeofQuestion &&
+                                  currentQuestionType.typeofQuestion.includes(
+                                    "TF(True or False)"
+                                  ) && (
+                                    <div>
+                                    <input
+                                      className="opt_btns"
+                                      type="radio"
+                                      name={`question-${currentQuestionIndex}-option`}
+                                      value={String.fromCharCode(
+                                        "A".charCodeAt(0) + optionIndex
+                                      )}
+                                      checked={
+                                        selectedAnswersMap1[
+                                          questionData.questions[
+                                            currentQuestionIndex
+                                          ]?.question_id
+                                        ] === optionIndex
+                                      }
+                                      onChange={() =>
+                                        onAnswerSelected1(optionIndex)
+                                      }
+                                    />
+                                    (
+                                    {String.fromCharCode(
+                                      "a".charCodeAt(0) + optionIndex
+                                    )}
+                                    )
+                                    
+                                    <img
+                                      src={`http://localhost:5001/uploads/${currentQuestion.documen_name}/${option.optionImgName}`}
+                                      alt={`Option ${option.option_id}`}
+                                    />
+                                  </div>
+                                    
+                                  )}
+
+                                {currentQuestionType &&
+                                  currentQuestionType.typeofQuestion &&
+                                  currentQuestionType.typeofQuestion.includes(
+                                    "CTQ(Comprehension type of questions )"
+                                  ) && (
+                                    <div>
+                                      <input
+                                        className="opt_btns"
+                                        type="radio"
+                                        name={`question-${currentQuestionIndex}-option`}
                                         value={String.fromCharCode(
                                           "A".charCodeAt(0) + optionIndex
                                         )}
@@ -1909,6 +2762,9 @@ console.log("hiii")
                                         src={`http://localhost:5001/uploads/${currentQuestion.documen_name}/${option.optionImgName}`}
                                         alt={`Option ${option.option_id}`}
                                       />
+
+                                      />
+
                                     </div>
                                   )}
                               </li>

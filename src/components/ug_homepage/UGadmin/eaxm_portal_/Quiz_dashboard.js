@@ -21,7 +21,48 @@ const Quiz_dashboard = () => {
     localStorage.removeItem("userRole");
     window.location.href = "/uglogin";
   };
-  
+   const userRole = localStorage.getItem("userRole");
+   const [isLoggedIn, setIsLoggedIn] = useState(false);
+   const [userData, setUserData] = useState({});
+    const fetchUserData = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const response = await fetch(
+          "http://localhost:5001/ughomepage_banner_login/user",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (response.ok) {
+          const userData = await response.json();
+          setUserData(userData);
+        } else {
+          setIsLoggedIn(false);
+
+          // Handle errors if needed
+        }
+      } catch (error) {
+        // Handle other errors if needed
+      }
+    };
+
+    // const [courses, setCourses] = useState([]);
+    const [examsug, setExamsug] = useState([0]);
+
+    useEffect(() => {
+      axios
+        .get("http://localhost:5001/ughomepage_banner_login/examsug")
+        .then((res) => {
+          setExamsug(res.data);
+          console.log(res.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching data:", error);
+        });
+    }, []);
 
   return (
     <div>

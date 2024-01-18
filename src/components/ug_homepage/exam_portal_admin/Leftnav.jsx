@@ -2,8 +2,6 @@ import React, { useState } from "react";
 import "./styles/Exam_portal_admin_integration.css";
 import "./styles/otcCss.css";
 
-
-
 import { Link } from "react-router-dom";
 import dashboard from "./assert/daashboard.png";
 import exam from "./assert/exam.png";
@@ -16,6 +14,7 @@ import Testcreationadmin from "./Testcreationadmin";
 import DocumentUpload_admin from "./DocumentUpload_admin";
 import Examcreation from "./Examcreation";
 import Coursecreation from "./Coursecreation";
+import Account_info from "../UGadmin/login/Account_info";
 
 // import logo2 from './logo2.jpeg'
 // import HomeLandingPage from "../Frontend/Pages/HomeLandingPage/HomeLandingPage";
@@ -33,6 +32,8 @@ const Leftnav = () => {
   const [showTestcreationadmin, setTestcreationadmin] = useState(false);
   const [showDocumentUpload_admin, setDocumentUpload_admin] = useState(false);
 
+  const [showregisteredstudent, setShowregisteredstudent] = useState(false);
+
   const handledisplaydashboard = () => {
     setShowdashboard(true);
     setShowExamcreation_admin(false);
@@ -40,6 +41,7 @@ const Leftnav = () => {
     setInstructionPage_admin(false);
     setTestcreationadmin(false);
     setDocumentUpload_admin(false);
+    setShowregisteredstudent(false);
   };
 
   const handleshowExamcreation_admin = () => {
@@ -49,6 +51,7 @@ const Leftnav = () => {
     setInstructionPage_admin(false);
     setTestcreationadmin(false);
     setDocumentUpload_admin(false);
+    setShowregisteredstudent(false);
   };
   const handleshowCoursecreation_admin = () => {
     setShowdashboard(false);
@@ -57,6 +60,7 @@ const Leftnav = () => {
     setInstructionPage_admin(false);
     setTestcreationadmin(false);
     setDocumentUpload_admin(false);
+    setShowregisteredstudent(false);
   };
   const handleInstructionPage_admin = () => {
     setShowdashboard(false);
@@ -65,6 +69,7 @@ const Leftnav = () => {
     setInstructionPage_admin(true);
     setTestcreationadmin(false);
     setDocumentUpload_admin(false);
+    setShowregisteredstudent(false);
   };
 
   const handleTestcreationadmin = () => {
@@ -74,6 +79,7 @@ const Leftnav = () => {
     setInstructionPage_admin(false);
     setTestcreationadmin(true);
     setDocumentUpload_admin(false);
+    setShowregisteredstudent(false);
   };
 
   const handleshowDocumentUpload_admin = () => {
@@ -83,6 +89,17 @@ const Leftnav = () => {
     setInstructionPage_admin(false);
     setTestcreationadmin(false);
     setDocumentUpload_admin(true);
+    setShowregisteredstudent(false);
+  };
+
+  const handleregisteredstudent = () => {
+    setShowdashboard(false);
+    setShowExamcreation_admin(false);
+    setshowCoursecreation_admin(false);
+    setInstructionPage_admin(false);
+    setTestcreationadmin(false);
+    setDocumentUpload_admin(false);
+    setShowregisteredstudent(true);
   };
   return (
     <>
@@ -183,6 +200,14 @@ const Leftnav = () => {
                 <p>Quiz App</p>
               </Link>
             </li>
+
+            <li>
+              <Link className="LeftnavLinks" onClick={handleregisteredstudent}>
+                <i class="fa-brands fa-quora"></i>
+                <p>Regestered student info</p>
+              </Link>
+            
+            </li>
           </ul>
         </div>
       </div>
@@ -204,7 +229,6 @@ const Leftnav = () => {
         <>
           <Coursecreation_admin />
           {/* <Coursecreation/> */}
-
         </>
       ) : null}
 
@@ -224,6 +248,12 @@ const Leftnav = () => {
         <>
           <DocumentUpload_admin />
         </>
+      ) : null}
+
+      {showregisteredstudent ? (
+        <div className="admin_S_R_INfo">
+          <Account_info />
+        </div>
       ) : null}
     </>
   );

@@ -36,6 +36,17 @@ router.get('/courses/count', async (req, res) => {
       res.status(500).json({ error: 'Internal Server Error' });
     }
   });
+  router.get('/user/count', async (req, res) => {
+    try {
+      const [results, fields] = await db.execute(
+        "SELECT COUNT(user_Id) AS count FROM log WHERE role = 'viewer'"
+      );
+      res.json(results);
+    } catch (error) {
+      console.error('Error fetching course count:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  });
   router.get('/question/count', async (req, res) => {
     try {
       const [results, fields] = await db.execute(

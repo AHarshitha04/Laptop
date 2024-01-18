@@ -16,6 +16,7 @@ const ButtonsFunctionality = ({
   questionData,
   updateQuestionStatus,
 }) => {
+
   const [wtimer, setWTimer] = useState(0);
 
   const [activeQuestion, setActiveQuestion] = useState(0);
