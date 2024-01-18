@@ -1323,7 +1323,7 @@ console.log("hiii")
                           </>
                         )}
 
-                      <h2>Question:</h2>
+                     
                       <img
                         src={`http://localhost:5001/uploads/${currentQuestion.documen_name}/${currentQuestion.questionImgName}`}
                         alt={`Question ${currentQuestion.question_id}`}
@@ -1841,7 +1841,7 @@ console.log("hiii")
                                 {currentQuestionType &&
                                   currentQuestionType.typeofQuestion &&
                                   currentQuestionType.typeofQuestion.includes(
-                                    "TF(True or False)"
+                                    "TF(True or false)"
                                   ) && (
                                     <div>
                                     <input
@@ -2018,7 +2018,10 @@ console.log("hiii")
               Are you sure you want to submit for final marking? <br />
               No changes will be allowed after submission.
             </h2>
-            <button onClick={handleYes}>YES</button>
+
+            <Link to='/SubmitPage'>YES</Link>
+
+            {/* <button onClick={handleYes}>YES</button> */}
             <button onClick={handleNo}>NO</button>
           </div>
         </div>
