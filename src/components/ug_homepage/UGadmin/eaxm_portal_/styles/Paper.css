@@ -380,6 +380,7 @@ margin-top: 0.5rem;
   color: black;
 }
 
+
 .result h3 {
   font-size: 24px;
   letter-spacing: 1.4px;
@@ -455,8 +456,9 @@ height: 950px; */
 }
 .result_contents {
   /* padding-top: ; */
+  border: 2px solid gray;
   text-align: center;
-  padding: 100px;
+  padding: 50px;
   text-align: justify;
   font-size: 20px;
   font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
