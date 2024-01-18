@@ -88,10 +88,10 @@ router.post("/Employeeportal_login", async (req, res) => {
         expiresIn: "1hr",
       });
 
-      const { Empoye_ID, EmpoyeeEmail } = employee;
+      const { Empoye_ID, EmpoyeeEmail,Emp_Role } = employee;
       res
         .status(200)
-        .json({ token, employee: { Empoye_ID, EmpoyeeEmail } });
+        .json({ token, employee: { Empoye_ID, EmpoyeeEmail,Emp_Role } });
     });
   } catch (error) {
     console.error("Error during login:", error);
@@ -206,6 +206,8 @@ router.get("/getEmployeeData", (req, res) => {
       Empoye_ID: employee.Empoye_ID,
       EmpoyeeEmail: employee.EmpoyeeEmail,
       EmpoyeeName: employee.EmpoyeeName,
+      EmpoyeeRole: employee.Emp_Role,
+
       // Add other fields as needed
     };
 

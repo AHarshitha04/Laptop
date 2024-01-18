@@ -80,3 +80,35 @@ text-align: center;
   }
 
 }
+
+.emp_mainpage {
+  display: grid;
+  grid-template-columns: 20% 70%;
+  gap: 2rem;
+}
+
+.showempdashboard{
+  text-align: center;
+  align-items: center;
+}
+
+.Dashboard_leftnav {
+  background: #1a374d;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 1rem;
+}
+
+.emp_leftnav {
+  color: #000;
+  background: #fff;
+  padding: 1rem;
+  margin: 0 auto;
+  cursor: pointer;
+  border-radius: 0.5rem;
+  border: none;
+  font-size: 1.3rem;
+  font-weight: bold;
+  text-decoration: none;
+}

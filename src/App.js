@@ -113,6 +113,7 @@ import Student_profileUpdate from "./components/ug_homepage/UGadmin/eaxm_portal_
 
 import EmployeePortal from "./components/EmployeePortal/EmployeePortal.js";
 import EmployeeDashboard from "./components/EmployeePortal/EmployeeDashboard.js";
+import EmployeeLOGIN_differentation from "./components/EmployeePortal/EmployeeLOGIN_differentation.js";
 
 const PrivateRoute = ({ element }) => {
   const isAuthenticated = localStorage.getItem("isLoggedIn");
@@ -304,7 +305,13 @@ const App = () => {
         <Route path="/Score" element={<PrivateRoute element={<Score />} />} />
         {/* ---------------------------EmployeePortalHomepage----------------------- */}
         {/* ---------- EmployeePortal_login ------------- */}
+        {/* http://localhost:3000/EmployeePortal */}
         <Route path="/EmployeePortal" element={<EmployeePortal />} />
+
+
+          {/* ---------- EmployeeDashboard ------------- */}
+          <Route path="/EmployeeLOGIN_differentation" element={<EmployeeLOGIN_differentation />} />
+   
         {/* ---------- EmployeeDashboard ------------- */}
         <Route path="/Employee_dashboard" element={<EmployeeDashboard />} />
       </Routes>
