@@ -164,64 +164,60 @@ const [showcard2, setshowcard2] = useState(false);
   return (
     <>
       <div className="Quiz_main_page_container">
-        <div className="Quiz_main_page_container_btns">
-          {/*-----------------  admin login ---------------------------------  */}
+        <div className="Quiz_main_page_subcontainer">
+          <div className="Quiz_main_page_container_btns">
+            {/*-----------------  admin login ---------------------------------  */}
+            {userRole === "admin" && (
+              <>
+                <button
+                  className={
+                    showcardactive2 ? "showcardactive" : "showcardactivenone"
+                  }
+                  onClick={UG_HOMEadim_btn}
+                >
+                  UG Page Admin
+                </button>
+
+                <button
+                  className={
+                    showcardactive1 ? "showcardactive" : "showcardactivenone"
+                  }
+                  onClick={UG_HOMEQuiz_btn}
+                >
+                  UG Quiz Admin
+                </button>
+              </>
+            )}
+          </div>
+
           {userRole === "admin" && (
             <>
-              <button
-                className={
-                  showcardactive2 ? "showcardactive" : "showcardactivenone"
-                }
-                onClick={UG_HOMEadim_btn}
-              >
-                UG Page Admin
-              </button>
-              
-          <button
-            className={
-              showcardactive1 ? "showcardactive" : "showcardactivenone"
-            }
-            onClick={UG_HOMEQuiz_btn}
-          >
-            UG Quiz Admin
-          </button>
-             
+              {showcard1 ? (
+                <div className="UGhomepageadmin">
+                  <UploadPage />
+                </div>
+              ) : null}
+              {showcard2 ? (
+                <div className="UGQUizadmin">
+                  <Exam_portal_admin_integration />
+                </div>
+              ) : null}
             </>
           )}
 
+          {userRole === "ugadmin" && (
+            <>
+              <UploadPage />
+            </>
+          )}
+          {/* --------------------- ugotsadmin ------------------------------- */}
+          {userRole === "ugotsadmin" && (
+            <>
+              <h3>Online Test Creation Admin</h3>
+              <Exam_portal_admin_integration />
+            </>
+          )}
         </div>
-
-        {userRole === "admin" && (
-          <>
-            {showcard1 ? (
-              <div className="UGhomepageadmin">
-                <UploadPage />
-              </div>
-            ) : null}
-            {showcard2 ? (
-              <div className="UGQUizadmin">
-                <Exam_portal_admin_integration />
-              </div>
-            ) : null}
-
-
-          </>
-        )}
-
-        {userRole === "ugadmin" && (
-          <>
-         
-
-            <UploadPage />
-          </>
-        )}
-        {/* --------------------- ugotsadmin ------------------------------- */}
-        {userRole === "ugotsadmin" && (
-          <>
-            <h3>Online Test Creation Admin</h3>
-            <Exam_portal_admin_integration />
-          </>
-        )}
       </div>
     </>
   );
@@ -480,20 +476,20 @@ export const UploadPage = () => {
 
   return (
     <div className="Quiz_admin_page_container">
-
-<div>
+      <div>
         {uploadStatus === "success" && (
-          <p style={{ color: "green", fontSize:"20px"}}>Successfully uploaded!</p>
+          <p style={{ color: "green", fontSize: "20px" }}>
+            Successfully uploaded!
+          </p>
         )}
         {uploadStatus === "error" && (
-          <p style={{ color: "red", fontSize:"20px"}}>
+          <p style={{ color: "red", fontSize: "20px" }}>
             Error uploading image. Please try again.
           </p>
         )}
       </div>
-      <div>
-        <h3>Upload Images</h3>
-      </div>
+
+      <h3>Upload Images</h3>
 
       <div className="UGhomepageadmin_inputs">
         <label htmlFor="Course">Course: </label>
@@ -525,14 +521,11 @@ export const UploadPage = () => {
             </option>
           ))}
         </select>
-       
-
- 
       </div>
 
       <div>
-      {show1 ? (
-            <div className="UGhomepageadmin_inputs">
+        {show1 ? (
+          <div className="UGhomepageadmin_inputs">
             <label htmlFor="state">Exam: </label>
             <select id="state" onChange={handleExamChange} value={selectedExam}>
               <option value="">Select Exam</option>
@@ -547,24 +540,14 @@ export const UploadPage = () => {
         ) : null}
       </div>
 
-
-      <div>
-      <input type="file" onChange={handleFileChange} />
+      <div className="UGhomepageadmin_inputs">
+        <input type="file" onChange={handleFileChange} />
       </div>
       <div>
-      <button onClick={handleUpload}>Upload Image</button>    
+        <Link onClick={handleUpload}>Upload Image</Link>
 
-
-
-
-  <Link 
-        to={"/ImageFetching"}
-      >
-        Show Uploaded Files
-      </Link>
-  
-</div>
-   
+        <Link to={"/ImageFetching"}>Show Uploaded Files</Link>
+      </div>
     </div>
   );
 };

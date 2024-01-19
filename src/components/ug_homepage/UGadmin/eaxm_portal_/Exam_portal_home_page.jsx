@@ -41,8 +41,11 @@ const Exam_portal_home_page = () => {
   return (
     <>
       <Header />
-      <Home_section />
-      <Quiz_Courses />
+      <div >
+        <Home_section />
+        <Quiz_Courses />
+      </div>
+
       <Footer />
     </>
   );
@@ -193,7 +196,7 @@ export const Header = () => {
                       className="courses_btn"
                       onClick={toggleCoursesBtnContainer}
                     >
-                      courses
+                      Courses
                     </button>
                     {coursesBtnContainerVisible ? (
                       <div className="courses">
@@ -226,73 +229,74 @@ export const Header = () => {
                         </li>
                       </>
                     )} */}
-{isLoggedIn === true ? (
-  <>
-     {(userRole === "admin" ||
-                      userRole === "ugotsadmin" ||
-                      userRole === "ugadmin") && (
-                      <>
-                        <li>
-                          <button>
-                            <Link to="/Quiz_dashboard">ADMIN Settings</Link>
-                          </button>
-                        </li>
-                      </>
-                    )}
-                     {userRole === "viewer" && (
-                      <>
-                        <button>
-                          <Link to="/student_dashboard">DashBoard</Link>
-                        </button>
-                      </>
-                    )}
-  </>
-):null}
-
-
-                   
-                  </div>
-                  <div>
                     {isLoggedIn === true ? (
                       <>
                         {(userRole === "admin" ||
                           userRole === "ugotsadmin" ||
                           userRole === "ugadmin") && (
                           <>
-                            <button id="dropdownmenu_foradim_page_btn">
-                              <img
-                                title={userData.username}
-                                src={userData.imageData}
-                                alt={`Image ${userData.user_Id}`}
-                              />
-                              <div className="dropdownmenu_foradim_page">
-                                {/* <Link to={`/userread/${user.id}`} className="btn btn-success mx-2">Read</Link> */}
-                                {/* <Link to={`/userdeatailspage/${user.id}`} >Account-info</Link> */}
-                                <Link to="/student_dashboard">My profile</Link>
-                                <Link onClick={handleLogout}>Logout</Link>
-                              </div>
-                            </button>
+                            <li>
+                              <button>
+                                <Link to="/Quiz_dashboard">Adim Settings</Link>
+                              </button>
+                            </li>
                           </>
                         )}
-
                         {userRole === "viewer" && (
                           <>
-                            <button id="dropdownmenu_foradim_page_btn">
-                           <img
-  title={userData.username}
-  src={userData.imageData}
-  alt={`Image ${userData.user_Id}`}
-/>
-                              <div className="dropdownmenu_foradim_page">
-                                {/* <Link to={`/userread/${user.id}`} className="btn btn-success mx-2">Read</Link> */}
-                                {/* <Link to={`/userdeatailspage/${user.id}`} >Account-info</Link> */}
-                                <Link to="/student_dashboard">My profile</Link>
-                                <Link onClick={handleLogout}>Logout</Link>
-                              </div>
+                            <button>
+                              <Link to="/student_dashboard">DashBoard</Link>
                             </button>
                           </>
                         )}
-                        {/* <button id="dropdownmenu_foradim_page_btn">
+                      </>
+                    ) : null}
+                  </div>
+                </ul>
+              </div>
+
+              <div className="quiz_app_quiz_menu_login_btn_contaioner">
+                <div>
+                  {isLoggedIn === true ? (
+                    <>
+                      {(userRole === "admin" ||
+                        userRole === "ugotsadmin" ||
+                        userRole === "ugadmin") && (
+                        <>
+                          <button id="dropdownmenu_foradim_page_btn">
+                            <img
+                              title={userData.username}
+                              src={userData.imageData}
+                              alt={`Image ${userData.user_Id}`}
+                            />
+                            <div className="dropdownmenu_foradim_page">
+                              {/* <Link to={`/userread/${user.id}`} className="btn btn-success mx-2">Read</Link> */}
+                              {/* <Link to={`/userdeatailspage/${user.id}`} >Account-info</Link> */}
+                              <Link to="/student_dashboard">My profile</Link>
+                              <Link onClick={handleLogout}>Logout</Link>
+                            </div>
+                          </button>
+                        </>
+                      )}
+
+                      {userRole === "viewer" && (
+                        <>
+                          <button id="dropdownmenu_foradim_page_btn">
+                            <img
+                              title={userData.username}
+                              src={userData.imageData}
+                              alt={`Image ${userData.user_Id}`}
+                            />
+                            <div className="dropdownmenu_foradim_page">
+                              {/* <Link to={`/userread/${user.id}`} className="btn btn-success mx-2">Read</Link> */}
+                              {/* <Link to={`/userdeatailspage/${user.id}`} >Account-info</Link> */}
+                              <Link to="/student_dashboard">My profile</Link>
+                              <Link onClick={handleLogout}>Logout</Link>
+                            </div>
+                          </button>
+                        </>
+                      )}
+                      {/* <button id="dropdownmenu_foradim_page_btn">
                           <img
                             title={userData.username}
                             src={userData.imageData}
@@ -304,37 +308,36 @@ export const Header = () => {
                             <Link onClick={handleLogout}>Logout</Link>
                           </div>
                         </button> */}
-                      </>
-                    ) : (
-                      <>
-                        <a class="ugQUIz_login_btn" href="/UgadminHome">
-                          Login/Registration
-                        </a>
-                      </>
-                    )}
+                    </>
+                  ) : (
+                    <>
+                      <a class="ugQUIz_login_btn" href="/UgadminHome">
+                        Login/Registration
+                      </a>
+                    </>
+                  )}
 
-                    {isLoggedIn === "flase" && (
-                      <>
-                        <button id="dropdownmenu_foradim_page_btn">
-                          {/* {userData.username} */}
-                          <div className="dropdownmenu_foradim_page">
-                            {/* <Link to={`/userread/${user.id}`} className="btn btn-success mx-2">Read</Link> */}
+                  {isLoggedIn === "flase" && (
+                    <>
+                      <button id="dropdownmenu_foradim_page_btn">
+                        {/* {userData.username} */}
+                        <div className="dropdownmenu_foradim_page">
+                          {/* <Link to={`/userread/${user.id}`} className="btn btn-success mx-2">Read</Link> */}
 
-                            {/* <Link to={`/userdeatailspage/${user.id}`} >Acount-info</Link> */}
-                            {/* <Link to="/Account_info">Acount-info</Link>
+                          {/* <Link to={`/userdeatailspage/${user.id}`} >Acount-info</Link> */}
+                          {/* <Link to="/Account_info">Acount-info</Link>
 
                             <Link onClick={handleLogout}>Logout</Link> */}
-                          </div>
-                        </button>
-                      </>
-                    )}
-                  </div>
-                </ul>
-              </div>
-              <div className="quz_menu" onClick={QuiZ_menu}>
-                <div className="lines"></div>
-                <div className="lines"></div>
-                <div className="lines"></div>
+                        </div>
+                      </button>
+                    </>
+                  )}
+                </div>
+                <div className="quz_menu" onClick={QuiZ_menu}>
+                  <div className="lines"></div>
+                  <div className="lines"></div>
+                  <div className="lines"></div>
+                </div>
               </div>
             </div>
           );
@@ -404,7 +407,7 @@ export const Home_section = () => {
 
         {isLoggedIn === true ? (
 <>
-  <h2>welcomes <span>{userData.username}</span> to EGRADTUTOR</h2>
+  <h4>welcomes <span>{userData.username}</span> to EGRADTUTOR</h4>
 </>
            ):null}
 
@@ -662,7 +665,7 @@ useEffect(() => {
 
                     {/* ----------------------------------- h--------------------- */}
                     <div className="CurrentCourses_div">
-                      <h1>Current Exams</h1>
+                     
                       {noexam ? (
                         <p>coming soon</p>
                       ) : (
@@ -687,10 +690,12 @@ useEffect(() => {
                                       {noOfCourses.map(
                                         (count) =>
                                           count.examId === cardItem.examId && (
-                                            <p key={count.examId}>
+                                            <li
+                                            
+                                             key={count.examId}>
                                               No of Courses:{" "}
                                               {count.numberOfCourses}
-                                            </p>
+                                            </li>
                                           )
                                       )}
                                     </li>

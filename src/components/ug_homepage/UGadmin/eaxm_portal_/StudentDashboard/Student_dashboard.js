@@ -5,6 +5,7 @@ import { nav } from "../DATA/Data";
 import { Link, Navigate } from "react-router-dom";
 import "./StudentDashbord.css";
 import Student_profileUpdate from "./Student_profileUpdate";
+import { MdMenu } from "react-icons/md";
 
 const Student_dashboard = () => {
   const [studentDashbordconatiner, setStudentDashbordconatiner] =useState(true);
@@ -89,20 +90,37 @@ setStudentDashbordconatiner(true)
 
        };
         
-     
+   const [showLeftMenu, setShowLeftMenu] = useState(false);
+
+   const handleToggleLeftMenu = () => {
+     setShowLeftMenu(!showLeftMenu);
+   };
+
   return (
     <div>
       <StudentDashbordheader />
+      <div
+        className="ugquiz_StudentDashbordconatiner_handleToggleLeftMenu"
+        onClick={handleToggleLeftMenu}
+      >
+        <MdMenu />
+      </div>
 
       <div className="ugquiz_StudentDashbordconatiner">
-        <div className="ugquiz_StudentDashbordconatiner_left">
+        <div
+          className={`${
+            showLeftMenu
+              ? "ugquiz_StudentDashbordconatiner_left_mobile"
+              : "ugquiz_StudentDashbordconatiner_left"
+          }`}
+        >
           <div className="ugquiz_StudentDashbordconatiner_left_menu">
             <button onClick={handlestudentDashbordconatiner}>Dashboard</button>
             <button onClick={handlestudentDashbordmycourse}>My Courses</button>
             <button onClick={handlestudentDashbordbuycurses}>
               Buy Courses
             </button>
-            <button onClick={handlestudentDashbordmyresult}>My Results </button>
+            <button onClick={handlestudentDashbordmyresult}>My Results</button>
             <button onClick={handlestudentDashborddountsection}>
               Doubt section
             </button>
@@ -110,6 +128,7 @@ setStudentDashbordconatiner(true)
             <button onClick={handlestudentDashbordsettings}>Settings</button>
           </div>
         </div>
+
         <div className="ugquiz_StudentDashbordconatiner_right">
           {studentDashbordconatiner ? (
             <>
