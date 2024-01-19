@@ -204,60 +204,76 @@ const handleYes = async () => {
   // ------------------------------------------END OF TIMER FUNCTION------------------------
 
   //-----------------------------TYPES OF INPUT VALUES for ANSWERING FORMATE
-  const onAnswerSelected1 = (optionIndex) => {
-    const questionId = questionData.questions[currentQuestionIndex].question_id;
-    const charcodeatopt = String.fromCharCode("a".charCodeAt(0) + optionIndex);
-    const questionIndex = currentQuestionIndex + 1;
-    console.log(`Question Index: ${questionIndex}`);
-    console.log(`Clicked Option Index: ${charcodeatopt}`);
-    setSelectedAnswersMap1((prevMap) => ({
-      ...prevMap,
-      [questionId]: optionIndex,
-    }));
-    // setSelectedAnswersMap2((prevMap) => ({
-    //   ...prevMap,
-    //   [questionId]: [],
-    // }));
-
-    const updatedSelectedAnswers = [...selectedAnswers];
-    updatedSelectedAnswers[activeQuestion] = optionIndex;
-    setSelectedAnswers(updatedSelectedAnswers);
-
-    // const updatedQuestionStatus = [...questionStatus];
-    // updatedQuestionStatus[activeQuestion] = "answered";
-    // setQuestionStatus(updatedQuestionStatus);
-  };
-
-  const onAnswerSelected2 = (optionIndex) => {
-    const questionId = questionData.questions[currentQuestionIndex].question_id;
-    const charcodeatopt = String.fromCharCode("a".charCodeAt(0) + optionIndex);
-    const questionIndex = currentQuestionIndex + 1;
-    console.log(`Question Index: ${questionIndex}`);
-    console.log(`Clicked Option Index: ${charcodeatopt}`);
-    setSelectedAnswersMap2((prevMap) => {
-      const updatedSelection = [...(prevMap[questionId] || [])];
-      const index = updatedSelection.indexOf(optionIndex);
-
-      if (index !== -1) {
-        updatedSelection.splice(index, 1);
-      } else {
-        updatedSelection.push(optionIndex);
-      }
-
-      return {
+  const onAnswerSelected1 = async (optionIndex) => {
+    try {
+      const questionId = questionData.questions[currentQuestionIndex].question_id;
+      const charcodeatopt = String.fromCharCode("a".charCodeAt(0) + optionIndex);
+      const questionIndex = currentQuestionIndex + 1;
+      console.log(`Question Index: ${questionIndex}`);
+      console.log(`Clicked Option Index: ${charcodeatopt}`);
+  
+      // Update selected answers for radio buttons (MCQ)
+      setSelectedAnswersMap1((prevMap) => ({
         ...prevMap,
-        [questionId]: updatedSelection,
-      };
-    });
-
-    const updatedSelectedAnswers = [...selectedAnswers];
-    updatedSelectedAnswers[activeQuestion] = optionIndex;
-    setSelectedAnswers(updatedSelectedAnswers);
-
-    // const updatedQuestionStatus = [...questionStatus];
-    // updatedQuestionStatus[activeQuestion] = "answered";
-    // setQuestionStatus(updatedQuestionStatus);
+        [questionId]: optionIndex,
+      }));
+  
+      // Clear response for checkboxes (MSQ)
+      setSelectedAnswersMap2((prevMap) => ({
+        ...prevMap,
+        [questionId]: [],
+      }));
+  
+      // Update selected answers for overall tracking
+      const updatedSelectedAnswers = [...selectedAnswers];
+      updatedSelectedAnswers[activeQuestion] = optionIndex;
+      setSelectedAnswers(updatedSelectedAnswers);
+    } catch (error) {
+      console.error("Error handling answer selected:", error);
+    }
   };
+  
+  const onAnswerSelected2 = async (optionIndex) => {
+    try {
+      const questionId = questionData.questions[currentQuestionIndex].question_id;
+      const charcodeatopt = String.fromCharCode("a".charCodeAt(0) + optionIndex);
+      const questionIndex = currentQuestionIndex + 1;
+      console.log(`Question Index: ${questionIndex}`);
+      console.log(`Clicked Option Index: ${charcodeatopt}`);
+  
+      // Update selected answers for checkboxes (MSQ)
+      setSelectedAnswersMap2((prevMap) => {
+        const updatedSelection = [...(prevMap[questionId] || [])];
+        const index = updatedSelection.indexOf(optionIndex);
+  
+        if (index !== -1) {
+          updatedSelection.splice(index, 1);
+        } else {
+          updatedSelection.push(optionIndex);
+        }
+  
+        return {
+          ...prevMap,
+          [questionId]: updatedSelection,
+        };
+      });
+  
+      // Clear response for radio buttons (MCQ)
+      setSelectedAnswersMap1((prevMap) => ({
+        ...prevMap,
+        [questionId]: null,
+      }));
+  
+      // Update selected answers for overall tracking
+      const updatedSelectedAnswers = [...selectedAnswers];
+      updatedSelectedAnswers[activeQuestion] = optionIndex;
+      setSelectedAnswers(updatedSelectedAnswers);
+    } catch (error) {
+      console.error("Error handling answer selected:", error);
+    }
+  };
+  
+  
 
   // const onAnswerSelected3 = (e) => {
   //   const inputValue = e.target.value; // Get the value from the text input
@@ -1199,39 +1215,28 @@ const handleYes = async () => {
   };
 
   const clearResponse = async () => {
-    //-----------------buttons functionality--------------
-    const currentQuestion = questionData.questions[currentQuestionIndex];
-    const isCurrentQuestionAnswered =
-      selectedAnswersMap1[currentQuestion.question_id] !== undefined ||
-      (selectedAnswersMap2[currentQuestion.question_id] &&
-        selectedAnswersMap2[currentQuestion.question_id].length > 0);
-
-    if (isCurrentQuestionAnswered) {
-      const updatedQuestionStatus = [...questionStatus];
-      updatedQuestionStatus[currentQuestionIndex] = "notAnswered";
-      setQuestionStatus(updatedQuestionStatus);
-    }
-    //-----------------buttons functionality end--------------
-
     try {
-      const questionId =
-        questionData.questions[currentQuestionIndex].question_id;
-      console.log("Response cleared successfully");
+      const currentQuestion = questionData.questions[currentQuestionIndex];
+      const questionId = currentQuestion.question_id;
+  
       // Clear response for radio buttons (MCQ)
-      const updatedSelectedAnswersMap1 = { ...selectedAnswersMap1 };
-      updatedSelectedAnswersMap1[questionId] = null;
-      setSelectedAnswersMap1(updatedSelectedAnswersMap1);
-
+      setSelectedAnswersMap1((prevMap) => {
+        const updatedMap = { ...prevMap };
+        delete updatedMap[questionId];
+        return updatedMap;
+      });
+  
       // Clear response for checkboxes (MSQ)
-      const updatedSelectedAnswersMap2 = { ...selectedAnswersMap2 };
-      updatedSelectedAnswersMap2[questionId] = [];
-      setSelectedAnswersMap2(updatedSelectedAnswersMap2);
-
+      setSelectedAnswersMap2((prevMap) => {
+        const updatedMap = { ...prevMap };
+        delete updatedMap[questionId];
+        return updatedMap;
+      });
       // Send a request to your server to clear the user's response for the current question
       const response = await axios.delete(
         `http://localhost:5001/QuestionPaper/clearResponse/${questionId}`
       );
-
+  
       if (response.status === 200) {
         console.log("Response cleared successfully");
         // Update any state or perform additional actions as needed
@@ -1242,6 +1247,7 @@ const handleYes = async () => {
       console.error("Error clearing response:", error);
     }
   };
+  
 
   // -------------------------------END OF BUTTONS FUNCTIONALITIES-----------------------------------
 
