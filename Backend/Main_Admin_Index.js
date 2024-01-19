@@ -63,9 +63,9 @@ app.use('/Cards',Cards)
 app.use('/QuestionPaper',QuestionPaper)
 
 //-------------------- empolyee portal  -------------------------------------
-
+const Employee_info=require('./EMPLOYEE_PORTAL/Employee_Info')
 app.use("/Empoyee_protal", Empoyee_protal);
-
+app.use("/Employee_info", Employee_info);
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);

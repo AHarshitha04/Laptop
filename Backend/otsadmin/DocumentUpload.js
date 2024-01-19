@@ -404,6 +404,24 @@ router.get('/tests', async (req, res) => {
                       question_id: que_id
                     };
                     await insertRecord('solution', solutionRecord);
+        }else if (textSections[i].includes('[PRG]')) {
+          const imageName = `snapshot_${document_Id}_${req.body.subjectId}_paragraph_${k}.png`;
+          const imagePath = `${outputDir}/${imageName}`;
+          await fs.writeFile(imagePath, images[image_index]);image_index++;
+          const paragraphRecord = {
+            paragraphImg: imageName,
+            document_Id: document_Id,
+          }
+          paragraph_Id = await insertRecord('paragraph', paragraphRecord);
+          // await insertRecord('paragraph', paragraphRecord);
+        } else if (textSections[i].includes('[PQNo]')) {
+          // Save in the marks table
+          const paragraphqnoRecord = {
+            paragraphQNo: textSections[i].replace('[PQNo]', ''),
+            paragraph_Id: paragraph_Id,
+            question_id: que_id
+          };
+          await insertRecord('paragraphqno', paragraphqnoRecord);
         }
       }
     }
