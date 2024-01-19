@@ -15,7 +15,8 @@ const ButtonsFunctionality = ({
   VisitedCount,
   questionData,
   updateQuestionStatus,
-  
+  setVisitedCount,
+  updateCounters,
 }) => {
  
  
@@ -36,7 +37,7 @@ const [isPaused, setIsPaused] = useState(false);
 
 const renderQuestionButtons = Array.isArray(questionData.questions)
 ? questionData.questions.map((question, index) => {
-    let className = "right_bar_Buttons ";
+    let className = " right_bar_Buttons";
     const questionKey = question.id || index;
     const questionStatusAtIndex = questionStatus && questionStatus[index];
 
@@ -50,7 +51,7 @@ const renderQuestionButtons = Array.isArray(questionData.questions)
     } else if (questionStatusAtIndex === "Answered but marked for review") {
       className += " instruction-btn4";
     } else if (questionStatusAtIndex === "notVisited") {
-      className += " instruction-btn6";
+      className += " instruction-btn5";
     } 
 
     // Highlight the current question being displayed
@@ -74,45 +75,55 @@ const renderQuestionButtons = Array.isArray(questionData.questions)
  
  
 
+
+
+
+
+
 const handleButtonClick = useCallback((questionNumber) => {
   const questionIndex = questionNumber - 1;
 
-  // Check if the question is already answered
+  let updatedStatus;
+
   if (questionStatus[questionIndex] === "answered") {
-    // If answered, navigate to the selected question
-    onQuestionSelect(questionNumber);
+    updatedStatus = "notAnswered"; // Change this line to set the status to "notAnswered"
+    onQuestionSelect(questionNumber, "notAnswered");
+    setAnsweredQuestions((prevAnsweredQuestions) => [...prevAnsweredQuestions, questionNumber]);
+    setIsPaused(false);
+  } else if (questionStatus[questionIndex] === "notAnswered") {
+    updatedStatus = "notAnswered";
+    onQuestionSelect(questionNumber, "notAnswered");
+    setAnsweredQuestions((prevAnsweredQuestions) => [...prevAnsweredQuestions, questionNumber]);
+    setIsPaused(false);
+  } else if (questionStatus[questionIndex] === "notVisited") {
+    updatedStatus = "notAnswered"; // Change this line to set the status to "notVisited" if you prefer
+    onQuestionSelect(questionNumber, "notVisited");
+    setAnsweredQuestions((prevAnsweredQuestions) => [...prevAnsweredQuestions, questionNumber]);
+    setIsPaused(false);
   } else {
-    // Check if the button was clicked
-    if (answeredQuestions.includes(questionNumber)) {
-      // If the button was clicked, mark it as answered
-      setQuestionStatus((prevQuestionStatus) => [
-        ...prevQuestionStatus.slice(0, questionIndex),
-        "answered",
-        ...prevQuestionStatus.slice(questionIndex + 1),
-      ]);
-
-      // Update other necessary state or perform additional logic
-      onQuestionSelect(questionNumber);
-      setAnsweredQuestions((prevAnsweredQuestions) => [...prevAnsweredQuestions, questionNumber]);
-      setIsPaused(false);
-    } else {
-      // If the button was not clicked, mark it as not answered
-      setQuestionStatus((prevQuestionStatus) => [
-        ...prevQuestionStatus.slice(0, questionIndex),
-        "notAnswered",
-        ...prevQuestionStatus.slice(questionIndex + 1),
-      ]);
-
-      // Update other necessary state or perform additional logic
-      onQuestionSelect(questionNumber);
-      setIsPaused(false);
-    }
+    updatedStatus = "answered";
+    onQuestionSelect(questionNumber);
+    setAnsweredQuestions((prevAnsweredQuestions) => [...prevAnsweredQuestions, questionNumber]);
+    setIsPaused(false);
   }
 
-  // Update the question status in the QuestionPaper component
-  updateQuestionStatus(questionIndex, "notAnswered");
+   // If the question is visited, decrease VisitedCount
+   if (questionStatus[questionIndex] !== "notVisited") {
+    setVisitedCount((prevVisitedCount) => prevVisitedCount - 1);
+  }
 
-}, [questionStatus, setQuestionStatus, onQuestionSelect, answeredQuestions, updateQuestionStatus]);
+  // Update the question status
+  setQuestionStatus((prevQuestionStatus) => [
+    ...prevQuestionStatus.slice(0, questionIndex),
+    updatedStatus,
+    ...prevQuestionStatus.slice(questionIndex + 1),
+  ]);
+
+  // Update the question status in the QuestionPaper component
+  updateQuestionStatus(updatedStatus);
+
+}, [questionStatus, setQuestionStatus, onQuestionSelect, setIsPaused, answeredQuestions, updateQuestionStatus, updateCounters]);
+
 
 
 
@@ -204,7 +215,6 @@ useEffect(() => {
       <div className="right-side-bar">
         <div className="rightSidebar-topHeader">
           <p>Name of the person :  {userData.username}</p>
-      
           <p>Time Left: {WformatTime(wtimer)}</p>
         </div>
  
