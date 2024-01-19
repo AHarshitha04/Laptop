@@ -16,27 +16,43 @@ const QuestionPaper = () => {
   const [Subjects, setSubjects] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedSubject, setSelectedSubject] = useState(null);
+<<<<<<< HEAD
 
   const [questionStatus, setQuestionStatus] = useState(Array(questionData?.questions?.length).fill("notAnswered"));
   
   const [sections, setSections] = useState([]);
   const [currentQuestionType, setCurrentQuestionType] = useState(null);
   const [value, setValue] = useState('');
+=======
+  const [questionStatus, setQuestionStatus] = useState(
+    Array.isArray(questionData)
+      ? Array(questionData.questions.length).fill("notAnswered")
+      : []
+  );
+  const [sections, setSections] = useState([]);
+  const [currentQuestionType, setCurrentQuestionType] = useState(null);
+  const [value, setValue] = useState("");
+>>>>>>> 632cc3a9c3c36c3c5ee90cc59eb2c540009c50f0
   const navigate = useNavigate();
   const [answeredCount, setAnsweredCount] = useState(0);
   const [notAnsweredCount, setNotAnsweredCount] = useState(0);
   const [answeredmarkedForReviewCount, setAnsweredmarkedForReviewCount] =
     useState(0);
   const [markedForReviewCount, setMarkedForReviewCount] = useState(0);
-  const [VisitedCount, setVisitedCount] = useState(questionData.questions.length);
+  const [VisitedCount, setVisitedCount] = useState(0);
   const [showExamSumary, setShowExamSumary] = useState(false);
 
+<<<<<<< HEAD
+=======
+  const [calculatorValue, setCalculatorValue] = useState("");
+
+>>>>>>> 632cc3a9c3c36c3c5ee90cc59eb2c540009c50f0
   const calculateQuestionCounts = () => {
     let answered = 0;
     let notAnswered = 0;
     let markedForReview = 0;
     let answeredmarkedForReviewCount = 0;
-    let VisitedCount = questionData.questions.length;
+    let VisitedCount = 0;
 
     questionStatus.forEach((status, index) => {
       if (status === "answered") {
@@ -48,7 +64,7 @@ const QuestionPaper = () => {
       } else if (status === "Answered but marked for review") {
         answeredmarkedForReviewCount++;
       } else if (status === "notVisited") {
-        VisitedCount--;
+        VisitedCount++;
       }
     });
 
@@ -64,9 +80,9 @@ const QuestionPaper = () => {
   const updateCounters = () => {
     let answered = 0;
     let notAnswered = 0;
+    let marked = 0;
     let markedForReview = 0;
-    let answeredmarkedForReviewCount = 0;
-    let VisitedCount = questionData.questions.length;
+    let Visited = 0;
 
     questionStatus.forEach((status) => {
       if (status === "answered") {
@@ -74,19 +90,19 @@ const QuestionPaper = () => {
       } else if (status === "notAnswered") {
         notAnswered++;
       } else if (status === "marked") {
-        markedForReview++;
+        marked++;
       } else if (status === "Answered but marked for review") {
-        answeredmarkedForReviewCount++;
+        markedForReview++;
       } else if (status === "notVisited") {
-        VisitedCount--;
+        Visited++;
       }
     });
 
     setAnsweredCount(answered);
     setNotAnsweredCount(notAnswered);
-    setAnsweredmarkedForReviewCount(markedForReview);
-    setMarkedForReviewCount(answeredmarkedForReviewCount);
-    setVisitedCount(VisitedCount,);
+    setAnsweredmarkedForReviewCount(marked);
+    setMarkedForReviewCount(markedForReview);
+    setVisitedCount(Visited);
   };
 
   const [selectedAnswers, setSelectedAnswers] = useState(
@@ -119,12 +135,21 @@ const QuestionPaper = () => {
     // // const totalCorrect = result.correctAnswers;
   };
 
+<<<<<<< HEAD
 
 
 
   const handleYes = () => {
     navigate("/SubmitPage");
   };
+=======
+  const handleYes = () => {
+    navigate("/SubmitPage");
+  };
+  const handleNo = () => {
+    navigate(`/QuestionPaper/questionOptions/${testCreationTableId}`);
+  };
+>>>>>>> 632cc3a9c3c36c3c5ee90cc59eb2c540009c50f0
 
   const [activeQuestion, setActiveQuestion] = useState(0);
   // --------------------------------------END OF CONST VARIABLES DECLARATIONS--------------------------
@@ -215,6 +240,28 @@ const QuestionPaper = () => {
     // setQuestionStatus(updatedQuestionStatus);
   };
 
+<<<<<<< HEAD
+=======
+  // const onAnswerSelected3 = (e) => {
+  //   const inputValue = e.target.value; // Get the value from the text input
+  //   const questionId = questionData.questions[currentQuestionIndex].question_id;
+  //   const charcodeatopt = String.fromCharCode("a".charCodeAt(0) + inputValue);
+  //   const questionIndex = currentQuestionIndex + 1;
+  //   console.log(`Question Index: ${questionIndex}`);
+  //   console.log(`Entered Text: ${inputValue}`);
+
+  //   setSelectedAnswersMap3((prevMap) => {
+  //     // Update the selected answers map with the text input value
+  //     return {
+  //       ...prevMap,
+  //       [questionId]: inputValue,
+  //     };
+  //   });
+  //   setCalculatorValue(inputValue);
+  //   console.log('Calculator Value:', inputValue);
+  // };
+
+>>>>>>> 632cc3a9c3c36c3c5ee90cc59eb2c540009c50f0
   const onAnswerSelected3 = (e) => {
     const inputValue = e.target.value;
     const parsedValue = parseFloat(inputValue); // Parse the input value to a float if it's supposed to be a number
@@ -247,13 +294,18 @@ const QuestionPaper = () => {
       };
     });
 
+<<<<<<< HEAD
     const updatedSelectedAnswers = [...selectedAnswers];
     updatedSelectedAnswers[activeQuestion] = e;
     setSelectedAnswers(updatedSelectedAnswers);
+=======
+    console.log("True/False Value:", inputValue);
+>>>>>>> 632cc3a9c3c36c3c5ee90cc59eb2c540009c50f0
   };
 
   //-----------------------------END TYPES OF INPUT VALUES ANSWERING FORMATE
 
+<<<<<<< HEAD
   // -------------------------------BUTTONS FUNCTIONALITIES-----------------------------------
 
 
@@ -275,6 +327,11 @@ const QuestionPaper = () => {
 
   // -------------------------------------------USE EFFECT FETCHING CODE-------------------------------
 
+=======
+  // -------------------------------------------USE EFFECT FETCHING CODE-------------------------------
+
+  //Subjects fetching use effect code
+>>>>>>> 632cc3a9c3c36c3c5ee90cc59eb2c540009c50f0
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -305,6 +362,12 @@ const QuestionPaper = () => {
 
     fetchData();
   }, [testCreationTableId, subjectId, selectedAnswersMap1]);
+<<<<<<< HEAD
+=======
+  //end Subjects fetching use effect code
+
+  //users fetching use effect code
+>>>>>>> 632cc3a9c3c36c3c5ee90cc59eb2c540009c50f0
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -332,6 +395,10 @@ const QuestionPaper = () => {
 
     fetchUserData();
   }, []);
+<<<<<<< HEAD
+=======
+  //end users fetching use effect code
+>>>>>>> 632cc3a9c3c36c3c5ee90cc59eb2c540009c50f0
 
   //counts use effect code
   useEffect(() => {
@@ -399,6 +466,12 @@ const QuestionPaper = () => {
     fetchUserData();
   }, []);
 
+<<<<<<< HEAD
+=======
+  const [originalStatuses, setOriginalStatuses] = useState(
+    Array(questionData.questions.length).fill("notVisited")
+  );
+>>>>>>> 632cc3a9c3c36c3c5ee90cc59eb2c540009c50f0
   const [questionTypes, setQuestionTypes] = useState([]);
   useEffect(() => {
     const fetchQuestionTypes = async () => {
@@ -1062,6 +1135,7 @@ const QuestionPaper = () => {
     setQuestionStatus(updatedQuestionStatus);
   };
 
+<<<<<<< HEAD
   return (
     <div>
       {!showExamSumary ? (
@@ -1236,6 +1310,457 @@ const QuestionPaper = () => {
                                       }
                                       onChange={(e) => onAnswerSelected3(e)}
                                     /> */}
+=======
+  // State variable to store text answers for each question
+  const [selectedTextAnswersMap3, setSelectedTextAnswersMap3] = useState({});
+  const [textInputs, setTextInputs] = useState({});
+  // Update function
+  const onTextAnswerSelected = (questionId, answer) => {
+    setSelectedTextAnswersMap3((prevMap) => ({
+      ...prevMap,
+      [questionId]: answer,
+    }));
+  };
+
+  return (
+    <div>
+      <div className="quiz_exam_interface_header">
+        <div className="quiz_exam_interface_header_LOGO">
+          <img src={logo} alt="" />
+        </div>
+      </div>
+      {!showExamSumary ? (
+        <div className="quiz_exam_interface_body">
+          {/* --------------- quiz examconatiner -------------------- */}
+          <div className="quiz_exam_interface_body_left_container">
+            {/* --------------- quiz sub container -------------------- */}
+
+            <div class="quiz_exam_interface_SUBJECTS_CONTAINER">
+              <div>
+                <div class="subjects_BTN_container">
+                  <li>
+                    <button class="subject_btn">Mathematics</button>
+                  </li>
+                  <li>
+                    <button class="subject_btn">Physics</button>
+                  </li>
+                  <li>
+                    <button class="subject_btn">Chemistry</button>
+                  </li>
+                </div>
+
+                <h3>
+                  Question Type:
+                  {questionTypes.map((type) => (
+                    <li key={type.quesionTypeId}>
+                      <p>{type.typeofQuestion}</p>
+                    </li>
+                  ))}
+                </h3>
+              </div>
+
+              <div class="right-header">
+                <div class="marks">
+                  Marks: <div class="plus-mark">+1</div>
+                  <div class="minus-mark">-1</div>
+                  <span>
+                    {" "}
+                    <p>Timer:</p>
+                    <p>{formatTime(timer)}</p>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* --------------- quiz question container -------------------- */}
+            <div class="quiz_exam_interface_exam_CONTAINEr">
+              {questionData.questions && questionData.questions.length > 0 && (
+                <>
+                  <div className="quiz_exam_interface_exam_subCONTAINEr">
+                    <div className="quiz_exam_interface_exam_qN_Q">
+                      <h3>Question:{currentQuestion.sortid.sortid_text}</h3>
+
+                      {currentQuestion.paragraph &&
+                        currentQuestion.paragraph.paragraphImg && (
+                          <>
+                            <h2>Paragraph:</h2>
+                            <img
+                              src={`http://localhost:5001/uploads/${currentQuestion.documen_name}/${currentQuestion.paragraph.paragraphImg}`}
+                              alt={`ParagraphImage ${currentQuestion.paragraph.paragraph_Id}`}
+                              style={{ width: "700px" }}
+                            />
+                          </>
+                        )}
+
+                      <h2>Question:</h2>
+                      <img
+                        src={`http://localhost:5001/uploads/${currentQuestion.documen_name}/${currentQuestion.questionImgName}`}
+                        alt={`Question ${currentQuestion.question_id}`}
+                        style={{ width: "583px" }}
+                      />
+                    </div>
+
+                    <div>
+                      <div className="quiz_exam_interface_exam_qN_Q_options">
+                        <h3>Options:</h3>
+                        {currentQuestion.options &&
+                          Array.isArray(currentQuestion.options) &&
+                          currentQuestion.options.filter(
+                            (opt) =>
+                              opt.question_id ===
+                              questionData.questions[currentQuestionIndex]
+                                ?.question_id
+                          ) &&
+                          currentQuestion.options.map((option, optionIndex) => (
+                            <div className="option" key={option.option_id}>
+                              <li key={optionIndex}>
+                                {/* {console.log("options", option.optionImgName)} */}
+                                {/* {console.log("Option:", option)}
+                                {console.log("Option Index:", option.option_index)} */}
+
+                                {/* <img
+                                  src={`http://localhost:5001/uploads/${currentQuestion.documen_name}/${option.optionImgName}`}
+                                  alt={`Option ${option.option_id}`}
+                                /> */}
+                                {currentQuestionType &&
+                                  currentQuestionType.typeofQuestion &&
+                                  currentQuestionType.typeofQuestion.includes(
+                                    "MCQ4(MCQ with 4 Options)"
+                                  ) && (
+                                    <div>
+                                      <input
+                                        className="opt_btns"
+                                        type="radio"
+                                        name={`question-${currentQuestionIndex}-option`}
+                                        value={String.fromCharCode(
+                                          "A".charCodeAt(0) + optionIndex
+                                        )}
+                                        checked={
+                                          selectedAnswersMap1[
+                                            questionData.questions[
+                                              currentQuestionIndex
+                                            ]?.question_id
+                                          ] === optionIndex
+                                        }
+                                        onChange={() =>
+                                          onAnswerSelected1(optionIndex)
+                                        }
+                                      />
+                                      (
+                                      {String.fromCharCode(
+                                        "a".charCodeAt(0) + optionIndex
+                                      )}
+                                      )
+                                      {/* {console.log(
+                                        "Question Image URL:",
+                                        `http://localhost:5001/uploads/${currentQuestion.documen_name}/${currentQuestion.questionImgName}`
+                                      )}
+                                      {console.log(
+                                        "Option Image URL:",
+                                        `http://localhost:5001/uploads/${currentQuestion.documen_name}/${option.optionImgName}`
+                                      )} */}
+                                      <img
+                                        src={`http://localhost:5001/uploads/${currentQuestion.documen_name}/${option.optionImgName}`}
+                                        alt={`Option ${option.option_id}`}
+                                      />
+                                    </div>
+                                  )}
+                                {currentQuestionType &&
+                                  currentQuestionType.typeofQuestion &&
+                                  currentQuestionType.typeofQuestion.includes(
+                                    "MCQ5(MCQ with 5 Options)"
+                                  ) && (
+                                    <div>
+                                      <input
+                                        className="opt_btns"
+                                        type="radio"
+                                        name={`question-${currentQuestionIndex}-option`}
+                                        value={String.fromCharCode(
+                                          "A".charCodeAt(0) + optionIndex
+                                        )}
+                                        checked={
+                                          selectedAnswersMap1[
+                                            questionData.questions[
+                                              currentQuestionIndex
+                                            ]?.question_id
+                                          ] === optionIndex
+                                        }
+                                        onChange={() =>
+                                          onAnswerSelected1(optionIndex)
+                                        }
+                                      />
+                                      (
+                                      {String.fromCharCode(
+                                        "a".charCodeAt(0) + optionIndex
+                                      )}
+                                      )
+                                      <img
+                                        src={`http://localhost:5001/uploads/${currentQuestion.documen_name}/${option.optionImgName}`}
+                                        alt={`Option ${option.option_id}`}
+                                      />
+                                    </div>
+                                  )}
+                                {currentQuestionType &&
+                                  currentQuestionType.typeofQuestion &&
+                                  currentQuestionType.typeofQuestion.includes(
+                                    "MSQN(MSQ with -ve marking)"
+                                  ) && (
+                                    <div>
+                                      {" "}
+                                      <input
+                                        className="opt_btns"
+                                        type="checkbox"
+                                        name={`question-${currentQuestionIndex}-optionIndex`}
+                                        value={String.fromCharCode(
+                                          "A".charCodeAt(0) + optionIndex
+                                        )}
+                                        checked={
+                                          selectedAnswersMap2[
+                                            questionData.questions[
+                                              currentQuestionIndex
+                                            ]?.question_id
+                                          ] &&
+                                          selectedAnswersMap2[
+                                            questionData.questions[
+                                              currentQuestionIndex
+                                            ]?.question_id
+                                          ].includes(optionIndex)
+                                        }
+                                        onChange={() =>
+                                          onAnswerSelected2(optionIndex)
+                                        }
+                                      />
+                                      (
+                                      {String.fromCharCode(
+                                        "a".charCodeAt(0) + optionIndex
+                                      )}
+                                      )
+                                      <img
+                                        src={`http://localhost:5001/uploads/${currentQuestion.documen_name}/${option.optionImgName}`}
+                                        alt={`Option ${option.option_id}`}
+                                      />
+                                    </div>
+                                  )}
+                                {currentQuestionType &&
+                                  currentQuestionType.typeofQuestion &&
+                                  currentQuestionType.typeofQuestion.includes(
+                                    "MSQ(MSQ without -ve marking)"
+                                  ) && (
+                                    <div>
+                                      <input
+                                        className="opt_btns"
+                                        type="checkbox"
+                                        name={`question-${currentQuestionIndex}-optionIndex`}
+                                        value={String.fromCharCode(
+                                          "A".charCodeAt(0) + optionIndex
+                                        )}
+                                        checked={
+                                          selectedAnswersMap2[
+                                            questionData.questions[
+                                              currentQuestionIndex
+                                            ]?.question_id
+                                          ] &&
+                                          selectedAnswersMap2[
+                                            questionData.questions[
+                                              currentQuestionIndex
+                                            ]?.question_id
+                                          ].includes(optionIndex)
+                                        }
+                                        onChange={() =>
+                                          onAnswerSelected2(optionIndex)
+                                        }
+                                      />
+                                      (
+                                      {String.fromCharCode(
+                                        "a".charCodeAt(0) + optionIndex
+                                      )}
+                                      )
+                                      <img
+                                        src={`http://localhost:5001/uploads/${currentQuestion.documen_name}/${option.optionImgName}`}
+                                        alt={`Option ${option.option_id}`}
+                                      />{" "}
+                                    </div>
+                                  )}
+                                {currentQuestionType &&
+                                  currentQuestionType.typeofQuestion &&
+                                  currentQuestionType.typeofQuestion.includes(
+                                    "NATD( Numeric Answer type of questions with Decimal values)"
+                                  ) && (
+                                    <div className="calculator">
+                                      <form action="">
+                                        <div className="display">
+                                          <input
+                                            type="text"
+                                            name={`question-${currentQuestionIndex}`}
+                                            value={value}
+                                            onChange={(e) =>
+                                              onAnswerSelected3(e)
+                                            }
+                                          />
+                                        </div>
+                                        <div>
+                                          <input
+                                            type="button"
+                                            value="AC"
+                                            onClick={(e) => setValue("")}
+                                          />
+                                          <input
+                                            type="button"
+                                            value="DE"
+                                            onClick={(e) =>
+                                              setValue(value.slice(0, -1))
+                                            }
+                                          />
+                                          {/* <input
+                                              type="button"
+                                              value="."
+                                              onClick={(e) =>
+                                                setValue(value + e.target.value)
+                                              }
+                                            /> */}
+                                          <input
+                                            type="button"
+                                            value="/"
+                                            onClick={(e) =>
+                                              setValue(value + e.target.value)
+                                            }
+                                          />
+                                        </div>
+                                        <div>
+                                          <input
+                                            type="button"
+                                            value="7"
+                                            onClick={(e) =>
+                                              setValue(value + e.target.value)
+                                            }
+                                          />
+                                          <input
+                                            type="button"
+                                            value="8"
+                                            onClick={(e) =>
+                                              setValue(value + e.target.value)
+                                            }
+                                          />
+                                          <input
+                                            type="button"
+                                            value="9"
+                                            onClick={(e) =>
+                                              setValue(value + e.target.value)
+                                            }
+                                          />
+                                          <input
+                                            type="button"
+                                            value="*"
+                                            onClick={(e) =>
+                                              setValue(value + e.target.value)
+                                            }
+                                          />
+                                        </div>
+                                        <div>
+                                          <input
+                                            type="button"
+                                            value="4"
+                                            onClick={(e) =>
+                                              setValue(value + e.target.value)
+                                            }
+                                          />
+                                          <input
+                                            type="button"
+                                            value="5"
+                                            onClick={(e) =>
+                                              setValue(value + e.target.value)
+                                            }
+                                          />
+                                          <input
+                                            type="button"
+                                            value="6"
+                                            onClick={(e) =>
+                                              setValue(value + e.target.value)
+                                            }
+                                          />
+                                          <input
+                                            type="button"
+                                            value="+"
+                                            onClick={(e) =>
+                                              setValue(value + e.target.value)
+                                            }
+                                          />
+                                        </div>
+                                        <div>
+                                          <input
+                                            type="button"
+                                            value="1"
+                                            onClick={(e) =>
+                                              setValue(value + e.target.value)
+                                            }
+                                          />
+                                          <input
+                                            type="button"
+                                            value="2"
+                                            onClick={(e) =>
+                                              setValue(value + e.target.value)
+                                            }
+                                          />
+                                          <input
+                                            type="button"
+                                            value="3"
+                                            onClick={(e) =>
+                                              setValue(value + e.target.value)
+                                            }
+                                          />
+                                          <input
+                                            type="button"
+                                            value="-"
+                                            onClick={(e) =>
+                                              setValue(value + e.target.value)
+                                            }
+                                          />
+                                        </div>
+                                        <div>
+                                          <input
+                                            type="button"
+                                            value="00"
+                                            onClick={(e) =>
+                                              setValue(value + e.target.value)
+                                            }
+                                          />
+                                          <input
+                                            type="button"
+                                            value="0"
+                                            onClick={(e) =>
+                                              setValue(value + e.target.value)
+                                            }
+                                          />
+                                          <input
+                                            type="button"
+                                            value="="
+                                            className="equal"
+                                            onClick={(e) =>
+                                              setValue(eval(value))
+                                            }
+                                          />
+                                        </div>
+                                      </form>
+                                    </div>
+                                  )}
+
+                                {currentQuestionType &&
+                                  currentQuestionType.typeofQuestion &&
+                                  currentQuestionType.typeofQuestion.includes(
+                                    "NATI( Numeric Answer type of questions with integer values)"
+                                  ) && (
+                                    <div className="calculator">
+                                      <form action="">
+                                        <div className="display">
+                                          <input
+                                            type="text"
+                                            name={`question-${currentQuestionIndex}`}
+                                            value={value}
+                                            onChange={(e) =>
+                                              onAnswerSelected3(e)
+                                            }
+                                          />
+>>>>>>> 632cc3a9c3c36c3c5ee90cc59eb2c540009c50f0
                                         </div>
                                         <div>
                                           <input
@@ -1381,6 +1906,7 @@ const QuestionPaper = () => {
                                         </div>
                                       </form>
                                     </div>
+<<<<<<< HEAD
                                   </div>
                                 )}
                               {currentQuestionType &&
@@ -1393,11 +1919,28 @@ const QuestionPaper = () => {
                                       type="radio"
                                       name={`question-${currentQuestionIndex}-option`}
                                       value="true"
+=======
+                                  )}
+                                {currentQuestionType &&
+                                  currentQuestionType.typeofQuestion &&
+                                  currentQuestionType.typeofQuestion.includes(
+                                    "TF(True or False)"
+                                  ) && (
+                                    <div>
+                                    <input
+                                      className="opt_btns"
+                                      type="radio"
+                                      name={`question-${currentQuestionIndex}-option`}
+                                      value={String.fromCharCode(
+                                        "A".charCodeAt(0) + optionIndex
+                                      )}
+>>>>>>> 632cc3a9c3c36c3c5ee90cc59eb2c540009c50f0
                                       checked={
                                         selectedAnswersMap1[
                                           questionData.questions[
                                             currentQuestionIndex
                                           ]?.question_id
+<<<<<<< HEAD
                                         ] === "true"
                                       }
                                       onChange={() => onAnswerSelected1("true")}
@@ -1467,6 +2010,139 @@ const QuestionPaper = () => {
                 </div>
               </div>
             )}
+=======
+                                        ] === optionIndex
+                                      }
+                                      onChange={() =>
+                                        onAnswerSelected1(optionIndex)
+                                      }
+                                    />
+                                    (
+                                    {String.fromCharCode(
+                                      "a".charCodeAt(0) + optionIndex
+                                    )}
+                                    )
+                                    
+                                    <img
+                                      src={`http://localhost:5001/uploads/${currentQuestion.documen_name}/${option.optionImgName}`}
+                                      alt={`Option ${option.option_id}`}
+                                    />
+                                  </div>
+                                    
+                                  )}
+
+                                {currentQuestionType &&
+                                  currentQuestionType.typeofQuestion &&
+                                  currentQuestionType.typeofQuestion.includes(
+                                    "CTQ(Comprehension type of questions )"
+                                  ) && (
+                                    <div>
+                                      <input
+                                        className="opt_btns"
+                                        type="radio"
+                                        name={`question-${currentQuestionIndex}-option`}
+                                        value={String.fromCharCode(
+                                          "A".charCodeAt(0) + optionIndex
+                                        )}
+                                        checked={
+                                          selectedAnswersMap1[
+                                            questionData.questions[
+                                              currentQuestionIndex
+                                            ]?.question_id
+                                          ] === optionIndex
+                                        }
+                                        onChange={() =>
+                                          onAnswerSelected1(optionIndex)
+                                        }
+                                      />
+                                      (
+                                      {String.fromCharCode(
+                                        "a".charCodeAt(0) + optionIndex
+                                      )}
+                                      )
+                                      <img
+                                        src={`http://localhost:5001/uploads/${currentQuestion.documen_name}/${option.optionImgName}`}
+                                        alt={`Option ${option.option_id}`}
+                                      />
+                                    </div>
+                                  )}
+                              </li>
+                            </div>
+                          ))}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="quiz_btns_contaioner">
+                    <div>
+                      <button
+                        className="Quiz_Save_MarkforReview"
+                        onClick={markForReview}
+                      >
+                        Save & Mark for Review
+                      </button>
+
+                      {/* <button
+                        className="Quiz_MarkforReview"
+                        onClick={markForReview}
+                      >
+                        Mark for Review & Next
+                      </button> */}
+                      <button
+                        className="Quiz_clearResponse"
+                        onClick={clearResponse}
+                      >
+                        Clear Response
+                      </button>
+                      <button
+                        className="quizsave_next"
+                        onClick={handleSaveNextQuestion}
+                      >
+                        Save & Next
+                      </button>
+                    </div>
+
+                    <div className="quiz_Next_back">
+                      <button
+                        className="previous-btn"
+                        onClick={handlePreviousClick}
+                        disabled={currentQuestionIndex === 0}
+                      >
+                        <i className="fa-solid fa-angles-left"></i> Back
+                      </button>
+                      <button onClick={handleNextQuestion}>Next</button>
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
+
+            {/* --------------- quiz option container -------------------- */}
+
+            {/* --------------- quiz btns container -------------------- */}
+          </div>
+
+          <div className="quiz_exam_interface_body_right_container">
+            {/* --------------- right bar -------------------- */}
+
+            <div className="rightsidebar">
+              <ButtonsFunctionality
+                onQuestionSelect={handleQuestionSelect}
+                questionStatus={questionStatus}
+                setQuestionStatus={setQuestionStatus}
+                answeredCount={answeredCount}
+                notAnsweredCount={notAnsweredCount}
+                answeredmarkedForReviewCount={answeredmarkedForReviewCount}
+                markedForReviewCount={markedForReviewCount}
+                VisitedCount={VisitedCount}
+                selectedSubject={selectedSubject}
+                questionData={questionData}
+                updateQuestionStatus={updateQuestionStatus}
+              />
+              <button onClick={handleSubmit} id="resume_btn">
+                Submit
+              </button>
+            </div>
+>>>>>>> 632cc3a9c3c36c3c5ee90cc59eb2c540009c50f0
           </div>
         </div>
       ) : (
@@ -1484,7 +2160,18 @@ const QuestionPaper = () => {
               Not Answered Questions:
               <span> {notAnsweredCount}</span>
             </p>
+<<<<<<< HEAD
 
+=======
+            <p>
+              Marked for Review Questions:
+              <span> {markedForReviewCount}</span>
+            </p>
+            <p>
+              Answered & Marked for Review Questions:
+              <span> {answeredmarkedForReviewCount}</span>
+            </p>
+>>>>>>> 632cc3a9c3c36c3c5ee90cc59eb2c540009c50f0
           </div>
           <div>
             <h2>
@@ -1492,7 +2179,11 @@ const QuestionPaper = () => {
               No changes will be allowed after submission.
             </h2>
             <button onClick={handleYes}>YES</button>
+<<<<<<< HEAD
             <button>NO</button>
+=======
+            <button onClick={handleNo}>NO</button>
+>>>>>>> 632cc3a9c3c36c3c5ee90cc59eb2c540009c50f0
           </div>
         </div>
       )}
