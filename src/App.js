@@ -113,11 +113,7 @@ import Student_profileUpdate from "./components/ug_homepage/UGadmin/eaxm_portal_
 
 import EmployeePortal from "./components/EmployeePortal/EmployeePortal.js";
 import EmployeeDashboard from "./components/EmployeePortal/EmployeeDashboard.js";
-<<<<<<< HEAD
-import QUiZ_ForgotPassword from "./components/ug_homepage/UGadmin/login/QUiZ_ForgotPassword.js";
-import QUIZ_ResetPassword from "./components/ug_homepage/UGadmin/login/QUIZ_ResetPassword.js";
-import EmployeeLOGIN_differentation from "./components/EmployeePortal/EmployeeLOGIN_differentation.js";
-=======
+
 
 import QUiZ_ForgotPassword from "./components/ug_homepage/UGadmin/login/QUiZ_ForgotPassword.js";
 import QUIZ_ResetPassword from "./components/ug_homepage/UGadmin/login/QUIZ_ResetPassword.js";
@@ -130,7 +126,7 @@ import EmployeeLOGIN_differentation from "./components/EmployeePortal/EmployeeLO
 // import EmployeeLOGIN_differentation from "./components/EmployeePortal/EmployeeLOGIN_differentation.js";
 
 
->>>>>>> 6493df3f3548f7132740ce35880d1497431967a1
+
 
 const PrivateRoute = ({ element }) => {
   const isAuthenticated = localStorage.getItem("isLoggedIn");
@@ -326,18 +322,7 @@ const App = () => {
           element={<QUIZ_ResetPassword />}
         ></Route>{" "}
         {/* ---------------------------EmployeePortalHomepage----------------------- */}
-<<<<<<< HEAD
         {/* ---------- EmployeePortal_login ------------- */}
-=======
-
-
-        // {/* ---------- EmployeePortal_login ------------- */}
-
-        {/* ---------- EmployeePortal_login ------------- */}
-        {/* http://localhost:3000/EmployeePortal */}
-
-
->>>>>>> 6493df3f3548f7132740ce35880d1497431967a1
         <Route path="/EmployeePortal" element={<EmployeePortal />} />
         {/* ---------- EmployeeDashboard ------------- */}
         <Route
