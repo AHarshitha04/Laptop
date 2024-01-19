@@ -257,12 +257,22 @@ const App = () => {
           path="/QuestionPaper/questionOptions/:testCreationTableId"
           element={<PrivateRoute element={<QuestionPaper />} />}
         />
-        <Route
+
+<Route
           path="/SubmitPage"
           element={<PrivateRoute element={<SubmitPage />} />}
         />
+{/* 
+<Route
+          path="/OTS_reset_password/:id/:token"
+          element={<QUIZ_ResetPassword />}
+        ></Route> */}
+        {/* <Route
+          path="/SubmitPage"
+          element={<PrivateRoute element={<SubmitPage />} />}
+        /> */}
         <Route
-          path="/TestResultsPage"
+          path="/TestResultsPage/:testCreationTableId"
           element={<PrivateRoute element={<TestResultsPage />} />}
         />
         {/* <Route path='/ExamSummary'  element={<ExamSummary />} /> */}
