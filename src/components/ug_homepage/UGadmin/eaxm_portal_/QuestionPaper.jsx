@@ -23,6 +23,14 @@ const QuestionPaper = () => {
   const [Subjects, setSubjects] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedSubject, setSelectedSubject] = useState(null);
+<<<<<<< HEAD
+
+  const [questionStatus, setQuestionStatus] = useState(Array(questionData?.questions?.length).fill("notAnswered"));
+  
+  const [sections, setSections] = useState([]);
+  const [currentQuestionType, setCurrentQuestionType] = useState(null);
+  const [value, setValue] = useState('');
+=======
   const [questionStatus, setQuestionStatus] = useState(
     Array.isArray(questionData)
       ? Array(questionData.questions.length).fill("notAnswered")
@@ -34,6 +42,7 @@ const QuestionPaper = () => {
   console.log("hiii");
   console.log("calculator:", value);
   // console.log("calculator:", setValue)
+>>>>>>> 6493df3f3548f7132740ce35880d1497431967a1
   const navigate = useNavigate();
   const [answeredCount, setAnsweredCount] = useState(0);
   const [notAnsweredCount, setNotAnsweredCount] = useState(0);
@@ -43,8 +52,11 @@ const QuestionPaper = () => {
   const [VisitedCount, setVisitedCount] = useState(0);
   const [showExamSumary, setShowExamSumary] = useState(false);
 
+<<<<<<< HEAD
+=======
   const [calculatorValue, setCalculatorValue] = useState("");
 
+>>>>>>> 6493df3f3548f7132740ce35880d1497431967a1
   const calculateQuestionCounts = () => {
     let answered = 0;
     let notAnswered = 0;
@@ -133,6 +145,8 @@ const QuestionPaper = () => {
     // // const totalCorrect = result.correctAnswers;
   };
 
+<<<<<<< HEAD
+=======
 //   const handleYes = () => {
 // console.log(userData.id)
 //     // navigate("/TestResultsPage"); // /userupdate/${user.id}
@@ -143,6 +157,7 @@ const handleYes = async () => {
 
   console.log(userId)
   navigate(`/TestResultsPage/${testCreationTableId}`);
+>>>>>>> 6493df3f3548f7132740ce35880d1497431967a1
 
 
   // try {
@@ -166,8 +181,13 @@ const handleYes = async () => {
   // }
 };
 
+<<<<<<< HEAD
+  const handleYes = () => {
+    navigate("/SubmitPage");
+=======
   const handleNo = () => {
     navigate(`/QuestionPaper/questionOptions/${testCreationTableId}`);
+>>>>>>> 6493df3f3548f7132740ce35880d1497431967a1
   };
 
   const [activeQuestion, setActiveQuestion] = useState(0);
@@ -259,6 +279,8 @@ const handleYes = async () => {
     // setQuestionStatus(updatedQuestionStatus);
   };
 
+<<<<<<< HEAD
+=======
   // const onAnswerSelected3 = (e) => {
   //   const inputValue = e.target.value; // Get the value from the text input
   //   const questionId = questionData.questions[currentQuestionIndex].question_id;
@@ -297,6 +319,7 @@ const handleYes = async () => {
   //   console.log("Calculator Value:", parsedValue);
   // };
   // const [value, setValue] = useState("");
+>>>>>>> 6493df3f3548f7132740ce35880d1497431967a1
   const onAnswerSelected3 = (e) => {
     const inputValue = e.target.value;
     const parsedValue = parseFloat(inputValue);
@@ -310,15 +333,58 @@ const handleYes = async () => {
     setValue(parsedValue.toString());
     console.log("Calculator Value:", parsedValue);
 
+<<<<<<< HEAD
+  const onAnswerSelected4 = (e, value) => {
+    const inputValue = value;
+    const questionId =
+      questionData.questions[currentQuestionIndex]?.question_id;
+
+    setSelectedAnswersMap4((prevMap) => {
+      // Update the selected answers map with the radio button value
+      return {
+        ...prevMap,
+        [questionId]: inputValue,
+      };
+    });
+
+    const updatedSelectedAnswers = [...selectedAnswers];
+    updatedSelectedAnswers[activeQuestion] = e;
+    setSelectedAnswers(updatedSelectedAnswers);
+=======
     // Log the input value to the console
     console.log("Calculator Input Text Box Value:", inputValue);
+>>>>>>> 6493df3f3548f7132740ce35880d1497431967a1
   };
 
   //-----------------------------END TYPES OF INPUT VALUES ANSWERING FORMATE
 
+<<<<<<< HEAD
+  // -------------------------------BUTTONS FUNCTIONALITIES-----------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  // -------------------------------END OF BUTTONS FUNCTIONALITIES-----------------------------------
+
+  // -------------------------------------------USE EFFECT FETCHING CODE-------------------------------
+
+=======
   // -------------------------------------------USE EFFECT FETCHING CODE-------------------------------
 
   //Subjects fetching use effect code
+>>>>>>> 6493df3f3548f7132740ce35880d1497431967a1
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -349,9 +415,12 @@ const handleYes = async () => {
 
     fetchData();
   }, [testCreationTableId, subjectId, selectedAnswersMap1]);
+<<<<<<< HEAD
+=======
   //end Subjects fetching use effect code
 
   //users fetching use effect code
+>>>>>>> 6493df3f3548f7132740ce35880d1497431967a1
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -379,7 +448,10 @@ const handleYes = async () => {
 
     fetchUserData();
   }, []);
+<<<<<<< HEAD
+=======
   //end users fetching use effect code
+>>>>>>> 6493df3f3548f7132740ce35880d1497431967a1
 
   //counts use effect code
   useEffect(() => {
@@ -447,9 +519,12 @@ const handleYes = async () => {
     fetchUserData();
   }, []);
 
+<<<<<<< HEAD
+=======
   const [originalStatuses, setOriginalStatuses] = useState(
     Array(questionData.questions.length).fill("notVisited")
   );
+>>>>>>> 6493df3f3548f7132740ce35880d1497431967a1
   const [questionTypes, setQuestionTypes] = useState([]);
   useEffect(() => {
     const fetchQuestionTypes = async () => {
@@ -1252,6 +1327,182 @@ const handleYes = async () => {
     setQuestionStatus(updatedQuestionStatus);
   };
 
+<<<<<<< HEAD
+  return (
+    <div>
+      {!showExamSumary ? (
+        <div>
+          <div className="subjects">
+            {Subjects.map((subjectTitle) => (
+              <li key={subjectTitle.subjectId}>
+                <button
+                  //   onClick={() => handleSubjectsClick(subjectTitle.subjectId)}
+                  className="subject_btn"
+                >
+                  {subjectTitle.subjectName}
+                </button>
+              </li>
+            ))}
+            <h3>
+              Question Type:
+              {questionTypes.map((type) => (
+                <li key={type.quesionTypeId}>
+                  <p>{type.typeofQuestion}</p>
+                </li>
+              ))}
+            </h3>
+
+            <div className="right-header">
+              <div className="marks">
+                Marks: <div className="plus-mark">+1</div>
+                <div className="minus-mark">-1</div>
+              </div>
+              <div>Timer: {formatTime(timer)}</div>
+            </div>
+          </div>
+          <div>
+            {questionData.questions && questionData.questions.length > 0 && (
+              <div
+                key={currentQuestionIndex}
+                className="question-container"
+                style={{ display: "flex" }}
+              >
+                <div>
+                  <div>
+                    <h3>Question: {currentQuestion.sortid.sortid_text}</h3>
+
+                    <img
+                      src={`http://localhost:5001/uploads/${currentQuestion.documen_name}/${currentQuestion.questionImgName}`}
+                      alt={`Question ${currentQuestion.question_id}`}
+                    />
+                    <div>
+                      {currentQuestion.options &&
+                        Array.isArray(currentQuestion.options) &&
+                        currentQuestion.options.filter(
+                          (opt) =>
+                            opt.question_id ===
+                            questionData.questions[currentQuestionIndex]
+                              ?.question_id
+                        ) &&
+                        currentQuestion.options.map((option, optionIndex) => (
+                          <div className="option" key={option.option_id}>
+                            <li key={optionIndex}>
+                              {/* {console.log("Option:", option)}
+                                {console.log("Option Index:", option.option_index)} */}
+                              {currentQuestionType &&
+                                currentQuestionType.typeofQuestion &&
+                                currentQuestionType.typeofQuestion
+                                  .toLowerCase()
+                                  .includes(
+                                    "mcq(multiple choice question)"
+                                  ) && (
+                                  <div>
+                                    {" "}
+                                    <input
+                                      type="radio"
+                                      name={`question-${currentQuestionIndex}-option`}
+                                      value={String.fromCharCode(
+                                        "A".charCodeAt(0) + optionIndex
+                                      )}
+                                      checked={
+                                        selectedAnswersMap1[
+                                          questionData.questions[
+                                            currentQuestionIndex
+                                          ]?.question_id
+                                        ] === optionIndex
+                                      }
+                                      onChange={() =>
+                                        onAnswerSelected1(optionIndex)
+                                      }
+                                    />
+                                    (
+                                    {String.fromCharCode(
+                                      "a".charCodeAt(0) + optionIndex
+                                    )}
+                                    )
+                                    <img
+                                      src={`http://localhost:5001/uploads/${currentQuestion.documen_name}/${option.optionImgName}`}
+                                      alt={`Option ${option.option_id}`}
+                                    />
+                                  </div>
+                                )}
+                              {currentQuestionType &&
+                                currentQuestionType.typeofQuestion &&
+                                currentQuestionType.typeofQuestion
+                                  .toLowerCase()
+                                  .includes(
+                                    "msq(multiple selection question)"
+                                  ) && (
+                                  <div>
+                                    {" "}
+                                    <input
+                                      type="checkbox"
+                                      name={`question-${currentQuestionIndex}-optionIndex`}
+                                      value={String.fromCharCode(
+                                        "A".charCodeAt(0) + optionIndex
+                                      )}
+                                      checked={
+                                        selectedAnswersMap2[
+                                          questionData.questions[
+                                            currentQuestionIndex
+                                          ]?.question_id
+                                        ] &&
+                                        selectedAnswersMap2[
+                                          questionData.questions[
+                                            currentQuestionIndex
+                                          ]?.question_id
+                                        ].includes(optionIndex)
+                                      }
+                                      onChange={() =>
+                                        onAnswerSelected2(optionIndex)
+                                      }
+                                    />
+                                    (
+                                    {String.fromCharCode(
+                                      "a".charCodeAt(0) + optionIndex
+                                    )}
+                                    )
+                                    <img
+                                      src={`http://localhost:5001/uploads/${currentQuestion.documen_name}/${option.optionImgName}`}
+                                      alt={`Option ${option.option_id}`}
+                                    />{" "}
+                                  </div>
+                                )}
+                              {currentQuestionType &&
+                                currentQuestionType.typeofQuestion &&
+                                currentQuestionType.typeofQuestion
+                                  .toLowerCase()
+                                  .includes("nat(numerical answer type)") && (
+                                  <div>
+                                    {/* <input
+                                      type="text"
+                                      name={`question-${currentQuestionIndex}`}
+                                      value={
+                                        selectedAnswersMap3[
+                                          questionData.questions[
+                                            currentQuestionIndex
+                                          ]?.question_id
+                                        ] || ""
+                                      }
+                                      onChange={(e) => onAnswerSelected3(e)}
+                                    /> */}
+                                    <div className="calculator">
+                                      <form action="">
+                                        <div className="display">
+                                          <input type="text"  name={`question-${currentQuestionIndex}`} value={value} onChange={(e) => onAnswerSelected3(e)}/>
+                                          {/* <input
+                                      type="text"
+                                      name={`question-${currentQuestionIndex}`}
+                                      value={
+                                        selectedAnswersMap3[
+                                          questionData.questions[
+                                            currentQuestionIndex
+                                          ]?.question_id
+                                        ] || ""
+                                      }
+                                      onChange={(e) => onAnswerSelected3(e)}
+                                    /> */}
+=======
   // State variable to store text answers for each question
   const [selectedTextAnswersMap3, setSelectedTextAnswersMap3] = useState({});
   const [textInputs, setTextInputs] = useState({});
@@ -1705,6 +1956,7 @@ const handleYes = async () => {
                                               onAnswerSelected3(e)
                                             }
                                           />
+>>>>>>> 6493df3f3548f7132740ce35880d1497431967a1
                                         </div>
                                         <div>
                                           <input
@@ -1850,6 +2102,94 @@ const handleYes = async () => {
                                         </div>
                                       </form>
                                     </div>
+<<<<<<< HEAD
+                                  </div>
+                                )}
+                              {currentQuestionType &&
+                                currentQuestionType.typeofQuestion &&
+                                currentQuestionType.typeofQuestion
+                                  .toLowerCase()
+                                  .includes("True/False Questions") && (
+                                  <>
+                                    <input
+                                      type="radio"
+                                      name={`question-${currentQuestionIndex}-option`}
+                                      value="true"
+                                      checked={
+                                        selectedAnswersMap1[
+                                          questionData.questions[
+                                            currentQuestionIndex
+                                          ]?.question_id
+                                        ] === "true"
+                                      }
+                                      onChange={() => onAnswerSelected1("true")}
+                                    />
+                                    True
+                                    <input
+                                      type="radio"
+                                      name={`question-${currentQuestionIndex}-option`}
+                                      value="false"
+                                      checked={
+                                        selectedAnswersMap1[
+                                          questionData.questions[
+                                            currentQuestionIndex
+                                          ]?.question_id
+                                        ] === "false"
+                                      }
+                                      onChange={() =>
+                                        onAnswerSelected1("false")
+                                      }
+                                    />
+                                    False
+                                  </>
+                                )}
+                            </li>
+                          </div>
+                        ))}
+                    </div>
+                  </div>
+                  <div>
+                    <button className="clear-btn" onClick={markForReview}>
+                      Mark for Review & Next
+                    </button>
+                    <button className="clear-btn" onClick={clearResponse}>
+                      Clear Response
+                    </button>
+                    <button onClick={handleSaveNextQuestion}>Save & Next</button>
+                    <button
+                      className="previous-btn"
+                      onClick={handlePreviousClick}
+                      disabled={currentQuestionIndex === 0}
+                    >
+                      <i className="fa-solid fa-angles-left"></i> Back
+                    </button>
+                    <button onClick={handleNextQuestion}>Next</button>
+                  </div>
+                  <div></div>
+                </div>
+                <div className="rightsidebar">
+                  <ButtonsFunctionality
+                    onQuestionSelect={handleQuestionSelect}
+                    questionStatus={questionStatus}
+                    setQuestionStatus={setQuestionStatus}
+                    answeredCount={answeredCount}
+                    notAnsweredCount={notAnsweredCount}
+                    answeredmarkedForReviewCount={answeredmarkedForReviewCount}
+                    markedForReviewCount={markedForReviewCount}
+                    VisitedCount={VisitedCount}
+                    selectedSubject={selectedSubject}
+                    questionData={questionData}
+                    updateQuestionStatus={updateQuestionStatus}
+                    setVisitedCount={setVisitedCount}
+                    updateCounters={updateCounters}
+                  />
+                  <button onClick={handleSubmit} id="resume_btn">
+                    Submit
+                  </button>
+                </div>
+              </div>
+            )}
+=======
                                   )}
                                 {currentQuestionType &&
                                   currentQuestionType.typeofQuestion &&
@@ -1999,6 +2339,7 @@ const handleYes = async () => {
               </button> */}
             <Link to={`/TestResultsPage/${testCreationTableId}`}>Yes FOr Link</Link>
             </div>
+>>>>>>> 6493df3f3548f7132740ce35880d1497431967a1
           </div>
         </div>
       ) : (
@@ -2016,6 +2357,8 @@ const handleYes = async () => {
               Not Answered Questions:
               <span> {notAnsweredCount}</span>
             </p>
+<<<<<<< HEAD
+=======
             <p>
               Marked for Review Questions:
               <span> {markedForReviewCount}</span>
@@ -2024,6 +2367,7 @@ const handleYes = async () => {
               Answered & Marked for Review Questions:
               <span> {answeredmarkedForReviewCount}</span>
             </p>
+>>>>>>> 6493df3f3548f7132740ce35880d1497431967a1
           </div>
           <div>
             <h2>
@@ -2034,7 +2378,11 @@ const handleYes = async () => {
             {/* <Link to='/SubmitPage'>YES</Link> */}
 
             <button onClick={handleYes}>YES</button>
+<<<<<<< HEAD
+            <button>NO</button>
+=======
             <button onClick={handleNo}>NO</button>
+>>>>>>> 6493df3f3548f7132740ce35880d1497431967a1
           </div>
         </div>
       )}

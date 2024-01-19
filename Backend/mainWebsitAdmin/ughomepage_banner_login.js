@@ -1538,41 +1538,52 @@ router.post("/OTS_reset_password/:id/:token", (req, res) => {
   });
 });
 // ------------------- user to get and all  register  user detail by admin
+// router.get("/act_info", (req, res) => {
+//   const query = "SELECT * FROM log ";
 
-router.get("/act_info", (req, res) => {
-  // const query = 'SELECT course_name,course_id FROM 1egquiz_courses';
-  const query = "SELECT  * FROM log ";
+//   db1.query(query, (error, results) => {
+//     if (error) {
+//       console.error("Error executing query: " + error.stack);
+//       // Send an error response as JSON
+//       return res
+//         .status(500)
+//         .json({ error: "Error retrieving data from the database." });
+//     }
 
-  db1.query(query, (error, results) => {
-    if (error) {
-      console.error("Error executing query: " + error.stack);
-      res.status(500).send("Error retrieving data from database.");
-      return;
-    }
-    // const imageArray = results.map((result) => {
-    //     const base64 = result.image_data.toString("base64");
-    //     return {
-    //       id: result.images_id,
-    //       imageData: `data:image/png;base64,${base64}`,
-    //     };
+//     try {
+//       // Process the results and send the response
+//       const imageArray = results
+//         .map((result, index) => {
+//           if (result.image_data !== undefined) {
+//             const base64 = result.image_data.toString("base64");
+//             return {
+//               id: result.user_Id,
+//               imageData: `data:image/png;base64,${base64}`,
+//             };
+//           } else {
+//             console.warn(
+//               `Image data is undefined for row ${index + 1}.`,
+//               result
+//             );
+//             return null; // Skip this entry or handle it accordingly
+//           }
+//         })
+//         .filter((item) => item !== null); // Remove null entries
 
-    else{
-       const imageArray = results.map((result) => {
-         const base64 = result.image_data.toString("base64");
-         return {
-           id: result.user_Id,
-           imageData: `data:image/png;base64,${base64}`,
-         };
-       });
+//       console.log("Retrieved data from test table:");
+//       console.log(results);
 
-      res.json(imageArray);
-    }
-    console.log("Retrieved data from test table:");
-    console.log(results);
-    // Send the retrieved data as JSON response
-    res.json(results);
-  });
-});
+//       // Send the retrieved data as JSON response
+//       res.json(imageArray);
+//     } catch (e) {
+//       console.error("Error processing results: " + e.message);
+//       // Send an error response as JSON if there's an issue during processing
+//       res.status(500).json({ error: "Error processing results." });
+//     }
+//   });
+// });
+
+
 
 router.get("/act_info", (req, res) => {
   const query = "SELECT * FROM log WHERE role = 'viewer' ";
@@ -1614,6 +1625,50 @@ router.get("/act_info", (req, res) => {
     res.json(dataWithImages); // Sending the processed data with images as a response
   });
 });
+
+
+
+
+// router.get("/act_info", (req, res) => {
+//   const query = "SELECT * FROM log WHERE role = 'viewer' ";
+
+//   db1.query(query, (error, results) => {
+//     if (error) {
+//       console.error("Error executing query: " + error.stack);
+//       return res.status(500).send("Error retrieving data from database.");
+//     }
+
+//     if (!results || results.length === 0) {
+//       console.log("No data found.");
+//       return res.status(404).send("No data found.");
+//     }
+
+//     const dataWithImages = results
+//       .map((result) => {
+//         if (!result.profile_image) {
+//           console.log("Image data is missing for a row.");
+//           return null; // Skip this entry or handle it accordingly
+//         }
+
+//         const base64 = result.profile_image.toString("base64");
+//         // Add all the fields along with the profile_image in the response
+//         return {
+//           id: result.user_Id,
+//           username: result.username,
+//           email: result.email,
+//           role: result.role,
+//           // Add other fields as needed
+//           profile_image: `data:image/png;base64,${base64}`,
+//         };
+//       })
+//       .filter((item) => item !== null); // Remove null entries
+
+//     // console.log("Retrieved data from log table:");
+//     // console.log(dataWithImages);
+
+//     res.json(dataWithImages); // Sending the processed data with images as a response
+//   });
+// });
 
 // --------------------------------------login end ----------------------------------------------------
 

@@ -1,6 +1,10 @@
 .act_infocontainer {
-  /* width: 80%; */
+  width: 90%;
   margin: 0 auto;
+  height: 60vh;
+}
+.Dashboard_container::-webkit-scrollbar{
+    display: none;
 }
 .table {
   text-align: center;

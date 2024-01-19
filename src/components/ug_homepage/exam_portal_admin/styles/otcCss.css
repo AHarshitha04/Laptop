@@ -159,6 +159,7 @@ input[type=text], input[type=number], input[type=date],input[type=time]{
 
 .otsMainPages {
     margin: 6rem 2rem;
+    overflow-x: scroll;
   }
 
   .textColor {
@@ -201,4 +202,14 @@ input[type=text], input[type=number], input[type=date],input[type=time]{
     margin-top: 5px; 
     font-size: small;
   }
+  
+  @media (max-width:1350px) {
+    .otsMainPages {
+    margin: 6rem 2rem;
+    overflow-x: scroll;
+  }
+
+   .otsMainPages::-webkit-scrollbar {display: none;}
+}
+    
   

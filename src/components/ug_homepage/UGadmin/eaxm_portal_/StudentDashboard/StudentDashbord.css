@@ -199,3 +199,50 @@ text-align: justify;
   width: 150px;
  
 }
+.ugquiz_StudentDashbordconatiner_handleToggleLeftMenu{
+  display: none;
+}
+.ugquiz_StudentDashbordconatiner_left_mobile{
+  display: none;
+}
+
+@media (max-width:900px) {
+
+
+  .ugquiz_StudentDashbordconatiner_handleToggleLeftMenu{
+  display: inline;
+  position: absolute;
+  top: 5rem;
+  left: 1rem;
+  z-index: 10002;
+  font-size: 1.5rem;
+ 
+  height: 100px;
+
+}
+  .ugquiz_StudentDashbordconatiner_left {
+    display: none;
+  }
+
+  
+.ugquiz_StudentDashbordconatiner_left_mobile {
+  display: block;
+  position: relative;
+  top: 0;
+  z-index: 1001;
+  background: #00b7ff;
+  height: 100vh;width: fit-content;
+}
+
+/* background: #2f2467;
+    color: white; */
+.ugquiz_StudentDashbordconatiner_left_mobile
+  .ugquiz_StudentDashbordconatiner_left_menu {
+  padding: 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+  
+}

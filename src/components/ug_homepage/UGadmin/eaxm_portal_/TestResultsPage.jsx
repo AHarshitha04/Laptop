@@ -75,7 +75,10 @@ const TestResultsPage = () => {
   //     amt: 2100,
   //   },
   // ];
+<<<<<<< HEAD
+=======
 
+>>>>>>> 6493df3f3548f7132740ce35880d1497431967a1
 
 
 
@@ -106,7 +109,10 @@ const TestResultsPage = () => {
     <div>
       <h2>Score Card</h2>
       <div>
+<<<<<<< HEAD
+=======
 
+>>>>>>> 6493df3f3548f7132740ce35880d1497431967a1
         <div>
           <h1>Your Test Performance</h1>
           <p>Your Score</p>
@@ -120,7 +126,11 @@ const TestResultsPage = () => {
         <div>
      
         </div>
+<<<<<<< HEAD
+ 
+=======
 
+>>>>>>> 6493df3f3548f7132740ce35880d1497431967a1
       </div>
       <table id="customers">
         <tr>

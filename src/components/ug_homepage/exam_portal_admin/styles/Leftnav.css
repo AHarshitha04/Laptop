@@ -37,3 +37,7 @@ tr th{
     /* align-items: center; */
     margin: 0 auto;
 }
+
+.admin_S_R_INfo::-webkit-scrollbar{
+    display: none;
+}
