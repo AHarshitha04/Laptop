@@ -90,8 +90,7 @@ const Employee_Information = () => {
     e.preventDefault();
 
     if (step === 1) {
-      // Handle step 1 logic
-      // Validate and process data if needed
+     
       setStep(2); // Move to step 2
     } else if (step === 2) {
       // Handle step 2 logic
@@ -604,7 +603,7 @@ const Employee_Information = () => {
             onChange={(e) => setAnyOtherRank(e.target.value)}
           />
         </div>
-        
+
             </div>
             <button type="button" onClick={handlePreviousStep}>
               Previous
