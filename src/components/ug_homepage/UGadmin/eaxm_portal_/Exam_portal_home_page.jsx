@@ -307,7 +307,7 @@ export const Header = () => {
                       </>
                     ) : (
                       <>
-                        <a class="uglogin_btn" href="/UgadminHome">
+                        <a class="ugQUIz_login_btn" href="/UgadminHome">
                           Login/Registration
                         </a>
                       </>

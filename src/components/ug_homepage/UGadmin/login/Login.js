@@ -81,11 +81,7 @@ const handleLogin = async (e) => {
                         {NavData.link1}
                       </Link>
                     </li>
-                    <Link
-                      to="/Register"
-                      
-                      className={NavData.login}
-                    >
+                    <Link to="/Register" className={NavData.login}>
                       Register
                     </Link>
                     {/* <div className="mobile_menu mobile_menu_non"onClick={() => setshowMenu(!showMenu)}  >
@@ -152,6 +148,8 @@ const handleLogin = async (e) => {
               <p>
                 Don't have an account ?<Link to="/Register">Register here</Link>
               </p>
+
+              <Link to="/OTS_ForgotPassword">Forgot Password ?</Link>
             </div>
           </div>
         </div>

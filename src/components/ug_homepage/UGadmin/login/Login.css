@@ -133,7 +133,7 @@
 
 .login_from_continer p {
     display: flex;
-    justify-content: space-around;
+    /* justify-content: space-around; */
     font-size: 1.2rem;
 
 }
@@ -141,12 +141,12 @@
 .login_from_continer a {
     color: #2f2467;
     padding: 0 0.5rem;
-    border-bottom: 2px solid #2f2467;
+    /* border-bottom: 2px solid #2f2467; */
 
     &:hover {
         color: #2f00ff;
         font-weight: 500;
-        border-bottom: 2px solid #2f00ff;
+        /* border-bottom: 0.5px solid #2f00ff; */
 
     }
 }

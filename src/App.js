@@ -113,6 +113,8 @@ import Student_profileUpdate from "./components/ug_homepage/UGadmin/eaxm_portal_
 
 import EmployeePortal from "./components/EmployeePortal/EmployeePortal.js";
 import EmployeeDashboard from "./components/EmployeePortal/EmployeeDashboard.js";
+import QUiZ_ForgotPassword from "./components/ug_homepage/UGadmin/login/QUiZ_ForgotPassword.js";
+import QUIZ_ResetPassword from "./components/ug_homepage/UGadmin/login/QUIZ_ResetPassword.js";
 
 const PrivateRoute = ({ element }) => {
   const isAuthenticated = localStorage.getItem("isLoggedIn");
@@ -302,8 +304,14 @@ const App = () => {
           element={<PrivateRoute element={<Student_profileUpdate />} />}
         />
         <Route path="/Score" element={<PrivateRoute element={<Score />} />} />
+        <Route path="/OTS_ForgotPassword" element={<QUiZ_ForgotPassword />} />
+        <Route
+          path="/OTS_reset_password/:id/:token"
+          element={<QUIZ_ResetPassword />}
+        ></Route>
+        //{" "}
         {/* ---------------------------EmployeePortalHomepage----------------------- */}
-        {/* ---------- EmployeePortal_login ------------- */}
+        // {/* ---------- EmployeePortal_login ------------- */}
         <Route path="/EmployeePortal" element={<EmployeePortal />} />
         {/* ---------- EmployeeDashboard ------------- */}
         <Route path="/Employee_dashboard" element={<EmployeeDashboard />} />
