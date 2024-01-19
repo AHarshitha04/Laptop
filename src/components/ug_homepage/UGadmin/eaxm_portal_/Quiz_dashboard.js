@@ -9,6 +9,8 @@ import Button from "@mui/material/Button";
 import Exam_portal_admin_integration from "../../exam_portal_admin/Exam_portal_admin_integration"
 import UG_HOME from "../../UG_HOME";
 import "./Quiz_amain_page.css"
+ 
+
 
 const Quiz_dashboard = () => {
   const [showQuizmobilemenu, setShowQuizmobilemenu] = useState(false);
@@ -125,25 +127,38 @@ export default Quiz_dashboard;
 export const Quiz_main_page_container = () => {
   const [showcardactive2, setshowcardactive2] = useState(true);
   const [showcardactive1, setshowcardactive1] = useState(false);
+  
+
 const [showcard1, setshowcard1] = useState(true);
 const [showcard2, setshowcard2] = useState(false);
+
+
 
   const UG_HOMEadim_btn = () => {
     setshowcardactive2(true);
     setshowcardactive1(false);
+  
+
     setshowcard1(true)
 // console.log("hello");
     setshowcard2(false)
+   
+
 
   };
 
   const UG_HOMEQuiz_btn = () => {
+  
     setshowcardactive2(false);
     setshowcardactive1(true);
     setshowcard1(false)
     setshowcard2(true)
+   
+
 
   };
+ 
+ 
 
     const userRole = localStorage.getItem("userRole");
   return (
@@ -170,7 +185,7 @@ const [showcard2, setshowcard2] = useState(false);
           >
             UG Quiz Admin
           </button>
-        
+             
             </>
           )}
 
@@ -188,6 +203,8 @@ const [showcard2, setshowcard2] = useState(false);
                 <Exam_portal_admin_integration />
               </div>
             ) : null}
+
+
           </>
         )}
 
@@ -666,3 +683,6 @@ export const ImageFetching = () => {
     </div>
   );
 };
+
+
+

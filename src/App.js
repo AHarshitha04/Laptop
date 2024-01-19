@@ -113,8 +113,12 @@ import Student_profileUpdate from "./components/ug_homepage/UGadmin/eaxm_portal_
 
 import EmployeePortal from "./components/EmployeePortal/EmployeePortal.js";
 import EmployeeDashboard from "./components/EmployeePortal/EmployeeDashboard.js";
+<<<<<<< HEAD
 import QUiZ_ForgotPassword from "./components/ug_homepage/UGadmin/login/QUiZ_ForgotPassword.js";
 import QUIZ_ResetPassword from "./components/ug_homepage/UGadmin/login/QUIZ_ResetPassword.js";
+=======
+import EmployeeLOGIN_differentation from "./components/EmployeePortal/EmployeeLOGIN_differentation.js";
+>>>>>>> d37e966daf1100bbf3117df46dc57e6a83bfd2b1
 
 const PrivateRoute = ({ element }) => {
   const isAuthenticated = localStorage.getItem("isLoggedIn");
@@ -311,8 +315,18 @@ const App = () => {
         ></Route>
         //{" "}
         {/* ---------------------------EmployeePortalHomepage----------------------- */}
+<<<<<<< HEAD
         // {/* ---------- EmployeePortal_login ------------- */}
+=======
+        {/* ---------- EmployeePortal_login ------------- */}
+        {/* http://localhost:3000/EmployeePortal */}
+>>>>>>> d37e966daf1100bbf3117df46dc57e6a83bfd2b1
         <Route path="/EmployeePortal" element={<EmployeePortal />} />
+
+
+          {/* ---------- EmployeeDashboard ------------- */}
+          <Route path="/EmployeeLOGIN_differentation" element={<EmployeeLOGIN_differentation />} />
+   
         {/* ---------- EmployeeDashboard ------------- */}
         <Route path="/Employee_dashboard" element={<EmployeeDashboard />} />
       </Routes>
