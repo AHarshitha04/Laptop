@@ -11,19 +11,18 @@ const QuestionPaper = () => {
   // const [data, setData] = useState({ questions: [] });
   const [questionData, setQuestionData] = useState({ questions: [] });
   // const [questionData, setQuestionData] = useState({});
+  const [value, setValue] = useState("");
+  // const [value, setValue] = useState(() => {
+  //   const savedValue = localStorage.getItem("calculatorInputValue");
+  //   return savedValue ? savedValue : "";
+  // });
+  //   console.log("hello")
+  // console.log("savedValue", value.savedValue);
 
   const { subjectId, testCreationTableId, userId } = useParams();
   const [Subjects, setSubjects] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedSubject, setSelectedSubject] = useState(null);
-<<<<<<< HEAD
-
-  const [questionStatus, setQuestionStatus] = useState(Array(questionData?.questions?.length).fill("notAnswered"));
-  
-  const [sections, setSections] = useState([]);
-  const [currentQuestionType, setCurrentQuestionType] = useState(null);
-  const [value, setValue] = useState('');
-=======
   const [questionStatus, setQuestionStatus] = useState(
     Array.isArray(questionData)
       ? Array(questionData.questions.length).fill("notAnswered")
@@ -31,8 +30,10 @@ const QuestionPaper = () => {
   );
   const [sections, setSections] = useState([]);
   const [currentQuestionType, setCurrentQuestionType] = useState(null);
-  const [value, setValue] = useState("");
->>>>>>> 632cc3a9c3c36c3c5ee90cc59eb2c540009c50f0
+
+  console.log("hiii");
+  console.log("calculator:", value);
+  // console.log("calculator:", setValue)
   const navigate = useNavigate();
   const [answeredCount, setAnsweredCount] = useState(0);
   const [notAnsweredCount, setNotAnsweredCount] = useState(0);
@@ -42,11 +43,8 @@ const QuestionPaper = () => {
   const [VisitedCount, setVisitedCount] = useState(0);
   const [showExamSumary, setShowExamSumary] = useState(false);
 
-<<<<<<< HEAD
-=======
   const [calculatorValue, setCalculatorValue] = useState("");
 
->>>>>>> 632cc3a9c3c36c3c5ee90cc59eb2c540009c50f0
   const calculateQuestionCounts = () => {
     let answered = 0;
     let notAnswered = 0;
@@ -125,7 +123,7 @@ const QuestionPaper = () => {
   const [selectedAnswersMap1, setSelectedAnswersMap1] = useState({});
   const [selectedAnswersMap2, setSelectedAnswersMap2] = useState({});
   const [selectedAnswersMap3, setSelectedAnswersMap3] = useState({});
-  const [selectedAnswersMap4, setSelectedAnswersMap4] = useState({});
+
   const [answeredQuestions, setAnsweredQuestions] = useState([]);
   const [isPaused, setIsPaused] = useState(false);
   // const [showExamSumary, setShowExamSumary] = useState(false);
@@ -135,21 +133,42 @@ const QuestionPaper = () => {
     // // const totalCorrect = result.correctAnswers;
   };
 
-<<<<<<< HEAD
+//   const handleYes = () => {
+// console.log(userData.id)
+//     // navigate("/TestResultsPage"); // /userupdate/${user.id}
+//   };
+
+const handleYes = async () => {
+  const userId = userData.id;
+
+  console.log(userId)
+  navigate(`/TestResultsPage/${testCreationTableId}`);
 
 
+  // try {
+  //   // Assuming userData.id is the user_Id from the log table
+    
 
-  const handleYes = () => {
-    navigate("/SubmitPage");
-  };
-=======
-  const handleYes = () => {
-    navigate("/SubmitPage");
-  };
+  //   const response = await fetch(
+  //     `http://localhost:5001/QuestionPaper/${userId}`,
+  //     // `http://localhost:5001/QuestionPaper/userId/${userId}` // Replace with your actual API endpoint
+  //   );
+
+  //   if (response.ok) {
+  //     const responseData = await response.json();
+  //     // Do something with responseData, which contains the data from user_responses
+  //     console.log(responseData);
+  //   } else {
+  //     console.error("Unexpected response from server:", response.statusText);
+  //   }
+  // } catch (error) {
+  //   console.error("Error during request:", error);
+  // }
+};
+
   const handleNo = () => {
     navigate(`/QuestionPaper/questionOptions/${testCreationTableId}`);
   };
->>>>>>> 632cc3a9c3c36c3c5ee90cc59eb2c540009c50f0
 
   const [activeQuestion, setActiveQuestion] = useState(0);
   // --------------------------------------END OF CONST VARIABLES DECLARATIONS--------------------------
@@ -240,8 +259,6 @@ const QuestionPaper = () => {
     // setQuestionStatus(updatedQuestionStatus);
   };
 
-<<<<<<< HEAD
-=======
   // const onAnswerSelected3 = (e) => {
   //   const inputValue = e.target.value; // Get the value from the text input
   //   const questionId = questionData.questions[currentQuestionIndex].question_id;
@@ -261,77 +278,47 @@ const QuestionPaper = () => {
   //   console.log('Calculator Value:', inputValue);
   // };
 
->>>>>>> 632cc3a9c3c36c3c5ee90cc59eb2c540009c50f0
+  // const onAnswerSelected3 = (e) => {
+  //   const inputValue = e.target.value;
+  //   const parsedValue = parseFloat(inputValue); // Parse the input value to a float if it's supposed to be a number
+  //   const questionId = questionData.questions[currentQuestionIndex].question_id;
+  //   const questionIndex = currentQuestionIndex + 1;
+  //   console.log(`Question Index: ${questionIndex}`);
+  //   console.log(`Entered Text: ${parsedValue}`);
+
+  //   setSelectedAnswersMap3((prevMap) => {
+  //     // Update the selected answers map with the parsed value
+  //     return {
+  //       ...prevMap,
+  //       [questionId]: parsedValue,
+  //     };
+  //   });
+  //   setCalculatorValue(parsedValue.toString()); // Update the calculator value as a string if needed
+  //   console.log("Calculator Value:", parsedValue);
+  // };
+  // const [value, setValue] = useState("");
   const onAnswerSelected3 = (e) => {
     const inputValue = e.target.value;
-    const parsedValue = parseFloat(inputValue); // Parse the input value to a float if it's supposed to be a number
+    const parsedValue = parseFloat(inputValue);
     const questionId = questionData.questions[currentQuestionIndex].question_id;
-    const questionIndex = currentQuestionIndex + 1;
-    console.log(`Question Index: ${questionIndex}`);
-    console.log(`Entered Text: ${parsedValue}`);
+    // console.log("Parsed Value:", parsedValue);
 
-    setSelectedAnswersMap3((prevMap) => {
-      // Update the selected answers map with the parsed value
-      return {
-        ...prevMap,
-        [questionId]: parsedValue,
-      };
-    });
-    setCalculatorValue(parsedValue.toString()); // Update the calculator value as a string if needed
+    setSelectedAnswersMap3((prevMap) => ({
+      ...prevMap,
+      [questionId]: parsedValue,
+    }));
+    setValue(parsedValue.toString());
     console.log("Calculator Value:", parsedValue);
-  };
 
-  const onAnswerSelected4 = (e, value) => {
-    const inputValue = value;
-    const questionId =
-      questionData.questions[currentQuestionIndex]?.question_id;
-
-    setSelectedAnswersMap4((prevMap) => {
-      // Update the selected answers map with the radio button value
-      return {
-        ...prevMap,
-        [questionId]: inputValue,
-      };
-    });
-
-<<<<<<< HEAD
-    const updatedSelectedAnswers = [...selectedAnswers];
-    updatedSelectedAnswers[activeQuestion] = e;
-    setSelectedAnswers(updatedSelectedAnswers);
-=======
-    console.log("True/False Value:", inputValue);
->>>>>>> 632cc3a9c3c36c3c5ee90cc59eb2c540009c50f0
+    // Log the input value to the console
+    console.log("Calculator Input Text Box Value:", inputValue);
   };
 
   //-----------------------------END TYPES OF INPUT VALUES ANSWERING FORMATE
 
-<<<<<<< HEAD
-  // -------------------------------BUTTONS FUNCTIONALITIES-----------------------------------
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-  // -------------------------------END OF BUTTONS FUNCTIONALITIES-----------------------------------
-
-  // -------------------------------------------USE EFFECT FETCHING CODE-------------------------------
-
-=======
   // -------------------------------------------USE EFFECT FETCHING CODE-------------------------------
 
   //Subjects fetching use effect code
->>>>>>> 632cc3a9c3c36c3c5ee90cc59eb2c540009c50f0
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -362,12 +349,9 @@ const QuestionPaper = () => {
 
     fetchData();
   }, [testCreationTableId, subjectId, selectedAnswersMap1]);
-<<<<<<< HEAD
-=======
   //end Subjects fetching use effect code
 
   //users fetching use effect code
->>>>>>> 632cc3a9c3c36c3c5ee90cc59eb2c540009c50f0
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -395,10 +379,7 @@ const QuestionPaper = () => {
 
     fetchUserData();
   }, []);
-<<<<<<< HEAD
-=======
   //end users fetching use effect code
->>>>>>> 632cc3a9c3c36c3c5ee90cc59eb2c540009c50f0
 
   //counts use effect code
   useEffect(() => {
@@ -466,12 +447,9 @@ const QuestionPaper = () => {
     fetchUserData();
   }, []);
 
-<<<<<<< HEAD
-=======
   const [originalStatuses, setOriginalStatuses] = useState(
     Array(questionData.questions.length).fill("notVisited")
   );
->>>>>>> 632cc3a9c3c36c3c5ee90cc59eb2c540009c50f0
   const [questionTypes, setQuestionTypes] = useState([]);
   useEffect(() => {
     const fetchQuestionTypes = async () => {
@@ -619,8 +597,8 @@ const QuestionPaper = () => {
   //             String.fromCharCode("a".charCodeAt(0) + index)
   //           ),
   //           selectedOption3: calculatorValue, // Add the calculator value to responses
-  //           isRadioType: true,
-  //           value: selectedAnswersMap4[questionId],
+  //           // isRadioType: true,
+  //           // value: selectedAnswersMap4[questionId],
   //         },
   //       };
 
@@ -650,24 +628,27 @@ const QuestionPaper = () => {
   //   // --------------------------------end of button functionality --------------------------------------------------
   // };
 
-  //practice
+  ///save &next start
+
   const handleSaveNextQuestion = async () => {
     // ------------------------------------ button functionality --------------------------------------------
     // Update question status for the current question
     const updatedQuestionStatus = [...questionStatus];
+
+    const calculatorInputValue = value;
+
     const currentQuestion = questionData.questions[currentQuestionIndex];
 
-    const isRadioType = currentQuestion.type === "TF(True or False)";
     const isCurrentQuestionAnswered =
       selectedAnswersMap1[currentQuestion.question_id] !== undefined ||
       (selectedAnswersMap2[currentQuestion.question_id] &&
         selectedAnswersMap2[currentQuestion.question_id].length > 0);
 
-     const isResponseCleared =
+    const isResponseCleared =
       selectedAnswersMap1[currentQuestion.question_id] === null ||
       selectedAnswersMap2[currentQuestion.question_id]?.length === 0;
 
-    if (!isCurrentQuestionAnswered && !isRadioType) {
+    if (!isCurrentQuestionAnswered) {
       // updatedQuestionStatus[currentQuestionIndex] = "notAnswered";
       // setQuestionStatus(updatedQuestionStatus);
       window.alert("Please answer the question before proceeding.");
@@ -681,14 +662,10 @@ const QuestionPaper = () => {
         if (prevIndex < questionData.questions.length - 1) {
           return prevIndex + 1;
         }
-      }
-      );
+      });
       // updatedQuestionStatus[currentQuestionIndex] = "notAnswered"
       // You may also show a message or perform other actions to indicate that the question is not answered
       console.log("Question not answered!");
-    } else if (isRadioType && selectedAnswersMap4[currentQuestion.question_id] === undefined) {
-      // If it's a true/false question and no value is selected
-      window.alert("Please answer the true/false question before proceeding.");
     } else if (isCurrentQuestionAnswered === markForReview()) {
       updatedQuestionStatus[currentQuestionIndex] =
         "Answered but marked for review";
@@ -732,15 +709,12 @@ const QuestionPaper = () => {
           console.error("Data or questions are null or undefined");
           return;
         }
-
+        const calculatorInputValue = value;
         const currentQuestion = questionData.questions[currentQuestionIndex];
         const selectedOption1 =
           selectedAnswersMap1[currentQuestion.question_id];
         const selectedOption2 =
           selectedAnswersMap2[currentQuestion.question_id];
-        // its for NATD( Numeric Answer type of questions with Decimal values)
-        const selectedOption3 =
-          selectedAnswersMap3[currentQuestion.question_id];
 
         const optionIndexes1 =
           selectedOption1 !== undefined ? [selectedOption1] : [];
@@ -760,9 +734,7 @@ const QuestionPaper = () => {
             optionIndexes2: optionIndexes2.map((index) =>
               String.fromCharCode("a".charCodeAt(0) + index)
             ),
-            selectedOption3: calculatorValue, // Add the calculator value to responses
-            isRadioType: isRadioType,
-            value: isRadioType ? selectedAnswersMap4[questionId] === "true" : undefined,
+            calculatorInputValue: calculatorInputValue, // Add the calculator value to responses
           },
         };
 
@@ -791,6 +763,151 @@ const QuestionPaper = () => {
 
     // --------------------------------end of button functionality --------------------------------------------------
   };
+
+  ///save &next end
+  // const [calculatorInputValue, setCalculatorInputValue] = useState('');
+  //practice
+  //   const handleSaveNextQuestion = async () => {
+  //     // ------------------------------------ button functionality --------------------------------------------
+  //     // Update question status for the current question
+  //     const updatedQuestionStatus = [...questionStatus];
+  //     const currentQuestion = questionData.questions[currentQuestionIndex];
+
+  //     const isCurrentQuestionAnswered =
+  //       selectedAnswersMap1[currentQuestion.question_id] !== undefined ||
+  //       (selectedAnswersMap2[currentQuestion.question_id] &&
+  //         selectedAnswersMap2[currentQuestion.question_id].length > 0) ||   value !== undefined;
+
+  //      const isResponseCleared =
+  //       selectedAnswersMap1[currentQuestion.question_id] === null ||
+  //       selectedAnswersMap2[currentQuestion.question_id]?.length === 0;
+
+  //     if (!isCurrentQuestionAnswered) {
+  //       // updatedQuestionStatus[currentQuestionIndex] = "notAnswered";
+  //       // setQuestionStatus(updatedQuestionStatus);
+  //       window.alert("Please answer the question before proceeding.");
+  //     } else if (isCurrentQuestionAnswered) {
+  //       // If the current question is not answered, update the status
+  //       const updatedQuestionStatus = [...questionStatus];
+  //       updatedQuestionStatus[currentQuestionIndex] = "answered";
+  //       setQuestionStatus(updatedQuestionStatus);
+
+  //       setCurrentQuestionIndex((prevIndex) => {
+  //         if (prevIndex < questionData.questions.length - 1) {
+  //           return prevIndex + 1;
+  //         }
+  //       }
+  //       );
+  //       // updatedQuestionStatus[currentQuestionIndex] = "notAnswered"
+  //       // You may also show a message or perform other actions to indicate that the question is not answered
+  //       console.log("Question not answered!");
+  //     }  else if (isCurrentQuestionAnswered === markForReview()) {
+  //       updatedQuestionStatus[currentQuestionIndex] =
+  //         "Answered but marked for review";
+  //       updateCounters();
+
+  //       setCurrentQuestionIndex((prevIndex) => {
+  //         if (prevIndex < questionData.questions.length - 1) {
+  //           return prevIndex + 1;
+  //         }
+  //       });
+  //     }
+
+  //     try {
+  //       const response = await fetch(
+  //         `http://localhost:5001/QuestionPaper/questionOptions/${testCreationTableId}`
+  //       );
+  //       const result = await response.json();
+
+  //       setQuestionData(result);
+
+  //       const token = localStorage.getItem("token");
+  //       const response_user = await fetch(
+  //         "http://localhost:5001/ughomepage_banner_login/user",
+  //         {
+  //           headers: {
+  //             Authorization: `Bearer ${token}`, // Attach token to headers for authentication
+  //           },
+  //         }
+  //       );
+
+  //       if (response_user.ok) {
+  //         const userData = await response_user.json();
+  //         setUserData(userData);
+
+  //         const userId = userData.id; // Move this line here to ensure userId is defined
+
+  //         console.log("Test Creation Table ID:", testCreationTableId);
+  //         console.log("Current user_Id:", userId); // Now userId should be defined
+
+  //         if (!questionData || !questionData.questions) {
+  //           console.error("Data or questions are null or undefined");
+  //           return;
+  //         }
+  //         const calculatorInputValue = value;
+  //         const currentQuestion = questionData.questions[currentQuestionIndex];
+  //         const selectedOption1 =
+  //           selectedAnswersMap1[currentQuestion.question_id];
+  //         const selectedOption2 =
+  //           selectedAnswersMap2[currentQuestion.question_id];
+  //         // its for NATD( Numeric Answer type of questions with Decimal values)
+  //         const selectedOption3 =
+  //           selectedAnswersMap3[currentQuestion.question_id];
+
+  //           // const calculatorInputValue = selectedAnswersMap3[currentQuestion.question_id];
+  //           console.log("Calculator Input Value:", value);
+  //         const optionIndexes1 =
+  //           selectedOption1 !== undefined ? [selectedOption1] : [];
+  //         const optionIndexes2 =
+  //           selectedOption2 !== undefined ? selectedOption2 : [];
+  //           const optionIndexes3 =
+  //           selectedOption3 !== undefined ? selectedOption3 : [];
+  //         const questionId = currentQuestion.question_id;
+
+  //         // console.log("Responses to be sent:", responses);
+  //         const responses = {
+  //           userId: userId,
+  //           testCreationTableId: testCreationTableId,
+  //           [questionId]: {
+  //             optionIndexes1: optionIndexes1.map((index) =>
+  //               String.fromCharCode("a".charCodeAt(0) + index)
+  //             ),
+  //             optionIndexes2: optionIndexes2.map((index) =>
+  //               String.fromCharCode("a".charCodeAt(0) + index)
+  //             ),
+  //             calculatorInputValue: calculatorInputValue, // Add the calculator value to responses
+
+  //           },
+  //         };
+  // console.log('fdkojgodskjgpokjdsogjpdosogkpdkgopk')
+  //         console.log(responses.selectedOption3)
+
+  //         // console.log(calculatorInputValue)
+  //         const saveResponse = await axios.post(
+  //           "http://localhost:5001/QuestionPaper/response",
+  //           {
+  //             responses,
+  //             userId,
+  //             testCreationTableId,
+  //           }
+  //         );
+
+  //         console.log(saveResponse.data);
+  //         console.log("Handle Next Click - New Response Saved");
+
+  //         setAnsweredQuestionsMap((prevMap) => ({
+  //           ...prevMap,
+  //           [questionId]: true,
+  //         }));
+
+  //         setClickCount((prevCount) => prevCount + 1);
+  //       }
+  //     } catch (error) {
+  //       console.error("Error handling next click:", error);
+  //     }
+
+  //     // --------------------------------end of button functionality --------------------------------------------------
+  //   };
 
   const handleNextQuestion = async () => {
     const currentQuestion = questionData.questions[currentQuestionIndex];
@@ -1135,182 +1252,6 @@ const QuestionPaper = () => {
     setQuestionStatus(updatedQuestionStatus);
   };
 
-<<<<<<< HEAD
-  return (
-    <div>
-      {!showExamSumary ? (
-        <div>
-          <div className="subjects">
-            {Subjects.map((subjectTitle) => (
-              <li key={subjectTitle.subjectId}>
-                <button
-                  //   onClick={() => handleSubjectsClick(subjectTitle.subjectId)}
-                  className="subject_btn"
-                >
-                  {subjectTitle.subjectName}
-                </button>
-              </li>
-            ))}
-            <h3>
-              Question Type:
-              {questionTypes.map((type) => (
-                <li key={type.quesionTypeId}>
-                  <p>{type.typeofQuestion}</p>
-                </li>
-              ))}
-            </h3>
-
-            <div className="right-header">
-              <div className="marks">
-                Marks: <div className="plus-mark">+1</div>
-                <div className="minus-mark">-1</div>
-              </div>
-              <div>Timer: {formatTime(timer)}</div>
-            </div>
-          </div>
-          <div>
-            {questionData.questions && questionData.questions.length > 0 && (
-              <div
-                key={currentQuestionIndex}
-                className="question-container"
-                style={{ display: "flex" }}
-              >
-                <div>
-                  <div>
-                    <h3>Question: {currentQuestion.sortid.sortid_text}</h3>
-
-                    <img
-                      src={`http://localhost:5001/uploads/${currentQuestion.documen_name}/${currentQuestion.questionImgName}`}
-                      alt={`Question ${currentQuestion.question_id}`}
-                    />
-                    <div>
-                      {currentQuestion.options &&
-                        Array.isArray(currentQuestion.options) &&
-                        currentQuestion.options.filter(
-                          (opt) =>
-                            opt.question_id ===
-                            questionData.questions[currentQuestionIndex]
-                              ?.question_id
-                        ) &&
-                        currentQuestion.options.map((option, optionIndex) => (
-                          <div className="option" key={option.option_id}>
-                            <li key={optionIndex}>
-                              {/* {console.log("Option:", option)}
-                                {console.log("Option Index:", option.option_index)} */}
-                              {currentQuestionType &&
-                                currentQuestionType.typeofQuestion &&
-                                currentQuestionType.typeofQuestion
-                                  .toLowerCase()
-                                  .includes(
-                                    "mcq(multiple choice question)"
-                                  ) && (
-                                  <div>
-                                    {" "}
-                                    <input
-                                      type="radio"
-                                      name={`question-${currentQuestionIndex}-option`}
-                                      value={String.fromCharCode(
-                                        "A".charCodeAt(0) + optionIndex
-                                      )}
-                                      checked={
-                                        selectedAnswersMap1[
-                                          questionData.questions[
-                                            currentQuestionIndex
-                                          ]?.question_id
-                                        ] === optionIndex
-                                      }
-                                      onChange={() =>
-                                        onAnswerSelected1(optionIndex)
-                                      }
-                                    />
-                                    (
-                                    {String.fromCharCode(
-                                      "a".charCodeAt(0) + optionIndex
-                                    )}
-                                    )
-                                    <img
-                                      src={`http://localhost:5001/uploads/${currentQuestion.documen_name}/${option.optionImgName}`}
-                                      alt={`Option ${option.option_id}`}
-                                    />
-                                  </div>
-                                )}
-                              {currentQuestionType &&
-                                currentQuestionType.typeofQuestion &&
-                                currentQuestionType.typeofQuestion
-                                  .toLowerCase()
-                                  .includes(
-                                    "msq(multiple selection question)"
-                                  ) && (
-                                  <div>
-                                    {" "}
-                                    <input
-                                      type="checkbox"
-                                      name={`question-${currentQuestionIndex}-optionIndex`}
-                                      value={String.fromCharCode(
-                                        "A".charCodeAt(0) + optionIndex
-                                      )}
-                                      checked={
-                                        selectedAnswersMap2[
-                                          questionData.questions[
-                                            currentQuestionIndex
-                                          ]?.question_id
-                                        ] &&
-                                        selectedAnswersMap2[
-                                          questionData.questions[
-                                            currentQuestionIndex
-                                          ]?.question_id
-                                        ].includes(optionIndex)
-                                      }
-                                      onChange={() =>
-                                        onAnswerSelected2(optionIndex)
-                                      }
-                                    />
-                                    (
-                                    {String.fromCharCode(
-                                      "a".charCodeAt(0) + optionIndex
-                                    )}
-                                    )
-                                    <img
-                                      src={`http://localhost:5001/uploads/${currentQuestion.documen_name}/${option.optionImgName}`}
-                                      alt={`Option ${option.option_id}`}
-                                    />{" "}
-                                  </div>
-                                )}
-                              {currentQuestionType &&
-                                currentQuestionType.typeofQuestion &&
-                                currentQuestionType.typeofQuestion
-                                  .toLowerCase()
-                                  .includes("nat(numerical answer type)") && (
-                                  <div>
-                                    {/* <input
-                                      type="text"
-                                      name={`question-${currentQuestionIndex}`}
-                                      value={
-                                        selectedAnswersMap3[
-                                          questionData.questions[
-                                            currentQuestionIndex
-                                          ]?.question_id
-                                        ] || ""
-                                      }
-                                      onChange={(e) => onAnswerSelected3(e)}
-                                    /> */}
-                                    <div className="calculator">
-                                      <form action="">
-                                        <div className="display">
-                                          <input type="text"  name={`question-${currentQuestionIndex}`} value={value} onChange={(e) => onAnswerSelected3(e)}/>
-                                          {/* <input
-                                      type="text"
-                                      name={`question-${currentQuestionIndex}`}
-                                      value={
-                                        selectedAnswersMap3[
-                                          questionData.questions[
-                                            currentQuestionIndex
-                                          ]?.question_id
-                                        ] || ""
-                                      }
-                                      onChange={(e) => onAnswerSelected3(e)}
-                                    /> */}
-=======
   // State variable to store text answers for each question
   const [selectedTextAnswersMap3, setSelectedTextAnswersMap3] = useState({});
   const [textInputs, setTextInputs] = useState({});
@@ -1321,6 +1262,11 @@ const QuestionPaper = () => {
       [questionId]: answer,
     }));
   };
+
+  // Update local storage when the 'value' state changes
+  useEffect(() => {
+    localStorage.setItem("calculatorInputValue", value);
+  }, [value]);
 
   return (
     <div>
@@ -1392,7 +1338,6 @@ const QuestionPaper = () => {
                           </>
                         )}
 
-                      <h2>Question:</h2>
                       <img
                         src={`http://localhost:5001/uploads/${currentQuestion.documen_name}/${currentQuestion.questionImgName}`}
                         alt={`Question ${currentQuestion.question_id}`}
@@ -1611,13 +1556,13 @@ const QuestionPaper = () => {
                                               setValue(value.slice(0, -1))
                                             }
                                           />
-                                          {/* <input
-                                              type="button"
-                                              value="."
-                                              onClick={(e) =>
-                                                setValue(value + e.target.value)
-                                              }
-                                            /> */}
+                                          <input
+                                            type="button"
+                                            value="."
+                                            onClick={(e) =>
+                                              setValue(value + e.target.value)
+                                            }
+                                          />
                                           <input
                                             type="button"
                                             value="/"
@@ -1750,7 +1695,7 @@ const QuestionPaper = () => {
                                     "NATI( Numeric Answer type of questions with integer values)"
                                   ) && (
                                     <div className="calculator">
-                                      <form action="">
+                                      <form>
                                         <div className="display">
                                           <input
                                             type="text"
@@ -1760,7 +1705,6 @@ const QuestionPaper = () => {
                                               onAnswerSelected3(e)
                                             }
                                           />
->>>>>>> 632cc3a9c3c36c3c5ee90cc59eb2c540009c50f0
                                         </div>
                                         <div>
                                           <input
@@ -1906,129 +1850,41 @@ const QuestionPaper = () => {
                                         </div>
                                       </form>
                                     </div>
-<<<<<<< HEAD
-                                  </div>
-                                )}
-                              {currentQuestionType &&
-                                currentQuestionType.typeofQuestion &&
-                                currentQuestionType.typeofQuestion
-                                  .toLowerCase()
-                                  .includes("True/False Questions") && (
-                                  <>
-                                    <input
-                                      type="radio"
-                                      name={`question-${currentQuestionIndex}-option`}
-                                      value="true"
-=======
                                   )}
                                 {currentQuestionType &&
                                   currentQuestionType.typeofQuestion &&
                                   currentQuestionType.typeofQuestion.includes(
-                                    "TF(True or False)"
+                                    "TF(True or false)"
                                   ) && (
                                     <div>
-                                    <input
-                                      className="opt_btns"
-                                      type="radio"
-                                      name={`question-${currentQuestionIndex}-option`}
-                                      value={String.fromCharCode(
-                                        "A".charCodeAt(0) + optionIndex
+                                      <input
+                                        className="opt_btns"
+                                        type="radio"
+                                        name={`question-${currentQuestionIndex}-option`}
+                                        value={String.fromCharCode(
+                                          "A".charCodeAt(0) + optionIndex
+                                        )}
+                                        checked={
+                                          selectedAnswersMap1[
+                                            questionData.questions[
+                                              currentQuestionIndex
+                                            ]?.question_id
+                                          ] === optionIndex
+                                        }
+                                        onChange={() =>
+                                          onAnswerSelected1(optionIndex)
+                                        }
+                                      />
+                                      (
+                                      {String.fromCharCode(
+                                        "a".charCodeAt(0) + optionIndex
                                       )}
->>>>>>> 632cc3a9c3c36c3c5ee90cc59eb2c540009c50f0
-                                      checked={
-                                        selectedAnswersMap1[
-                                          questionData.questions[
-                                            currentQuestionIndex
-                                          ]?.question_id
-<<<<<<< HEAD
-                                        ] === "true"
-                                      }
-                                      onChange={() => onAnswerSelected1("true")}
-                                    />
-                                    True
-                                    <input
-                                      type="radio"
-                                      name={`question-${currentQuestionIndex}-option`}
-                                      value="false"
-                                      checked={
-                                        selectedAnswersMap1[
-                                          questionData.questions[
-                                            currentQuestionIndex
-                                          ]?.question_id
-                                        ] === "false"
-                                      }
-                                      onChange={() =>
-                                        onAnswerSelected1("false")
-                                      }
-                                    />
-                                    False
-                                  </>
-                                )}
-                            </li>
-                          </div>
-                        ))}
-                    </div>
-                  </div>
-                  <div>
-                    <button className="clear-btn" onClick={markForReview}>
-                      Mark for Review & Next
-                    </button>
-                    <button className="clear-btn" onClick={clearResponse}>
-                      Clear Response
-                    </button>
-                    <button onClick={handleSaveNextQuestion}>Save & Next</button>
-                    <button
-                      className="previous-btn"
-                      onClick={handlePreviousClick}
-                      disabled={currentQuestionIndex === 0}
-                    >
-                      <i className="fa-solid fa-angles-left"></i> Back
-                    </button>
-                    <button onClick={handleNextQuestion}>Next</button>
-                  </div>
-                  <div></div>
-                </div>
-                <div className="rightsidebar">
-                  <ButtonsFunctionality
-                    onQuestionSelect={handleQuestionSelect}
-                    questionStatus={questionStatus}
-                    setQuestionStatus={setQuestionStatus}
-                    answeredCount={answeredCount}
-                    notAnsweredCount={notAnsweredCount}
-                    answeredmarkedForReviewCount={answeredmarkedForReviewCount}
-                    markedForReviewCount={markedForReviewCount}
-                    VisitedCount={VisitedCount}
-                    selectedSubject={selectedSubject}
-                    questionData={questionData}
-                    updateQuestionStatus={updateQuestionStatus}
-                    setVisitedCount={setVisitedCount}
-                    updateCounters={updateCounters}
-                  />
-                  <button onClick={handleSubmit} id="resume_btn">
-                    Submit
-                  </button>
-                </div>
-              </div>
-            )}
-=======
-                                        ] === optionIndex
-                                      }
-                                      onChange={() =>
-                                        onAnswerSelected1(optionIndex)
-                                      }
-                                    />
-                                    (
-                                    {String.fromCharCode(
-                                      "a".charCodeAt(0) + optionIndex
-                                    )}
-                                    )
-                                    
-                                    <img
-                                      src={`http://localhost:5001/uploads/${currentQuestion.documen_name}/${option.optionImgName}`}
-                                      alt={`Option ${option.option_id}`}
-                                    />
-                                  </div>
-                                    
+                                      )
+                                      <img
+                                        src={`http://localhost:5001/uploads/${currentQuestion.documen_name}/${option.optionImgName}`}
+                                        alt={`Option ${option.option_id}`}
+                                      />
+                                    </div>
                                   )}
 
                                 {currentQuestionType &&
@@ -2138,11 +1994,11 @@ const QuestionPaper = () => {
                 questionData={questionData}
                 updateQuestionStatus={updateQuestionStatus}
               />
-              <button onClick={handleSubmit} id="resume_btn">
+              {/* <button onClick={handleSubmit} id="resume_btn">
                 Submit
-              </button>
+              </button> */}
+            <Link to={`/TestResultsPage/${testCreationTableId}`}>Yes FOr Link</Link>
             </div>
->>>>>>> 632cc3a9c3c36c3c5ee90cc59eb2c540009c50f0
           </div>
         </div>
       ) : (
@@ -2160,9 +2016,6 @@ const QuestionPaper = () => {
               Not Answered Questions:
               <span> {notAnsweredCount}</span>
             </p>
-<<<<<<< HEAD
-
-=======
             <p>
               Marked for Review Questions:
               <span> {markedForReviewCount}</span>
@@ -2171,19 +2024,17 @@ const QuestionPaper = () => {
               Answered & Marked for Review Questions:
               <span> {answeredmarkedForReviewCount}</span>
             </p>
->>>>>>> 632cc3a9c3c36c3c5ee90cc59eb2c540009c50f0
           </div>
           <div>
             <h2>
               Are you sure you want to submit for final marking? <br />
               No changes will be allowed after submission.
             </h2>
+
+            {/* <Link to='/SubmitPage'>YES</Link> */}
+
             <button onClick={handleYes}>YES</button>
-<<<<<<< HEAD
-            <button>NO</button>
-=======
             <button onClick={handleNo}>NO</button>
->>>>>>> 632cc3a9c3c36c3c5ee90cc59eb2c540009c50f0
           </div>
         </div>
       )}
