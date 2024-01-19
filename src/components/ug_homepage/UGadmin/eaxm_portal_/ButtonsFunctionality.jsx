@@ -85,13 +85,8 @@ const handleButtonClick = useCallback((questionNumber) => {
   
   const questionIndex = questionNumber - 1;
 
-<<<<<<< HEAD
   let updatedStatus;
 
-=======
-
-  // Check if the question is already answered
->>>>>>> 43ac2440f8ea8859d3260924d320479b14d52eac
   if (questionStatus[questionIndex] === "answered") {
     updatedStatus = "notAnswered"; // Change this line to set the status to "notAnswered"
     onQuestionSelect(questionNumber, "notAnswered");
