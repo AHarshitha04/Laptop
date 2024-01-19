@@ -34,6 +34,12 @@ const DocumentUpload =require('./otsadmin/DocumentUpload')
 const Cards =require('./quiz_ots/Cards')
 const QuestionPaper = require('./quiz_ots/QuestionPaper')
 
+
+
+//-------------------- empolyee portal imports -------------------------------------
+
+const Empoyee_protal=require("./EMPLOYEE_PORTAL/Empoyee_protal")
+
 app.use(cors({ origin: "*" }));
 
 //ughomepage_banner_login
@@ -56,7 +62,9 @@ app.use('/DocumentUpload',DocumentUpload)
 app.use('/Cards',Cards)
 app.use('/QuestionPaper',QuestionPaper)
 
+//-------------------- empolyee portal  -------------------------------------
 
+app.use("/Empoyee_protal", Empoyee_protal);
 
 
 app.listen(port, () => {

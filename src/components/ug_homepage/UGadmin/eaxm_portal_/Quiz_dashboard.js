@@ -9,6 +9,8 @@ import Button from "@mui/material/Button";
 import Exam_portal_admin_integration from "../../exam_portal_admin/Exam_portal_admin_integration"
 import UG_HOME from "../../UG_HOME";
 import "./Quiz_amain_page.css"
+ 
+
 
 const Quiz_dashboard = () => {
   const [showQuizmobilemenu, setShowQuizmobilemenu] = useState(false);
@@ -21,7 +23,48 @@ const Quiz_dashboard = () => {
     localStorage.removeItem("userRole");
     window.location.href = "/uglogin";
   };
-  
+   const userRole = localStorage.getItem("userRole");
+   const [isLoggedIn, setIsLoggedIn] = useState(false);
+   const [userData, setUserData] = useState({});
+    const fetchUserData = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const response = await fetch(
+          "http://localhost:5001/ughomepage_banner_login/user",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (response.ok) {
+          const userData = await response.json();
+          setUserData(userData);
+        } else {
+          setIsLoggedIn(false);
+
+          // Handle errors if needed
+        }
+      } catch (error) {
+        // Handle other errors if needed
+      }
+    };
+
+    // const [courses, setCourses] = useState([]);
+    const [examsug, setExamsug] = useState([0]);
+
+    useEffect(() => {
+      axios
+        .get("http://localhost:5001/ughomepage_banner_login/examsug")
+        .then((res) => {
+          setExamsug(res.data);
+          console.log(res.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching data:", error);
+        });
+    }, []);
 
   return (
     <div>
@@ -84,25 +127,38 @@ export default Quiz_dashboard;
 export const Quiz_main_page_container = () => {
   const [showcardactive2, setshowcardactive2] = useState(true);
   const [showcardactive1, setshowcardactive1] = useState(false);
+  
+
 const [showcard1, setshowcard1] = useState(true);
 const [showcard2, setshowcard2] = useState(false);
+
+
 
   const UG_HOMEadim_btn = () => {
     setshowcardactive2(true);
     setshowcardactive1(false);
+  
+
     setshowcard1(true)
 // console.log("hello");
     setshowcard2(false)
+   
+
 
   };
 
   const UG_HOMEQuiz_btn = () => {
+  
     setshowcardactive2(false);
     setshowcardactive1(true);
     setshowcard1(false)
     setshowcard2(true)
+   
+
 
   };
+ 
+ 
 
     const userRole = localStorage.getItem("userRole");
   return (
@@ -129,7 +185,7 @@ const [showcard2, setshowcard2] = useState(false);
           >
             UG Quiz Admin
           </button>
-        
+             
             </>
           )}
 
@@ -147,6 +203,8 @@ const [showcard2, setshowcard2] = useState(false);
                 <Exam_portal_admin_integration />
               </div>
             ) : null}
+
+
           </>
         )}
 
@@ -625,3 +683,6 @@ export const ImageFetching = () => {
     </div>
   );
 };
+
+
+

@@ -61,7 +61,7 @@
 .Quiz__menu .lines {
   width: 100px;
   height: 10px;
-  background: #fff;
+  background: #000000;
 }
 
 .Quiz__home {
@@ -147,35 +147,76 @@
     display: flex;
     flex-direction: column;
     gap: 0.8rem;
-    top: 0rem;
+    top: -0.5rem;
     left: -3rem;
     /* width: 160%; */
     text-align: left;
-    background: rgb(0, 153, 255); /* width: 100%;? */
+    background: rgb(0, 0, 0); /* width: 100%;? */
     padding: 1.45rem;
-    padding-top: 3rem;
+    padding-top:5rem;
     z-index: -1;
     border-radius: 18px;
   }
 }
+#dropdownmenu_foradim_page_btn img{
+  padding: 0.5rem;
+  width: 50px;
+  height:50px;
+  border-radius: 50%;
+  background: #ffffff;
+}
 #dropdownmenu_foradim_page_btn :hover {
-  background: rgb(0, 153, 255); /* width: 100%;? */
+  /* background: rgb(0, 153, 255); width: 100%;? */
 }
 
 .dropdownmenu_foradim_page {
   display: none;
 }
-
+.dropdownmenu_foradim_page a{
+  color: #ffffff;
+}
 .dropdownmenu_foradim_page a:hover {
-  color: blue;
+  /* color: blue; */
   text-decoration: underline;
 }
 
 /* ------------------------------------------------------------------------- home section --------------------------------------------- */
 .quiz__Home_continer {
+  position: relative;
   width: 100%;
   background: #0000000f;
 }
+
+.quiz__Home_continer h2{
+    position: relative;
+    /* width: 100px; */
+    top: 4rem;
+    /* left: 10%; */
+    /* text-align: center; */
+    font-size: 1.5em;
+    text-align: center;
+    margin: 0 auto;
+    animation: welcomeuser 0.5s alternate forwards;
+}
+
+.quiz__Home_continer h2 span{
+  position: relative;
+  /* color: #00a3ff; */
+      color: rgba(43, 43, 48, 0.726);
+      font-weight: 900;
+
+  
+}
+.quiz__Home_continer h2 span::after {
+  content: " ";
+  width: 50px;
+  height: 4px;
+  background:rgba(43, 43, 48, 0.726);
+  position: absolute;
+  bottom: -0.5rem;
+right:0.2rem;
+}
+
 
 .quiz__Home_continer > div {
   max-width: 80%;
@@ -431,8 +472,17 @@
 .first_card {
   /* display: flex; */
   text-align: center;
-  /* width: 350px; */
+  width: 300px;
   /* margin-left: 40px; */
+  background: #fff;
+  text-align: justify;
+  padding: 0.5rem;
+  border: 1px solid rgba(0,0,0,0.5);
+  border-radius: 18px;
+}
+
+.first_card img {
+  width: 100%;
 }
 .first_card > h4 {
   font-size: 25px;
@@ -668,5 +718,23 @@ i#footerIcons:hover {
     padding-top: 3rem;
     z-index: 1;
     width: 200px;
+  }
+}
+
+
+@keyframes welcomeuser {
+  0%{
+    opacity:0.1;
+    transform: translateY(400px);
+  }
+
+   50%{
+    opacity:0.3;
+    transform: translateY(200px);
+  }
+    100%{
+    opacity:1;
+    transform: translateY(0px);
+
   }
 }

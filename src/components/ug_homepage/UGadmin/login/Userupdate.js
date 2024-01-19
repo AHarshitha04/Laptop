@@ -253,7 +253,7 @@ const Userupdate = () => {
 const handleImageChange = (e) => {
   setUser((prev) => ({ ...prev, profile_image: e.target.files[0] }));
 };
-
+  const userRole = localStorage.getItem('userRole');
 const handleClick = async (e) => {
   e.preventDefault();
   try {
@@ -268,7 +268,7 @@ const handleClick = async (e) => {
     // Send a PUT request to the server with the FormData
     
       await axios.put(
-        `http://localhost:5001/ughomepage_banner_login/users/${userId}`,
+        `http://localhost:5001/ughomepage_banner_login/users/${user.id}`,
         formData,
         {
           headers: {
@@ -278,10 +278,12 @@ const handleClick = async (e) => {
       );
 
       
- 
-   
-  
-    navigate("/Account_info");
+      // if (userRole === "viewer"){
+      // navigate("/student_dashboard");
+
+      // } 
+      
+      navigate("/Quiz_dashboard");
   } catch (err) {
     console.log(err);
   }
@@ -383,13 +385,15 @@ const handleClick = async (e) => {
               onChange={handleImageChange}
             />
           </div>
-          <button
-            type="submit"
-            className="btn btn-primary"
-            onClick={handleClick}
-          >
-            Update
-          </button>
+          {userRole === "admin" && (
+            <button
+              type="submit"
+              className="btn btn-primary"
+              onClick={handleClick}
+            >
+              Update
+            </button>
+          )}
         </form>
         <div className="container d-flex justify-content-center">
           <Link to="/">See all users</Link>

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import iitjee from "../../../../Images/iit-jee-course.jpg";
 import axios from "axios";
 
-import { Link, useParams } from "react-router-dom";
+import { Link, Navigate, useParams } from "react-router-dom";
 import { Carousel } from "react-responsive-carousel";
 import { AiOutlineForm, AiFillDelete } from "react-icons/ai";
 
@@ -75,18 +75,16 @@ export const Header = () => {
   const userRole = localStorage.getItem("userRole");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userData, setUserData] = useState({});
-
-   useEffect(() => {
-     const checkLoggedIn = () => {
-       const loggedIn = localStorage.getItem("isLoggedIn");
-       if (loggedIn === "true") {
-         setIsLoggedIn(true);
-         fetchUserData();
-       }
-     };
-     checkLoggedIn();
-   }, []);
-
+  useEffect(() => {
+    const checkLoggedIn = () => {
+      const loggedIn = localStorage.getItem("isLoggedIn");
+      if (loggedIn === "true") {
+        setIsLoggedIn(true);
+        fetchUserData();
+      }
+    };
+    checkLoggedIn();
+  }, []);
 
   const fetchUserData = async () => {
     try {
@@ -100,14 +98,24 @@ export const Header = () => {
         }
       );
 
+      if (!response.ok) {
+        // Token is expired or invalid, redirect to login page
+        localStorage.removeItem("isLoggedIn");
+        localStorage.removeItem("token");
+        setIsLoggedIn(false);
+        Navigate("/uglogin"); // Assuming you have the 'navigate' function available
+
+        return;
+      }
+
       if (response.ok) {
-        const userData = await response.json();
-        setUserData(userData);
-      } else {
-        // Handle errors if needed
+        // Token is valid, continue processing user data
+     const userData = await response.json();
+     setUserData(userData);
+        // ... process userData
       }
     } catch (error) {
-      // Handle other errors if needed
+      console.error("Error fetching user data:", error);
     }
   };
 
@@ -152,6 +160,8 @@ export const Header = () => {
   };
 
   // ----------------- dashborad ---------------------/
+
+
 
   //  localStorage.setItem("isLoggedIn", "true");
   return (
@@ -216,8 +226,9 @@ export const Header = () => {
                         </li>
                       </>
                     )} */}
-
-                    {(userRole === "admin" ||
+{isLoggedIn === true ? (
+  <>
+     {(userRole === "admin" ||
                       userRole === "ugotsadmin" ||
                       userRole === "ugadmin") && (
                       <>
@@ -228,27 +239,71 @@ export const Header = () => {
                         </li>
                       </>
                     )}
+                     {userRole === "viewer" && (
+                      <>
+                        <button>
+                          <Link to="/student_dashboard">DashBoard</Link>
+                        </button>
+                      </>
+                    )}
+  </>
+):null}
 
-{userRole === "viewer" && (<>
-<button>
-<Link to="/student_dashboard">DashBoard</Link>
 
-</button>
-
-</>)}
+                   
                   </div>
                   <div>
                     {isLoggedIn === true ? (
                       <>
-                        <button id="dropdownmenu_foradim_page_btn">
-                          {userData.username}
+                        {(userRole === "admin" ||
+                          userRole === "ugotsadmin" ||
+                          userRole === "ugadmin") && (
+                          <>
+                            <button id="dropdownmenu_foradim_page_btn">
+                              <img
+                                title={userData.username}
+                                src={userData.imageData}
+                                alt={`Image ${userData.user_Id}`}
+                              />
+                              <div className="dropdownmenu_foradim_page">
+                                {/* <Link to={`/userread/${user.id}`} className="btn btn-success mx-2">Read</Link> */}
+                                {/* <Link to={`/userdeatailspage/${user.id}`} >Account-info</Link> */}
+                                <Link to="/student_dashboard">My profile</Link>
+                                <Link onClick={handleLogout}>Logout</Link>
+                              </div>
+                            </button>
+                          </>
+                        )}
+
+                        {userRole === "viewer" && (
+                          <>
+                            <button id="dropdownmenu_foradim_page_btn">
+                           <img
+  title={userData.username}
+  src={userData.imageData}
+  alt={`Image ${userData.user_Id}`}
+/>
+                              <div className="dropdownmenu_foradim_page">
+                                {/* <Link to={`/userread/${user.id}`} className="btn btn-success mx-2">Read</Link> */}
+                                {/* <Link to={`/userdeatailspage/${user.id}`} >Account-info</Link> */}
+                                <Link to="/student_dashboard">My profile</Link>
+                                <Link onClick={handleLogout}>Logout</Link>
+                              </div>
+                            </button>
+                          </>
+                        )}
+                        {/* <button id="dropdownmenu_foradim_page_btn">
+                          <img
+                            title={userData.username}
+                            src={userData.imageData}
+                            alt={`Image ${userData.user_Id}`}
+                          />
                           <div className="dropdownmenu_foradim_page">
-                            {/* <Link to={`/userread/${user.id}`} className="btn btn-success mx-2">Read</Link> */}
-                            {/* <Link to={`/userdeatailspage/${user.id}`} >Account-info</Link> */}
-                            <Link to="/Account_info">Account-info</Link>
+                           
+                            <Link to="/Account_info">My profile</Link>
                             <Link onClick={handleLogout}>Logout</Link>
                           </div>
-                        </button>
+                        </button> */}
                       </>
                     ) : (
                       <>
@@ -294,9 +349,67 @@ export const Header = () => {
 // ------------------------------------------------------------------------- home section ---------------------------------------------
 
 export const Home_section = () => {
+   const userRole = localStorage.getItem("userRole");
+   const [isLoggedIn, setIsLoggedIn] = useState(false);
+   const [userData, setUserData] = useState({});
+
+  useEffect(() => {
+    const checkLoggedIn = () => {
+      const loggedIn = localStorage.getItem("isLoggedIn");
+      if (loggedIn === "true") {
+        setIsLoggedIn(true);
+        fetchUserData();
+      }
+    };
+    checkLoggedIn();
+  }, []);
+
+   const fetchUserData = async () => {
+     try {
+       const token = localStorage.getItem("token");
+       const response = await fetch(
+         "http://localhost:5001/ughomepage_banner_login/user",
+         {
+           headers: {
+             Authorization: `Bearer ${token}`,
+           },
+         }
+       );
+
+       if (!response.ok) {
+         // Token is expired or invalid, redirect to login page
+         localStorage.removeItem("isLoggedIn");
+         localStorage.removeItem("token");
+         setIsLoggedIn(false);
+         Navigate("/uglogin"); // Assuming you have the 'navigate' function available
+
+         return;
+       }
+
+       if (response.ok) {
+         // Token is valid, continue processing user data
+         const userData = await response.json();
+         setUserData(userData);
+         // ... process userData
+       }
+     } catch (error) {
+       console.error("Error fetching user data:", error);
+     }
+   };
+
+
   return (
     <>
       <div className="quiz__Home_continer">
+
+        {isLoggedIn === true ? (
+<>
+  <h2>welcomes <span>{userData.username}</span> to EGRADTUTOR</h2>
+</>
+           ):null}
+
+      
+
         <div>
           <div className="quiz__Home_continer_left">
             {quiz__Home_continer_left.map((home, index) => {
@@ -428,6 +541,7 @@ export const Quiz_Courses = () => {
     setshowcard2(false);
     setshowcardactive1(true);
     setshowcardactive2(false);
+   
   };
 
   // ---------------------------------------------------------- onclick displaycurrentexamsug function--------------------------------------------------------
@@ -436,6 +550,7 @@ export const Quiz_Courses = () => {
     setshowcard2(true);
     setshowcardactive1(false);
     setshowcardactive2(true);
+    
   };
 
   // ----------------- h
@@ -461,31 +576,34 @@ export const Quiz_Courses = () => {
   const [noOfCourses, setNoOfCourses] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const examResponse = await axios.get(
-          `http://localhost:5001/Cards/examData`
-        );
-        setExamCardName(examResponse.data);
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const examResponse = await axios.get(
+        `http://localhost:5001/Cards/examData`
+      );
+      setExamCardName(examResponse.data);
 
-        const courseResponse = await fetch(
-          "http://localhost:5001/Cards/courses/count"
-        );
-        if (!courseResponse.ok) {
-          throw new Error("Network response was not ok");
-        }
-        const courseData = await courseResponse.json();
-        setNoOfCourses(courseData);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      } finally {
-        setLoading(false);
+      const courseResponse = await fetch(
+        "http://localhost:5001/Cards/courses/count"
+      );
+
+      if (!courseResponse.ok) {
+        throw new Error("Network response was not ok");
       }
-    };
 
-    fetchData();
-  }, []);
+      const courseData = await courseResponse.json();
+      setNoOfCourses(courseData);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setNoexam(true); // Set Noexam to true if there is an error
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchData();
+}, []);
 
   const currentDate = new Date(); // Get the current date
   const filteredExams = examCardName.filter(
@@ -494,6 +612,7 @@ export const Quiz_Courses = () => {
       currentDate <= new Date(exam.endDate)
   );
 
+  const [noexam,setNoexam]=useState(false)
   return (
     <>
       <div className="Quiz_cards_page">
@@ -540,67 +659,61 @@ export const Quiz_Courses = () => {
                 return (
                   <div key={examsug.exam_id}>
                     {/* <a href=""><h1>{e.exam_name}</h1> </a>  */}
-                    coming soon
+
                     {/* ----------------------------------- h--------------------- */}
                     <div className="CurrentCourses_div">
                       <h1>Current Exams</h1>
+                      {noexam ? (
+                        <p>coming soon</p>
+                      ) : (
+                        <>
+                        <div className="card_container">
+                        
 
-                      <div className="card_container">
-                        {/* --------------practice-------------------- */}
-
-                        <div className="first_card">
-                          <div className="card">
-                            <div className="container">
-                              <ul className="card_container_ul">
-                                {loading ? (
-                                  <p>Loading...</p>
-                                ) : (
-                                  filteredExams.map((cardItem) => (
-                                    <React.Fragment key={cardItem.examId}>
-                                      <div className="card_container_li">
-                                        <img
-                                          src={iitjee}
-                                          alt="card"
-                                          width={350}
-                                        />
-                                        <h3>{cardItem.examName}</h3>
-                                        <li>
-                                          Validity: ({cardItem.startDate}) to (
-                                          {cardItem.endDate})
-                                        </li>
-                                        <li>
-                                          {noOfCourses.map(
-                                            (count) =>
-                                              count.examId ===
-                                                cardItem.examId && (
-                                                <p key={count.examId}>
-                                                  No of Courses:{" "}
-                                                  {count.numberOfCourses}
-                                                </p>
-                                              )
-                                          )}
-                                        </li>
-                                        <li>
-                                          <br />
-                                          <div className="start_now">
-                                            <Link
-                                              to={`/feachingcourse/${cardItem.examId}`}
-                                            >
-                                              Start Now
-                                            </Link>
-                                          </div>
-                                        </li>
+                          <div className="first_card">
+                            {loading ? (
+                              <p>Loading...</p>
+                            ) : (
+                              filteredExams.map((cardItem) => (
+                                <React.Fragment key={cardItem.examId}>
+                                  <div>
+                                    <img src={iitjee} alt="card" width={350} />
+                                    <h3>{cardItem.examName}</h3>
+                                    <li>
+                                      Validity: ({cardItem.startDate}) to (
+                                      {cardItem.endDate})
+                                    </li>
+                                    <li>
+                                      {noOfCourses.map(
+                                        (count) =>
+                                          count.examId === cardItem.examId && (
+                                            <p key={count.examId}>
+                                              No of Courses:{" "}
+                                              {count.numberOfCourses}
+                                            </p>
+                                          )
+                                      )}
+                                    </li>
+                                    <li>
+                                      <br />
+                                      <div className="start_now">
+                                        <Link
+                                          to={`/feachingcourse/${cardItem.examId}`}
+                                        >
+                                          Start Now
+                                        </Link>
                                       </div>
-                                    </React.Fragment>
-                                  ))
-                                )}
-                              </ul>
-                            </div>
+                                    </li>
+                                  </div>
+                                </React.Fragment>
+                              ))
+                            )}
                           </div>
-                        </div>
 
-                        {/* --------------practice-------------------- */}
-                      </div>
+                        </div>
+                        </>
+                        
+                      )}
                     </div>
                     {/* ----------------------------------- h--------------------- */}
                   </div>
@@ -965,6 +1078,7 @@ export const Footer = () => {
       <i class="fa-brands fa-youtube"></i>          
       </div>
     </div>  */}
+    
       </div>
     </div>
   );

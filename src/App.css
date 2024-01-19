@@ -10,7 +10,7 @@
 
 a {
     text-decoration: none;
-    color: white;
+    /* color: white; */
 }
 .login-btn{
     margin: 2vmax 109px 1vmax 0;

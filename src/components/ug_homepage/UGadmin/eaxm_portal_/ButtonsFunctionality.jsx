@@ -24,7 +24,7 @@ const ButtonsFunctionality = ({
 
 
 
-  
+
   const [wtimer, setWTimer] = useState(0);
  
  
@@ -81,10 +81,17 @@ const renderQuestionButtons = Array.isArray(questionData.questions)
 
 
 const handleButtonClick = useCallback((questionNumber) => {
+
+  
   const questionIndex = questionNumber - 1;
 
+<<<<<<< HEAD
   let updatedStatus;
 
+=======
+
+  // Check if the question is already answered
+>>>>>>> 43ac2440f8ea8859d3260924d320479b14d52eac
   if (questionStatus[questionIndex] === "answered") {
     updatedStatus = "notAnswered"; // Change this line to set the status to "notAnswered"
     onQuestionSelect(questionNumber, "notAnswered");
@@ -214,6 +221,12 @@ useEffect(() => {
     <>
       <div className="right-side-bar">
         <div className="rightSidebar-topHeader">
+
+        <img
+                            title={userData.username}
+                            src={userData.imageData}
+                            alt={`Image ${userData.user_Id}`}
+                          />
           <p>Name of the person :  {userData.username}</p>
           <p>Time Left: {WformatTime(wtimer)}</p>
         </div>
@@ -230,36 +243,36 @@ useEffect(() => {
           <h4 className="sidebar-footer-header">Legend</h4>
           <div className="footer-btns">
             <div className="inst-btns">
-              <button className="instruction-btn1">{answeredCount}</button>
-              <p>Answerd</p>
-              <br />
+              <button className="instruction-btn1 r_S_B_BTNS">{answeredCount}</button>
+              <span>Answerd</span>
+             
             </div>
-            <br />
+           
             <div className="inst-btns">
-              <button className="instruction-btn2">{notAnsweredCount}</button>
-              <p>Not Answered</p>
-              <br />
+              <button className="instruction-btn2 r_S_B_BTNS">{notAnsweredCount}</button>
+              <span>Not Answered</span>
+           
             </div>
-            <br />
+            
             <div className="inst-btns">
-              <button className="instruction-btn3">
+              <button className="instruction-btn3 r_S_B_BTNS">
                 {answeredmarkedForReviewCount}
               </button>
-              <p>Marked</p>
-              <br />
+              <span>Marked</span>
+             
             </div>
-            <br />
+           
             <div className="inst-btns">
-              <button className="instruction-btn4">
+              <button className="instruction-btn4 r_S_B_BTNS">
                 {markedForReviewCount}
               </button>
-              <p>Answered but marked for review</p>
+              <span>Answered but marked for review</span>
             </div>{" "}
-            <br />{" "}
+          
             <div className="inst-btns">
               {" "}
-              <button className="instruction-btn5">{VisitedCount}</button>
-              <p>Not Visited</p>
+              <button className="instruction-btn5 r_S_B_BTNS">{VisitedCount}</button>
+              <span>Not Visited</span>
             </div>
           </div>
         </div>

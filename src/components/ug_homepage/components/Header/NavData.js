@@ -1,5 +1,7 @@
 import logo from "./logo/egradtutor_logo.png";
 
+
+
 export const NavData = [
   {
     // --------------------logo------------------
@@ -15,14 +17,17 @@ export const NavData = [
     // ---------------------navbar links-----------------
 
     link1: "Home",
-    link2: "About",
-    link3: "Exams",
-    link4: "Courses",
-    link5: "Contact",
+    link2: "Exams",
+    link3: "Courses",
+    link4: "About",
+    link5: "Contacts",
     link6: "FAQs",
+    link7: "Downloads",
+    link7_dp1: "PYQ Papers",
+    link7_dp2: "Worksheet",
 
     // ---------------------navbar login-----------------
     login_btn: "login_btn",
-    btn1: "Login/Registration",
+    btn1: "Online Test Series",
   },
 ];
