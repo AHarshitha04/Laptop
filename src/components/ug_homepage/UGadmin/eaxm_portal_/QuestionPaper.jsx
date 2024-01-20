@@ -642,7 +642,8 @@ const handleYes = async () => {
     const isCurrentQuestionAnswered =
       selectedAnswersMap1[currentQuestion.question_id] !== undefined ||
       (selectedAnswersMap2[currentQuestion.question_id] &&
-        selectedAnswersMap2[currentQuestion.question_id].length > 0);
+        selectedAnswersMap2[currentQuestion.question_id].length > 0)||
+        calculatorInputValue !== "";
 
     const isResponseCleared =
       selectedAnswersMap1[currentQuestion.question_id] === null ||
@@ -1205,33 +1206,35 @@ const handleYes = async () => {
       selectedAnswersMap1[currentQuestion.question_id] !== undefined ||
       (selectedAnswersMap2[currentQuestion.question_id] &&
         selectedAnswersMap2[currentQuestion.question_id].length > 0);
-
+  
     if (isCurrentQuestionAnswered) {
+      // If the current question is answered, update the status
       const updatedQuestionStatus = [...questionStatus];
       updatedQuestionStatus[currentQuestionIndex] = "notAnswered";
       setQuestionStatus(updatedQuestionStatus);
     }
     //-----------------buttons functionality end--------------
-
+  
     try {
       const questionId =
         questionData.questions[currentQuestionIndex].question_id;
-      console.log("Response cleared successfully");
+      console.log("Response cleared successfully ");
+  
       // Clear response for radio buttons (MCQ)
       const updatedSelectedAnswersMap1 = { ...selectedAnswersMap1 };
-      updatedSelectedAnswersMap1[questionId] = null;
+      updatedSelectedAnswersMap1[questionId] = undefined;
       setSelectedAnswersMap1(updatedSelectedAnswersMap1);
-
+  
       // Clear response for checkboxes (MSQ)
       const updatedSelectedAnswersMap2 = { ...selectedAnswersMap2 };
       updatedSelectedAnswersMap2[questionId] = [];
       setSelectedAnswersMap2(updatedSelectedAnswersMap2);
-
+  
       // Send a request to your server to clear the user's response for the current question
       const response = await axios.delete(
         `http://localhost:5001/QuestionPaper/clearResponse/${questionId}`
       );
-
+  
       if (response.status === 200) {
         console.log("Response cleared successfully");
         // Update any state or perform additional actions as needed
@@ -1242,7 +1245,7 @@ const handleYes = async () => {
       console.error("Error clearing response:", error);
     }
   };
-
+  
   // -------------------------------END OF BUTTONS FUNCTIONALITIES-----------------------------------
 
   const updateQuestionStatus = (index, status) => {

@@ -1,4 +1,9 @@
 import React from "react";
+
+
+
+
+
 import {
   BrowserRouter as Router,
   Routes,
@@ -79,6 +84,10 @@ import Exam_portal_home_page from "./components/ug_homepage/UGadmin/eaxm_portal_
 // ========================================================= ugquiz exam imports ===========================================================
 
 import QuestionPaper from "./components/ug_homepage/UGadmin/eaxm_portal_/QuestionPaper.jsx";
+
+import DemoDeleteItsNotImp from "./components/ug_homepage/UGadmin/eaxm_portal_/DemoDeleteItsNotImp.jsx";
+
+
 import FullTest from "./components/ug_homepage/UGadmin/eaxm_portal_/FullTest.jsx";
 import Instructions from "./components/ug_homepage/UGadmin/eaxm_portal_/Instructions.jsx";
 
@@ -257,6 +266,14 @@ const App = () => {
           path="/QuestionPaper/questionOptions/:testCreationTableId"
           element={<PrivateRoute element={<QuestionPaper />} />}
         />
+{/* ----------------demo------------------------------------------------------------------ */}
+{/* 
+<Route
+          path="/QuestionPaper/questionOptions/:testCreationTableId"
+          element={<PrivateRoute element={<DemoDeleteItsNotImp />} />}
+        /> */}
+
+{/* ----------------demo------------------------------------------------------------------ */}
 
 <Route
           path="/SubmitPage"
