@@ -40,6 +40,9 @@ router.get('/examforimeageupload', async (req, res) => {
   router.post('/uploadImage', upload.single('cardimeage'), async (req, res) => {
     try {
       // Access examId, courseCreationId, testCreationTableId from req.body
+      if (!req.file) {
+        return res.status(400).json({ error: 'No file uploaded' });
+      }
       const { examId, courseCreationId, testCreationTableId } = req.body;
   
       // Access the image buffer from req.file

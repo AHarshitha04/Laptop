@@ -210,7 +210,7 @@ const BuyCourses = () => {
                   key={userCourse.courseCreationId}
                 >
                   <div className="student_dash_board_buycourses_card_Img">
-                    <img src="./#endregion" alt={userCourse.courseName} />
+                  <img src={userCourse.cardimeage} alt={userCourse.courseName} />
                   </div>
                   {/* <p>{userCourse.courseCreationId}</p> */}
                   <h4>{userCourse.courseName}</h4>
