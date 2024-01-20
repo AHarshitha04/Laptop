@@ -5,19 +5,19 @@ const BuyCourses = () => {
   const [userCourses, setUserCourses] = useState([]);
   const [userData, setUserData] = useState({});
   const [showAddedCourses, setShowAddedCourses] = useState(false);
+  useEffect(() => {
+    fetchData();
+  }, []); 
+
   const fetchData = async () => {
     try {
-      const response = await fetch('http://localhost:5001/BuyCourses/DisplayCoursesForBuy');
+      const response = await fetch('http://localhost:5001/BuyCourses/DisplayCoursesForBuy'); 
       const data = await response.json();
       setCourses(data);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
   };
-
-  useEffect(() => {
-    fetchData();
-  }, []);  
 
     useEffect(() => {
       const fetchUserData = async () => {
