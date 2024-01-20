@@ -1,101 +1,98 @@
-
-
 import React, { useEffect, useState } from "react";
 import { nav } from "../DATA/Data";
 import { Link, Navigate } from "react-router-dom";
-import "./StudentDashbord.css";
+import "./styles/StudentDashbord.css";
 import Student_profileUpdate from "./Student_profileUpdate";
 import { MdMenu } from "react-icons/md";
 import BuyCourses from "./BuyCourses";
 
 const Student_dashboard = () => {
-  const [studentDashbordconatiner, setStudentDashbordconatiner] =useState(true);
+  const [studentDashbordconatiner, setStudentDashbordconatiner] =
+    useState(true);
 
   const [studentDashbordmycourse, setStudentDashbordmycourse] = useState(false);
 
-   const [studentDashbordbuycurses, setStudentDashbordbuycurses] =
-     useState(false);
+  const [studentDashbordbuycurses, setStudentDashbordbuycurses] =
+    useState(false);
   const [studentDashbordmyresult, setStudentDashbordmyresult] = useState(false);
 
-  const [studentDashborddountsection, setStudentDashborddountsection] =useState(false);
+  const [studentDashborddountsection, setStudentDashborddountsection] =
+    useState(false);
 
   const [studentDashbordbookmark, setStudentDashbordbookmark] = useState(false);
 
   const [studentDashbordsettings, setStudentDashbordsettings] = useState(false);
 
+  const handlestudentDashbordconatiner = () => {
+    setStudentDashbordconatiner(true);
+    setStudentDashbordmycourse(false);
+    setStudentDashbordbuycurses(false);
+    setStudentDashbordmyresult(false);
+    setStudentDashborddountsection(false);
+    setStudentDashbordbookmark(false);
+    setStudentDashbordsettings(false);
+  };
 
-  const handlestudentDashbordconatiner=()=>{
-setStudentDashbordconatiner(true)
-   setStudentDashbordmycourse(false)
-   setStudentDashbordbuycurses(false)
-   setStudentDashbordmyresult(false)
-   setStudentDashborddountsection(false)
-   setStudentDashbordbookmark(false)
-   setStudentDashbordsettings(false)
-  }
+  const handlestudentDashbordmycourse = () => {
+    setStudentDashbordconatiner(false);
+    setStudentDashbordmycourse(true);
+    setStudentDashbordbuycurses(false);
+    setStudentDashbordmyresult(false);
+    setStudentDashborddountsection(false);
+    setStudentDashbordbookmark(false);
+    setStudentDashbordsettings(false);
+  };
+  const handlestudentDashbordbuycurses = () => {
+    setStudentDashbordconatiner(false);
+    setStudentDashbordmycourse(false);
+    setStudentDashbordbuycurses(true);
+    setStudentDashbordmyresult(false);
+    setStudentDashborddountsection(false);
+    setStudentDashbordbookmark(false);
+    setStudentDashbordsettings(false);
+  };
+  const handlestudentDashbordmyresult = () => {
+    setStudentDashbordconatiner(false);
+    setStudentDashbordmycourse(false);
+    setStudentDashbordbuycurses(false);
+    setStudentDashbordmyresult(true);
+    setStudentDashborddountsection(false);
+    setStudentDashbordbookmark(false);
+    setStudentDashbordsettings(false);
+  };
+  const handlestudentDashborddountsection = () => {
+    setStudentDashbordconatiner(false);
+    setStudentDashbordmycourse(false);
+    setStudentDashbordbuycurses(false);
+    setStudentDashbordmyresult(false);
+    setStudentDashborddountsection(true);
+    setStudentDashbordbookmark(false);
+    setStudentDashbordsettings(false);
+  };
+  const handlestudentDashbordbookmark = () => {
+    setStudentDashbordconatiner(false);
+    setStudentDashbordmycourse(false);
+    setStudentDashbordbuycurses(false);
+    setStudentDashbordmyresult(false);
+    setStudentDashborddountsection(false);
+    setStudentDashbordbookmark(true);
+    setStudentDashbordsettings(false);
+  };
+  const handlestudentDashbordsettings = () => {
+    setStudentDashbordconatiner(false);
+    setStudentDashbordmycourse(false);
+    setStudentDashbordbuycurses(false);
+    setStudentDashbordmyresult(false);
+    setStudentDashborddountsection(false);
+    setStudentDashbordbookmark(false);
+    setStudentDashbordsettings(true);
+  };
 
-   const handlestudentDashbordmycourse = () => {
+  const [showLeftMenu, setShowLeftMenu] = useState(false);
 
-   setStudentDashbordconatiner(false)
-   setStudentDashbordmycourse(true)
-   setStudentDashbordbuycurses(false)
-   setStudentDashbordmyresult(false)
-   setStudentDashborddountsection(false)
-   setStudentDashbordbookmark(false)
-   setStudentDashbordsettings(false)
-   };
-     const handlestudentDashbordbuycurses = () => {
-        setStudentDashbordconatiner(false);
-        setStudentDashbordmycourse(false);
-        setStudentDashbordbuycurses(true);
-        setStudentDashbordmyresult(false);
-        setStudentDashborddountsection(false);
-        setStudentDashbordbookmark(false);
-        setStudentDashbordsettings(false);
-     };
-    const handlestudentDashbordmyresult = () => {
-        setStudentDashbordconatiner(false);
-        setStudentDashbordmycourse(false);
-        setStudentDashbordbuycurses(false);
-        setStudentDashbordmyresult(true);
-        setStudentDashborddountsection(false);
-        setStudentDashbordbookmark(false);
-        setStudentDashbordsettings(false);
-    };
-     const handlestudentDashborddountsection = () => {
-        setStudentDashbordconatiner(false);
-        setStudentDashbordmycourse(false);
-        setStudentDashbordbuycurses(false);
-        setStudentDashbordmyresult(false);
-        setStudentDashborddountsection(true);
-        setStudentDashbordbookmark(false);
-        setStudentDashbordsettings(false);
-     };
-      const handlestudentDashbordbookmark = () => {
-          setStudentDashbordconatiner(false);
-          setStudentDashbordmycourse(false);
-          setStudentDashbordbuycurses(false);
-          setStudentDashbordmyresult(false);
-          setStudentDashborddountsection(false);
-          setStudentDashbordbookmark(true);
-          setStudentDashbordsettings(false);
-      };
-       const handlestudentDashbordsettings = () => {
- setStudentDashbordconatiner(false);
- setStudentDashbordmycourse(false);
- setStudentDashbordbuycurses(false);
- setStudentDashbordmyresult(false);
- setStudentDashborddountsection(false);
- setStudentDashbordbookmark(false);
- setStudentDashbordsettings(true);
-
-       };
-        
-   const [showLeftMenu, setShowLeftMenu] = useState(false);
-
-   const handleToggleLeftMenu = () => {
-     setShowLeftMenu(!showLeftMenu);
-   };
+  const handleToggleLeftMenu = () => {
+    setShowLeftMenu(!showLeftMenu);
+  };
 
   return (
     <div>
@@ -205,44 +202,42 @@ export const StudentDashbordheader = () => {
     checkLoggedIn();
   }, []);
 
-const fetchUserData = async () => {
-  try {
-    const token = localStorage.getItem("token");
-    const response = await fetch(
-      "http://localhost:5001/ughomepage_banner_login/user",
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+  const fetchUserData = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(
+        "http://localhost:5001/ughomepage_banner_login/user",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        // Token is expired or invalid, redirect to login page
+        localStorage.removeItem("isLoggedIn");
+        localStorage.removeItem("token");
+        setIsLoggedIn(false);
+        Navigate("/uglogin"); // Assuming you have the 'navigate' function available
+
+        return;
       }
-    );
 
-    if (!response.ok) {
-      // Token is expired or invalid, redirect to login page
-      localStorage.removeItem("isLoggedIn");
-      localStorage.removeItem("token");
-      setIsLoggedIn(false);
-      Navigate("/uglogin"); // Assuming you have the 'navigate' function available
-
-      return;
+      if (response.ok) {
+        // Token is valid, continue processing user data
+        const userData = await response.json();
+        setUserData(userData);
+        // ... process userData
+      }
+    } catch (error) {
+      console.error("Error fetching user data:", error);
     }
+  };
 
-    if (response.ok) {
-      // Token is valid, continue processing user data
-      const userData = await response.json();
-      setUserData(userData)
-      // ... process userData
-    }
-  } catch (error) {
-    console.error("Error fetching user data:", error);
-  }
-};
-
-
- const handlestudentDashbordsettings = () => {}
+  const handlestudentDashbordsettings = () => {};
   return (
     <div>
-      StudentDashbordheader
       <div className="Quiz_main_page_header">
         {nav.map((nav, index) => {
           return (
@@ -313,7 +308,11 @@ export const StudentDashbordconatiner = () => {
   return <div>StudentDashbordconatiner</div>;
 };
 export const StudentDashbordbuycurses = () => {
-  return <div><BuyCourses/></div>;
+  return (
+    <>
+      <BuyCourses />
+    </>
+  );
 };
 export const StudentDashbordmycourse = () => {
   return <div>StudentDashbordmycourse</div>;
@@ -335,50 +334,50 @@ export const StudentDashbordsettings = () => {
   const userRole = localStorage.getItem("userRole");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUserData] = useState({});
-    
-     useEffect(() => {
-       const checkLoggedIn = () => {
-         const loggedIn = localStorage.getItem("isLoggedIn");
-         if (loggedIn === "true") {
-           setIsLoggedIn(true);
-           fetchUserData();
-         }
-       };
-       checkLoggedIn();
-     }, []);
 
-     const fetchUserData = async () => {
-       try {
-         const token = localStorage.getItem("token");
-         const response = await fetch(
-           "http://localhost:5001/ughomepage_banner_login/user",
-           {
-             headers: {
-               Authorization: `Bearer ${token}`,
-             },
-           }
-         );
+  useEffect(() => {
+    const checkLoggedIn = () => {
+      const loggedIn = localStorage.getItem("isLoggedIn");
+      if (loggedIn === "true") {
+        setIsLoggedIn(true);
+        fetchUserData();
+      }
+    };
+    checkLoggedIn();
+  }, []);
 
-         if (!response.ok) {
-           // Token is expired or invalid, redirect to login page
-           localStorage.removeItem("isLoggedIn");
-           localStorage.removeItem("token");
-           setIsLoggedIn(false);
-           Navigate("/uglogin"); // Assuming you have the 'navigate' function available
+  const fetchUserData = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(
+        "http://localhost:5001/ughomepage_banner_login/user",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-           return;
-         }
+      if (!response.ok) {
+        // Token is expired or invalid, redirect to login page
+        localStorage.removeItem("isLoggedIn");
+        localStorage.removeItem("token");
+        setIsLoggedIn(false);
+        Navigate("/uglogin"); // Assuming you have the 'navigate' function available
 
-         if (response.ok) {
-           // Token is valid, continue processing user data
-           const userData = await response.json();
-           setUserData(userData);
-           // ... process userData
-         }
-       } catch (error) {
-         console.error("Error fetching user data:", error);
-       }
-     };
+        return;
+      }
+
+      if (response.ok) {
+        // Token is valid, continue processing user data
+        const userData = await response.json();
+        setUserData(userData);
+        // ... process userData
+      }
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  };
 
   return (
     <div className="StudentDashbordsettings_conatiner">
