@@ -6,13 +6,15 @@
 }
 
 .Quiz_main_page_subcontainer {
-  width: 80%;
+  width: 92%;
   margin: 1rem auto;
   /* border: 1px solid red; */
   border-radius: 18px;
 }
 
 .Quiz_main_page_container_btns {
+  position: relative;
+  z-index: 1;
     display: flex;
     gap: 3rem;
     /* width: 80%; */
