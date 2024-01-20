@@ -4,14 +4,32 @@ const router = express.Router();
 
 
 router.get("/DisplayCoursesForBuy", async (req, res) => {
-    try {
-      const [rows] = await db.query("SELECT  * FROM course_creation_table");
-      res.json(rows);
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: "Internal Server Error" });
-    }
-  });
+  try {
+    const [courses] = await db.query("SELECT c.courseCreationId,c.courseName,c.courseYear,c.courseStartDate,c.courseEndDate,c.cost,c.Discount,c.totalPrice,ci.cardimeageuploadID,ci.cardimeage FROM course_creation_table AS c JOIN cardimeageuploadtable AS ci ON ci.courseCreationId = c.courseCreationId;");
+    
+    const base64CardImage = courses[0].cardimeage.toString("base64");
+  
+    // Return the response
+    res.status(200).json({
+      courses: courses.map(course => ({
+        courseCreationId: course.courseCreationId,
+        courseName: course.courseName,
+        courseYear: course.courseYear,
+        courseStartDate: course.courseStartDate,
+        courseEndDate: course.courseEndDate,
+        cost: course.cost,
+        Discount: course.Discount,
+        totalPrice: course.totalPrice,
+        cardimeageuploadID: course.cardimeageuploadID,
+        cardimeage: `data:image/png;base64,${base64CardImage}`,
+      }))
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 
 
   router.post('/addToCart', async (req, res) => {
@@ -72,16 +90,42 @@ router.get("/DisplayCoursesForBuy", async (req, res) => {
   
     try {
       // Perform the database query to get the added courses for the user
-      const getAddedCoursesQuery = 'SELECT u.user_Id,u.courseCreationId,c.courseCreationId,c.courseName,c.courseYear,c.courseStartDate,c.courseEndDate,c.cost,c.Discount,c.totalPrice FROM useraddtocart AS u JOIN course_creation_table AS c ON u.courseCreationId=c.courseCreationId WHERE u.user_Id= ?';
+      const getAddedCoursesQuery = `
+        SELECT u.user_Id, u.courseCreationId, c.courseCreationId, c.courseName, 
+               c.courseYear, c.courseStartDate, c.courseEndDate, c.cost, c.Discount, 
+               c.totalPrice, ci.cardimeageuploadID, ci.cardimeage 
+        FROM useraddtocart AS u 
+        JOIN course_creation_table AS c ON u.courseCreationId = c.courseCreationId 
+        JOIN cardimeageuploadtable AS ci ON ci.courseCreationId = c.courseCreationId 
+        WHERE u.user_Id = ?`;
+  
       const [courses] = await db.query(getAddedCoursesQuery, [userId]);
   
-      // Send the fetched courses as the response
-      res.status(200).json({ courses });
+      // Assuming you have a profile image in the result, convert it to base64
+      const base64CardImage = courses[0].cardimeage.toString("base64");
+  
+      // Return the response
+      res.status(200).json({
+        courses: courses.map(course => ({
+          user_Id: course.user_Id,
+          courseCreationId: course.courseCreationId,
+          courseName: course.courseName,
+          courseYear: course.courseYear,
+          courseStartDate: course.courseStartDate,
+          courseEndDate: course.courseEndDate,
+          cost: course.cost,
+          Discount: course.Discount,
+          totalPrice: course.totalPrice,
+          cardimeageuploadID: course.cardimeageuploadID,
+          cardimeage: `data:image/png;base64,${base64CardImage}`,
+        }))
+      });
     } catch (error) {
       console.error('Error fetching added courses:', error);
       res.status(500).json({ error: 'Internal Server Error' });
     }
   });
+  
 
   router.post('/deleteFromCart', (req, res) => {
     const { user_id, course_id } = req.body;
@@ -106,6 +150,9 @@ router.get("/DisplayCoursesForBuy", async (req, res) => {
       }
     });
   });
+
+
+
 
 
 module.exports = router;

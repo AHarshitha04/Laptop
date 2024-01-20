@@ -12,13 +12,20 @@ const BuyCourses = () => {
 
   const fetchData = async () => {
     try {
-      const response = await fetch('http://localhost:5001/BuyCourses/DisplayCoursesForBuy'); 
-      const data = await response.json();
-      setCourses(data);
+      const response = await fetch('http://localhost:5001/BuyCourses/DisplayCoursesForBuy');
+      if (response.ok) {
+        const data = await response.json();
+        console.log('Fetched data:', data);
+        setCourses(data.courses);
+
+      } else {
+        console.error('Error fetching data:', response.status);
+      }
     } catch (error) {
       console.error('Error fetching data:', error);
     }
   };
+  
 
     useEffect(() => {
       const fetchUserData = async () => {
@@ -175,6 +182,7 @@ const BuyCourses = () => {
           <div>
             {userCourses.map((userCourse) => (
               <div key={userCourse.courseCreationId}>
+                  <img src={userCourse.cardimeage} alt={userCourse.courseName} />
                 <p>{userCourse.courseCreationId}</p>
                 <p>{userCourse.courseName}</p>
                 <p>{userCourse.courseYear}</p>
@@ -207,7 +215,7 @@ const BuyCourses = () => {
             >
               {/* <p>{course.courseCreationId}</p> */}
               <div className="student_dash_board_buycourses_card_Img">
-                <img src="./#endregion" alt={course.courseName} />
+                <img src={course.cardimeage} alt={course.courseName} />
               </div>
               <div className="student_dash_board_buycourses_card_info">
                 <h4>{course.courseName}</h4>
