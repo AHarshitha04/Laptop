@@ -25,7 +25,7 @@ const CoureseCreation=require("./otsadmin/CoureseCreation")
 const InstructionCreation = require('./otsadmin/InstructionCreation')
 const TestCreation = require('./otsadmin/TestCreation')
 const DocumentUpload =require('./otsadmin/DocumentUpload')
-
+const ImeageUpload =require('./otsadmin/ImeageUpload')
 
 
 
@@ -55,7 +55,7 @@ app.use('/CoureseCreation',CoureseCreation)
 app.use('/InstructionCreation',InstructionCreation)
 app.use('/TestCreation',TestCreation)
 app.use('/DocumentUpload',DocumentUpload)
-
+app.use('/ImeageUpload',ImeageUpload)
 
 //-------------------- quiz router  -------------------------------------
 

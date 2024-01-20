@@ -17,6 +17,7 @@ import Coursecreation from "./Coursecreation";
 import Account_info from "../UGadmin/login/Account_info";
 
 import { FaLock, FaUserAlt, FaImage } from "react-icons/fa";
+import Image_Upload_for_Ac_ADMIN from "./Image_Upload_for_Ac_ADMIN";
 
 // import logo2 from './logo2.jpeg'
 // import HomeLandingPage from "../Frontend/Pages/HomeLandingPage/HomeLandingPage";
@@ -35,7 +36,8 @@ const Leftnav = () => {
   const [showDocumentUpload_admin, setDocumentUpload_admin] = useState(false);
 
   const [showregisteredstudent, setShowregisteredstudent] = useState(false);
-
+  const [showImage_Upload_for_Ac, setShowImage_Upload_for_Ac] = useState(false);
+  
   const handledisplaydashboard = () => {
     setShowdashboard(true);
     setShowExamcreation_admin(false);
@@ -44,6 +46,7 @@ const Leftnav = () => {
     setTestcreationadmin(false);
     setDocumentUpload_admin(false);
     setShowregisteredstudent(false);
+    setShowImage_Upload_for_Ac(false)
   };
 
   const handleshowExamcreation_admin = () => {
@@ -54,6 +57,8 @@ const Leftnav = () => {
     setTestcreationadmin(false);
     setDocumentUpload_admin(false);
     setShowregisteredstudent(false);
+    setShowImage_Upload_for_Ac(false)
+
   };
   const handleshowCoursecreation_admin = () => {
     setShowdashboard(false);
@@ -63,6 +68,8 @@ const Leftnav = () => {
     setTestcreationadmin(false);
     setDocumentUpload_admin(false);
     setShowregisteredstudent(false);
+    setShowImage_Upload_for_Ac(false)
+
   };
   const handleInstructionPage_admin = () => {
     setShowdashboard(false);
@@ -72,6 +79,8 @@ const Leftnav = () => {
     setTestcreationadmin(false);
     setDocumentUpload_admin(false);
     setShowregisteredstudent(false);
+    setShowImage_Upload_for_Ac(false)
+
   };
 
   const handleTestcreationadmin = () => {
@@ -82,6 +91,8 @@ const Leftnav = () => {
     setTestcreationadmin(true);
     setDocumentUpload_admin(false);
     setShowregisteredstudent(false);
+    setShowImage_Upload_for_Ac(false)
+
   };
 
   const handleshowDocumentUpload_admin = () => {
@@ -92,6 +103,8 @@ const Leftnav = () => {
     setTestcreationadmin(false);
     setDocumentUpload_admin(true);
     setShowregisteredstudent(false);
+    setShowImage_Upload_for_Ac(false)
+
   };
 
   const handleregisteredstudent = () => {
@@ -102,7 +115,20 @@ const Leftnav = () => {
     setTestcreationadmin(false);
     setDocumentUpload_admin(false);
     setShowregisteredstudent(true);
+    setShowImage_Upload_for_Ac(false)
+
   };
+
+  const handleImage_Upload_for_Ac=()=>{
+    setShowdashboard(false);
+    setShowExamcreation_admin(false);
+    setshowCoursecreation_admin(false);
+    setInstructionPage_admin(false);
+    setTestcreationadmin(false);
+    setDocumentUpload_admin(false);
+    setShowregisteredstudent(false);
+    setShowImage_Upload_for_Ac(true)
+  }
   return (
     <>
       <div className="left_nav_bar_container">
@@ -221,6 +247,16 @@ const Leftnav = () => {
                 </p>
               </Link>
             </li>
+            <li>
+              <Link className="LeftnavLinks" onClick={handleImage_Upload_for_Ac}>
+                <p>
+                  <i>
+                    <FaUserAlt />
+                  </i>
+                 Image Upload
+                </p>
+              </Link>
+            </li>
           </ul>
         </div>
       </div>
@@ -268,6 +304,13 @@ const Leftnav = () => {
           <Account_info />
         </div>
       ) : null}
+
+{showImage_Upload_for_Ac ? (
+        
+          <Image_Upload_for_Ac_ADMIN />
+        
+      ) : null}
+
     </>
   );
 };
