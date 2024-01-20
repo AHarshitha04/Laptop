@@ -14,25 +14,36 @@ router.get("/DisplayCoursesForBuy", async (req, res) => {
   });
 
 
-  router.post('/addToCart', (req, res) => {
+  router.post('/addToCart', async (req, res) => {
     const { user_id, courseCreationId } = req.body;
-  console.log('Received request body:', req.body);
-
+    console.log('Received request body:', req.body);
+  
     if (!user_id || !courseCreationId) {
       return res.status(400).json({ error: 'User ID and CourseCreationId are required' });
     }
   
-    const addToCartQuery = 'INSERT INTO useraddtocart (user_id, courseCreationId) VALUES (?, ?)';
-    db.query(addToCartQuery, [user_id, courseCreationId], (err) => {
-      if (err) {
-        console.error('Error adding to cart:', err);
-        res.status(500).json({ error: 'Internal Server Error' });
-      } else {
-        console.log('Added to cart successfully');
-        res.status(200).json({ message: 'Added to cart successfully' });
+    try {
+      // Check if the course already exists in the cart
+      const checkExistingCourseQuery = 'SELECT * FROM useraddtocart WHERE user_id = ? AND courseCreationId = ?';
+      const [existingCourse] = await db.query(checkExistingCourseQuery, [user_id, courseCreationId]);
+  
+      if (existingCourse.length > 0) {
+        // Course already exists in the cart
+        return res.status(400).json({ error: 'Course already in the cart' });
       }
-    });
+  
+      // If the course doesn't exist, add it to the cart
+      const addToCartQuery = 'INSERT INTO useraddtocart (user_id, courseCreationId) VALUES (?, ?)';
+      await db.query(addToCartQuery, [user_id, courseCreationId]);
+  
+      console.log('Added to cart successfully');
+      res.status(200).json({ message: 'Added to cart successfully' });
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
   });
+  
 
   router.post('/buyCourses', (req, res) => {
     const { user_id, courseCreationId } = req.body;
@@ -71,7 +82,7 @@ router.get("/DisplayCoursesForBuy", async (req, res) => {
       res.status(500).json({ error: 'Internal Server Error' });
     }
   });
-  
+
   router.post('/deleteFromCart', (req, res) => {
     const { user_id, course_id } = req.body;
   
