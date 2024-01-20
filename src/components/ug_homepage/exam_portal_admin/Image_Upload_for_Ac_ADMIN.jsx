@@ -145,55 +145,99 @@ const Image_Upload_for_Ac_ADMIN = () => {
   };
 
   return (
-    <div>
-      <h1>Image Upload for Academic Admin</h1>
+    <div className="create_exam_container otsMainPages">
+      <h3 className="Coures_-otsTitels">Image Upload for Academic Admin</h3>
       <form onSubmit={handleSubmit}>
-        <label htmlFor="examDropdown">Select Exam:</label>
-        <select id="examDropdown" value={selectedExam} onChange={handleExamChange}>
-          <option value="" disabled>Select an exam</option>
-          {exams.map((exam) => (
-            <option key={exam.examId} value={exam.examId}>{exam.examName}</option>
-          ))}
-        </select>
+        <div className="examForm_Contant-container">
+          <div className="Exams_contant examSubjects_-contant">
+            <div className="formdiv_contaniner">
+              <label htmlFor="examDropdown">Select Exam:</label>
+              <select
+                id="examDropdown"
+                value={selectedExam}
+                onChange={handleExamChange}
+              >
+                <option value="" disabled>
+                  Select an exam
+                </option>
+                {exams.map((exam) => (
+                  <option key={exam.examId} value={exam.examId}>
+                    {exam.examName}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="formdiv_contaniner">
+              <label>Upload Exam Image:</label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleExamImageChange}
+              />
+            </div>
+            <div className="formdiv_contaniner">
+              <label htmlFor="courseDropdown">Select Course:</label>
+              <select
+                id="courseDropdown"
+                value={selectedCourse}
+                onChange={handleCourseChange}
+              >
+                <option value="" disabled>
+                  Select a course
+                </option>
+                {course.map((course) => (
+                  <option
+                    key={course.courseCreationId}
+                    value={course.courseCreationId}
+                  >
+                    {course.courseName}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="formdiv_contaniner">
+              <label>Upload Course Image:</label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleCourseImageChange}
+              />
+            </div>
+            <div className="formdiv_contaniner">
+              <label htmlFor="testDropdown">Select Test:</label>
 
-        <label>
-          Upload Exam Image:
-          <input type="file" accept="image/*" onChange={handleExamImageChange} />
-        </label>
+              <select
+                id="testDropdown"
+                value={selectedTest}
+                onChange={handleTestChange}
+              >
+                <option value="" disabled>
+                  Select a test
+                </option>
+                {test.map((test) => (
+                  <option
+                    key={test.testCreationTableId}
+                    value={test.testCreationTableId}
+                  >
+                    {test.TestName}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="formdiv_contaniner">
+              <label>Upload Test Image:</label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleTestImageChange}
+              />
+            </div>
+          </div>
+        </div>
 
-        <br />
-
-        <label htmlFor="courseDropdown">Select Course:</label>
-        <select id="courseDropdown" value={selectedCourse} onChange={handleCourseChange}>
-          <option value="" disabled>Select a course</option>
-          {course.map((course) => (
-            <option key={course.courseCreationId} value={course.courseCreationId}>{course.courseName}</option>
-          ))}
-        </select>
-
-        <label>
-          Upload Course Image:
-          <input type="file" accept="image/*" onChange={handleCourseImageChange} />
-        </label>
-
-        <br />
-
-        <label htmlFor="testDropdown">Select Test:</label>
-        <select id="testDropdown" value={selectedTest} onChange={handleTestChange}>
-          <option value="" disabled>Select a test</option>
-          {test.map((test) => (
-            <option key={test.testCreationTableId} value={test.testCreationTableId}>{test.TestName}</option>
-          ))}
-        </select>
-
-        <label>
-          Upload Test Image:
-          <input type="file" accept="image/*" onChange={handleTestImageChange} />
-        </label>
-
-        <br />
-
-        <button type="submit">Submit</button>
+        <button type="submit" className="ots_-createBtn">
+          Submit
+        </button>
       </form>
     </div>
   );
