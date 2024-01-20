@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import "./styles/BuyCourses.css";
 import { FaRupeeSign } from "react-icons/fa";
+import { VscChromeClose } from "react-icons/vsc";
 const BuyCourses = () => {
   const [courses, setCourses] = useState([]);
   const [userCourses, setUserCourses] = useState([]);
@@ -136,7 +137,29 @@ const BuyCourses = () => {
       console.error('Error fetching added courses:', error);
     }
   };
+    const handleViewAddedCoursesClick_close = async () => {
+      setShowAddedCourses(!showAddedCourses); // Toggle visibility
+      if (!showAddedCourses) {
+        return; // If it's being closed, no need to fetch data
+      }
 
+      try {
+        const response = await fetch(
+          `http://localhost:5001/BuyCourses/addedCourses/${userData.id}`
+        );
+        if (response.ok) {
+          const { courses } = await response.json();
+          console.log("Fetched added courses:", courses);
+          // Update the userCourses state with the fetched courses
+          setUserCourses(courses);
+        } else {
+          console.error("Failed to fetch added courses");
+        }
+      } catch (error) {
+        console.error("Error fetching added courses:", error);
+      }
+    };
+;
   const handleDeleteFromCartClick = async (courseCreationId) => {
     try {
       const response = await fetch('http://localhost:5001/BuyCourses/deleteFromCart', {
@@ -180,33 +203,67 @@ const BuyCourses = () => {
         </button>
         {showAddedCourses && (
           <div>
-            {userCourses.map((userCourse) => (
-              <div key={userCourse.courseCreationId}>
-                  <img src={userCourse.cardimeage} alt={userCourse.courseName} />
-                <p>{userCourse.courseCreationId}</p>
-                <p>{userCourse.courseName}</p>
-                <p>{userCourse.courseYear}</p>
-                <p>{userCourse.courseStartDate}</p>
-                <p>{userCourse.courseEndDate}</p>
-                <p>{userCourse.cost}</p>
-                <p>{userCourse.Discount}</p>
-                <p>{userCourse.totalPrice}</p>
-                <button
-                  onClick={() => handleBuyClick(userCourse.courseCreationId)}
+          
+              {userCourses.map((userCourse) => (
+                <div
+                  className="student_dash_board_buycourses_card"
+                  key={userCourse.courseCreationId}
                 >
-                  Buy Now
-                </button>
-                <button
-                  onClick={() =>
-                    handleDeleteFromCartClick(userCourse.courseCreationId)
-                  }
-                >
-                  Delete from Cart
-                </button>
-              </div>
-            ))}
-          </div>
-        )}
+                  <div className="student_dash_board_buycourses_card_Img">
+                    <img src="./#endregion" alt={userCourse.courseName} />
+                  </div>
+                  {/* <p>{userCourse.courseCreationId}</p> */}
+                  <h4>{userCourse.courseName}</h4>
+                  <div className="student_dash_board_buycourses_card_info_year">
+                    <label>Year : </label>
+                    <span>{userCourse.courseYear}</span>
+                  </div>
+                  <div className="student_dash_board_buycourses_card_info_year_date">
+                    {userCourse.courseStartDate} to {userCourse.courseEndDate}
+                  </div>
+
+                  <div className="student_dash_board_buycourses_card_price_contanier">
+                    <div>
+                      <div className="student_dash_board_buycourses_card_info_discount">
+                        {userCourse.Discount}%
+                      </div>
+                      <p className="student_dash_board_buycourses_card_info_totleprice">
+                        Price:
+                        {userCourse.cost}
+                      </p>
+                    </div>
+
+                    <p className="student_dash_board_buycourses_card_info_discountprice">
+                      <sup>
+                        <FaRupeeSign />
+                      </sup>
+                      {userCourse.totalPrice}
+                    </p>
+                  </div>
+
+                  <div className="student_dash_board_buycourses_card_btn_container">
+                    <button
+                      onClick={() =>
+                        handleBuyClick(userCourse.courseCreationId)
+                      }
+                    >
+                      Buy Now
+                    </button>
+                    <button
+                      id="Delete_from_Cart"
+                      onClick={() =>
+                        handleDeleteFromCartClick(userCourse.courseCreationId)
+                      }
+                    >
+                      Delete from Cart
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        
+
         <div className="student_dash_board_buycourses_card_container">
           {courses.map((course) => (
             <div
@@ -224,10 +281,7 @@ const BuyCourses = () => {
                   <span>{course.courseYear}</span>
                 </div>
                 <div className="student_dash_board_buycourses_card_info_year_date">
-                  
-                  
-                    {course.courseStartDate} to {course.courseEndDate}
-                  
+                  {course.courseStartDate} to {course.courseEndDate}
                 </div>
 
                 <div className="student_dash_board_buycourses_card_price_contanier">

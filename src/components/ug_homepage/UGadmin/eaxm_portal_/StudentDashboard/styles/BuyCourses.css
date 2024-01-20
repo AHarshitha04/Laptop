@@ -30,8 +30,8 @@
     box-shadow: 0 0 29px -12px #000;
     display: flex;
     flex-direction: column;
-    height: auto;
-    margin: 0 auto;
+    height: 300px;
+    
     padding: 0.8rem;
     transition: .5s;
     width: 275px;
@@ -165,4 +165,29 @@
     -webkit-transform: scale(1.2);
     transform: scale(1.1);
 }
+}
+#Delete_from_Cart{
+  background: rgba(238, 0, 0, 0.795);
+}
+.student_dash_board_buycourses_add_tocart_cantioner{
+  position: absolute;
+  top: 0;
+  width: 300px;
+  right: 0;
+  height: 100vh;
+  overflow: auto;
+  background: #ffffff;
+  display: grid;
+  justify-content: center;
+  padding: 2rem;
+  border-left: 1px solid rgba(14, 14, 14, 0.171);
+  z-index: 100;
+}
+.student_dash_board_buycourses_add_tocart_cantionerclose{
+  position: absolute;
+  right: 2rem;
+  top: 0rem;
+  font-size: 1.5rem;
+  color: rgba(255, 0, 0, 0.74);
+ 
 }
