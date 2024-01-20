@@ -6,6 +6,7 @@ import { Link, Navigate } from "react-router-dom";
 import "./StudentDashbord.css";
 import Student_profileUpdate from "./Student_profileUpdate";
 import { MdMenu } from "react-icons/md";
+import BuyCourses from "./BuyCourses";
 
 const Student_dashboard = () => {
   const [studentDashbordconatiner, setStudentDashbordconatiner] =useState(true);
@@ -312,7 +313,7 @@ export const StudentDashbordconatiner = () => {
   return <div>StudentDashbordconatiner</div>;
 };
 export const StudentDashbordbuycurses = () => {
-  return <div>StudentDashbordbuycourse</div>;
+  return <div><BuyCourses/></div>;
 };
 export const StudentDashbordmycourse = () => {
   return <div>StudentDashbordmycourse</div>;
