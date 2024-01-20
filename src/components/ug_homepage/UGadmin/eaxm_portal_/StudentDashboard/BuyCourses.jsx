@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-
+import "./styles/BuyCourses.css";
+import { FaRupeeSign } from "react-icons/fa";
 const BuyCourses = () => {
   const [courses, setCourses] = useState([]);
   const [userCourses, setUserCourses] = useState([]);
@@ -156,44 +157,104 @@ const BuyCourses = () => {
   };
 
   return (
-    <div>
-      <h1>Buy Courses</h1>
-      <button onClick={handleViewAddedCoursesClick}>{showAddedCourses ?  <i class="fa-solid fa-cart-shopping"></i> : <i class="fa-solid fa-cart-shopping"></i>}</button>
-      {showAddedCourses && (
-      <div>
-      {userCourses.map((userCourse) => (
-        <div key={userCourse.courseCreationId}>
-          <p>{userCourse.courseCreationId}</p>
-          <p>{userCourse.courseName}</p>
-          <p>{userCourse.courseYear}</p>
-          <p>{userCourse.courseStartDate}</p>
-          <p>{userCourse.courseEndDate}</p>
-          <p>{userCourse.cost}</p>
-          <p>{userCourse.Discount}</p>
-          <p>{userCourse.totalPrice}</p>
-          <button onClick={() => handleBuyClick(userCourse.courseCreationId)}>Buy Now</button>
-          <button onClick={() => handleDeleteFromCartClick(userCourse.courseCreationId)}>Delete from Cart</button>
-        </div>
-      ))} 
-      </div>
-      )}
-      {courses.map((course) => (
-        <div key={course.courseCreationId}>
-          <p>{course.courseCreationId}</p>
-          <p>{course.courseName}</p>
-          <p>{course.courseYear}</p>
-          <p>{course.courseStartDate}</p>
-          <p>{course.courseEndDate}</p>
-          <p>{course.cost}</p>
-          <p>{course.Discount}</p>
-          <p>{course.totalPrice}</p>
-          <button onClick={() => handleBuyClick(course.courseCreationId)}>Buy Now</button>
-          <button onClick={() => handleAddToCartClick(course.courseCreationId)}>Add to Cart</button>
-        </div>
-      ))}
+    <div className="student_dash_board_buycourses_container">
+      <h3>Buy Courses</h3>
 
+      <>
+        <button
+          className="student_dash_board_buycourse_cart"
+          onClick={handleViewAddedCoursesClick}
+        >
+          {showAddedCourses ? (
+            <i class="fa-solid fa-cart-shopping"></i>
+          ) : (
+            <i class="fa-solid fa-cart-shopping"></i>
+          )}
+        </button>
+        {showAddedCourses && (
+          <div>
+            {userCourses.map((userCourse) => (
+              <div key={userCourse.courseCreationId}>
+                <p>{userCourse.courseCreationId}</p>
+                <p>{userCourse.courseName}</p>
+                <p>{userCourse.courseYear}</p>
+                <p>{userCourse.courseStartDate}</p>
+                <p>{userCourse.courseEndDate}</p>
+                <p>{userCourse.cost}</p>
+                <p>{userCourse.Discount}</p>
+                <p>{userCourse.totalPrice}</p>
+                <button
+                  onClick={() => handleBuyClick(userCourse.courseCreationId)}
+                >
+                  Buy Now
+                </button>
+                <button
+                  onClick={() =>
+                    handleDeleteFromCartClick(userCourse.courseCreationId)
+                  }
+                >
+                  Delete from Cart
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+        <div className="student_dash_board_buycourses_card_container">
+          {courses.map((course) => (
+            <div
+              className="student_dash_board_buycourses_card"
+              key={course.courseCreationId}
+            >
+              {/* <p>{course.courseCreationId}</p> */}
+              <div className="student_dash_board_buycourses_card_Img">
+                <img src="./#endregion" alt={course.courseName} />
+              </div>
+              <div className="student_dash_board_buycourses_card_info">
+                <h4>{course.courseName}</h4>
+                <div className="student_dash_board_buycourses_card_info_year">
+                  <label>Year : </label>
+                  <span>{course.courseYear}</span>
+                </div>
+                <div className="student_dash_board_buycourses_card_info_year_date">
+                  
+                  
+                    {course.courseStartDate} to {course.courseEndDate}
+                  
+                </div>
 
-       
+                <div className="student_dash_board_buycourses_card_price_contanier">
+                  <div>
+                    <div className="student_dash_board_buycourses_card_info_discount">
+                      {course.Discount}%
+                    </div>
+                    <p className="student_dash_board_buycourses_card_info_totleprice">
+                      Price:
+                      {course.cost}
+                    </p>
+                  </div>
+
+                  <p className="student_dash_board_buycourses_card_info_discountprice">
+                    <sup>
+                      <FaRupeeSign />
+                    </sup>
+                    {course.totalPrice}
+                  </p>
+                </div>
+              </div>
+              <div className="student_dash_board_buycourses_card_btn_container">
+                <button onClick={() => handleBuyClick(course.courseCreationId)}>
+                  Buy Now
+                </button>
+                <button
+                  onClick={() => handleAddToCartClick(course.courseCreationId)}
+                >
+                  Add to Cart
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </>
     </div>
   );
 };

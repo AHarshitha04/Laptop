@@ -8,7 +8,7 @@
 
 .Exam_portal_admin_integration_container {
   position: absolute;
-  top: 4rem;
+  top: 9rem;
   left: 0;
   display: flex;
 
@@ -16,8 +16,8 @@
   /* border-radius: 18px; */
   background: #fff;
   width: 100%;
-  padding-top: 4rem ;
-  height: 99.9vh;
+  /* padding-top: 4rem ; */
+  height: 84.9vh;
 }
 
 /* -------------------------------------- menu btn .js ---------------------- */
@@ -110,10 +110,11 @@
   text-align: left;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  justify-content: center;
+  gap: 1.5rem;
+  /* justify-content: center; */
   align-items: center;
   border-right: 1px solid rgba(0, 0, 0, 0.288);
+  height: 85vh;
 }
 .left-nav-bar ul li {
   width: 100%;
