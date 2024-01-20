@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Adimheader from "../login/Adimheader";
 import { nav } from "./DATA/Data";
-import { Link } from "react-router-dom";
+import { Link, Navigate, useParams } from "react-router-dom";
 import axios from "axios";
 import Tooltip from "@mui/material/Tooltip";
 import Button from "@mui/material/Button";
@@ -23,33 +23,52 @@ const Quiz_dashboard = () => {
     localStorage.removeItem("userRole");
     window.location.href = "/uglogin";
   };
-   const userRole = localStorage.getItem("userRole");
+    const userRole = localStorage.getItem("userRole");
    const [isLoggedIn, setIsLoggedIn] = useState(false);
-   const [userData, setUserData] = useState({});
-    const fetchUserData = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        const response = await fetch(
-          "http://localhost:5001/ughomepage_banner_login/user",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        if (response.ok) {
-          const userData = await response.json();
-          setUserData(userData);
-        } else {
-          setIsLoggedIn(false);
-
-          // Handle errors if needed
-        }
-      } catch (error) {
-        // Handle other errors if needed
+  const [userData, setUserData] = useState({});
+  useEffect(() => {
+    const checkLoggedIn = () => {
+      const loggedIn = localStorage.getItem("isLoggedIn");
+      if (loggedIn === "true") {
+        setIsLoggedIn(true);
+        fetchUserData();
       }
     };
+    checkLoggedIn();
+  }, []);
+
+  const fetchUserData = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(
+        "http://localhost:5001/ughomepage_banner_login/user",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        // Token is expired or invalid, redirect to login page
+        localStorage.removeItem("isLoggedIn");
+        localStorage.removeItem("token");
+        setIsLoggedIn(false);
+        Navigate("/uglogin"); // Assuming you have the 'navigate' function available
+
+        return;
+      }
+
+      if (response.ok) {
+        // Token is valid, continue processing user data
+     const userData = await response.json();
+     setUserData(userData);
+        // ... process userData
+      }
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  };
 
     // const [courses, setCourses] = useState([]);
     const [examsug, setExamsug] = useState([0]);
@@ -102,7 +121,20 @@ const Quiz_dashboard = () => {
                   </button></Link> */}
                   </div>
                   <div>
-                    <button onClick={handleLogout}>Logout</button>
+                    <button id="dropdownmenu_foradim_page_btn">
+                      <img
+                        title={userData.username}
+                        src={userData.imageData}
+                        alt={`Image ${userData.user_Id}`}
+                      />
+                      <div className="dropdownmenu_foradim_page">
+                        {/* <Link to={`/userread/${user.id}`} className="btn btn-success mx-2">Read</Link> */}
+                        {/* <Link to={`/userdeatailspage/${user.id}`} >Account-info</Link> */}
+                        <Link to="/student_dashboard">My profile</Link>
+                        <Link onClick={handleLogout}>Logout</Link>
+                      </div>
+                    </button>
+                   
                   </div>
                 </ul>
               </div>
