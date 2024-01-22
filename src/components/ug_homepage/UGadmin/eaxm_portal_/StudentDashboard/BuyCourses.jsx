@@ -137,6 +137,29 @@ const BuyCourses = () => {
       console.error('Error fetching added courses:', error);
     }
   };
+
+   const handleViewAddedCoursesClickclose = async () => {
+     setShowAddedCourses(!showAddedCourses); // Toggle visibility
+     if (!showAddedCourses) {
+       return; // If it's being closed, no need to fetch data
+     }
+
+     try {
+       const response = await fetch(
+         `http://localhost:5001/BuyCourses/addedCourses/${userData.id}`
+       );
+       if (response.ok) {
+         const { courses } = await response.json();
+         console.log("Fetched added courses:", courses);
+         // Update the userCourses state with the fetched courses
+         setUserCourses(courses);
+       } else {
+         console.error("Failed to fetch added courses");
+       }
+     } catch (error) {
+       console.error("Error fetching added courses:", error);
+     }
+   };
     const handleViewAddedCoursesClick_close = async () => {
       setShowAddedCourses(!showAddedCourses); // Toggle visibility
       if (!showAddedCourses) {
@@ -202,67 +225,72 @@ const BuyCourses = () => {
           )}
         </button>
         {showAddedCourses && (
-          <div>
-          
-              {userCourses.map((userCourse) => (
-                <div
-                  className="student_dash_board_buycourses_card"
-                  key={userCourse.courseCreationId}
-                >
-                  <div className="student_dash_board_buycourses_card_Img">
-                  <img src={userCourse.cardimeage} alt={userCourse.courseName} />
-                  </div>
-                  {/* <p>{userCourse.courseCreationId}</p> */}
-                  <h4>{userCourse.courseName}</h4>
-                  <div className="student_dash_board_buycourses_card_info_year">
-                    <label>Year : </label>
-                    <span>{userCourse.courseYear}</span>
-                  </div>
-                  <div className="student_dash_board_buycourses_card_info_year_date">
-                    {userCourse.courseStartDate} to {userCourse.courseEndDate}
-                  </div>
+          <div className="student_dash_board_buycourses_add_tocart_cantioner">
+            <div
+              onClick={handleViewAddedCoursesClickclose}
+              className="student_dash_board_buycourses_add_tocart_cantionerclose"
+            >
+              <VscChromeClose />
+            </div>
+            {userCourses.map((userCourse) => (
+              <div
+                className="student_dash_board_buycourses_card"
+                key={userCourse.courseCreationId}
+              >
+                <div className="student_dash_board_buycourses_card_Img">
+                  <img
+                    src={userCourse.cardimeage}
+                    alt={userCourse.courseName}
+                  />
+                </div>
+                {/* <p>{userCourse.courseCreationId}</p> */}
+                <h4>{userCourse.courseName}</h4>
+                <div className="student_dash_board_buycourses_card_info_year">
+                  <label>Year : </label>
+                  <span>{userCourse.courseYear}</span>
+                </div>
+                <div className="student_dash_board_buycourses_card_info_year_date">
+                  {userCourse.courseStartDate} to {userCourse.courseEndDate}
+                </div>
 
-                  <div className="student_dash_board_buycourses_card_price_contanier">
-                    <div>
-                      <div className="student_dash_board_buycourses_card_info_discount">
-                        {userCourse.Discount}%
-                      </div>
-                      <p className="student_dash_board_buycourses_card_info_totleprice">
-                        Price:
-                        {userCourse.cost}
-                      </p>
+                <div className="student_dash_board_buycourses_card_price_contanier">
+                  <div>
+                    <div className="student_dash_board_buycourses_card_info_discount">
+                      {userCourse.Discount}%
                     </div>
-
-                    <p className="student_dash_board_buycourses_card_info_discountprice">
-                      <sup>
-                        <FaRupeeSign />
-                      </sup>
-                      {userCourse.totalPrice}
+                    <p className="student_dash_board_buycourses_card_info_totleprice">
+                      Price:
+                      {userCourse.cost}
                     </p>
                   </div>
 
-                  <div className="student_dash_board_buycourses_card_btn_container">
-                    <button
-                      onClick={() =>
-                        handleBuyClick(userCourse.courseCreationId)
-                      }
-                    >
-                      Buy Now
-                    </button>
-                    <button
-                      id="Delete_from_Cart"
-                      onClick={() =>
-                        handleDeleteFromCartClick(userCourse.courseCreationId)
-                      }
-                    >
-                      Delete from Cart
-                    </button>
-                  </div>
+                  <p className="student_dash_board_buycourses_card_info_discountprice">
+                    <sup>
+                      <FaRupeeSign />
+                    </sup>
+                    {userCourse.totalPrice}
+                  </p>
                 </div>
-              ))}
-            </div>
-          )}
-        
+
+                <div className="student_dash_board_buycourses_card_btn_container">
+                  <button
+                    onClick={() => handleBuyClick(userCourse.courseCreationId)}
+                  >
+                    Buy Now
+                  </button>
+                  <button
+                    id="Delete_from_Cart"
+                    onClick={() =>
+                      handleDeleteFromCartClick(userCourse.courseCreationId)
+                    }
+                  >
+                    Delete from Cart
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
 
         <div className="student_dash_board_buycourses_card_container">
           {courses.map((course) => (
