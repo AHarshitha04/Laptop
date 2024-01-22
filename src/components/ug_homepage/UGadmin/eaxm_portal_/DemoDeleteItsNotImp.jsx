@@ -218,31 +218,34 @@ const QuestionPaper = () => {
   };
 
   const onAnswerSelected3 = (e) => {
-    if (!questionData.questions || !questionData.questions[currentQuestionIndex]) {
+    if (
+      !questionData.questions ||
+      !questionData.questions[currentQuestionIndex]
+    ) {
       // Handle the case where questions are not defined
       console.error("Invalid question data or index");
       return;
     }
-  
+
     const currentQuestion = questionData.questions[currentQuestionIndex];
     const questionId = currentQuestion.question_id;
-  
+
     console.log("questionId from onAnswerSelected3:", questionId);
     console.log("Current Question:", currentQuestion);
-  
+
     const inputValue = e.target.value;
     const parsedValue = parseFloat(inputValue);
-  
+
     setSelectedAnswersMap3((prevMap) => ({
       ...prevMap,
       [questionId]: parsedValue,
     }));
-  
+
     setValue(parsedValue.toString());
     console.log("Calculator Value:", parsedValue);
     console.log("Calculator Input Text Box Value:", inputValue);
   };
-  
+
   // -------------- -------------- END TYPES OF INPUT VALUES ANSWERING FORMATE
 
   // -------------------------------------------USE EFFECT FETCHING CODE-------------------------------
@@ -411,20 +414,22 @@ const QuestionPaper = () => {
 
   // Reset calculator value when the question changes
   useEffect(() => {
-    if (!questionData.questions || !questionData.questions[currentQuestionIndex]) {
+    if (
+      !questionData.questions ||
+      !questionData.questions[currentQuestionIndex]
+    ) {
       // Handle the case where questions are not defined
       return;
     }
-  
+
     const questionId = questionData.questions[currentQuestionIndex].question_id;
-  
+
     if (selectedAnswersMap3.hasOwnProperty(questionId)) {
       setValue(selectedAnswersMap3[questionId].toString());
     } else {
       setValue(""); // Clear the input if there is no selected answer
     }
   }, [currentQuestionIndex, selectedAnswersMap3]);
-  
 
   useEffect(() => {
     console.log("Updated Map in useEffect:", selectedAnswersMap3);
@@ -738,6 +743,8 @@ const QuestionPaper = () => {
           return;
         }
 
+        
+        const calculatorInputValue = value;
         const currentQuestion = questionData.questions[currentQuestionIndex];
         const selectedOption1 =
           selectedAnswersMap1[currentQuestion.question_id];
@@ -763,6 +770,7 @@ const QuestionPaper = () => {
             optionIndexes2: optionIndexes2.map((index) =>
               String.fromCharCode("a".charCodeAt(0) + index)
             ),
+            calculatorInputValue: calculatorInputValue, // Add the calculator value to responses
           },
         };
 
@@ -816,6 +824,7 @@ const QuestionPaper = () => {
       const updatedTimers = [...timers];
       updatedTimers[prevIndex] = timer;
       setTimers(updatedTimers);
+
       // Move to the previous question
       return prevIndex - 1;
     });
@@ -897,7 +906,6 @@ const QuestionPaper = () => {
 
   return (
     <div>
-
       <div className="quiz_exam_interface_header">
         <div className="quiz_exam_interface_header_LOGO">
           <img src={logo} alt="" />
@@ -1151,7 +1159,7 @@ const QuestionPaper = () => {
                                           type="text"
                                           name={`question-${currentQuestionIndex}`}
                                           value={value}
-                                          onChange={(e) => onAnswerSelected3(e)}
+                                          // onChange={(e) => onAnswerSelected3(e)}
                                         />
                                       </div>
                                       <div>
@@ -1308,7 +1316,7 @@ const QuestionPaper = () => {
                                           type="text"
                                           name={`question-${currentQuestionIndex}`}
                                           value={value}
-                                          onChange={(e) => onAnswerSelected3(e)}
+                                          // onChange={(e) => onAnswerSelected3(e)}
                                         />
                                       </div>
                                       <div>
@@ -1581,8 +1589,7 @@ const QuestionPaper = () => {
 
           <div className="quiz_exam_interface_body_right_container">
             {/* --------------- right bar -------------------- */}
-
-            <div className="rightsidebar" style={{ background: "#ff9292" }}>
+            <div className="rightsidebar">
               <DemoDeleteItsNotImp2
                 onQuestionSelect={handleQuestionSelect}
                 questionStatus={questionStatus}

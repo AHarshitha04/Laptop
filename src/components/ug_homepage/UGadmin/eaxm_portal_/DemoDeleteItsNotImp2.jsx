@@ -48,7 +48,7 @@ import axios from "axios";
           }
 
           return (
-            <li key={questionKey} style={{color:'#000'}}>
+            <li key={questionKey} >
               <button
                 onClick={() => handleButtonClick(index + 1)}
                 className={className}
@@ -208,13 +208,13 @@ import axios from "axios";
             <p>Time Left: {WformatTime(wtimer)}</p>
           </div>
 
-          <div className="buttons_container" style={{ background: "#000" }}>
+          <div className="buttons_container" >
             <div className="ques-btn">
               <ul className="btn-ul quesAns-btn ">{renderQuestionButtons}</ul>
             </div>
           </div>
 
-          <div className="sidebar-footer" style={{ background: "green" }}>
+          <div className="sidebar-footer" >
             <h4 className="sidebar-footer-header">Legend</h4>
             <div className="footer-btns">
               <div className="inst-btns">

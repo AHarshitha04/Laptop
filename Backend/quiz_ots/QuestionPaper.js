@@ -521,6 +521,9 @@ router.post("/response", async (req, res) => {
     const sql =
       "INSERT INTO user_responses (user_Id, testCreationTableId, question_id, user_answer) VALUES (?,?,?,?)";
 
+  //   const sql =
+  // "INSERT INTO user_responses (user_Id, testCreationTableId, question_id, user_answer) VALUES (?,?,?,?) ON DUPLICATE KEY UPDATE user_answer = VALUES(user_answer)";
+
     for (const questionId in responses) {
       const questionIdNumber = parseInt(questionId, 10);
 
@@ -569,39 +572,6 @@ router.post("/response", async (req, res) => {
   } catch (error) {
     console.error("Error handling the request:", error);
     res.status(500).json({ success: false, message: "Internal server error" });
-  }
-});
-
-
-router.delete('/clearResponse/:questionId', async (req, res) => {
-  try {
-    const { questionId } = req.params;
-
-    // Validate that questionId is a valid integer
-    const questionIdNumber = parseInt(questionId, 10);
-    if (isNaN(questionIdNumber)) {
-      console.error(`Invalid integer value for questionId: ${questionId}`);
-      return res.status(400).json({ success: false, message: 'Invalid questionId' });
-    }
-
-    // Execute SQL query to delete the user's response for the specified question
-    const deleteQuery = 'DELETE FROM user_responses WHERE question_id = ?';
-    await new Promise((resolve, reject) => {
-      db.query(deleteQuery, [questionIdNumber], (err, result) => {
-        if (err) {
-          console.error('Error deleting user response:', err);
-          reject(err);
-        } else {
-          console.log(`User response for question ${questionIdNumber} deleted`);
-          resolve(result);
-        }
-      });
-    });
-
-    res.status(200).json({ success: true, message: 'User response cleared successfully' });
-  } catch (error) {
-    console.error('Error clearing user response:', error);
-    res.status(500).json({ success: false, message: 'Internal server error' });
   }
 });
 
