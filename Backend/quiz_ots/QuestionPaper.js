@@ -571,6 +571,84 @@ router.post("/response", async (req, res) => {
   }
 });
 
+// router.put('/updateResponse/:user_Id/:testCreationTableId/:question_id', async (req, res) => {
+//   try {
+//     const { user_Id, testCreationTableId, question_id } = req.params;
+
+//     // Validate data types
+//     const userIdNumber = parseInt(user_Id, 10);
+//     const testCreationTableIdNumber = parseInt(testCreationTableId, 10);
+//     const questionId = parseInt(question_id, 10);
+
+//     if (isNaN(userIdNumber) || isNaN(testCreationTableIdNumber) || isNaN(questionId)) {
+//       console.error("Invalid integer value for user_Id, testCreationTableId, or question_id");
+//       return res.status(400).json({ success: false, message: "Invalid data types" });
+//     }
+
+//     // Continue with processing
+//     const optionIndexes1 = req.body.updatedResponse.optionIndexes1.join(",");
+//     const optionIndexes2 = req.body.updatedResponse.optionIndexes2.join(",");
+//     const calculatorInputValue = req.body.updatedResponse.calculatorInputValue;
+
+//     const existingResponseQuery = `
+//       SELECT * FROM user_responses
+//       WHERE user_Id = ? AND testCreationTableId = ? AND question_id = ?
+//     `;
+
+//     const existingResponseValues = [
+//       userIdNumber,
+//       testCreationTableIdNumber,
+//       questionId
+//     ];
+
+//     const existingResponseResult = await new Promise((resolve, reject) => {
+//       db.query(existingResponseQuery, existingResponseValues, (err, result) => {
+//         if (err) {
+//           console.error("Error checking existing response in the database:", err);
+//           reject(err);
+//         } else {
+//           resolve(result);
+//         }
+//       });
+//     });
+
+//     if (existingResponseResult.length > 0) {
+//       const updateQuery = `
+//         UPDATE user_responses
+//         SET user_answer = ?
+//         WHERE user_Id = ? AND testCreationTableId = ? AND question_id = ?
+//       `;
+
+//       const updateValues = [
+//         optionIndexes1 + "," + optionIndexes2 + " " + calculatorInputValue,
+//         userIdNumber,
+//         testCreationTableIdNumber,
+//         questionId
+//       ];
+
+//       await new Promise((resolve, reject) => {
+//         db.query(updateQuery, updateValues, (err, result) => {
+//           if (err) {
+//             console.error("Error updating response in the database:", err);
+//             reject(err);
+//           } else {
+//             console.log(`Response for question ${questionId} updated in the database`);
+//             resolve(result);
+//           }
+//         });
+//       });
+
+//       res.json({ success: true, message: "Response updated successfully" });
+//     } else {
+//       // Handle the case where the response does not exist
+//       res.status(404).json({ success: false, message: "Response not found" });
+//     }
+//   } catch (error) {
+//     console.error("Error handling update request:", error);
+//     res.status(500).json({ success: false, message: "Internal server error" });
+//   }
+// });
+
 router.put('/updateResponse/:user_Id/:testCreationTableId/:question_id', async (req, res) => {
   try {
     const { user_Id, testCreationTableId, question_id } = req.params;
@@ -585,62 +663,46 @@ router.put('/updateResponse/:user_Id/:testCreationTableId/:question_id', async (
       return res.status(400).json({ success: false, message: "Invalid data types" });
     }
 
-    // Continue with processing
     const optionIndexes1 = req.body.updatedResponse.optionIndexes1.join(",");
     const optionIndexes2 = req.body.updatedResponse.optionIndexes2.join(",");
     const calculatorInputValue = req.body.updatedResponse.calculatorInputValue;
 
+    // Check if the response exists
     const existingResponseQuery = `
       SELECT * FROM user_responses
       WHERE user_Id = ? AND testCreationTableId = ? AND question_id = ?
     `;
 
-    const existingResponseValues = [
-      userIdNumber,
-      testCreationTableIdNumber,
-      questionId
-    ];
+    const existingResponseValues = [userIdNumber, testCreationTableIdNumber, questionId];
 
-    const existingResponseResult = await new Promise((resolve, reject) => {
-      db.query(existingResponseQuery, existingResponseValues, (err, result) => {
-        if (err) {
-          console.error("Error checking existing response in the database:", err);
-          reject(err);
-        } else {
-          resolve(result);
-        }
-      });
-    });
+    const existingResponseResult = await db.query(existingResponseQuery, existingResponseValues);
 
     if (existingResponseResult.length > 0) {
-      const updateQuery = `
-        UPDATE user_responses
-        SET user_answer = ?
+      // Delete the existing response
+      const deleteQuery = `
+        DELETE FROM user_responses
         WHERE user_Id = ? AND testCreationTableId = ? AND question_id = ?
       `;
 
-      const updateValues = [
-        optionIndexes1 + "," + optionIndexes2 + " " + calculatorInputValue,
+      await db.query(deleteQuery, existingResponseValues);
+
+      // Insert the new response
+      const insertQuery = `
+        INSERT INTO user_responses (user_Id, testCreationTableId, question_id, user_answer)
+        VALUES (?, ?, ?, ?)
+      `;
+
+      const insertValues = [
         userIdNumber,
         testCreationTableIdNumber,
-        questionId
+        questionId,
+        optionIndexes1 + "," + optionIndexes2 + " " + calculatorInputValue
       ];
 
-      await new Promise((resolve, reject) => {
-        db.query(updateQuery, updateValues, (err, result) => {
-          if (err) {
-            console.error("Error updating response in the database:", err);
-            reject(err);
-          } else {
-            console.log(`Response for question ${questionId} updated in the database`);
-            resolve(result);
-          }
-        });
-      });
+      await db.query(insertQuery, insertValues);
 
       res.json({ success: true, message: "Response updated successfully" });
     } else {
-      // Handle the case where the response does not exist
       res.status(404).json({ success: false, message: "Response not found" });
     }
   } catch (error) {
@@ -648,7 +710,6 @@ router.put('/updateResponse/:user_Id/:testCreationTableId/:question_id', async (
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 });
-
 
 
 router.delete('/clearResponse/:questionId', async (req, res) => {

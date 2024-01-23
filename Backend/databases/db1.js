@@ -7,7 +7,7 @@ const mysql = require("mysql");
     host: 'localhost',
     user: 'root',
     password: '',
-    database: 'adminnew',
+    database: 'admin_project',
   
   });
 
