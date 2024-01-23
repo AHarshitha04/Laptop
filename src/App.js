@@ -262,16 +262,16 @@ const App = () => {
           path="/General_intructions_page/:testCreationTableId"
           element={<PrivateRoute element={<General_intructions_page />} />}
         />
-     <Route
+     {/* <Route
           path="/QuestionPaper/questionOptions/:testCreationTableId"
           element={<PrivateRoute element={<QuestionPaper />} />}
-        /> 
+        />  */}
 {/* ----------------demo------------------------------------------------------------------ */}
 
-{/* <Route
+<Route
           path="/QuestionPaper/questionOptions/:testCreationTableId"
           element={<PrivateRoute element={<DemoDeleteItsNotImp />} />}
-        />  */}
+        /> 
 
 {/* ----------------demo------------------------------------------------------------------ */}
 

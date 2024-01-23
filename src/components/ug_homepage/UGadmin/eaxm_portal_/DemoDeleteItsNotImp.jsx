@@ -14,7 +14,7 @@ const QuestionPaper = () => {
   const [questionData, setQuestionData] = useState({ questions: [] });
   const [value, setValue] = useState("");
 
-  const { subjectId, testCreationTableId, userId } = useParams();
+  const { subjectId, testCreationTableId, userId, question_id, user_Id } = useParams();
   const [Subjects, setSubjects] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedSubject, setSelectedSubject] = useState(null);
@@ -435,15 +435,21 @@ const QuestionPaper = () => {
     console.log("Updated Map in useEffect:", selectedAnswersMap3);
   }, [selectedAnswersMap3]);
 
+
   const handleSaveNextQuestion = async () => {
+    // ------------------------------------ button functionality --------------------------------------------
+    // Update question status for the current question
     const updatedQuestionStatus = [...questionStatus];
-    const currentQuestion = questionData.questions[currentQuestionIndex];
+
     const calculatorInputValue = value;
+
+    const currentQuestion = questionData.questions[currentQuestionIndex];
+
     const isCurrentQuestionAnswered =
       selectedAnswersMap1[currentQuestion.question_id] !== undefined ||
       (selectedAnswersMap2[currentQuestion.question_id] &&
-        selectedAnswersMap2[currentQuestion.question_id].length > 0) ||
-      calculatorInputValue !== "";
+        selectedAnswersMap2[currentQuestion.question_id].length > 0)||
+        calculatorInputValue !== "";
 
     const isResponseCleared =
       selectedAnswersMap1[currentQuestion.question_id] === null ||
@@ -524,37 +530,65 @@ const QuestionPaper = () => {
 
         const questionId = currentQuestion.question_id;
 
-        // console.log("Responses to be sent:", responses);
-        const responses = {
-          userId: userId,
-          testCreationTableId: testCreationTableId,
-          [questionId]: {
+        const hasAnswered = answeredQuestionsMap[questionId];     
+        // If the user has answered, update the existing response
+        if (hasAnswered) {
+          const updatedResponse = {
             optionIndexes1: optionIndexes1.map((index) =>
               String.fromCharCode("a".charCodeAt(0) + index)
             ),
             optionIndexes2: optionIndexes2.map((index) =>
               String.fromCharCode("a".charCodeAt(0) + index)
             ),
-            calculatorInputValue: calculatorInputValue, // Add the calculator value to responses
-          },
-        };
+            calculatorInputValue: calculatorInputValue,
+          };
 
-        const saveResponse = await axios.post(
-          "http://localhost:5001/QuestionPaper/response",
-          {
-            responses,
-            userId,
-            testCreationTableId,
-          }
-        );
+          const updateResponse = await axios.post(
+            `http://localhost:5001/QuestionPaper/updateResponse/${userId}/${testCreationTableId}/${questionId}`,
+            {
+              updatedResponse,
+              // userId,
+              // testCreationTableId,
+            }
+          );
 
-        console.log(saveResponse.data);
-        console.log("Handle Next Click - New Response Saved");
+          console.log(updateResponse.data);
+          console.log("Existing Response Updated");
+        } else {
+          // Responses object
+          const responses = {
+            userId: userId,
+            testCreationTableId: testCreationTableId,
+            [questionId]: {
+              optionIndexes1: optionIndexes1.map((index) =>
+                String.fromCharCode("a".charCodeAt(0) + index)
+              ),
+              optionIndexes2: optionIndexes2.map((index) =>
+                String.fromCharCode("a".charCodeAt(0) + index)
+              ),
+              calculatorInputValue: calculatorInputValue,
+            },
+          };
 
-        setAnsweredQuestionsMap((prevMap) => ({
-          ...prevMap,
-          [questionId]: true,
-        }));
+          // If the user has not answered, save a new response
+          const saveResponse = await axios.post(
+            "http://localhost:5001/QuestionPaper/response",
+            {
+              responses,
+              userId,
+              testCreationTableId,
+            }
+          );
+
+          console.log(saveResponse.data);
+          console.log("New Response Saved");
+
+          // Update answeredQuestionsMap to indicate that the question has been answered
+          setAnsweredQuestionsMap((prevMap) => ({
+            ...prevMap,
+            [questionId]: true,
+          }));
+        }
 
         setClickCount((prevCount) => prevCount + 1);
       }
@@ -743,8 +777,6 @@ const QuestionPaper = () => {
           return;
         }
 
-        
-        const calculatorInputValue = value;
         const currentQuestion = questionData.questions[currentQuestionIndex];
         const selectedOption1 =
           selectedAnswersMap1[currentQuestion.question_id];
@@ -770,7 +802,6 @@ const QuestionPaper = () => {
             optionIndexes2: optionIndexes2.map((index) =>
               String.fromCharCode("a".charCodeAt(0) + index)
             ),
-            calculatorInputValue: calculatorInputValue, // Add the calculator value to responses
           },
         };
 
@@ -824,7 +855,6 @@ const QuestionPaper = () => {
       const updatedTimers = [...timers];
       updatedTimers[prevIndex] = timer;
       setTimers(updatedTimers);
-
       // Move to the previous question
       return prevIndex - 1;
     });
@@ -1159,7 +1189,7 @@ const QuestionPaper = () => {
                                           type="text"
                                           name={`question-${currentQuestionIndex}`}
                                           value={value}
-                                          // onChange={(e) => onAnswerSelected3(e)}
+                                          onChange={(e) => onAnswerSelected3(e)}
                                         />
                                       </div>
                                       <div>
@@ -1316,7 +1346,7 @@ const QuestionPaper = () => {
                                           type="text"
                                           name={`question-${currentQuestionIndex}`}
                                           value={value}
-                                          // onChange={(e) => onAnswerSelected3(e)}
+                                          onChange={(e) => onAnswerSelected3(e)}
                                         />
                                       </div>
                                       <div>
@@ -1589,6 +1619,7 @@ const QuestionPaper = () => {
 
           <div className="quiz_exam_interface_body_right_container">
             {/* --------------- right bar -------------------- */}
+
             <div className="rightsidebar">
               <DemoDeleteItsNotImp2
                 onQuestionSelect={handleQuestionSelect}
