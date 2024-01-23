@@ -125,7 +125,7 @@ const ButtonsFunctionality = ({
     }:${remainingSeconds > 9 ? remainingSeconds : "0" + remainingSeconds}`;
   };
   useEffect(() => {
-    // setWTimer(timer);
+    setWTimer(wtimer);
     let interval;
     interval = setInterval(() => {
       setWTimer((prevTimer) => prevTimer + 1);
@@ -194,7 +194,7 @@ const ButtonsFunctionality = ({
           />
           <p>Name of the person : {userData.username}</p>
 
-          <p>Time Left: {WformatTime(wtimer)}</p>
+          {/* <p>Time Left: {WformatTime(wtimer)}</p> */}
         </div>
 
         <div className="buttons_container">
