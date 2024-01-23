@@ -543,12 +543,12 @@ const QuestionPaper = () => {
             calculatorInputValue: calculatorInputValue,
           };
 
-          const updateResponse = await axios.post(
+          const updateResponse = await axios.put(
             `http://localhost:5001/QuestionPaper/updateResponse/${userId}/${testCreationTableId}/${questionId}`,
             {
               updatedResponse,
-              // userId,
-              // testCreationTableId,
+              userId,
+              testCreationTableId,
             }
           );
 
@@ -1633,6 +1633,8 @@ const QuestionPaper = () => {
                 selectedSubject={selectedSubject}
                 questionData={questionData}
                 updateQuestionStatus={updateQuestionStatus}
+                // seconds={seconds}
+                seconds={600}
               />
 
               {/* <Link to={`/TestResultsPage/${testCreationTableId}`}>Yes FOr Link</Link> */}

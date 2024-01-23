@@ -243,6 +243,7 @@ export const General_intructions_page_container = ({ seconds }) => {
     }, 1000);
     navigate("/Paper1");
   };
+  
   const [isChecked, setIsChecked] = useState(false);
 
   const handleCheckboxChange = (e) => {

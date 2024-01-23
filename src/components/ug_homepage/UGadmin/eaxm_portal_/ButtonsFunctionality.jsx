@@ -115,7 +115,7 @@ const ButtonsFunctionality = ({
     data: PropTypes.object, // Add the appropriate prop type
     updateQuestionStatus: PropTypes.func.isRequired, // Add the prop type
   };
-
+  // const [timer, setWTimer] = useState(0);
   const WformatTime = (seconds) => {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
@@ -124,23 +124,34 @@ const ButtonsFunctionality = ({
       minutes > 9 ? minutes : "0" + minutes
     }:${remainingSeconds > 9 ? remainingSeconds : "0" + remainingSeconds}`;
   };
-
   useEffect(() => {
-    const interval = setInterval(() => {
-      setWTimer((prevTimer) => prevTimer - 1);
+    // setWTimer(timer);
+    let interval;
+    interval = setInterval(() => {
+      setWTimer((prevTimer) => prevTimer + 1);
     }, 1000);
 
-    // Clear the interval and handle time-up logic when timer reaches 0
-    if (wtimer <= 0) {
-      clearInterval(interval);
-      // Handle time-up logic here (e.g., navigate to a different component)
-    }
-
-    // Clean up the interval on component unmount or when navigating away
     return () => {
       clearInterval(interval);
     };
   }, [wtimer]);
+
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     setWTimer((prevTimer) => prevTimer - 1);
+  //   }, 1000);
+
+  //   // Clear the interval and handle time-up logic when timer reaches 0
+  //   if (wtimer <= 0) {
+  //     clearInterval(interval);
+  //     // Handle time-up logic here (e.g., navigate to a different component)
+  //   }
+
+  //   // Clean up the interval on component unmount or when navigating away
+  //   return () => {
+  //     clearInterval(interval);
+  //   };
+  // }, [wtimer]);
 
   //user name
   const [userData, setUserData] = useState({});
