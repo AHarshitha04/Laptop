@@ -26,6 +26,28 @@ router.get('/getGenderOptions', async (req, res) => {
     }
   });
 
+  router.post('/empinfo', async (req, res) => {
+    
+    const { login, password,firstName,lastName,motherName,fatherName,dateOfBirth,motherTongue,bloodGroup } = req.body;
+  
+    try {
+      const [empinfo] = await db.query(
+        'INSERT INTO egardtutor_employees_registration (EmpoyeeEmail, EmpoyeePassword) VALUES (?, ?)',
+        [login, password]
+      );
 
+      const insertedempinfo = empinfo.insertId;
+     {
+        await db.query(
+          'INSERT INTO ed_basicinfo (Empoye_ID, empFirstName,empLastName,empMotherName,empFatherName,empDOB,empMoterTongue,empbloodGroup) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+          [insertedempinfo,firstName,lastName,motherName,fatherName,dateOfBirth,motherTongue,bloodGroup]
+        );
+      }
+      res.json({ message: 'Emp created successfully', empinfo });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  });
 
 module.exports = router;
