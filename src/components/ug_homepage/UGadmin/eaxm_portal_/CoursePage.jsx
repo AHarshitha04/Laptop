@@ -47,6 +47,13 @@ const CoursePage = () => {
   console.log("Exam ID:", examId); // Log the examId
   console.log("Course Card State:", courseCard); // Log the courseCard state
 
+  
+  const handleBuyNow = (courseDetails) => {
+    
+    console.log(`Buy Now clicked for course ${courseDetails.courseCreationId}`);
+
+  };
+
   return (
     <div>
       {/* <div><Header/></div> */}
@@ -83,6 +90,9 @@ const CoursePage = () => {
               <Link to={`/Test_List/${courseDetails.courseCreationId}`}>
                 Test Page
               </Link>
+              <button onClick={() => handleBuyNow(courseDetails)}>
+                Buy Now
+              </button>
             </div>
           </div>
         ))}
