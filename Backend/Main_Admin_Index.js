@@ -12,7 +12,7 @@ const path = require('path');
 const imagesDirectory = path.join(__dirname, 'uploads');
 app.use('/uploads', express.static(imagesDirectory));
 const ughomepage_banner_login = require('./mainWebsitAdmin/ughomepage_banner_login')
-
+require("dotenv").config();
 //---------------------- databases admin_project imports ----------------------
 const db1 = require('./databases/db1');
 //---------------------- databases admin_project1  imports----------------------
@@ -73,6 +73,11 @@ app.use("/Employee_info", Employee_info);
 const BuyCourses =require('./StudentDashboard/BuyCourses')
 
 app.use("/BuyCourses", BuyCourses);
+
+
+const PayU =require('../quiz_ots/PayU')
+app.use("/PayU",PayU)
+
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
