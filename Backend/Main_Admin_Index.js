@@ -75,10 +75,10 @@ const BuyCourses =require('./StudentDashboard/BuyCourses')
 app.use("/BuyCourses", BuyCourses);
 
 
-const PayU =require('../quiz_ots/PayU')
-app.use("/PayU",PayU)
-
-
+// const PayU =require('./quiz_ots/PayU')
+// app.use("/PayU",PayU)
+ const PayU =require('./quiz_ots/PayU')
+ app.use("/PayU",PayU)
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
   });
