@@ -871,15 +871,37 @@ useEffect(() => {
               ),
               calculatorInputValue: calculatorInputValue,
             };
-            console.log("egrad")
+
+            const updateRespons = await axios.put(
+              `http://localhost:5001/QuestionPaper/updateResponse/${questionId}`,
+              {
+                updatedResponse,
+                userId,
+                testCreationTableId,
+              }
+            );
+            console.log("egrad", updateRespons)
             console.log("updatedResponse", updatedResponse)
             console.log("hiiii")
             console.log("The question answer is  updated");
             // You can perform additional actions if the question is already answered
           } else {
-            
+            const responses = {
+              userId: userId,
+              testCreationTableId: testCreationTableId,
+              [questionId]: {
+                optionIndexes1: optionIndexes1.map((index) =>
+                  String.fromCharCode("a".charCodeAt(0) + index)
+                ),
+                optionIndexes2: optionIndexes2.map((index) =>
+                  String.fromCharCode("a".charCodeAt(0) + index)
+                ),
+                calculatorInputValue: calculatorInputValue,
+              },
+            };
             console.log("hello")
             console.log("The question is answered for the first time");
+            console.log("responses", responses)
             // You can perform additional actions if the question is answered for the first time
   
             // Update answeredQuestionsMap to indicate that the question has been answered

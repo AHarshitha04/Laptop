@@ -823,18 +823,22 @@ router.post("/response", async (req, res) => {
 //       WHERE user_Id = ? AND testCreationTableId = ? AND question_id = ?
 
 
-router.put('/updateResponse/:questionId', (req, res) => {
+router.put('/updateResponse/:questionId', async (req, res) => {
   try {
     const questionId = parseInt(req.params.questionId, 10);
-    const { updatedResponse } = req.body;
+    const { updatedResponse, userId, testCreationTableId } = req.body;
 
-    if (updatedResponse && updatedResponse.optionIndexes1 && updatedResponse.optionIndexes2) {
-      const userAnswer1 = updatedResponse.optionIndexes1.join(',');
+    if (
+      updatedResponse &&
+      updatedResponse.optionIndexes1 &&
+      updatedResponse.optionIndexes2
+    ) {
+      const userAnswer1 = updatedResponse.optionIndexes1;
       const userAnswer2 = updatedResponse.optionIndexes2.join(',');
 
       const sql = 'UPDATE user_responses SET user_answer = ? WHERE question_id = ?';
 
-      db.query(sql, [userAnswer1 + ',' + userAnswer2, questionId], (err, result) => {
+      db.query(sql, [userAnswer1 + userAnswer2, questionId], (err, result) => {
         if (err) {
           console.error('Error updating response in the database:', err);
           res.status(500).json({ success: false, message: 'Internal server error' });
@@ -857,6 +861,7 @@ router.put('/updateResponse/:questionId', (req, res) => {
     res.status(500).json({ success: false, message: 'Internal server error' });
   }
 });
+
 
 
 
