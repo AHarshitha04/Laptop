@@ -94,7 +94,7 @@ import Instructions from "./components/ug_homepage/UGadmin/eaxm_portal_/Instruct
 import General_intructions_page from "./components/ug_homepage/UGadmin/eaxm_portal_/General_intructions_page.jsx";
 
 import CoursePage from "./components/ug_homepage/UGadmin/eaxm_portal_/CoursePage.jsx";
-
+// import ButtonsFunctionality from "./components/ug_homepage/UGadmin/eaxm_portal_/ButtonsFunctionality.jsx"
 // import ExamSummary from './components/ug_homepage/UGadmin/eaxm_portal_/Exam_Summary';
 import SubmitPage from "./components/ug_homepage/UGadmin/eaxm_portal_/Submit_Page";
 import TestResultsPage from "./components/ug_homepage/UGadmin/eaxm_portal_/TestResultsPage";
@@ -262,6 +262,7 @@ const App = () => {
           path="/General_intructions_page/:testCreationTableId"
           element={<PrivateRoute element={<General_intructions_page />} />}
         />
+        {/* <Route path="/ButtonsFunctionality" element={<ButtonsFunctionality    seconds={600}/>}/> */}
      {/* <Route
           path="/QuestionPaper/questionOptions/:testCreationTableId"
           element={<PrivateRoute element={<QuestionPaper />} />}
@@ -270,7 +271,7 @@ const App = () => {
 
 <Route
           path="/QuestionPaper/questionOptions/:testCreationTableId"
-          element={<PrivateRoute element={<DemoDeleteItsNotImp />} />}
+          element={<PrivateRoute element={<DemoDeleteItsNotImp seconds={600}/>} />} 
         /> 
 
 {/* ----------------demo------------------------------------------------------------------ */}

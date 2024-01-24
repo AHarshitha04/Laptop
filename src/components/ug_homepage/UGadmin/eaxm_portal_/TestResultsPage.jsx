@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 // import ButtonsFunctionality from "./ButtonsFunctionality";
 import "./TestResultPage.css";
+import DemoDeleteItsNotImp from "./DemoDeleteItsNotImp";
+
 const TestResultsPage = () => {
   const [userData, setUserData] = useState({});
   useEffect(() => {
@@ -101,7 +103,7 @@ const TestResultsPage = () => {
   //     amt: 2100,
   //   },
   // ];
-  const { testCreationTableId, user_Id } = useParams();
+  const { testCreationTableId, user_Id,userId } = useParams();
 
   const [questionCount, setQuestionCount] = useState(null);
 
@@ -133,10 +135,9 @@ const TestResultsPage = () => {
         console.error("Error fetching question count:", error);
       }
     };
-  
+
     fetchQuestionCount();
   }, [testCreationTableId]);
-
 
   const [attemptCount, setAttemptCount] = useState(null);
   useEffect(() => {
@@ -260,6 +261,30 @@ const TestResultsPage = () => {
     fetchEmployeeData();
   }, []);
 
+  // /getTimeLeftSubmissions/:userId/:testCreationTableId
+
+  const [TimeSpent, setTimeSpent] = useState(null);
+  useEffect(() => {
+    const fetchQuestionCount = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:5001/QuestionPaper/getTimeLeftSubmissions/${userId}/${testCreationTableId}`
+          // `http://localhost:5001/QuestionPaper/getTimeLeftSubmissions/2/1`
+
+        );
+        const data = await response.json();
+        setTimeSpent(data);
+        // console.log(setAttemptCount, data);
+      } catch (error) {
+        console.error("Error fetching question count:", error);
+      }
+    };
+
+    fetchQuestionCount();
+  }, [testCreationTableId, userId]);
+  console.log("hello")
+  console.log(TimeSpent);
+
   return (
     <div className="testResult_-container">
       <h1>Scrore Card</h1>
@@ -278,22 +303,6 @@ const TestResultsPage = () => {
         </div>
       </div>
 
-      {/* {userData.username} */}
-
-      {/* <h2>Score Card</h2>
-      <div>
-        <div>
-          <h1>Your Test Performance</h1>
-          <p>Your Score</p>
-          <p>Attempted Questions</p>
-          <p>Correct</p>
-          <p>Top Score</p>
-          <p>Live Rank</p>
-        </div>
-
-        <div></div>
-      </div> */}
-
       <div className="testResultTable">
         <table id="customers">
           <tr>
@@ -304,15 +313,14 @@ const TestResultsPage = () => {
             <td>Correct Answers</td>
             <td>Incorrect Answers</td>
             <td>Score</td>
+            <td>Time Spent</td>
           </tr>
           <tr>
             <td>
               {questionCount && questionCount.length > 0 ? (
                 <p>{questionCount[0].total_question_count}</p>
               ) : (
-                <span>
-                  Loading...
-                </span>
+                <span>Loading...</span>
               )}
             </td>
             <td>
@@ -320,18 +328,14 @@ const TestResultsPage = () => {
               {attemptCount && attemptCount.length > 0 ? (
                 <p>{attemptCount[0].total_attempted_questions}</p>
               ) : (
-                <span>
-                Loading...
-              </span>
+                <span>Loading...</span>
               )}
             </td>
             <td>
               {correctAnswers && correctAnswers.length > 0 ? (
                 <p>{correctAnswers[0].total_matching_rows}</p>
               ) : (
-                <span>
-                Loading...
-              </span>
+                <span>Loading...</span>
               )}
             </td>
             <td>
@@ -339,12 +343,43 @@ const TestResultsPage = () => {
               {incorrectAnswers && incorrectAnswers.length > 0 ? (
                 <p>{incorrectAnswers[0].total_unmatched_rows}</p>
               ) : (
-                <span>
-                Loading...
-              </span>
+                <span>Loading...</span>
               )}
             </td>
             <td>{score.netMarks}</td>
+            {
+  TimeSpent ? (
+    TimeSpent.map((time, index) => {
+      console.log('Time:', time); // Add this line for debugging
+      return (
+        <tr key={index}>
+          <td>{time.time_left}</td>
+        </tr>
+      );
+    })
+  ) : (
+    <tr>
+      <td colSpan="6">Loading...</td>
+    </tr>
+  )
+}
+            {/* {
+              TimeSpent.map((time, index) => (
+                <tr key={index}>
+                  <td>{time.time_left}</td>
+                </tr>
+              ))} */}
+            {/* {TimeSpent ? (
+              TimeSpent.map((time, index) => (
+                <tr key={index}>
+                  <td>{time.time_left}</td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="6">Loading...</td>
+              </tr>
+            )} */}
           </tr>
         </table>
       </div>
