@@ -5,6 +5,8 @@ const Employee_Information = () => {
   const [step, setStep] = useState(1);
   const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
+  const [designationOptions, setDesignationOptions] = useState([]);
+  const [selectedDesignation, setSelectedDesignation] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [motherName,setMotherName] = useState('');
@@ -39,6 +41,14 @@ const Employee_Information = () => {
   const[eseRank,setEseRank]=useState('');
   const[psuRank,setPsuRank]=useState('');
   const[anyOtherRank,setAnyOtherRank]=useState('');
+
+  useEffect(() => {
+    // Fetch gender options from the database
+    fetch('http://localhost:5001/Employee_info/getGenderDesignationOptions')
+      .then((response) => response.json())
+      .then((data) => setDesignationOptions(data))
+      .catch((error) => console.error('Error fetching DesignationOptions:', error));
+  }, []);
   useEffect(() => {
     // Fetch gender options from the database
     fetch('http://localhost:5001/Employee_info/getGenderOptions')
@@ -108,8 +118,8 @@ const Employee_Information = () => {
         // Make a POST request to your backend endpoint (/empinfo)
         const response = await axios.post('http://localhost:5001/Employee_Info/empinfo', {
           login,
-          password,firstName,lastName,motherName,fatherName,dateOfBirth,motherTongue,bloodGroup,
-          // Include other form data here
+          password,firstName,lastName,motherName,fatherName,dateOfBirth,motherTongue,bloodGroup,selectedGender: selectedGender, 
+          selectedrelationshipStatus: selectedrelationshipStatus,
         });
   
         // Handle the response if needed
@@ -154,6 +164,22 @@ const Employee_Information = () => {
            //required
           />
         </div>
+        <div>
+            <label>Designation:</label>
+            {designationOptions.map((designationOption) => (
+              <div key={designationOption.empdesignationId }>
+                <input
+                  type="radio"
+                  id={designationOption.empdesignationId }
+                  name="designation"
+                  value={designationOption.empdesignationId }
+                  checked={selectedDesignation === designationOption.empdesignationId }
+                  onChange={() => setSelectedDesignation(designationOption.empdesignationId )}
+                />
+                <label htmlFor={designationOption.empdesignationId}>{designationOption.Designation}</label>
+              </div>
+            ))}
+          </div>
           <div> 
             <h2>Basic Details</h2>
           <div>
@@ -214,9 +240,9 @@ const Employee_Information = () => {
                   type="radio"
                   id={option.empGenderId}
                   name="gender"
-                  value={option.Gender}
-                  checked={selectedGender === option.Gander}
-                  onChange={() => setSelectedGender(option.Gander)}
+                  value={option.empGenderId}
+                  checked={selectedGender === option.empGenderId}
+                  onChange={() => setSelectedGender(option.empGenderId)}
                 />
                 <label htmlFor={option.empGenderId}>{option.Gander}</label>
               </div>
@@ -224,19 +250,19 @@ const Employee_Information = () => {
           </div>
           <div>
             <label>RELATIONSHIP STATUS</label>
-            {relationshipStatus.map((option) => (
-              <div key={option.empRSId}>
-                <input
-                  type="radio"
-                  id={option.empRSId}
-                  name="gender"
-                  value={option.RelationshipStatus}
-                  checked={selectedrelationshipStatus === option.RelationshipStatus}
-                  onChange={() => setSelectedRelationshipStatus(option.RelationshipStatus)}
-                />
-                <label htmlFor={option.empRSId}>{option.RelationshipStatus}</label>
-              </div>
-            ))}
+            {relationshipStatus.map((relationshipStatusoption) => (
+  <div key={relationshipStatusoption.empRSId}>
+    <input
+      type="radio"
+      id={relationshipStatusoption.empRSId}
+      name="relationshipStatus"
+      value={relationshipStatusoption.empRSId}
+      checked={selectedrelationshipStatus === relationshipStatusoption.empRSId}
+      onChange={() => setSelectedRelationshipStatus(relationshipStatusoption.empRSId)}
+    />
+    <label htmlFor={relationshipStatusoption.empRSId}>{relationshipStatusoption.RelationshipStatus}</label>
+  </div>
+))}
           </div>
           <div>
           <label htmlFor="MotherTongue">MOTHER TONGUE:</label>
