@@ -1591,7 +1591,7 @@ useEffect(() => {
                         alt={`Question ${currentQuestion.question_id}`}
                         style={{ width: "583px" }}
                       />
-                      <h1> {currentQuestion.question_id}</h1>
+                      {/* <h1> {currentQuestion.question_id}</h1> */}
                     </div>
 
                     <div>
@@ -1684,7 +1684,7 @@ useEffect(() => {
                                     "MSQN(MSQ with -ve marking)"
                                   ) && (
                                     <div>
-                                      {" "}
+                                     
                                       <input
                                         className="opt_btns"
                                         type="checkbox"
@@ -1725,8 +1725,6 @@ useEffect(() => {
                                     "MSQ(MSQ without -ve marking)"
                                   ) && (
                                     <div>
-                                      <h2>{questionData.questions[currentQuestionIndex].useranswer.ans} </h2>
-
                                       <input
                                         className="opt_btns"
                                         type="checkbox"
