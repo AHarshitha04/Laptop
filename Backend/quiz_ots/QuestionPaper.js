@@ -191,7 +191,7 @@ router.get("/questionOptions/:testCreationTableId", async (req, res) => {
     doc.subjectId, doc.testCreationTableId,
     P.paragraphImg, p.paragraph_Id,
     pq.paragraphQNo_Id, pq.paragraphQNo,
-    ur.user_answer
+    ur.user_answer, ur.user_Sno
 FROM 
     questions q 
     LEFT OUTER JOIN options o ON q.question_id = o.question_id
@@ -203,7 +203,7 @@ FROM
     LEFT OUTER JOIN paragraph p ON q.document_Id = p.document_Id
     LEFT OUTER JOIN paragraphqno pq ON p.paragraph_Id = pq.paragraph_Id AND q.question_id = pq.question_id
     LEFT OUTER JOIN ots_document doc ON q.document_Id = doc.document_Id
-    LEFT OUTER JOIN user_responses ur ON q.document_Id = doc.document_Id
+    LEFT OUTER JOIN user_responses ur ON  q.question_id = ur.question_id 
 
 WHERE 
     doc.testCreationTableId = ?
@@ -255,7 +255,7 @@ ORDER BY q.question_id ASC;
             },
             useranswer: {
               ans: row.user_answer,
-              
+              urid: row.question_id,
             },
             marks: {
               markesId: row.markesId,
@@ -1042,8 +1042,7 @@ router.get("/incorrectAnswers/:testCreationTableId/:user_Id",
   }
 );
 
-router.get(
-  "/score/:testCreationTableId/:user_Id",
+router.get("/score/:testCreationTableId/:user_Id",
   async (req, res) => {
     const { testCreationTableId, user_Id } = req.params;
 
