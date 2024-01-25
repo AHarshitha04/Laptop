@@ -125,7 +125,8 @@ import EmployeeLOGIN_differentation from "./components/EmployeePortal/EmployeeLO
 
 // import EmployeeLOGIN_differentation from "./components/EmployeePortal/EmployeeLOGIN_differentation.js";
 
-
+import PayU from "./components/payu/PayUMoneyForm.js";
+import Payupaymentgateway from "./components/payu/Payupaymentgateway.js";
 
 
 const PrivateRoute = ({ element }) => {
@@ -289,6 +290,10 @@ const App = () => {
           path="/Coureseupdate_admin/:courseCreationId"
           element={<PrivateRoute element={<Coureseupdate_admin />} />}
         />
+         <Route
+          path="/payugateway"
+          element={<PrivateRoute element={<Payupaymentgateway />} />}
+        />
         <Route
           path="/TestUpdateadmin/:testCreationTableId"
           element={<PrivateRoute element={<TestUpdateadmin />} />}
@@ -331,6 +336,7 @@ const App = () => {
         />
         {/* ---------- EmployeeDashboard ------------- */}
         <Route path="/Employee_dashboard" element={<EmployeeDashboard />} />
+        <Route path="/payu" element={<PayU/>}/>
       </Routes>
 
       {/* <Footer /> */}

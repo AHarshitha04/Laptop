@@ -1,8 +1,8 @@
 import React from 'react'
 
-import {key} from './test.js';
+// import {key} from './test.js';
 
-const payUPamentPage = ({setToggle,from,hash,transactionId}) => {
+const payUPamentPage = ({setToggle,form,hash,transactionId}) => {
   return (
     <div>
         <div>
@@ -13,7 +13,7 @@ const payUPamentPage = ({setToggle,from,hash,transactionId}) => {
 <span>pay Amount:{form?.amount}</span>
 </div>
 <form action="https://secure.payu.in/_payment" method="POST">
-<input type="hidden" name="key" value={key} />
+<input type="hidden" name="key" value='2RJzQH' />
 <input type="hidden" name="txnid" value={transactionId} />
 <input type="hidden" name="productinfo" value="TEST PRDOUCT" />
 <input type="hidden" name="amount" value={form?.amount} />

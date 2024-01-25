@@ -81,7 +81,7 @@ const PayUMoneyForm = () => {
   const [form, setForm] = useState({ name: '', email: '', number: '', amount: 0 });
   const [toggle, setToggle] = useState(1);
   const [hash, setHash] = useState(null);
-  const [transactionId, setTransactionId] = useState(null);
+  const [transactionId, setTransactionId] = useState('abc');
 
   const handleChange = (e) => {
     if (e.target.name === 'amount') {
@@ -141,7 +141,7 @@ const PayUMoneyForm = () => {
             </div>
             <div>
               <label>Amount</label>
-              <input value={form?.amount} required name='amount' type="text" onChange={handleChange} />
+              <input value={form?.amount} required name='amount' type="number" onChange={handleChange} />
             </div>
             <div><input type="checkbox" /> <label>Check me out</label></div>
             <button type="submit">Check Details</button>
