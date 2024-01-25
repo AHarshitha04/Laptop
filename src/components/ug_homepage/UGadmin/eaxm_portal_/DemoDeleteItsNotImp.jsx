@@ -348,6 +348,7 @@ useEffect(() => {
     setVisitedCount(counts.VisitedCount);
   }, [questionStatus]);
 
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -368,7 +369,6 @@ useEffect(() => {
 
     fetchData();
   }, [testCreationTableId]);
-  //end questionOptions use effect code
 
   const currentQuestion =
     questionData.questions && questionData.questions[currentQuestionIndex];
@@ -912,26 +912,7 @@ useEffect(() => {
   
             // If the user has answered, update the existing response
             if (hasAnswered) {
-              const updatedResponse = {
-                optionIndexes1: optionIndexes1.map((index) =>
-                  String.fromCharCode("a".charCodeAt(0) + index)
-                ),
-                optionIndexes2: optionIndexes2.map((index) =>
-                  String.fromCharCode("a".charCodeAt(0) + index)
-                ),
-                calculatorInputValue: calculatorInputValue,
-              };
-  
-              const updateResponse = await axios.put(
-                `http://localhost:5001/QuestionPaper/updateResponse/${userId}/${testCreationTableId}/${questionId}`,
-                {
-                  updatedResponse,
-                  userId,
-                  testCreationTableId,
-                }
-              );
-  
-              console.log(updateResponse.data);
+
               console.log("Existing Response Updated");
               console.log("updated reponse is saved")
             } else {
@@ -1007,97 +988,147 @@ useEffect(() => {
         return prevIndex + 1;
       }
     });
+
+
     try {
+      // Fetch question options
       const response = await fetch(
         `http://localhost:5001/QuestionPaper/questionOptions/${testCreationTableId}`
       );
       const result = await response.json();
-
       setQuestionData(result);
-
+  
+      // Fetch user data
       const token = localStorage.getItem("token");
       const response_user = await fetch(
         "http://localhost:5001/ughomepage_banner_login/user",
         {
           headers: {
-            Authorization: `Bearer ${token}`, // Attach token to headers for authentication
+            Authorization: `Bearer ${token}`,
           },
         }
       );
-
+  
       if (response_user.ok) {
         const userData = await response_user.json();
         setUserData(userData);
-
-        const userId = userData.id; // Move this line here to ensure userId is defined
-
+  
+        const userId = userData.id;
+  
         console.log("Test Creation Table ID:", testCreationTableId);
-        console.log("Current user_Id:", userId); // Now userId should be defined
-
+        console.log("Current user_Id:", userId);
+  
         if (!questionData || !questionData.questions) {
           console.error("Data or questions are null or undefined");
           return;
         }
-
+  
         const currentQuestion = questionData.questions[currentQuestionIndex];
-        const selectedOption1 =
-          selectedAnswersMap1[currentQuestion.question_id];
-        const selectedOption2 =
-          selectedAnswersMap2[currentQuestion.question_id];
-
+        const questionId = currentQuestion.question_id;
+        const calculatorInputValue = value;
+  
+        const selectedOption1 = selectedAnswersMap1[questionId];
+        const selectedOption2 = selectedAnswersMap2[questionId];
+  
         const optionIndexes1 =
           selectedOption1 !== undefined ? [selectedOption1] : [];
         const optionIndexes2 =
           selectedOption2 !== undefined ? selectedOption2 : [];
-
-        const questionId = currentQuestion.question_id;
-        console.log("vanakam");
-        console.log("Responses to be sent:", responses);
-
-        const responses = {
-          userId: userId,
-          testCreationTableId: testCreationTableId,
-          [questionId]: {
+  
+        const hasAnswered = answeredQuestionsMap[questionId];
+  
+        if (hasAnswered) {
+          const updatedResponse = {
             optionIndexes1: optionIndexes1.map((index) =>
               String.fromCharCode("a".charCodeAt(0) + index)
             ),
             optionIndexes2: optionIndexes2.map((index) =>
               String.fromCharCode("a".charCodeAt(0) + index)
             ),
-          },
-        };
-
-        const saveResponse = await axios.post(
-          "http://localhost:5001/QuestionPaper/response",
-          {
-            responses,
+            calculatorInputValue: calculatorInputValue,
+          };
+  
+          const updateRespons = await axios.put(
+            `http://localhost:5001/QuestionPaper/updateResponse/${questionId}`,
+            {
+              updatedResponse,
+              userId,
+              testCreationTableId,
+            }
+          );
+          console.log("egrad", updateRespons);
+          console.log("updatedResponse", updatedResponse);
+          console.log("hiiii");
+          console.log("The question answer is updated");
+          // You can perform additional actions if the question is already answered
+        } else {
+          const responses = {
+            userId: userId,
+            testCreationTableId: testCreationTableId,
+            [questionId]: {
+              optionIndexes1: optionIndexes1.map((index) =>
+                String.fromCharCode("a".charCodeAt(0) + index)
+              ),
+              optionIndexes2: optionIndexes2.map((index) =>
+                String.fromCharCode("a".charCodeAt(0) + index)
+              ),
+              calculatorInputValue: calculatorInputValue,
+            },
+          };
+          console.log("hello");
+          console.log("The question is answered for the first time");
+          console.log("responses", responses);
+          // You can perform additional actions if the question is answered for the first time
+  
+          // Update answeredQuestionsMap to indicate that the question has been answered
+          setAnsweredQuestionsMap((prevMap) => ({
+            ...prevMap,
+            [questionId]: true,
+          }));
+  
+          // If the user has answered, update the existing response
+          if (hasAnswered) {
+            console.log("Existing Response Updated 1");
+            console.log("updated response is saved");
+          } else {
+            // Responses object
+            const responses = {
+              userId: userId,
+              testCreationTableId: testCreationTableId,
+              [questionId]: {
+                optionIndexes1: optionIndexes1.map((index) =>
+                  String.fromCharCode("a".charCodeAt(0) + index)
+                ),
+                optionIndexes2: optionIndexes2.map((index) =>
+                  String.fromCharCode("a".charCodeAt(0) + index)
+                ),
+                calculatorInputValue: calculatorInputValue,
+              },
+            };
+  
+            // If the user has not answered, save a new response
+            const saveResponse = await axios.post(
+              "http://localhost:5001/QuestionPaper/response",
+              {
+                responses,
+                userId,
+                testCreationTableId,
+              }
+            );
+  
+            console.log(saveResponse.data);
+            console.log("New Response Saved");
+            console.log("response is saved");
           }
-        );
-
-        console.log(saveResponse.data);
-        console.log("Handle Next Click - New Response Saved");
-
-        setAnsweredQuestionsMap((prevMap) => ({
-          ...prevMap,
-          [questionId]: true,
-        }));
-
-        setClickCount((prevCount) => prevCount + 1);
-      } else {
-        // Handle errors, e.g., if user data fetch fails
+  
+          setClickCount((prevCount) => prevCount + 1);
+        }
       }
     } catch (error) {
       console.error("Error handling next click:", error);
     }
-
-    if (currentQuestionIndex < questionData.length - 1) {
-      // setCurrentQuestionIndex((prevActiveQuestion) => prevActiveQuestion + 1);
-    } else {
-      // setShowResult(true);
-      calculateResult();
-    }
+    // --------------------------------end of button functionality --------------------------------------------------
   };
-
   const markForReview = async () => {
     setCurrentQuestionIndex((prevIndex) => {
       if (prevIndex < questionData.questions.length - 1) {
@@ -1233,7 +1264,7 @@ useEffect(() => {
 
   
   const handleSubmit = async () => {
-    window.alert("Your Test has been Submitted!! Click Ok to See Result.");
+    window.alert("Your Test has been Submitted!! Click Ok to See Result.", calculateResult());
     setShowExamSumary(true);
     calculateResult();
     const counts = calculateQuestionCounts();
@@ -1271,7 +1302,6 @@ useEffect(() => {
   };
   
   
-
   const handlePreviousClick = () => {
     setCurrentQuestionIndex((prevIndex) => {
       // Save the current timer value for the question
@@ -1428,7 +1458,7 @@ useEffect(() => {
                               alt={`ParagraphImage ${currentQuestion.paragraph.paragraph_Id}`}
                               style={{ width: "700px" }}
                             />
-                            <h2>Question:</h2>
+                            <h2>Question:  </h2>
                           </>
                         )}
 
@@ -1437,6 +1467,7 @@ useEffect(() => {
                         alt={`Question ${currentQuestion.question_id}`}
                         style={{ width: "583px" }}
                       />
+                      <h1> {currentQuestion.question_id}</h1>
                     </div>
 
                     <div>
@@ -2025,6 +2056,8 @@ useEffect(() => {
                         <i className="fa-solid fa-angles-left"></i> Back
                       </button>
                       <button onClick={handleNextQuestion}>Next</button>
+                    
+                    
                       <button
                         style={{ background: "#f0a607da" }}
                         onClick={handleSubmit}
@@ -2115,3 +2148,4 @@ useEffect(() => {
 };
 
 export default QuestionPaper;
+
