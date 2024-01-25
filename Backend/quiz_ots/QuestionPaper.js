@@ -190,8 +190,8 @@ router.get("/questionOptions/:testCreationTableId", async (req, res) => {
     doc.documen_name, doc.sectionId, 
     doc.subjectId, doc.testCreationTableId,
     P.paragraphImg, p.paragraph_Id,
-    pq.paragraphQNo_Id, pq.paragraphQNo
-    
+    pq.paragraphQNo_Id, pq.paragraphQNo,
+    ur.user_answer
 FROM 
     questions q 
     LEFT OUTER JOIN options o ON q.question_id = o.question_id
@@ -203,7 +203,8 @@ FROM
     LEFT OUTER JOIN paragraph p ON q.document_Id = p.document_Id
     LEFT OUTER JOIN paragraphqno pq ON p.paragraph_Id = pq.paragraph_Id AND q.question_id = pq.question_id
     LEFT OUTER JOIN ots_document doc ON q.document_Id = doc.document_Id
-    
+    LEFT OUTER JOIN user_responses ur ON q.document_Id = doc.document_Id
+
 WHERE 
     doc.testCreationTableId = ?
 ORDER BY q.question_id ASC;
@@ -251,6 +252,10 @@ ORDER BY q.question_id ASC;
             answer: {
               answer_id: row.answer_id,
               answer_text: row.answer_text,
+            },
+            useranswer: {
+              ans: row.user_answer,
+              
             },
             marks: {
               markesId: row.markesId,
