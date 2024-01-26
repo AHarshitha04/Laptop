@@ -19,6 +19,7 @@ import Account_info from "../UGadmin/login/Account_info";
 import { FaLock, FaUserAlt, FaImage } from "react-icons/fa";
 import Image_Upload_for_Ac_ADMIN from "./Image_Upload_for_Ac_ADMIN";
 import { StudentDashborddountsection } from "../UGadmin/eaxm_portal_/StudentDashboard/Student_dashboard";
+import TestActivation_admin from "./TestActivation_admin";
 
 // import logo2 from './logo2.jpeg'
 // import HomeLandingPage from "../Frontend/Pages/HomeLandingPage/HomeLandingPage";
@@ -35,6 +36,10 @@ const Leftnav = () => {
     useState(false);
   const [showTestcreationadmin, setTestcreationadmin] = useState(false);
   const [showDocumentUpload_admin, setDocumentUpload_admin] = useState(false);
+
+  const [showTestActivation_admin, setShowTestActivation_admin] =
+    useState(false);
+
 
   const [showregisteredstudent, setShowregisteredstudent] = useState(false);
   const [showImage_Upload_for_Ac, setShowImage_Upload_for_Ac] = useState(false);
