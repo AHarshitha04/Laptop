@@ -41,6 +41,12 @@ const QuestionPaper = () => {
 
   const [calculatorValue, setCalculatorValue] = useState("");
 
+
+  const [userAnswer, setUserAnswer] = useState("");
+const [userHasAnswered, setUserHasAnswered] = useState(false);
+const [previousAnswer, setPreviousAnswer] = useState("");
+
+
   const calculateQuestionCounts = () => {
     let answered = 0;
     let notAnswered = 0;
@@ -117,6 +123,8 @@ const QuestionPaper = () => {
   const [selectedAnswersMap3, setSelectedAnswersMap3] = useState({});
 
   const [answeredQuestions, setAnsweredQuestions] = useState([]);
+
+  
   const [isPaused, setIsPaused] = useState(false);
   // const [showExamSumary, setShowExamSumary] = useState(false);
   const calculateResult = () => {};
@@ -241,7 +249,7 @@ const QuestionPaper = () => {
     updatedSelectedAnswers[activeQuestion] = optionIndex;
     setSelectedAnswers(updatedSelectedAnswers);
   };
-  const [answers, setAnswers] = useState(Array(questionData.questions.length).fill(''));
+
   const onAnswerSelected3 = (e) => {
     // Handle updating the state when the user answers a question
     const updatedAnswers = [...answers];
@@ -252,7 +260,6 @@ const QuestionPaper = () => {
       !questionData.questions ||
       !questionData.questions[currentQuestionIndex]
     ) {
-      // Handle the case where questions are not defined
       console.error("Invalid question data or index");
       return;
     }
@@ -260,27 +267,19 @@ const QuestionPaper = () => {
     const currentQuestion = questionData.questions[currentQuestionIndex];
     const questionId = currentQuestion.question_id;
 
-    console.log("questionId from onAnswerSelected3:", questionId);
-    console.log("Current Question:", currentQuestion);
-
     const inputValue = e.target.value;
     const parsedValue = parseFloat(inputValue);
-
+    setUserHasAnswered(true);
     setSelectedAnswersMap3((prevMap) => ({
       ...prevMap,
       [questionId]: parsedValue,
     }));
 
     setValue(parsedValue.toString());
-    console.log("Calculator Value:", parsedValue);
-    console.log("Calculator Input Text Box Value:", inputValue);
   };
-
-  // -------------- -------------- END TYPES OF INPUT VALUES ANSWERING FORMATE
-
-  // -------------------------------------------USE EFFECT FETCHING CODE-------------------------------
-
-  //Subjects fetching use effect code
+  
+  
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -442,20 +441,45 @@ const QuestionPaper = () => {
   }, [questionStatus]);
 
   // Reset calculator value when the question changes
+  // useEffect(() => {
+  //   if (
+  //     !questionData.questions ||
+  //     !questionData.questions[currentQuestionIndex]
+  //   ) {
+  //     // Handle the case where questions are not defined
+  //     return;
+  //   }
+
+  //   const questionId = questionData.questions[currentQuestionIndex].question_id;
+
+  //   if (selectedAnswersMap3.hasOwnProperty(questionId)) {
+  //     setValue(selectedAnswersMap3[questionId].toString());
+  //   } else {
+  //     setValue(""); // Clear the input if there is no selected answer
+  //   }
+  // }, [currentQuestionIndex, selectedAnswersMap3]);
+
+  // useEffect(() => {
+  //   console.log("Updated Map in useEffect:", selectedAnswersMap3);
+  // }, [selectedAnswersMap3]);
+
+
   useEffect(() => {
     if (
       !questionData.questions ||
       !questionData.questions[currentQuestionIndex]
     ) {
-      // Handle the case where questions are not defined
       return;
     }
 
     const questionId = questionData.questions[currentQuestionIndex].question_id;
 
     if (selectedAnswersMap3.hasOwnProperty(questionId)) {
-      setValue(selectedAnswersMap3[questionId].toString());
+      setPreviousAnswer(selectedAnswersMap3[questionId].toString());
+      setUserAnswer(selectedAnswersMap3[questionId].toString());
     } else {
+      setPreviousAnswer("");
+      setUserAnswer("");
       setValue(""); // Clear the input if there is no selected answer
     }
   }, [currentQuestionIndex, selectedAnswersMap3]);
@@ -558,6 +582,7 @@ const QuestionPaper = () => {
 
   //       const questionId = currentQuestion.question_id;
 
+
   //       if(answeredQuestionsMap[questionId]){
   //         const updatedResponse = {
   //           optionIndexes1: optionIndexes1.map((index) =>
@@ -567,14 +592,14 @@ const QuestionPaper = () => {
   //             String.fromCharCode("a".charCodeAt(0) + index)
   //           ),
   //         };
-
+  
   //         const updateResponse = await axios.put(
   //           `http://localhost:5001/QuestionPaper/updateResponse/${questionId}`,
   //           {
   //             updatedResponse,
   //           }
   //         );
-
+  
   //         console.log(updateResponse.data);
   //         console.log("Handle Next Click - Response Updated");
   //       }else{
@@ -611,6 +636,8 @@ const QuestionPaper = () => {
   //       }));
 
   //       }
+
+       
 
   //       setClickCount((prevCount) => prevCount + 1);
   //     }
@@ -715,7 +742,7 @@ const QuestionPaper = () => {
 
   //       const questionId = currentQuestion.question_id;
 
-  //       const hasAnswered = answeredQuestionsMap[questionId];
+  //       const hasAnswered = answeredQuestionsMap[questionId];     
   //       // If the user has answered, update the existing response
   //       if (hasAnswered) {
   //         const updatedResponse = {
@@ -1802,33 +1829,11 @@ const QuestionPaper = () => {
                                   ) && (
                                     <div className="calculator">
                                       <div className="display">
-                                        {/* <h2>Answer:{questionData.questions[currentQuestionIndex].useranswer.ans}</h2> */}
-                                        {/* <h2>Answer: {getAnswerForCurrentQuestion()}</h2> */}
-                                        {/* {questionData.questions[
-                                          currentQuestionIndex
-                                        ].useranswer.ans !== undefined ? (
-                                          <h2>
-                                            Answer:{" "}
-                                            {
-                                              questionData.questions[
-                                                currentQuestionIndex
-                                              ].useranswer.ans
-                                            }
-                                          </h2>
-                                        ) : (
-                                          // <h2>Answer: Not available</h2>
-                                          <></>
-                                        )} */}
-                                         {/* {answers[currentQuestionIndex] !== undefined ? (
-              <h2>Answer: {answers[currentQuestionIndex]}</h2>
-            ) : (
-              <></>
-            )} */}
-                                        <label>Answer:</label>
+                                          <h2>{questionData.questions[currentQuestionIndex].useranswer.ans}</h2>
                                         <input
                                           type="text"
                                           name={`question-${currentQuestionIndex}`}
-                                          value={value}
+                                          value={userHasAnswered ? userAnswer : value}
                                           onChange={(e) => onAnswerSelected3(e)}
                                           placeholder="Enter your answer"
                                           readOnly
@@ -1983,33 +1988,13 @@ const QuestionPaper = () => {
                                     "NATI( Numeric Answer type of questions with integer values)"
                                   ) && (
                                     <div className="calculator">
-                                      {/* <h2>Answer:{questionData.questions[currentQuestionIndex].useranswer.ans} </h2> */}
-                                      {/* {questionData.questions[
-                                        currentQuestionIndex
-                                      ].useranswer.ans !== undefined ? (
-                                        <h2>
-                                          Answer:{" "}
-                                          {
-                                            questionData.questions[
-                                              currentQuestionIndex
-                                            ].useranswer.ans
-                                          }
-                                        </h2>
-                                      ) : (
-                                        // <h2>Answer: Not available</h2>
-                                        <></>
-                                      )} */}
-                                       {/* {answers[currentQuestionIndex] !== undefined ? (
-              <h2>Answer: {answers[currentQuestionIndex]}</h2>
-            ) : (
-              <></>
-            )} */}
+                                      <h2>{questionData.questions[currentQuestionIndex].useranswer.ans} </h2>
+
                                       <div className="display">
-                                      <label>Answer:</label>
                                         <input
                                           type="text"
                                           name={`question-${currentQuestionIndex}`}
-                                          value={value}
+                                          value={userHasAnswered ? userAnswer : value}
                                           onChange={(e) => onAnswerSelected3(e)}
                                           placeholder="Enter your answer"
                                           readOnly
@@ -2157,7 +2142,7 @@ const QuestionPaper = () => {
                                       </div>
                                     </div>
                                   )}
-                                {/* calculator ============ */}
+ {/* calculator ============ */}
                                 {currentQuestionType &&
                                   currentQuestionType.typeofQuestion &&
                                   currentQuestionType.typeofQuestion.includes(
