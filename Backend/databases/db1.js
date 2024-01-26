@@ -7,7 +7,9 @@ const mysql = require("mysql");
     host: 'localhost',
     user: 'root',
     password: '',
-    database: 'admin_project',
+
+    database: 'quiz_app_admin',
+
   
   });
 

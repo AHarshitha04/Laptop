@@ -20,3 +20,40 @@
     background-color: #04AA6D;
     color: white;
   }
+
+  .testResult_-container{
+    margin:0 auto;
+    width: 80%;
+  }
+
+  .testResultTable {
+    width: 52%;
+    /* background: red; */
+    margin: 0 auto;
+    display: flex;
+}
+
+.testResultTable #customers{
+  width: 1000px;
+}
+
+.user_-infoFromResult{
+  display: flex;
+  gap: 4rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 2rem 0;
+}
+
+.testResultTable #customers tr td{
+padding: 10px 20px; 
+ margin: 0px;
+ font-weight: 700;
+ font-size: 20px;
+}
+.testResultTable #customers tr td p{
+  padding: 5px 10px; 
+  margin: 0px;
+  text-align: center;
+  }

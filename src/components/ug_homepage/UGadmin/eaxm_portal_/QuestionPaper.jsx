@@ -630,6 +630,7 @@ const handleYes = async () => {
 
   ///save &next start
 
+
   const handleSaveNextQuestion = async () => {
     // ------------------------------------ button functionality --------------------------------------------
     // Update question status for the current question
@@ -677,21 +678,54 @@ const handleYes = async () => {
         }
       });
     }
+=======
+// working for updatin 
+const handleSaveNextQuestion = async () => {
+  // ------------------------------------ button functionality --------------------------------------------
+  // Update question status for the current question
+  const updatedQuestionStatus = [...questionStatus];
+  const calculatorInputValue = value;
+  const currentQuestion = questionData.questions[currentQuestionIndex];
+
+  const isCurrentQuestionAnswered =
+    selectedAnswersMap1[currentQuestion.question_id] !== undefined ||
+    (selectedAnswersMap2[currentQuestion.question_id] &&
+      selectedAnswersMap2[currentQuestion.question_id].length > 0) ||
+    calculatorInputValue !== "";
+
+  const isResponseCleared =
+    selectedAnswersMap1[currentQuestion.question_id] === null ||
+    selectedAnswersMap2[currentQuestion.question_id]?.length === 0;
+
+  if (!isCurrentQuestionAnswered) {
+    window.alert("Please answer the question before proceeding.");
+  } else {
+    const updatedQuestionStatus = [...questionStatus];
+    updatedQuestionStatus[currentQuestionIndex] = "answered";
+    setQuestionStatus(updatedQuestionStatus);
+
+    setCurrentQuestionIndex((prevIndex) => {
+      if (prevIndex < questionData.questions.length - 1) {
+        return prevIndex + 1;
+      }
+    });
+
 
     try {
+      // Fetch question options
       const response = await fetch(
         `http://localhost:5001/QuestionPaper/questionOptions/${testCreationTableId}`
       );
       const result = await response.json();
-
       setQuestionData(result);
 
+      // Fetch user data
       const token = localStorage.getItem("token");
       const response_user = await fetch(
         "http://localhost:5001/ughomepage_banner_login/user",
         {
           headers: {
-            Authorization: `Bearer ${token}`, // Attach token to headers for authentication
+            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -700,15 +734,18 @@ const handleYes = async () => {
         const userData = await response_user.json();
         setUserData(userData);
 
-        const userId = userData.id; // Move this line here to ensure userId is defined
+        const userId = userData.id;
 
         console.log("Test Creation Table ID:", testCreationTableId);
-        console.log("Current user_Id:", userId); // Now userId should be defined
+        console.log("Current user_Id:", userId);
 
         if (!questionData || !questionData.questions) {
           console.error("Data or questions are null or undefined");
           return;
         }
+
+
+
         const calculatorInputValue = value;
         const currentQuestion = questionData.questions[currentQuestionIndex];
         const selectedOption1 =
@@ -722,18 +759,17 @@ const handleYes = async () => {
           selectedOption2 !== undefined ? selectedOption2 : [];
 
         const questionId = currentQuestion.question_id;
+        const hasAnswered = answeredQuestionsMap[questionId];
 
-        // console.log("Responses to be sent:", responses);
-        const responses = {
-          userId: userId,
-          testCreationTableId: testCreationTableId,
-          [questionId]: {
+        if (hasAnswered) {
+          const updatedResponse = {
             optionIndexes1: optionIndexes1.map((index) =>
               String.fromCharCode("a".charCodeAt(0) + index)
             ),
             optionIndexes2: optionIndexes2.map((index) =>
               String.fromCharCode("a".charCodeAt(0) + index)
             ),
+
             calculatorInputValue: calculatorInputValue, // Add the calculator value to responses
           },
         };
@@ -744,25 +780,391 @@ const handleYes = async () => {
             responses,
             userId,
             testCreationTableId,
+
+            calculatorInputValue: calculatorInputValue,
+          };
+
+          const updateRespons = await axios.put(
+            `http://localhost:5001/QuestionPaper/updateResponse/${questionId}`,
+            {
+              updatedResponse,
+              userId,
+              testCreationTableId,
+            }
+          );
+          console.log("egrad", updateRespons)
+          console.log("updatedResponse", updatedResponse)
+          console.log("hiiii")
+          console.log("The question answer is  updated");
+          // You can perform additional actions if the question is already answered
+        } else {
+          const responses = {
+            userId: userId,
+            testCreationTableId: testCreationTableId,
+            [questionId]: {
+              optionIndexes1: optionIndexes1.map((index) =>
+                String.fromCharCode("a".charCodeAt(0) + index)
+              ),
+              optionIndexes2: optionIndexes2.map((index) =>
+                String.fromCharCode("a".charCodeAt(0) + index)
+              ),
+              calculatorInputValue: calculatorInputValue,
+            },
+          };
+          console.log("hello")
+          console.log("The question is answered for the first time");
+          console.log("responses", responses)
+          // You can perform additional actions if the question is answered for the first time
+
+          // Update answeredQuestionsMap to indicate that the question has been answered
+          setAnsweredQuestionsMap((prevMap) => ({
+            ...prevMap,
+            [questionId]: true,
+          }));
+
+          // If the user has answered, update the existing response
+          if (hasAnswered) {
+            // const updatedResponse = {
+            //   optionIndexes1: optionIndexes1.map((index) =>
+            //     String.fromCharCode("a".charCodeAt(0) + index)
+            //   ),
+            //   optionIndexes2: optionIndexes2.map((index) =>
+            //     String.fromCharCode("a".charCodeAt(0) + index)
+            //   ),
+            //   calculatorInputValue: calculatorInputValue,
+            // };
+
+            // const updateResponse = await axios.put(
+            //   `http://localhost:5001/QuestionPaper/updateResponse/${userId}/${testCreationTableId}/${questionId}`,
+            //   {
+            //     updatedResponse,
+            //     userId,
+            //     testCreationTableId,
+            //   }
+            // );
+
+            // console.log(updateResponse.data);
+            console.log("Existing Response Updated");
+            console.log("updated reponse is saved")
+          } else {
+            // Responses object
+            const responses = {
+              userId: userId,
+              testCreationTableId: testCreationTableId,
+              [questionId]: {
+                optionIndexes1: optionIndexes1.map((index) =>
+                  String.fromCharCode("a".charCodeAt(0) + index)
+                ),
+                optionIndexes2: optionIndexes2.map((index) =>
+                  String.fromCharCode("a".charCodeAt(0) + index)
+                ),
+                calculatorInputValue: calculatorInputValue,
+              },
+            };
+
+            // If the user has not answered, save a new response
+            const saveResponse = await axios.post(
+              "http://localhost:5001/QuestionPaper/response",
+              {
+                responses,
+                userId,
+                testCreationTableId,
+              }
+            );
+
+            console.log(saveResponse.data);
+            console.log("New Response Saved");
+            console.log("reponse is saved")
+
           }
-        );
 
-        console.log(saveResponse.data);
-        console.log("Handle Next Click - New Response Saved");
-
-        setAnsweredQuestionsMap((prevMap) => ({
-          ...prevMap,
-          [questionId]: true,
-        }));
-
-        setClickCount((prevCount) => prevCount + 1);
+          setClickCount((prevCount) => prevCount + 1);
+        }
       }
     } catch (error) {
       console.error("Error handling next click:", error);
     }
+  }
+  // --------------------------------end of button functionality --------------------------------------------------
+};
 
-    // --------------------------------end of button functionality --------------------------------------------------
-  };
+  // ------------------------------------ button functionality --------------------------------------------
+// prest main
+  // const handleSaveNextQuestion = async () => {
+  //   // Update question status for the current question
+  //   const updatedQuestionStatus = [...questionStatus];
+  //   const calculatorInputValue = value;
+  //   const currentQuestion = questionData.questions[currentQuestionIndex];
+
+  //   const isCurrentQuestionAnswered =
+  //     selectedAnswersMap1[currentQuestion.question_id] !== undefined ||
+  //     (selectedAnswersMap2[currentQuestion.question_id] &&
+  //       selectedAnswersMap2[currentQuestion.question_id].length > 0)||
+  //       calculatorInputValue !== "";
+
+  //   const isResponseCleared =
+  //     selectedAnswersMap1[currentQuestion.question_id] === null ||
+  //     selectedAnswersMap2[currentQuestion.question_id]?.length === 0;
+
+  //   if (!isCurrentQuestionAnswered) {
+  //     // updatedQuestionStatus[currentQuestionIndex] = "notAnswered";
+  //     // setQuestionStatus(updatedQuestionStatus);
+  //     window.alert("Please answer the question before proceeding.");
+  //   } else if (isCurrentQuestionAnswered) {
+  //     // If the current question is not answered, update the status
+  //     const updatedQuestionStatus = [...questionStatus];
+  //     updatedQuestionStatus[currentQuestionIndex] = "answered";
+  //     setQuestionStatus(updatedQuestionStatus);
+
+  //     setCurrentQuestionIndex((prevIndex) => {
+  //       if (prevIndex < questionData.questions.length - 1) {
+  //         return prevIndex + 1;
+  //       }
+  //     });
+  //     console.log("Question not answered!");
+
+  //   } else if (isCurrentQuestionAnswered === markForReview()) {
+  //     updatedQuestionStatus[currentQuestionIndex] =
+  //       "Answered but marked for review";
+  //     updateCounters();
+
+  //     setCurrentQuestionIndex((prevIndex) => {
+  //       if (prevIndex < questionData.questions.length - 1) {
+  //         return prevIndex + 1;
+  //       }
+  //     });
+  //   }
+
+  //   try {
+  //     const response = await fetch(
+  //       `http://localhost:5001/QuestionPaper/questionOptions/${testCreationTableId}`
+  //     );
+  //     const result = await response.json();
+
+  //     setQuestionData(result);
+
+  //     const token = localStorage.getItem("token");
+  //     const response_user = await fetch(
+  //       "http://localhost:5001/ughomepage_banner_login/user",
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`, // Attach token to headers for authentication
+  //         },
+  //       }
+  //     );
+
+  //     if (response_user.ok) {
+  //       const userData = await response_user.json();
+  //       setUserData(userData);
+
+  //       const userId = userData.id; // Move this line here to ensure userId is defined
+
+  //       console.log("Test Creation Table ID:", testCreationTableId);
+  //       console.log("Current user_Id:", userId); // Now userId should be defined
+
+  //       if (!questionData || !questionData.questions) {
+  //         console.error("Data or questions are null or undefined");
+  //         return;
+  //       }
+  //       const calculatorInputValue = value;
+  //       const currentQuestion = questionData.questions[currentQuestionIndex];
+  //       const selectedOption1 =
+  //         selectedAnswersMap1[currentQuestion.question_id];
+  //       const selectedOption2 =
+  //         selectedAnswersMap2[currentQuestion.question_id];
+
+  //       const optionIndexes1 =
+  //         selectedOption1 !== undefined ? [selectedOption1] : [];
+  //       const optionIndexes2 =
+  //         selectedOption2 !== undefined ? selectedOption2 : [];
+
+  //       const questionId = currentQuestion.question_id;
+
+  //       // console.log("Responses to be sent:", responses);
+  //       const responses = {
+  //         userId: userId,
+  //         testCreationTableId: testCreationTableId,
+  //         [questionId]: {
+  //           optionIndexes1: optionIndexes1.map((index) =>
+  //             String.fromCharCode("a".charCodeAt(0) + index)
+  //           ),
+  //           optionIndexes2: optionIndexes2.map((index) =>
+  //             String.fromCharCode("a".charCodeAt(0) + index)
+  //           ),
+  //           calculatorInputValue: calculatorInputValue, // Add the calculator value to responses
+  //         },
+  //       };
+
+  //       const saveResponse = await axios.post(
+  //         "http://localhost:5001/QuestionPaper/response",
+  //         {
+  //           responses,
+  //           userId,
+  //           testCreationTableId,
+  //         }
+  //       );
+
+  //       console.log(saveResponse.data);
+  //       console.log("Handle Next Click - New Response Saved");
+
+  //       setAnsweredQuestionsMap((prevMap) => ({
+  //         ...prevMap,
+  //         [questionId]: true,
+  //       }));
+
+  //       setClickCount((prevCount) => prevCount + 1);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error handling next click:", error);
+  //   }
+
+  //   // --------------------------------end of button functionality --------------------------------------------------
+  // };
+
+  ///save &next end
+  // const [calculatorInputValue, setCalculatorInputValue] = useState('');
+  //practice
+  //   const handleSaveNextQuestion = async () => {
+  //     // ------------------------------------ button functionality --------------------------------------------
+  //     // Update question status for the current question
+  //     const updatedQuestionStatus = [...questionStatus];
+  //     const currentQuestion = questionData.questions[currentQuestionIndex];
+
+  //     const isCurrentQuestionAnswered =
+  //       selectedAnswersMap1[currentQuestion.question_id] !== undefined ||
+  //       (selectedAnswersMap2[currentQuestion.question_id] &&
+  //         selectedAnswersMap2[currentQuestion.question_id].length > 0) ||   value !== undefined;
+
+  //      const isResponseCleared =
+  //       selectedAnswersMap1[currentQuestion.question_id] === null ||
+  //       selectedAnswersMap2[currentQuestion.question_id]?.length === 0;
+
+  //     if (!isCurrentQuestionAnswered) {
+  //       // updatedQuestionStatus[currentQuestionIndex] = "notAnswered";
+  //       // setQuestionStatus(updatedQuestionStatus);
+  //       window.alert("Please answer the question before proceeding.");
+  //     } else if (isCurrentQuestionAnswered) {
+  //       // If the current question is not answered, update the status
+  //       const updatedQuestionStatus = [...questionStatus];
+  //       updatedQuestionStatus[currentQuestionIndex] = "answered";
+  //       setQuestionStatus(updatedQuestionStatus);
+
+  //       setCurrentQuestionIndex((prevIndex) => {
+  //         if (prevIndex < questionData.questions.length - 1) {
+  //           return prevIndex + 1;
+  //         }
+  //       }
+  //       );
+  //       // updatedQuestionStatus[currentQuestionIndex] = "notAnswered"
+  //       // You may also show a message or perform other actions to indicate that the question is not answered
+  //       console.log("Question not answered!");
+  //     }  else if (isCurrentQuestionAnswered === markForReview()) {
+  //       updatedQuestionStatus[currentQuestionIndex] =
+  //         "Answered but marked for review";
+  //       updateCounters();
+
+  //       setCurrentQuestionIndex((prevIndex) => {
+  //         if (prevIndex < questionData.questions.length - 1) {
+  //           return prevIndex + 1;
+  //         }
+  //       });
+  //     }
+
+  //     try {
+  //       const response = await fetch(
+  //         `http://localhost:5001/QuestionPaper/questionOptions/${testCreationTableId}`
+  //       );
+  //       const result = await response.json();
+
+  //       setQuestionData(result);
+
+  //       const token = localStorage.getItem("token");
+  //       const response_user = await fetch(
+  //         "http://localhost:5001/ughomepage_banner_login/user",
+  //         {
+  //           headers: {
+  //             Authorization: `Bearer ${token}`, // Attach token to headers for authentication
+  //           },
+  //         }
+  //       );
+
+  //       if (response_user.ok) {
+  //         const userData = await response_user.json();
+  //         setUserData(userData);
+
+  //         const userId = userData.id; // Move this line here to ensure userId is defined
+
+  //         console.log("Test Creation Table ID:", testCreationTableId);
+  //         console.log("Current user_Id:", userId); // Now userId should be defined
+
+  //         if (!questionData || !questionData.questions) {
+  //           console.error("Data or questions are null or undefined");
+  //           return;
+  //         }
+  //         const calculatorInputValue = value;
+  //         const currentQuestion = questionData.questions[currentQuestionIndex];
+  //         const selectedOption1 =
+  //           selectedAnswersMap1[currentQuestion.question_id];
+  //         const selectedOption2 =
+  //           selectedAnswersMap2[currentQuestion.question_id];
+  //         // its for NATD( Numeric Answer type of questions with Decimal values)
+  //         const selectedOption3 =
+  //           selectedAnswersMap3[currentQuestion.question_id];
+
+  //           // const calculatorInputValue = selectedAnswersMap3[currentQuestion.question_id];
+  //           console.log("Calculator Input Value:", value);
+  //         const optionIndexes1 =
+  //           selectedOption1 !== undefined ? [selectedOption1] : [];
+  //         const optionIndexes2 =
+  //           selectedOption2 !== undefined ? selectedOption2 : [];
+  //           const optionIndexes3 =
+  //           selectedOption3 !== undefined ? selectedOption3 : [];
+  //         const questionId = currentQuestion.question_id;
+
+  //         // console.log("Responses to be sent:", responses);
+  //         const responses = {
+  //           userId: userId,
+  //           testCreationTableId: testCreationTableId,
+  //           [questionId]: {
+  //             optionIndexes1: optionIndexes1.map((index) =>
+  //               String.fromCharCode("a".charCodeAt(0) + index)
+  //             ),
+  //             optionIndexes2: optionIndexes2.map((index) =>
+  //               String.fromCharCode("a".charCodeAt(0) + index)
+  //             ),
+  //             calculatorInputValue: calculatorInputValue, // Add the calculator value to responses
+
+  //           },
+  //         };
+  // console.log('fdkojgodskjgpokjdsogjpdosogkpdkgopk')
+  //         console.log(responses.selectedOption3)
+
+  //         // console.log(calculatorInputValue)
+  //         const saveResponse = await axios.post(
+  //           "http://localhost:5001/QuestionPaper/response",
+  //           {
+  //             responses,
+  //             userId,
+  //             testCreationTableId,
+  //           }
+  //         );
+
+  //         console.log(saveResponse.data);
+  //         console.log("Handle Next Click - New Response Saved");
+
+  //         setAnsweredQuestionsMap((prevMap) => ({
+  //           ...prevMap,
+  //           [questionId]: true,
+  //         }));
+
+  //         setClickCount((prevCount) => prevCount + 1);
+  //       }
+  //     } catch (error) {
+  //       console.error("Error handling next click:", error);
+  //     }
+
+  //     // --------------------------------end of button functionality --------------------------------------------------
+  //   };
 
   ///save &next end
   // const [calculatorInputValue, setCalculatorInputValue] = useState('');
@@ -1205,33 +1607,35 @@ const handleYes = async () => {
       selectedAnswersMap1[currentQuestion.question_id] !== undefined ||
       (selectedAnswersMap2[currentQuestion.question_id] &&
         selectedAnswersMap2[currentQuestion.question_id].length > 0);
-
+  
     if (isCurrentQuestionAnswered) {
+      // If the current question is answered, update the status
       const updatedQuestionStatus = [...questionStatus];
       updatedQuestionStatus[currentQuestionIndex] = "notAnswered";
       setQuestionStatus(updatedQuestionStatus);
     }
     //-----------------buttons functionality end--------------
-
+  
     try {
       const questionId =
         questionData.questions[currentQuestionIndex].question_id;
-      console.log("Response cleared successfully");
+      console.log("Response cleared successfully ");
+  
       // Clear response for radio buttons (MCQ)
       const updatedSelectedAnswersMap1 = { ...selectedAnswersMap1 };
-      updatedSelectedAnswersMap1[questionId] = null;
+      updatedSelectedAnswersMap1[questionId] = undefined;
       setSelectedAnswersMap1(updatedSelectedAnswersMap1);
-
+  
       // Clear response for checkboxes (MSQ)
       const updatedSelectedAnswersMap2 = { ...selectedAnswersMap2 };
       updatedSelectedAnswersMap2[questionId] = [];
       setSelectedAnswersMap2(updatedSelectedAnswersMap2);
-
+  
       // Send a request to your server to clear the user's response for the current question
       const response = await axios.delete(
         `http://localhost:5001/QuestionPaper/clearResponse/${questionId}`
       );
-
+  
       if (response.status === 200) {
         console.log("Response cleared successfully");
         // Update any state or perform additional actions as needed
@@ -1242,7 +1646,7 @@ const handleYes = async () => {
       console.error("Error clearing response:", error);
     }
   };
-
+  
   // -------------------------------END OF BUTTONS FUNCTIONALITIES-----------------------------------
 
   const updateQuestionStatus = (index, status) => {
@@ -1335,6 +1739,7 @@ const handleYes = async () => {
                               alt={`ParagraphImage ${currentQuestion.paragraph.paragraph_Id}`}
                               style={{ width: "700px" }}
                             />
+                             <h2>Question:</h2>
                           </>
                         )}
 
@@ -1884,6 +2289,8 @@ const handleYes = async () => {
                                         src={`http://localhost:5001/uploads/${currentQuestion.documen_name}/${option.optionImgName}`}
                                         alt={`Option ${option.option_id}`}
                                       />
+
+
                                     </div>
                                   )}
 
@@ -1893,6 +2300,7 @@ const handleYes = async () => {
                                     "CTQ(Comprehension type of questions )"
                                   ) && (
                                     <div>
+                                     
                                       <input
                                         className="opt_btns"
                                         type="radio"
@@ -1916,6 +2324,7 @@ const handleYes = async () => {
                                         "a".charCodeAt(0) + optionIndex
                                       )}
                                       )
+                                      
                                       <img
                                         src={`http://localhost:5001/uploads/${currentQuestion.documen_name}/${option.optionImgName}`}
                                         alt={`Option ${option.option_id}`}
@@ -1968,6 +2377,27 @@ const handleYes = async () => {
                       <button onClick={handleNextQuestion}>Next</button>
                     </div>
                   </div>
+                  {/* <div className="rightsidebar">
+                    <ButtonsFunctionality
+                      onQuestionSelect={handleQuestionSelect}
+                      questionStatus={questionStatus}
+                      setQuestionStatus={setQuestionStatus}
+                      answeredCount={answeredCount}
+                      notAnsweredCount={notAnsweredCount}
+                      answeredmarkedForReviewCount={
+                        answeredmarkedForReviewCount
+                      }
+                      markedForReviewCount={markedForReviewCount}
+                      VisitedCount={VisitedCount}
+                      selectedSubject={selectedSubject}
+                      questionData={questionData}
+                      updateQuestionStatus={updateQuestionStatus}
+                    />
+                    <button onClick={handleSubmit} id="resume_btn">
+                      Submit
+                    </button>
+                    <Link to=''></Link>
+                  </div> */}
                 </>
               )}
             </div>
@@ -1996,8 +2426,13 @@ const handleYes = async () => {
               />
               {/* <button onClick={handleSubmit} id="resume_btn">
                 Submit
+
               </button> */}
             <Link to={`/TestResultsPage/${testCreationTableId}`}>Yes FOr Link</Link>
+
+              </button>
+            {/* <Link to={`/TestResultsPage/${testCreationTableId}`}>Yes FOr Link</Link> */}
+
             </div>
           </div>
         </div>
@@ -2033,7 +2468,12 @@ const handleYes = async () => {
 
             {/* <Link to='/SubmitPage'>YES</Link> */}
 
+
             <button onClick={handleYes}>YES</button>
+
+            {/* <button onClick={handleYes}>YES</button> */}
+             <Link to={`/TestResultsPage/${testCreationTableId}`}>Yes FOr Link</Link>
+
             <button onClick={handleNo}>NO</button>
           </div>
         </div>

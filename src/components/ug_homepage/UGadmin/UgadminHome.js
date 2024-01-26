@@ -1,27 +1,27 @@
-
 // Home.js
 
-import React from 'react';
-import Exam_portal_home_page from './eaxm_portal_/Exam_portal_home_page';
-import Quiz_dashboard from './eaxm_portal_/Quiz_dashboard';
-
+import React from "react";
+import Exam_portal_home_page from "./eaxm_portal_/Exam_portal_home_page";
+import Quiz_dashboard from "./eaxm_portal_/Quiz_dashboard";
 
 const UgadminHome = () => {
-  
-  const userRole = localStorage.getItem('userRole');
+  const userRole = localStorage.getItem("userRole");
 
   const handleLogout = () => {
-    localStorage.removeItem('isLoggedIn');
-    localStorage.removeItem('userRole');
-    window.location.href = '/uglogin';
+    localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("userRole");
+    window.location.href = "/uglogin";
   };
 
   return (
     <div>
-     
       {userRole === "admin" && (
         <div>
+
           {/* <p>admin View: Show limited features</p> */}
+
+          <p>admin View: Show limited features</p>
+        
 
           <Quiz_dashboard />
 
