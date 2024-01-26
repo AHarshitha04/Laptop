@@ -201,9 +201,9 @@ const focusPopup = () => {
               </div>
               <div className="test-contents2">
                 <li>
-                  <Link to={`/Instructions/${test.testCreationTableId}`}  onClick={openPopup}>
+                  {/* <Link to={`/Instructions/${test.testCreationTableId}`}  onClick={openPopup}> */}
                   {/* <Link to={`/Instructions/${test.testCreationTableId}`}> */}
-                  {/* <Link to='#' onClick={openPopup}> */}
+                  <Link to='#' onClick={openPopup}>
          
                     Start Test
                   </Link>
