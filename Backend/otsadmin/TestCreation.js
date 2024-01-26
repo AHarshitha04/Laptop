@@ -43,15 +43,14 @@ router.get('/testcourses', async (req, res) => {
       totalQuestions,
       totalMarks,
       calculator,
-      status,
       sectionsData,
       selectedInstruction,
     } = req.body;
    
     try {
       const [result] = await db.query(
-        'INSERT INTO test_creation_table (TestName, courseCreationId, courseTypeOfTestId, testStartDate, testEndDate, testStartTime, testEndTime, Duration, TotalQuestions, totalMarks, calculator, status, instructionId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-        [testName, selectedCourse, selectedtypeOfTest, startDate, endDate, startTime, endTime, duration, totalQuestions, totalMarks, calculator, status, selectedInstruction]
+        'INSERT INTO test_creation_table (TestName, courseCreationId, courseTypeOfTestId, testStartDate, testEndDate, testStartTime, testEndTime, Duration, TotalQuestions, totalMarks, calculator, instructionId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        [testName, selectedCourse, selectedtypeOfTest, startDate, endDate, startTime, endTime, duration, totalQuestions, totalMarks, calculator, selectedInstruction]
       );
    
       if (result && result.insertId) {
@@ -150,7 +149,7 @@ router.get('/testcourses', async (req, res) => {
       tc.TotalQuestions,
       tc.totalMarks,
       tc.calculator,
-      tc.status,
+    
       cc.courseCreationId,
       cc.courseName,
       ctt.courseTypeOfTestId,
@@ -207,7 +206,7 @@ router.get('/testcourses', async (req, res) => {
       TotalQuestions,
       totalMarks,
       calculator,
-      status,
+     
       sectionId,
       sectionName,
       noOfQuestions,
@@ -219,7 +218,7 @@ router.get('/testcourses', async (req, res) => {
                          SET TestName=?, courseCreationId=?, courseTypeOfTestId=?,
                              testStartDate=?, testEndDate=?, testStartTime=?,
                              testEndTime=?, Duration=?, TotalQuestions=?,
-                             totalMarks=?, calculator=?, status=?, instructionId=?
+                             totalMarks=?, calculator=?, instructionId=?
                          WHERE testCreationTableId=?`;
    
     try {
@@ -235,7 +234,6 @@ router.get('/testcourses', async (req, res) => {
         TotalQuestions,
         totalMarks,
         calculator,
-        status,
         selectedInstruction,
         testCreationTableId,
       ]);
@@ -264,6 +262,152 @@ router.get('/testcourses', async (req, res) => {
     }
   });
 
+  
+
+  // router.get('/TestActivation', async (req, res) => {
+  //   // Fetch subjects
+  //   try {
+  //     const [rows] = await db.query(`SELECT
+  //     t.testCreationTableId,
+  //     t.TestName,
+  //     t.TotalQuestions,
+  //     s.subjectId,
+  //     s.subjectName,
+  //     sc.sectionId,
+  //     sc.sectionName,
+  //     sc.noOfQuestions AS numberOfQuestionsInSection,
+  //     subquery.numberOfQuestionsInSubject
+  // FROM
+  //     test_creation_table AS t
+  // LEFT JOIN course_subjects AS cs ON t.courseCreationId = cs.courseCreationId
+  // LEFT JOIN subjects AS s ON s.subjectId = cs.subjectId
+  // LEFT JOIN sections AS sc ON sc.subjectId = s.subjectId
+  // LEFT JOIN (
+  //     SELECT
+  //         q.subjectId,
+  //         COUNT(q.question_id) AS numberOfQuestionsInSubject
+  //     FROM
+  //         questions AS q
+  //     GROUP BY
+  //         q.subjectId
+  // ) AS subquery ON s.subjectId = subquery.subjectId
+  // LEFT JOIN questions AS q ON t.testCreationTableId = q.testCreationTableId
+  //                       AND sc.sectionId = q.sectionId
+  //                       AND s.subjectId = q.subjectId
+  // WHERE
+  //     t.testCreationTableId = ?
+  // GROUP BY
+  //     t.testCreationTableId,
+  //     t.TestName,
+  //     t.TotalQuestions,
+  //     s.subjectId,
+  //     s.subjectName,
+  //     sc.sectionId,
+  //     sc.sectionName,
+  //     sc.noOfQuestions,
+  //     subquery.numberOfQuestionsInSubject`);
+  //     res.json(rows);
+  //   } catch (error) {
+  //     console.error(error);
+  //     res.status(500).json({ error: 'Internal Server Error' });
+  //   }
+  // });
+
+
+  router.get('/TestActivation', async (req, res) => {
+    try {
+      const [rows] = await db.query(`
+        SELECT
+          t.testCreationTableId,
+          t.TestName,
+          t.TotalQuestions,
+          s.subjectId,
+          s.subjectName,
+          sc.sectionId,
+          sc.sectionName,
+          sc.noOfQuestions AS numberOfQuestionsInSection,
+          subquery.numberOfQuestionsInSubject
+        FROM
+          test_creation_table AS t
+        LEFT JOIN course_subjects AS cs ON t.courseCreationId = cs.courseCreationId
+        LEFT JOIN subjects AS s ON s.subjectId = cs.subjectId
+        LEFT JOIN sections AS sc ON sc.subjectId = s.subjectId
+        LEFT JOIN (
+          SELECT
+            q.subjectId,
+            COUNT(q.question_id) AS numberOfQuestionsInSubject
+          FROM
+            questions AS q
+          GROUP BY
+            q.subjectId
+        ) AS subquery ON s.subjectId = subquery.subjectId
+        LEFT JOIN questions AS q ON t.testCreationTableId = q.testCreationTableId
+                                AND sc.sectionId = q.sectionId
+                                AND s.subjectId = q.subjectId
+        WHERE
+          t.testCreationTableId = 3
+        GROUP BY
+          t.testCreationTableId,
+          t.TestName,
+          t.TotalQuestions,
+          s.subjectId,
+          s.subjectName,
+          sc.sectionId,
+          sc.sectionName,
+          sc.noOfQuestions,
+          subquery.numberOfQuestionsInSubject
+      `);
+  
+      // Organize the data into a structured JSON response
+      const tests = rows.map(row => {
+        const existingTest = tests.find(test => test.testCreationTableId === row.testCreationTableId);
+        if (existingTest) {
+          // Test already exists, add subject and section to existing test
+          const existingSubject = existingTest.subjects.find(subject => subject.subjectId === row.subjectId);
+          if (existingSubject) {
+            // Subject already exists, add section to existing subject
+            existingSubject.sections.push({
+              sectionId: row.sectionId,
+              sectionName: row.sectionName,
+              numberOfQuestions: row.numberOfQuestionsInSection,
+            });
+          } else {
+            // Subject does not exist, create a new subject
+            existingTest.subjects.push({
+              subjectId: row.subjectId,
+              subjectName: row.subjectName,
+              sections: [{
+                sectionId: row.sectionId,
+                sectionName: row.sectionName,
+                numberOfQuestions: row.numberOfQuestionsInSection,
+              }],
+            });
+          }
+        } else {
+          // Test does not exist, create a new test with subject and section
+          tests.push({
+            testCreationTableId: row.testCreationTableId,
+            TestName: row.TestName,
+            TotalQuestions: row.TotalQuestions,
+            subjects: [{
+              subjectId: row.subjectId,
+              subjectName: row.subjectName,
+              sections: [{
+                sectionId: row.sectionId,
+                sectionName: row.sectionName,
+                numberOfQuestions: row.numberOfQuestionsInSection,
+              }],
+            }],
+          });
+        }
+      });
+  
+      res.json(tests);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  });
   
   
   module.exports = router;

@@ -56,6 +56,7 @@ const Leftnav = () => {
     setShowregisteredstudent(false);
     setShowImage_Upload_for_Ac(false)
     setshowStudent_Doubt_Section(false);
+    setShowTestActivation_admin(false);
   };
 
   const handleshowExamcreation_admin = () => {
@@ -81,7 +82,7 @@ const Leftnav = () => {
     setShowregisteredstudent(false);
     setShowImage_Upload_for_Ac(false)
     setshowStudent_Doubt_Section(false);
-
+    setShowTestActivation_admin(false);
 
   };
   const handleInstructionPage_admin = () => {
@@ -94,7 +95,7 @@ const Leftnav = () => {
     setShowregisteredstudent(false);
     setShowImage_Upload_for_Ac(false)
     setshowStudent_Doubt_Section(false);
-
+    setShowTestActivation_admin(false);
 
   };
 
@@ -108,7 +109,7 @@ const Leftnav = () => {
     setShowregisteredstudent(false);
     setShowImage_Upload_for_Ac(false)
     setshowStudent_Doubt_Section(false);
-
+    setShowTestActivation_admin(false);
 
   };
 
@@ -122,7 +123,7 @@ const Leftnav = () => {
     setShowregisteredstudent(false);
     setShowImage_Upload_for_Ac(false)
     setshowStudent_Doubt_Section(false);
-
+    setShowTestActivation_admin(false);
 
   };
 
@@ -148,7 +149,7 @@ const  handleTestActivation_admin =()=>{
     setShowregisteredstudent(true);
     setShowImage_Upload_for_Ac(false)
     setshowStudent_Doubt_Section(false);
-
+    setShowTestActivation_admin(false);
 
   };
 
@@ -162,7 +163,7 @@ const  handleTestActivation_admin =()=>{
     setShowregisteredstudent(false);
     setShowImage_Upload_for_Ac(true)
     setshowStudent_Doubt_Section(false);
-
+    setShowTestActivation_admin(false);
   }
 
     const handleStudent_Doubt_Section = () => {
@@ -175,7 +176,7 @@ const  handleTestActivation_admin =()=>{
       setShowregisteredstudent(false);
       setShowImage_Upload_for_Ac(false);
     setshowStudent_Doubt_Section(true);
-
+    setShowTestActivation_admin(false);
     };
 
   return (

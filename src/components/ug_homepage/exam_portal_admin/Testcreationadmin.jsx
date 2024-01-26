@@ -15,7 +15,7 @@ const Testcreationadmin = () => {
   const [totalQuestions, setTotalQuestions] = useState("");
   const [totalMarks, setTotalMarks] = useState("");
   const [calculator, setCalculator] = useState("no");
-  const [status, setStatus] = useState("inactive");
+  // const [status, setStatus] = useState("inactive");
   const [typeOfTests, setTypeOfTests] = useState([]);
   const [selectedtypeOfTest, setSelectedtypeOfTest] = useState("");
   const [subjects, setSubjects] = useState([]);
@@ -228,9 +228,9 @@ const Testcreationadmin = () => {
     setCalculator(e.target.value);
   };
 
-  const handleStatusChange = (e) => {
-    setStatus(e.target.value);
-  };
+  // const handleStatusChange = (e) => {
+  //   setStatus(e.target.value);
+  // };
 
   const handleQuestionLimitChange = (e) => {
     setQuestionLimitChecked(e.target.checked);
@@ -290,7 +290,7 @@ const Testcreationadmin = () => {
           totalQuestions,
           totalMarks,
           calculator,
-          status,
+          // status,
           sectionsData,
           selectedInstruction,
         }),
@@ -432,11 +432,11 @@ setSubmitting(false);
                   )}
                 </div>
                 <div className="testCreation_-list">
-                  <label>Status:</label>
-                  <select value={status} onChange={handleStatusChange}>
+                  {/* <label>Status:</label> */}
+                  {/* <select value={status} onChange={handleStatusChange}>
                     <option value="active">Active</option>
                     <option value="inactive">Inactive</option>
-                  </select>
+                  </select> */}
                 </div>
               </div>
 
@@ -629,7 +629,7 @@ setSubmitting(false);
                     </span>
                   )}
                 </div>
-                {/* <div className="testCreation_-list">
+                <div className="testCreation_-list">
                   <label>SECTION</label>
                   <label>Question Limit:</label>
                   <input
@@ -638,7 +638,7 @@ setSubmitting(false);
                     checked={QuestionLimitChecked}
                     onChange={handleQuestionLimitChange}
                   />
-                </div> */}
+                </div>
 
                 <div className="testCreation_-list">
                   <label>SECTION</label>
@@ -812,7 +812,7 @@ setSubmitting(false);
               <th>Test End Date</th>
               <th>Start Time</th>
               <th>End Time</th>
-              <th>Status</th>
+              {/* <th>Status</th> */}
               <th>Action</th>
             </tr>
           </thead>
@@ -831,7 +831,7 @@ setSubmitting(false);
                 <td>{test.testEndDate}</td>
                 <td>{formatTime(test.testStartTime)}</td>
                 <td>{formatTime(test.testEndTime)}</td>
-                <td>{test.status}</td>
+                {/* <td>{test.status}</td> */}
                 <td>
                   <div className="EditDelete_-btns">
                     <Link
