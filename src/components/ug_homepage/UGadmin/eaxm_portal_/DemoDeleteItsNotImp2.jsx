@@ -206,6 +206,7 @@ const ButtonsFunctionality = ({
             title={userData.username}
             src={userData.imageData}
             alt={`Image ${userData.user_Id}`}
+            style={{width:100,height:100}}
           />
           <p>Name of the person : {userData.username}</p>
 

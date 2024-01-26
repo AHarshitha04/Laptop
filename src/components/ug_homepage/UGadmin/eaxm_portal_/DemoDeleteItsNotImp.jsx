@@ -194,6 +194,7 @@ const QuestionPaper = () => {
   const onAnswerSelected1 = (optionIndex) => {
     const questionId = questionData.questions[currentQuestionIndex].question_id;
     const charcodeatopt = String.fromCharCode("a".charCodeAt(0) + optionIndex);
+
     console.log("questionId from onAnswerSelected1 : ", questionId);
     const questionIndex = currentQuestionIndex + 1;
     console.log(`Question Index: ${questionIndex}`);
@@ -241,7 +242,9 @@ const QuestionPaper = () => {
     updatedSelectedAnswers[activeQuestion] = optionIndex;
     setSelectedAnswers(updatedSelectedAnswers);
   };
-  const [answers, setAnswers] = useState(Array(questionData.questions.length).fill(''));
+  const [answers, setAnswers] = useState(
+    Array(questionData.questions.length).fill("")
+  );
   const onAnswerSelected3 = (e) => {
     // Handle updating the state when the user answers a question
     const updatedAnswers = [...answers];
@@ -815,6 +818,15 @@ const QuestionPaper = () => {
       });
 
       try {
+        const currentQuestion = questionData.questions[currentQuestionIndex];
+        const subjectId = currentQuestion.subjectId;
+        const sectionId = currentQuestion.sectionId;
+
+        console.log("hello, hii");
+        console.log(" Current Test Creation Table ID:", testCreationTableId);
+        console.log("Current user_Id:", userData.id);
+        console.log("Current Subject Id:", subjectId);
+        console.log("Current Section Id:", sectionId);
         // Fetch question options
         const response = await fetch(
           `http://localhost:5001/QuestionPaper/questionOptions/${testCreationTableId}`
@@ -838,15 +850,8 @@ const QuestionPaper = () => {
           setUserData(userData);
 
           const userId = userData.id;
-          const subjectId = questionData.subjectId;
+          // const subjectId = questionData.subjectId;
 
-          console.log("Test Creation Table ID:", testCreationTableId);
-          console.log("Current user_Id:", userId);
-          console.log("Current Subject Id:",subjectId)
-          // console.log("Current Section Id:",sectionId)
-          console.log(questionData)
-
-          
           if (!questionData || !questionData.questions) {
             console.error("Data or questions are null or undefined");
             return;
@@ -884,6 +889,8 @@ const QuestionPaper = () => {
                 updatedResponse,
                 userId,
                 testCreationTableId,
+                subjectId,
+                sectionId,
               }
             );
             console.log("egrad", updateRespons);
@@ -895,6 +902,8 @@ const QuestionPaper = () => {
             const responses = {
               userId: userId,
               testCreationTableId: testCreationTableId,
+              subjectId: subjectId,
+              sectionId: sectionId,
               [questionId]: {
                 optionIndexes1: optionIndexes1.map((index) =>
                   String.fromCharCode("a".charCodeAt(0) + index)
@@ -925,6 +934,8 @@ const QuestionPaper = () => {
               const responses = {
                 userId: userId,
                 testCreationTableId: testCreationTableId,
+                subjectId: subjectId,
+                sectionId: sectionId,
                 [questionId]: {
                   optionIndexes1: optionIndexes1.map((index) =>
                     String.fromCharCode("a".charCodeAt(0) + index)
@@ -943,7 +954,8 @@ const QuestionPaper = () => {
                   responses,
                   userId,
                   testCreationTableId,
-
+                  subjectId,
+                  sectionId,
                 }
               );
 
@@ -1541,12 +1553,14 @@ const QuestionPaper = () => {
   }
   // const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   return (
-    <div>
+    <div className="QuestionPaper_-container">
+
       <div className="quiz_exam_interface_header">
         <div className="quiz_exam_interface_header_LOGO">
           <img src={logo} alt="" />
         </div>
       </div>
+
       {!showExamSumary ? (
         <div className="quiz_exam_interface_body">
           {/* --------------- quiz examconatiner -------------------- */}
@@ -1556,7 +1570,7 @@ const QuestionPaper = () => {
             <div class="quiz_exam_interface_SUBJECTS_CONTAINER">
               <div>
                 <div class="subjects_BTN_container">
-                {/* {questionData.map((subject,Index) => (
+                  {/* {questionData.map((subject,Index) => (
                     <li key={Index}>
                       <p>{subject.subjectId}</p>
                     </li>
@@ -1584,7 +1598,7 @@ const QuestionPaper = () => {
                   ))}
                 </h3>
               </div>
-              
+
               <div class="right-header">
                 <div class="marks">
                   Marks: <div class="plus-mark">+1</div>
@@ -1606,7 +1620,7 @@ const QuestionPaper = () => {
                   <div className="quiz_exam_interface_exam_subCONTAINEr">
                     <div className="quiz_exam_interface_exam_qN_Q">
                       {/* <h3>Question:{currentQuestion.sortid.sortid_text}</h3> */}
-                      <h3>{currentQuestionIndex+1}</h3>
+                      <h3>{currentQuestionIndex + 1}</h3>
 
                       {currentQuestion.paragraph &&
                         currentQuestion.paragraph.paragraphImg && (
@@ -1631,7 +1645,16 @@ const QuestionPaper = () => {
 
                     <div>
                       <div className="quiz_exam_interface_exam_qN_Q_options">
-                        <h3>Options:</h3>
+                        {/* <h3>Options:</h3> */}
+                        {currentQuestionType &&
+                          currentQuestionType.typeofQuestion &&
+                          !currentQuestionType.typeofQuestion.includes(
+                            "NATD"
+                          ) &&
+                          !currentQuestionType.typeofQuestion.includes(
+                            "NATI"
+                          ) && <h3>Options:</h3>}
+
                         {currentQuestion.options &&
                           Array.isArray(currentQuestion.options) &&
                           currentQuestion.options.filter(
@@ -1819,7 +1842,7 @@ const QuestionPaper = () => {
                                           // <h2>Answer: Not available</h2>
                                           <></>
                                         )} */}
-                                         {/* {answers[currentQuestionIndex] !== undefined ? (
+                                        {/* {answers[currentQuestionIndex] !== undefined ? (
               <h2>Answer: {answers[currentQuestionIndex]}</h2>
             ) : (
               <></>
@@ -1832,6 +1855,7 @@ const QuestionPaper = () => {
                                           onChange={(e) => onAnswerSelected3(e)}
                                           placeholder="Enter your answer"
                                           readOnly
+                                          defaultValue={answeredQuestionsMap[currentQuestion.question_id] || ''}
                                         />
                                       </div>
                                       <div>
@@ -1999,13 +2023,13 @@ const QuestionPaper = () => {
                                         // <h2>Answer: Not available</h2>
                                         <></>
                                       )} */}
-                                       {/* {answers[currentQuestionIndex] !== undefined ? (
+                                      {/* {answers[currentQuestionIndex] !== undefined ? (
               <h2>Answer: {answers[currentQuestionIndex]}</h2>
             ) : (
               <></>
             )} */}
                                       <div className="display">
-                                      <label>Answer:</label>
+                                        <label>Answer:</label>
                                         <input
                                           type="text"
                                           name={`question-${currentQuestionIndex}`}
@@ -2342,12 +2366,13 @@ const QuestionPaper = () => {
             {/* <Link to='/SubmitPage'>YES</Link> */}
 
             {/* <button onClick={handleYes}>YES</button> */}
-            <Link
+            {/* <Link
               to={`/TestResultsPage/${testCreationTableId}`}
               style={{ background: "red", fontWeight: "bold", padding: "10px" }}
             >
               Yes
-            </Link>
+            </Link> */}
+            <Link to='/InputValueDemo'>Yes</Link>
             <button onClick={handleNo}>NO</button>
           </div>
         </div>
