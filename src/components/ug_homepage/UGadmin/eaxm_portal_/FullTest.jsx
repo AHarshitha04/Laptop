@@ -84,7 +84,7 @@ const FullTest = () => {
 
  
   const newWinRef = useRef(null);
-  // http://localhost:3000/Instructions/1/Instructions/3
+
 const openPopup = () => {
   newWinRef.current = window.open(
     testData.map((test) => `/Instructions/${test.testCreationTableId}`).join('\n'),
@@ -204,7 +204,7 @@ const focusPopup = () => {
                   {/* <Link to={`/Instructions/${test.testCreationTableId}`}  onClick={openPopup}> */}
                   {/* <Link to={`/Instructions/${test.testCreationTableId}`}> */}
                   <Link to='#' onClick={openPopup}>
-         
+
                     Start Test
                   </Link>
                 </li>
