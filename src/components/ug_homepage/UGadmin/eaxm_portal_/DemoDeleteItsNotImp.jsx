@@ -821,12 +821,14 @@ const QuestionPaper = () => {
         const currentQuestion = questionData.questions[currentQuestionIndex];
         const subjectId = currentQuestion.subjectId;
         const sectionId = currentQuestion.sectionId;
+        const currentQuestionType = currentQuestion.typeofQuestion;
 
         console.log("hello, hii");
         console.log(" Current Test Creation Table ID:", testCreationTableId);
         console.log("Current user_Id:", userData.id);
         console.log("Current Subject Id:", subjectId);
         console.log("Current Section Id:", sectionId);
+        console.log("Current Question Type:", currentQuestionType);
         // Fetch question options
         const response = await fetch(
           `http://localhost:5001/QuestionPaper/questionOptions/${testCreationTableId}`
@@ -1552,9 +1554,67 @@ const QuestionPaper = () => {
     return "Answer not available";
   }
   // const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+
+  const [setCurrentQuestion] = useState();
+  const [calculatorInput, setCalculatorInput] = useState("");
+
+  useEffect(() => {
+    const storedAnswers = JSON.parse(localStorage.getItem("quizAnswers")) || [];
+    setQuestionData(storedAnswers);
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("quizAnswers", JSON.stringify(questionData));
+  }, [questionData]);
+
+  const handleInputChange = (event) => {
+    const newQuestions = [...questionData];
+    newQuestions[currentQuestion].answer = event.target.value;
+    setQuestionData(newQuestions);
+    setCalculatorInput(event.target.value);
+  };
+
+  // const handleNavigation = (offset) => {
+  //   const nextQuestion = currentQuestion + offset;
+  //   if (nextQuestion >= 0 && nextQuestion < questions.length) {
+  //     setCurrentQuestion(nextQuestion);
+  //     setCalculatorInput(questions[nextQuestion].answer || "");
+  //   } else {
+  //     console.log("Quiz completed");
+  //   }
+  // };
+
+  const handleCalculatorButtonClick = (value) => {
+    setCalculatorInput((prevInput) => prevInput + value);
+  };
+
+  const handleCalculatorClear = () => {
+    setCalculatorInput("");
+  };
+
+  const handleCalculatorDelete = () => {
+    setCalculatorInput((prevInput) => prevInput.slice(0, -1));
+  };
+
+  const handleCalculatorEqual = () => {
+    const evaluatedValue = eval(calculatorInput);
+    const newQuestions = [...questionData];
+    newQuestions[currentQuestion].answer = isNaN(evaluatedValue)
+      ? ""
+      : evaluatedValue;
+    setQuestionData(newQuestions);
+    setCalculatorInput("");
+  };
+
+  // const handleClearResponse = () => {
+  //   const newQuestions = [...questionData];
+  //   newQuestions[currentQuestion].answer = "";
+  //   setQuestionData(newQuestions);
+  //   setCalculatorInput("");
+  // };
+
   return (
     <div className="QuestionPaper_-container">
-
       <div className="quiz_exam_interface_header">
         <div className="quiz_exam_interface_header_LOGO">
           <img src={logo} alt="" />
@@ -1570,20 +1630,6 @@ const QuestionPaper = () => {
             <div class="quiz_exam_interface_SUBJECTS_CONTAINER">
               <div>
                 <div class="subjects_BTN_container">
-                  {/* {questionData.map((subject,Index) => (
-                    <li key={Index}>
-                      <p>{subject.subjectId}</p>
-                    </li>
-                  ))} */}
-                  {/* <li>
-                    <button class="subject_btn">Mathematics</button>
-                  </li>
-                  <li>
-                    <button class="subject_btn">Physics</button>
-                  </li>
-                  <li>
-                    <button class="subject_btn">Chemistry</button>
-                  </li> */}
                   <li>
                     <h6>Time Left: {WformatTime(wtimer)}</h6>
                   </li>
@@ -1818,35 +1864,14 @@ const QuestionPaper = () => {
                                   )}
                                 {/* calculator ============ */}
 
-                                {currentQuestionType &&
+                                {/* {currentQuestionType &&
                                   currentQuestionType.typeofQuestion &&
                                   currentQuestionType.typeofQuestion.includes(
                                     "NATD( Numeric Answer type of questions with Decimal values)"
                                   ) && (
                                     <div className="calculator">
                                       <div className="display">
-                                        {/* <h2>Answer:{questionData.questions[currentQuestionIndex].useranswer.ans}</h2> */}
-                                        {/* <h2>Answer: {getAnswerForCurrentQuestion()}</h2> */}
-                                        {/* {questionData.questions[
-                                          currentQuestionIndex
-                                        ].useranswer.ans !== undefined ? (
-                                          <h2>
-                                            Answer:{" "}
-                                            {
-                                              questionData.questions[
-                                                currentQuestionIndex
-                                              ].useranswer.ans
-                                            }
-                                          </h2>
-                                        ) : (
-                                          // <h2>Answer: Not available</h2>
-                                          <></>
-                                        )} */}
-                                        {/* {answers[currentQuestionIndex] !== undefined ? (
-              <h2>Answer: {answers[currentQuestionIndex]}</h2>
-            ) : (
-              <></>
-            )} */}
+
                                         <label>Answer:</label>
                                         <input
                                           type="text"
@@ -1855,7 +1880,7 @@ const QuestionPaper = () => {
                                           onChange={(e) => onAnswerSelected3(e)}
                                           placeholder="Enter your answer"
                                           readOnly
-                                          defaultValue={answeredQuestionsMap[currentQuestion.question_id] || ''}
+                                         
                                         />
                                       </div>
                                       <div>
@@ -1999,35 +2024,117 @@ const QuestionPaper = () => {
                                         />
                                       </div>
                                     </div>
+                                  )} */}
+                                {currentQuestionType &&
+                                  currentQuestionType.typeofQuestion &&
+                                  currentQuestionType.typeofQuestion.includes(
+                                    "NATD( Numeric Answer type of questions with Decimal values)"
+                                  ) && (
+                                    <div className="calculator">
+                                      <div className="display">
+                                        <label>Answer:</label>
+                                        <input
+                                          type="text"
+                                          name={`question-${currentQuestionIndex}`}
+                                          // value={value}
+                                          value={questionData.questions[currentQuestion].answer}
+                                          onChange={handleInputChange}
+                                          // onChange={(e) => {
+                                          //   setValue(e.target.value);
+                                          //   onAnswerSelected3(e);
+                                          // }}
+                                          placeholder="Enter your answer"
+                                          readOnly
+                                        />
+                                      </div>
+                                      <div>
+                                        <input
+                                          type="button"
+                                          value="AC"
+                                          onClick={() => setValue("")}
+                                        />
+                                        <input
+                                          type="button"
+                                          value="DE"
+                                          onClick={() =>
+                                            setValue(value.slice(0, -1))
+                                          }
+                                        />
+                                        <input
+                                          type="button"
+                                          value="."
+                                          onClick={() => setValue(value + ".")}
+                                        />
+                                        <input
+                                          type="button"
+                                          value="/"
+                                          onClick={() => setValue(value + "/")}
+                                        />
+                                      </div>
+                                      <div>
+                                        {[7, 8, 9, "*"].map((num) => (
+                                          <input
+                                            key={num}
+                                            type="button"
+                                            value={num}
+                                            onClick={() =>
+                                              setValue(value + num)
+                                            }
+                                          />
+                                        ))}
+                                      </div>
+                                      <div>
+                                        {[4, 5, 6, "+"].map((num) => (
+                                          <input
+                                            key={num}
+                                            type="button"
+                                            value={num}
+                                            onClick={() =>
+                                              setValue(value + num)
+                                            }
+                                          />
+                                        ))}
+                                      </div>
+                                      <div>
+                                        {[1, 2, 3, "-"].map((num) => (
+                                          <input
+                                            key={num}
+                                            type="button"
+                                            value={num}
+                                            onClick={() =>
+                                              setValue(value + num)
+                                            }
+                                          />
+                                        ))}
+                                      </div>
+                                      <div>
+                                        <input
+                                          type="button"
+                                          value="00"
+                                          onClick={() => setValue(value + "00")}
+                                        />
+                                        <input
+                                          type="button"
+                                          value="0"
+                                          onClick={() => setValue(value + "0")}
+                                        />
+                                        <input
+                                          type="button"
+                                          value="="
+                                          className="equal"
+                                          onClick={() => setValue(eval(value))}
+                                        />
+                                      </div>
+                                    </div>
                                   )}
 
-                                {currentQuestionType &&
+                                {/* {currentQuestionType &&
                                   currentQuestionType.typeofQuestion &&
                                   currentQuestionType.typeofQuestion.includes(
                                     "NATI( Numeric Answer type of questions with integer values)"
                                   ) && (
                                     <div className="calculator">
-                                      {/* <h2>Answer:{questionData.questions[currentQuestionIndex].useranswer.ans} </h2> */}
-                                      {/* {questionData.questions[
-                                        currentQuestionIndex
-                                      ].useranswer.ans !== undefined ? (
-                                        <h2>
-                                          Answer:{" "}
-                                          {
-                                            questionData.questions[
-                                              currentQuestionIndex
-                                            ].useranswer.ans
-                                          }
-                                        </h2>
-                                      ) : (
-                                        // <h2>Answer: Not available</h2>
-                                        <></>
-                                      )} */}
-                                      {/* {answers[currentQuestionIndex] !== undefined ? (
-              <h2>Answer: {answers[currentQuestionIndex]}</h2>
-            ) : (
-              <></>
-            )} */}
+                                   
                                       <div className="display">
                                         <label>Answer:</label>
                                         <input
@@ -2177,6 +2284,109 @@ const QuestionPaper = () => {
                                           value="="
                                           className="equal"
                                           onClick={(e) => setValue(eval(value))}
+                                        />
+                                      </div>
+                                    </div>
+                                  )} */}
+                                {currentQuestionType &&
+                                  currentQuestionType.typeofQuestion &&
+                                  currentQuestionType.typeofQuestion.includes(
+                                    "NATI( Numeric Answer type of questions with integer values)"
+                                  ) && (
+                                    <div className="calculator">
+                                      <div className="display">
+
+                                      <input type="text" value={[currentQuestionIndex].answer} onChange={handleInputChange} />
+    
+                                        <label>Answer:</label>
+                                        <input
+                                          type="text"
+                                          name={`question-${currentQuestionIndex}`}
+                                          value={value}
+                                          onChange={(e) => {
+                                            setValue(e.target.value);
+                                            onAnswerSelected3(e);
+                                          }}
+                                          placeholder="Enter your answer"
+                                          readOnly
+                                        />
+                                      </div>
+                                      <div>
+                                        <input
+                                          type="button"
+                                          value="AC"
+                                          onClick={() => setValue("")}
+                                        />
+                                        <input
+                                          type="button"
+                                          value="DE"
+                                          onClick={() =>
+                                            setValue(value.slice(0, -1))
+                                          }
+                                        />
+                                        <input
+                                          type="button"
+                                          value="."
+                                          onClick={() => setValue(value + ".")}
+                                        />
+                                        <input
+                                          type="button"
+                                          value="/"
+                                          onClick={() => setValue(value + "/")}
+                                        />
+                                      </div>
+                                      <div>
+                                        {[7, 8, 9, "*"].map((num) => (
+                                          <input
+                                            key={num}
+                                            type="button"
+                                            value={num}
+                                            onClick={() =>
+                                              setValue(value + num)
+                                            }
+                                          />
+                                        ))}
+                                      </div>
+                                      <div>
+                                        {[4, 5, 6, "+"].map((num) => (
+                                          <input
+                                            key={num}
+                                            type="button"
+                                            value={num}
+                                            onClick={() =>
+                                              setValue(value + num)
+                                            }
+                                          />
+                                        ))}
+                                      </div>
+                                      <div>
+                                        {[1, 2, 3, "-"].map((num) => (
+                                          <input
+                                            key={num}
+                                            type="button"
+                                            value={num}
+                                            onClick={() =>
+                                              setValue(value + num)
+                                            }
+                                          />
+                                        ))}
+                                      </div>
+                                      <div>
+                                        <input
+                                          type="button"
+                                          value="00"
+                                          onClick={() => setValue(value + "00")}
+                                        />
+                                        <input
+                                          type="button"
+                                          value="0"
+                                          onClick={() => setValue(value + "0")}
+                                        />
+                                        <input
+                                          type="button"
+                                          value="="
+                                          className="equal"
+                                          onClick={() => setValue(eval(value))}
                                         />
                                       </div>
                                     </div>
@@ -2366,13 +2576,13 @@ const QuestionPaper = () => {
             {/* <Link to='/SubmitPage'>YES</Link> */}
 
             {/* <button onClick={handleYes}>YES</button> */}
-            {/* <Link
+            <Link
               to={`/TestResultsPage/${testCreationTableId}`}
               style={{ background: "red", fontWeight: "bold", padding: "10px" }}
             >
               Yes
-            </Link> */}
-            <Link to='/InputValueDemo'>Yes</Link>
+            </Link>
+            {/* <Link to='/InputValueDemo'>Yes</Link> */}
             <button onClick={handleNo}>NO</button>
           </div>
         </div>

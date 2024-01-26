@@ -514,7 +514,7 @@ router.get('/tests', async (req, res) => {
       o.option_id, o.optionImgName, o.option_index,
       s.solution_id, s.solutionImgName,
       qt.qtypeId, qt.qtype_text,
-      ans.answer_id, ans.answer_text,
+      ans.answer_id, ans.answer_text, 
       m.markesId, m.marks_text,
       si.sort_id, si.sortid_text,
       doc.documen_name, doc.sectionId,
