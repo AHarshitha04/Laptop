@@ -62,6 +62,8 @@ const Leftnav = () => {
     setDocumentUpload_admin(false);
     setShowregisteredstudent(false);
     setShowImage_Upload_for_Ac(false)
+    setShowTestActivation_admin(false);
+
 
   };
   const handleshowCoursecreation_admin = () => {
@@ -118,6 +120,18 @@ const Leftnav = () => {
 
 
   };
+
+const  handleTestActivation_admin =()=>{
+  setShowdashboard(false);
+  setShowExamcreation_admin(false);
+  setshowCoursecreation_admin(false);
+  setInstructionPage_admin(false);
+  setTestcreationadmin(false);
+  setDocumentUpload_admin(false);
+  setShowregisteredstudent(false);
+  setShowImage_Upload_for_Ac(false)
+  setShowTestActivation_admin(true);
+}
 
   const handleregisteredstudent = () => {
     setShowdashboard(false);
@@ -258,6 +272,23 @@ const Leftnav = () => {
                 </p>
               </Link>
             </li>
+
+            <li>
+              {/* <Link to="/DocumentUpload" onClick={handleshowDocumentUpload_admin} className="LeftnavLinks"> */}
+              <Link
+                onClick={handleTestActivation_admin}
+                className="LeftnavLinks"
+              >
+                {/* <img width={40} src={dashboard} alt="" /> */}
+                <p>
+                  <i class="fa-solid fa-folder-open logo_-clr"></i>
+               Test Activation
+                </p>
+              </Link>
+            </li>
+          
+
+
             <li>
               <Link className="LeftnavLinks" to="/HomeLandingPage">
                 <p>
@@ -341,6 +372,13 @@ const Leftnav = () => {
       {showDocumentUpload_admin ? (
         <>
           <DocumentUpload_admin />
+        </>
+      ) : null}
+
+
+{showTestActivation_admin ? (
+        <>
+     <TestActivation_admin />
         </>
       ) : null}
 

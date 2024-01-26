@@ -38,7 +38,10 @@ const Testcreationadmin = () => {
     selectedInstruction
   ) => {
     const errors = {};
-  
+
+    
+
+
     if (!testName) {
       errors.testName = 'Test name is required';
     }
@@ -95,6 +98,21 @@ const Testcreationadmin = () => {
   
     return Object.keys(errors).length === 0;
   };
+  const calculateDuration = () => {
+    if (startTime && endTime) {
+      const startDateTime = moment(startTime, "HH:mm");
+      const endDateTime = moment(endTime, "HH:mm");
+
+      const durationInMinutes = endDateTime.diff(startDateTime, "minutes");
+
+      setDuration(durationInMinutes.toString());
+    }
+  };
+
+  useEffect(() => {
+    // Calculate duration whenever start or end time changes
+    calculateDuration();
+  }, [startTime, endTime,setDuration]);
   
   const [sectionsData, setSectionsData] = useState([
     {
@@ -564,13 +582,13 @@ setSubmitting(false);
               </div>
               <div className="testCreation_-contant_-flexCOntant  examSubjects_-contant">
                 <div className="testCreation_-list">
-                  <label>Duration (in minutes):</label>
-                  <input
+                  <label>Duration (in minutes):{duration}</label>
+                  {/* <input
                     type="number"
                     value={duration}
                     onChange={handleDurationChange}
                     min="1"
-                  />
+                  /> */}
                    {formErrors.duration && (
                     <span className="error-message">
                       <i className="fa-solid fa-circle"></i>

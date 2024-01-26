@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Label } from 'recharts';
+import axios from 'axios';
 
 const Employee_Information = () => {
   const [step, setStep] = useState(1);
   const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
+  const [designationOptions, setDesignationOptions] = useState([]);
+  const [selectedDesignation, setSelectedDesignation] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [motherName,setMotherName] = useState('');
@@ -39,6 +41,14 @@ const Employee_Information = () => {
   const[eseRank,setEseRank]=useState('');
   const[psuRank,setPsuRank]=useState('');
   const[anyOtherRank,setAnyOtherRank]=useState('');
+
+  useEffect(() => {
+    // Fetch gender options from the database
+    fetch('http://localhost:5001/Employee_info/getGenderDesignationOptions')
+      .then((response) => response.json())
+      .then((data) => setDesignationOptions(data))
+      .catch((error) => console.error('Error fetching DesignationOptions:', error));
+  }, []);
   useEffect(() => {
     // Fetch gender options from the database
     fetch('http://localhost:5001/Employee_info/getGenderOptions')
@@ -86,44 +96,38 @@ const Employee_Information = () => {
 
 
   
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     if (step === 1) {
-     
-      setStep(2); // Move to step 2
+      // Handle step 1 logic
+      setStep(2);
     } else if (step === 2) {
       // Handle step 2 logic
-      // Validate and process data if needed
-      setStep(3); // Move to step 3
+      setStep(3);
     } else if (step === 3) {
       // Handle step 3 logic
-      // Validate and process data if needed
-      setStep(4); // Move to step 4
-    }
-    else if (step === 4) {
-      // Handle step 3 logic
-      // Validate and process data if needed
-      setStep(5); // Move to step 4
-    } else if (step === 5) {
+      setStep(4);
+    } else if (step === 4) {
       // Handle step 4 logic
-      // Validate and process data if needed
-      // Submit the form or perform final actions
-      console.log('Form submitted:', {
-        login,
-        password,
-        firstName,
-        lastName,
-        motherName,
-        fatherName,
-        dateOfBirth,
-        gender: selectedGender,
-        relationshipStatus: selectedrelationshipStatus,
-        motherTongue,
-        bloodGroup,
-        languages,
-        AcademicDetails,
-      });
+      setStep(5);
+    } else if (step === 5) {
+      // Form submission logic
+  
+      try {
+        // Make a POST request to your backend endpoint (/empinfo)
+        const response = await axios.post('http://localhost:5001/Employee_Info/empinfo', {
+          login,
+          password,firstName,lastName,motherName,fatherName,dateOfBirth,motherTongue,bloodGroup,selectedGender: selectedGender, 
+          selectedrelationshipStatus: selectedrelationshipStatus,
+        });
+  
+        // Handle the response if needed
+        console.log('Server Response:', response.data);
+      } catch (error) {
+        // Handle error
+        console.error('Error submitting form:', error);
+      }
     }
   };
 
@@ -147,7 +151,7 @@ const Employee_Information = () => {
             id="login"
             value={login}
             onChange={(e) => setLogin(e.target.value)}
-            required
+           //required
           />
         </div>
         <div>
@@ -157,9 +161,25 @@ const Employee_Information = () => {
             id="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            required
+           //required
           />
         </div>
+        <div>
+            <label>Designation:</label>
+            {designationOptions.map((designationOption) => (
+              <div key={designationOption.empdesignationId }>
+                <input
+                  type="radio"
+                  id={designationOption.empdesignationId }
+                  name="designation"
+                  value={designationOption.empdesignationId }
+                  checked={selectedDesignation === designationOption.empdesignationId }
+                  onChange={() => setSelectedDesignation(designationOption.empdesignationId )}
+                />
+                <label htmlFor={designationOption.empdesignationId}>{designationOption.Designation}</label>
+              </div>
+            ))}
+          </div>
           <div> 
             <h2>Basic Details</h2>
           <div>
@@ -169,7 +189,7 @@ const Employee_Information = () => {
             id="firstName"
             value={firstName}
             onChange={(e) => setFirstName(e.target.value)}
-            required
+           //required
           />
         </div>
         <div>
@@ -179,7 +199,7 @@ const Employee_Information = () => {
             id="lastName"
             value={lastName}
             onChange={(e) => setLastName(e.target.value)}
-            required
+           //required
           />
         </div>
         <div>
@@ -189,7 +209,7 @@ const Employee_Information = () => {
             id="motherName"
             value={motherName}
             onChange={(e) => setMotherName(e.target.value)}
-            required
+           //required
           />
         </div>
         <div>
@@ -199,7 +219,7 @@ const Employee_Information = () => {
             id="fatherName"
             value={fatherName}
             onChange={(e) => setFatherName(e.target.value)}
-            required
+           //required
           />
         </div>
         <div>
@@ -209,7 +229,7 @@ const Employee_Information = () => {
             id="dateOfBirth"
             value={dateOfBirth}
             onChange={(e) => setDateOfBirth(e.target.value)}
-            required
+           //required
           />
         </div>
         <div>
@@ -220,9 +240,9 @@ const Employee_Information = () => {
                   type="radio"
                   id={option.empGenderId}
                   name="gender"
-                  value={option.Gender}
-                  checked={selectedGender === option.Gander}
-                  onChange={() => setSelectedGender(option.Gander)}
+                  value={option.empGenderId}
+                  checked={selectedGender === option.empGenderId}
+                  onChange={() => setSelectedGender(option.empGenderId)}
                 />
                 <label htmlFor={option.empGenderId}>{option.Gander}</label>
               </div>
@@ -230,19 +250,19 @@ const Employee_Information = () => {
           </div>
           <div>
             <label>RELATIONSHIP STATUS</label>
-            {relationshipStatus.map((option) => (
-              <div key={option.empRSId}>
-                <input
-                  type="radio"
-                  id={option.empRSId}
-                  name="gender"
-                  value={option.RelationshipStatus}
-                  checked={selectedrelationshipStatus === option.RelationshipStatus}
-                  onChange={() => setSelectedRelationshipStatus(option.RelationshipStatus)}
-                />
-                <label htmlFor={option.empRSId}>{option.RelationshipStatus}</label>
-              </div>
-            ))}
+            {relationshipStatus.map((relationshipStatusoption) => (
+  <div key={relationshipStatusoption.empRSId}>
+    <input
+      type="radio"
+      id={relationshipStatusoption.empRSId}
+      name="relationshipStatus"
+      value={relationshipStatusoption.empRSId}
+      checked={selectedrelationshipStatus === relationshipStatusoption.empRSId}
+      onChange={() => setSelectedRelationshipStatus(relationshipStatusoption.empRSId)}
+    />
+    <label htmlFor={relationshipStatusoption.empRSId}>{relationshipStatusoption.RelationshipStatus}</label>
+  </div>
+))}
           </div>
           <div>
           <label htmlFor="MotherTongue">MOTHER TONGUE:</label>
@@ -251,7 +271,7 @@ const Employee_Information = () => {
             id="MotherTongue"
             value={motherTongue}
             onChange={(e) => setMotherTongue(e.target.value)}
-            required
+           //required
           />
         </div>
         <div>
@@ -261,7 +281,7 @@ const Employee_Information = () => {
             id="bloodGroup"
             value={bloodGroup}
             onChange={(e) => setBloodGroup(e.target.value)}
-            required
+           //required
           />
         </div>
 
@@ -320,7 +340,7 @@ const Employee_Information = () => {
             id="emailid"
             value={emailid}
             onChange={(e) => setEmailid(e.target.value)}
-            required
+           //required
           />
         </div>
         <div>
@@ -330,7 +350,7 @@ const Employee_Information = () => {
             id="contactNo"
             value={contactNo}
             onChange={(e) => setContactNo(e.target.value)}
-            required
+           //required
           />
         </div>
         <div>
@@ -340,7 +360,7 @@ const Employee_Information = () => {
             id="presentAddress"
             value={presentAddress}
             onChange={(e) => setPresentAddress(e.target.value)}
-            required
+           //required
           />
         </div>
         <label>Are you willing to relocate?</label>
@@ -396,7 +416,7 @@ const Employee_Information = () => {
             id="EmployeeName"
             value={employeeName}
             onChange={(e) => setEmployeeName(e.target.value)}
-            required
+           //required
           />
         </div>
         <div>
@@ -406,7 +426,7 @@ const Employee_Information = () => {
             id="BankRecordName"
             value={bankRecordName}
             onChange={(e) => setBankRecordName(e.target.value)}
-            required
+           //required
           />
         </div>
         <div>
@@ -416,7 +436,7 @@ const Employee_Information = () => {
             id="BankName"
             value={bankName}
             onChange={(e) => setBankName(e.target.value)}
-            required
+           //required
           />
         </div>
         <div>
@@ -426,7 +446,7 @@ const Employee_Information = () => {
             id="AccontNo"
             value={accontNo}
             onChange={(e) => setAccontNo(e.target.value)}
-            required
+           //required
           />
         </div>
         <div>
@@ -436,7 +456,7 @@ const Employee_Information = () => {
             id="IfscCode"
             value={ifscCode}
             onChange={(e) => setIfscCode(e.target.value)}
-            required
+           //required
           />
         </div>
         <div>
@@ -446,7 +466,7 @@ const Employee_Information = () => {
             id="BranchName"
             value={branchName}
             onChange={(e) => setBranchName(e.target.value)}
-            required
+           //required
           />
         </div>
         <label>TYPE OF ACCOUNT</label>
@@ -487,7 +507,7 @@ const Employee_Information = () => {
             id="ConformAccountNo"
             value={conformAccountNo}
             onChange={(e) => setConformAccountNo(e.target.value)}
-            required
+           //required
           />
         </div>
             </div>
@@ -626,7 +646,7 @@ knowledge and I bear the responsibility for the correctness of the above-mention
             id="Place"
             value={place}
             onChange={(e) => setPlace(e.target.value)}
-            required
+           //required
           />
         </div>
         <div>
@@ -636,7 +656,7 @@ knowledge and I bear the responsibility for the correctness of the above-mention
             id="Date"
             value={date}
             onChange={(e) => setDate(e.target.value)}
-            required
+           //required
           />
         </div>
         <div>
@@ -646,7 +666,7 @@ knowledge and I bear the responsibility for the correctness of the above-mention
                   id="Signature"
                   onChange={(e) => setSignatureImage(e.target.files[0])}
                   accept="image/*"
-                  required
+                 //required
                 />
               </div>
           

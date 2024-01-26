@@ -483,7 +483,7 @@ router.get('/tests', async (req, res) => {
     const { testCreationTableId, subjectId, sectionId } = req.params;
     try {
       const [rows] = await db.query(`
-        SELECT 
+        SELECT DISTINCT
           q.question_id, q.questionImgName, 
           o.option_id, o.optionImgName,o.option_index,
           s.solution_id, s.solutionImgName, 
@@ -505,7 +505,7 @@ router.get('/tests', async (req, res) => {
           LEFT OUTER JOIN paragraph p ON q.question_id = p.question_id
           LEFT OUTER JOIN ots_document doc ON q.document_Id  = doc.document_Id  
         WHERE 
-          doc.testCreationTableId = ? AND doc.subjectId = ? AND doc.sectionId = ?;
+          doc.testCreationTableId = ? AND doc.subjectId = ? AND doc.sectionId = ? ORDER BY q.question_id ASC;
       `, [testCreationTableId, subjectId, sectionId]);
   
       // Check if rows is not empty
@@ -574,6 +574,83 @@ router.get('/tests', async (req, res) => {
       res.status(500).json({ error: 'Internal Server Error' });
     }
   });
+  // router.get('/fulldocimages/:testCreationTableId/:subjectId/:sectionId', async (req, res) => {
+  //   const { testCreationTableId, subjectId, sectionId } = req.params;
+  //   try {
+  //     const [rows] = await db.query(`
+  //       SELECT DISTINCT
+  //         q.question_id, q.questionImgName, 
+  //         o.option_id, o.optionImgName,o.option_index, 
+  //         qt.qtypeId,qt.qtype_text,
+  //         si.sort_id ,si.sortid_text,
+  //         doc.documen_name, doc.sectionId, 
+  //         doc.subjectId, doc.testCreationTableId ,
+  //         P.paragraphImg,p.paragraph_Id
+  //       FROM 
+  //         questions q 
+  //         LEFT OUTER JOIN options o ON q.question_id = o.question_id
+  //         LEFT OUTER JOIN qtype qt ON q.question_id = qt.question_id 
+  //         LEFT OUTER JOIN sortid si ON q.question_id = si.question_id  
+  //         LEFT OUTER JOIN paragraph p ON q.question_id = p.question_id
+  //         LEFT OUTER JOIN ots_document doc ON q.document_Id  = doc.document_Id  
+  //       WHERE 
+  //         doc.testCreationTableId = ? AND doc.subjectId = ? AND doc.sectionId = ? ORDER BY q.question_id ASC;
+  //     `, [testCreationTableId, subjectId, sectionId]);
+  
+  //     // Check if rows is not empty
+  //     if (rows.length > 0) {
+  //       const questionData = {
+  //         questions: [],
+  //       };
+  
+  //       // Organize data into an array of questions
+  //       rows.forEach(row => {
+  //         const existingQuestion = questionData.questions.find(q => q.question_id === row.question_id);
+  
+  //         if (existingQuestion) {
+  //           // Question already exists, add option to the existing question
+  //           existingQuestion.options.push({
+  //             option_id: row.option_id,
+  //             option_index:row.option_index,
+  //             optionImgName: row.optionImgName,
+  //           });
+  //         } else {
+  //           // Question doesn't exist, create a new question
+  //           const newQuestion = {
+  //             question_id: row.question_id,
+  //             questionImgName: row.questionImgName,
+  //             documen_name: row.documen_name,
+  //             options: [
+  //               {
+  //                 option_id: row.option_id,
+  //                 optionImgName: row.optionImgName,
+  //               },
+  //             ],
+  //             qtype:{
+  //               qtypeId:row.qtypeId,
+  //               qtype_text:row.qtype_text,
+  //             },
+  //             sortid:{
+  //               sort_id:row.sort_id,
+  //               sortid_text:row.sortid_text
+  //             },
+  //           };
+  
+  //           questionData.questions.push(newQuestion);
+  //         }
+  //       });
+  
+  
+  //       res.json(questionData);
+  //     } else {
+  //       // Handle the case where no rows are returned (empty result set)
+  //       res.status(404).json({ error: 'No data found' });
+  //     }
+  //   } catch (error) {
+  //     console.error('Error fetching question data:', error);
+  //     res.status(500).json({ error: 'Internal Server Error' });
+  //   }
+  // });
 
   //doc delete 
   router.delete('/DocumentDelete/:document_Id', async (req, res) => {
