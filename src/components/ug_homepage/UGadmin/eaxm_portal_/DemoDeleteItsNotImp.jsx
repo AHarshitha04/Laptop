@@ -14,7 +14,8 @@ const QuestionPaper = () => {
   const [questionData, setQuestionData] = useState({ questions: [] });
   const [value, setValue] = useState("");
 
-  const { subjectId, testCreationTableId, userId, question_id, user_Id } = useParams();
+  const { subjectId, testCreationTableId, userId, question_id, user_Id } =
+    useParams();
   const [Subjects, setSubjects] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedSubject, setSelectedSubject] = useState(null);
@@ -128,8 +129,7 @@ const QuestionPaper = () => {
   };
 
   const handleNo = () => {
-    setShowExamSumary(false)
-    // navigate(`/QuestionPaper/questionOptions/${testCreationTableId}`);
+    setShowExamSumary(false);
   };
 
   const [activeQuestion, setActiveQuestion] = useState(0);
@@ -166,30 +166,29 @@ const QuestionPaper = () => {
   // ------------------------------------------END OF TIMER FUNCTION------------------------
   const [timeLeftAtSubmission, setTimeLeftAtSubmission] = useState(0);
 
-// -------------------------overall time-------------------------------
-const [wtimer, setWTimer] = useState(0);
-const WformatTime = (seconds) => {
-  const hours = Math.floor(seconds / 3600);
-  const minutes = Math.floor((seconds % 3600) / 60);
-  const remainingSeconds = seconds % 60;
-  return `${hours > 9 ? hours : "0" + hours}:${
-    minutes > 9 ? minutes : "0" + minutes
-  }:${remainingSeconds > 9 ? remainingSeconds : "0" + remainingSeconds}`;
-  // return hours * 3600 + minutes * 60 + seconds;
-
-};
-useEffect(() => {
-  // setWTimer(wtimer);
-  let interval;
-  interval = setInterval(() => {
-    setWTimer((prevTimer) => prevTimer + 1);
-  }, 1000);
-
-  return () => {
-    clearInterval(interval);
+  // -------------------------overall time-------------------------------
+  const [wtimer, setWTimer] = useState(0);
+  const WformatTime = (seconds) => {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const remainingSeconds = seconds % 60;
+    return `${hours > 9 ? hours : "0" + hours}:${
+      minutes > 9 ? minutes : "0" + minutes
+    }:${remainingSeconds > 9 ? remainingSeconds : "0" + remainingSeconds}`;
+    // return hours * 3600 + minutes * 60 + seconds;
   };
-}, [wtimer]);
-// ----------------------------end overall time--------------------------
+  useEffect(() => {
+    // setWTimer(wtimer);
+    let interval;
+    interval = setInterval(() => {
+      setWTimer((prevTimer) => prevTimer + 1);
+    }, 1000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [wtimer]);
+  // ----------------------------end overall time--------------------------
   //-----------------------------TYPES OF INPUT VALUES for ANSWERING FORMATE
 
   const onAnswerSelected1 = (optionIndex) => {
@@ -242,8 +241,13 @@ useEffect(() => {
     updatedSelectedAnswers[activeQuestion] = optionIndex;
     setSelectedAnswers(updatedSelectedAnswers);
   };
-
+  const [answers, setAnswers] = useState(Array(questionData.questions.length).fill(''));
   const onAnswerSelected3 = (e) => {
+    // Handle updating the state when the user answers a question
+    const updatedAnswers = [...answers];
+    updatedAnswers[currentQuestionIndex] = e.target.value;
+    setAnswers(updatedAnswers);
+
     if (
       !questionData.questions ||
       !questionData.questions[currentQuestionIndex]
@@ -349,7 +353,6 @@ useEffect(() => {
     setVisitedCount(counts.VisitedCount);
   }, [questionStatus]);
 
-  
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -555,7 +558,6 @@ useEffect(() => {
 
   //       const questionId = currentQuestion.question_id;
 
-
   //       if(answeredQuestionsMap[questionId]){
   //         const updatedResponse = {
   //           optionIndexes1: optionIndexes1.map((index) =>
@@ -565,14 +567,14 @@ useEffect(() => {
   //             String.fromCharCode("a".charCodeAt(0) + index)
   //           ),
   //         };
-  
+
   //         const updateResponse = await axios.put(
   //           `http://localhost:5001/QuestionPaper/updateResponse/${questionId}`,
   //           {
   //             updatedResponse,
   //           }
   //         );
-  
+
   //         console.log(updateResponse.data);
   //         console.log("Handle Next Click - Response Updated");
   //       }else{
@@ -609,8 +611,6 @@ useEffect(() => {
   //       }));
 
   //       }
-
-       
 
   //       setClickCount((prevCount) => prevCount + 1);
   //     }
@@ -715,7 +715,7 @@ useEffect(() => {
 
   //       const questionId = currentQuestion.question_id;
 
-  //       const hasAnswered = answeredQuestionsMap[questionId];     
+  //       const hasAnswered = answeredQuestionsMap[questionId];
   //       // If the user has answered, update the existing response
   //       if (hasAnswered) {
   //         const updatedResponse = {
@@ -790,30 +790,30 @@ useEffect(() => {
     const updatedQuestionStatus = [...questionStatus];
     const calculatorInputValue = value;
     const currentQuestion = questionData.questions[currentQuestionIndex];
-  
+
     const isCurrentQuestionAnswered =
       selectedAnswersMap1[currentQuestion.question_id] !== undefined ||
       (selectedAnswersMap2[currentQuestion.question_id] &&
         selectedAnswersMap2[currentQuestion.question_id].length > 0) ||
       calculatorInputValue !== "";
-  
+
     const isResponseCleared =
       selectedAnswersMap1[currentQuestion.question_id] === null ||
       selectedAnswersMap2[currentQuestion.question_id]?.length === 0;
-  
+
     if (!isCurrentQuestionAnswered) {
       window.alert("Please answer the question before proceeding.");
     } else {
       const updatedQuestionStatus = [...questionStatus];
       updatedQuestionStatus[currentQuestionIndex] = "answered";
       setQuestionStatus(updatedQuestionStatus);
-  
+
       setCurrentQuestionIndex((prevIndex) => {
         if (prevIndex < questionData.questions.length - 1) {
           return prevIndex + 1;
         }
       });
-  
+
       try {
         // Fetch question options
         const response = await fetch(
@@ -821,7 +821,7 @@ useEffect(() => {
         );
         const result = await response.json();
         setQuestionData(result);
-  
+
         // Fetch user data
         const token = localStorage.getItem("token");
         const response_user = await fetch(
@@ -832,36 +832,41 @@ useEffect(() => {
             },
           }
         );
-  
+
         if (response_user.ok) {
           const userData = await response_user.json();
           setUserData(userData);
-  
+
           const userId = userData.id;
-  
+          const subjectId = questionData.subjectId;
+
           console.log("Test Creation Table ID:", testCreationTableId);
           console.log("Current user_Id:", userId);
-  
+          console.log("Current Subject Id:",subjectId)
+          // console.log("Current Section Id:",sectionId)
+          console.log(questionData)
+
+          
           if (!questionData || !questionData.questions) {
             console.error("Data or questions are null or undefined");
             return;
           }
-  
+
           const calculatorInputValue = value;
           const currentQuestion = questionData.questions[currentQuestionIndex];
           const selectedOption1 =
             selectedAnswersMap1[currentQuestion.question_id];
           const selectedOption2 =
             selectedAnswersMap2[currentQuestion.question_id];
-  
+
           const optionIndexes1 =
             selectedOption1 !== undefined ? [selectedOption1] : [];
           const optionIndexes2 =
             selectedOption2 !== undefined ? selectedOption2 : [];
-  
+
           const questionId = currentQuestion.question_id;
           const hasAnswered = answeredQuestionsMap[questionId];
-  
+
           if (hasAnswered) {
             const updatedResponse = {
               optionIndexes1: optionIndexes1.map((index) =>
@@ -881,9 +886,9 @@ useEffect(() => {
                 testCreationTableId,
               }
             );
-            console.log("egrad", updateRespons)
-            console.log("updatedResponse", updatedResponse)
-            console.log("hiiii")
+            console.log("egrad", updateRespons);
+            console.log("updatedResponse", updatedResponse);
+            console.log("hiiii");
             console.log("The question answer is  updated");
             // You can perform additional actions if the question is already answered
           } else {
@@ -900,22 +905,21 @@ useEffect(() => {
                 calculatorInputValue: calculatorInputValue,
               },
             };
-            console.log("hello")
+            console.log("hello");
             console.log("The question is answered for the first time");
-            console.log("responses", responses)
+            console.log("responses", responses);
             // You can perform additional actions if the question is answered for the first time
-  
+
             // Update answeredQuestionsMap to indicate that the question has been answered
             setAnsweredQuestionsMap((prevMap) => ({
               ...prevMap,
               [questionId]: true,
             }));
-  
+
             // If the user has answered, update the existing response
             if (hasAnswered) {
-
               console.log("Existing Response Updated");
-              console.log("updated reponse is saved")
+              console.log("updated reponse is saved");
             } else {
               // Responses object
               const responses = {
@@ -931,7 +935,7 @@ useEffect(() => {
                   calculatorInputValue: calculatorInputValue,
                 },
               };
-  
+
               // If the user has not answered, save a new response
               const saveResponse = await axios.post(
                 "http://localhost:5001/QuestionPaper/response",
@@ -939,14 +943,15 @@ useEffect(() => {
                   responses,
                   userId,
                   testCreationTableId,
+
                 }
               );
-  
+
               console.log(saveResponse.data);
               console.log("New Response Saved");
-              console.log("reponse is saved")
+              console.log("reponse is saved");
             }
-  
+
             setClickCount((prevCount) => prevCount + 1);
           }
         }
@@ -956,7 +961,6 @@ useEffect(() => {
     }
     // --------------------------------end of button functionality --------------------------------------------------
   };
-  
 
   // const handleNextQuestion = async () => {
   //   const currentQuestion = questionData.questions[currentQuestionIndex];
@@ -990,7 +994,6 @@ useEffect(() => {
   //     }
   //   });
 
-
   //   try {
   //     // Fetch question options
   //     const response = await fetch(
@@ -998,7 +1001,7 @@ useEffect(() => {
   //     );
   //     const result = await response.json();
   //     setQuestionData(result);
-  
+
   //     // Fetch user data
   //     const token = localStorage.getItem("token");
   //     const response_user = await fetch(
@@ -1009,35 +1012,35 @@ useEffect(() => {
   //         },
   //       }
   //     );
-  
+
   //     if (response_user.ok) {
   //       const userData = await response_user.json();
   //       setUserData(userData);
-  
+
   //       const userId = userData.id;
-  
+
   //       console.log("Test Creation Table ID:", testCreationTableId);
   //       console.log("Current user_Id:", userId);
-  
+
   //       if (!questionData || !questionData.questions) {
   //         console.error("Data or questions are null or undefined");
   //         return;
   //       }
-  
+
   //       const currentQuestion = questionData.questions[currentQuestionIndex];
   //       const questionId = currentQuestion.question_id;
   //       const calculatorInputValue = value;
-  
+
   //       const selectedOption1 = selectedAnswersMap1[questionId];
   //       const selectedOption2 = selectedAnswersMap2[questionId];
-  
+
   //       const optionIndexes1 =
   //         selectedOption1 !== undefined ? [selectedOption1] : [];
   //       const optionIndexes2 =
   //         selectedOption2 !== undefined ? selectedOption2 : [];
-  
+
   //       const hasAnswered = answeredQuestionsMap[questionId];
-  
+
   //       if (hasAnswered) {
   //         const updatedResponse = {
   //           optionIndexes1: optionIndexes1.map((index) =>
@@ -1048,7 +1051,7 @@ useEffect(() => {
   //           ),
   //           calculatorInputValue: calculatorInputValue,
   //         };
-  
+
   //         const updateRespons = await axios.put(
   //           `http://localhost:5001/QuestionPaper/updateResponse/${questionId}`,
   //           {
@@ -1080,13 +1083,13 @@ useEffect(() => {
   //         console.log("The question is answered for the first time");
   //         console.log("responses", responses);
   //         // You can perform additional actions if the question is answered for the first time
-  
+
   //         // Update answeredQuestionsMap to indicate that the question has been answered
   //         setAnsweredQuestionsMap((prevMap) => ({
   //           ...prevMap,
   //           [questionId]: true,
   //         }));
-  
+
   //         // If the user has answered, update the existing response
   //         if (hasAnswered) {
   //           console.log("Existing Response Updated 1");
@@ -1106,7 +1109,7 @@ useEffect(() => {
   //               calculatorInputValue: calculatorInputValue,
   //             },
   //           };
-  
+
   //           // If the user has not answered, save a new response
   //           const saveResponse = await axios.post(
   //             "http://localhost:5001/QuestionPaper/response",
@@ -1116,12 +1119,12 @@ useEffect(() => {
   //               testCreationTableId,
   //             }
   //           );
-  
+
   //           console.log(saveResponse.data);
   //           console.log("New Response Saved");
   //           console.log("response is saved");
   //         }
-  
+
   //         setClickCount((prevCount) => prevCount + 1);
   //       }
   //     }
@@ -1130,7 +1133,6 @@ useEffect(() => {
   //   }
   //   // --------------------------------end of button functionality --------------------------------------------------
   // };
-
 
   const handleNextQuestion = async () => {
     const currentQuestion = questionData.questions[currentQuestionIndex];
@@ -1383,12 +1385,14 @@ useEffect(() => {
 
   //    // Log the time left at the moment of submission
   // console.log("Time Left at Submission:", WformatTime(wtimer));
-  
+
   // };
 
-  
   const handleSubmit = async () => {
-    window.alert("Your Test has been Submitted!! Click Ok to See Result.", calculateResult());
+    window.alert(
+      "Your Test has been Submitted!! Click Ok to See Result.",
+      calculateResult()
+    );
     setShowExamSumary(true);
     calculateResult();
     const counts = calculateQuestionCounts();
@@ -1400,32 +1404,35 @@ useEffect(() => {
 
     // const timeLeftInSeconds = wtimer;
     const formattedTime = WformatTime(wtimer);
-  
+
     // Log the time left at the moment of submission
     console.log("Time Left at Submission:", formattedTime);
-  
+
     try {
       // Make a POST request to your server to submit time left
-      const response = await fetch('http://localhost:5001/QuestionPaper/submitTimeLeft', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          userId: userData.id, /* Replace with actual user ID */
-          testCreationTableId: testCreationTableId, /* Replace with actual test creation table ID */
-          timeLeft: formattedTime,
-        }),
-      });
-  
+      const response = await fetch(
+        "http://localhost:5001/QuestionPaper/submitTimeLeft",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId: userData.id /* Replace with actual user ID */,
+            testCreationTableId:
+              testCreationTableId /* Replace with actual test creation table ID */,
+            timeLeft: formattedTime,
+          }),
+        }
+      );
+
       const result = await response.json();
       console.log(result);
     } catch (error) {
-      console.error('Error submitting time left:', error);
+      console.error("Error submitting time left:", error);
     }
   };
-  
-  
+
   const handlePreviousClick = () => {
     setCurrentQuestionIndex((prevIndex) => {
       // Save the current timer value for the question
@@ -1511,6 +1518,28 @@ useEffect(() => {
     localStorage.setItem("calculatorInputValue", value);
   }, [value]);
 
+  // Function to get the answer for the current question
+  function getAnswerForCurrentQuestion() {
+    const currentQuestion = questionData.questions[currentQuestionIndex];
+
+    if (currentQuestion && currentQuestion.useranswer) {
+      const { useranswer, typeofQuestion } = currentQuestion;
+
+      // Check if typeofQuestion is defined before using includes
+      if (typeofQuestion && typeofQuestion.includes) {
+        // Adjust the logic based on your data structure
+        if (typeofQuestion.includes("NATD")) {
+          return useranswer.ans; // For questions with Decimal values
+        } else if (typeofQuestion.includes("NATI")) {
+          return useranswer.ans; // For questions with Integer values
+        }
+      }
+    }
+
+    // Add more conditions or handle the case where the question type is not recognized
+    return "Answer not available";
+  }
+  // const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   return (
     <div>
       <div className="quiz_exam_interface_header">
@@ -1527,7 +1556,12 @@ useEffect(() => {
             <div class="quiz_exam_interface_SUBJECTS_CONTAINER">
               <div>
                 <div class="subjects_BTN_container">
-                  <li>
+                {/* {questionData.map((subject,Index) => (
+                    <li key={Index}>
+                      <p>{subject.subjectId}</p>
+                    </li>
+                  ))} */}
+                  {/* <li>
                     <button class="subject_btn">Mathematics</button>
                   </li>
                   <li>
@@ -1535,9 +1569,9 @@ useEffect(() => {
                   </li>
                   <li>
                     <button class="subject_btn">Chemistry</button>
-                  </li>
+                  </li> */}
                   <li>
-                  <h6>Time Left: {WformatTime(wtimer)}</h6>
+                    <h6>Time Left: {WformatTime(wtimer)}</h6>
                   </li>
                 </div>
 
@@ -1550,7 +1584,7 @@ useEffect(() => {
                   ))}
                 </h3>
               </div>
-
+              
               <div class="right-header">
                 <div class="marks">
                   Marks: <div class="plus-mark">+1</div>
@@ -1571,7 +1605,8 @@ useEffect(() => {
                 <>
                   <div className="quiz_exam_interface_exam_subCONTAINEr">
                     <div className="quiz_exam_interface_exam_qN_Q">
-                      <h3>Question:{currentQuestion.sortid.sortid_text}</h3>
+                      {/* <h3>Question:{currentQuestion.sortid.sortid_text}</h3> */}
+                      <h3>{currentQuestionIndex+1}</h3>
 
                       {currentQuestion.paragraph &&
                         currentQuestion.paragraph.paragraphImg && (
@@ -1582,7 +1617,7 @@ useEffect(() => {
                               alt={`ParagraphImage ${currentQuestion.paragraph.paragraph_Id}`}
                               style={{ width: "700px" }}
                             />
-                            <h2>Question:  </h2>
+                            <h2>Question: </h2>
                           </>
                         )}
 
@@ -1684,7 +1719,6 @@ useEffect(() => {
                                     "MSQN(MSQ with -ve marking)"
                                   ) && (
                                     <div>
-                                     
                                       <input
                                         className="opt_btns"
                                         type="checkbox"
@@ -1759,7 +1793,8 @@ useEffect(() => {
                                       />{" "}
                                     </div>
                                   )}
-   {/* calculator ============ */}
+                                {/* calculator ============ */}
+
                                 {currentQuestionType &&
                                   currentQuestionType.typeofQuestion &&
                                   currentQuestionType.typeofQuestion.includes(
@@ -1767,12 +1802,36 @@ useEffect(() => {
                                   ) && (
                                     <div className="calculator">
                                       <div className="display">
-                                          <h2>{questionData.questions[currentQuestionIndex].useranswer.ans}</h2>
+                                        {/* <h2>Answer:{questionData.questions[currentQuestionIndex].useranswer.ans}</h2> */}
+                                        {/* <h2>Answer: {getAnswerForCurrentQuestion()}</h2> */}
+                                        {/* {questionData.questions[
+                                          currentQuestionIndex
+                                        ].useranswer.ans !== undefined ? (
+                                          <h2>
+                                            Answer:{" "}
+                                            {
+                                              questionData.questions[
+                                                currentQuestionIndex
+                                              ].useranswer.ans
+                                            }
+                                          </h2>
+                                        ) : (
+                                          // <h2>Answer: Not available</h2>
+                                          <></>
+                                        )} */}
+                                         {/* {answers[currentQuestionIndex] !== undefined ? (
+              <h2>Answer: {answers[currentQuestionIndex]}</h2>
+            ) : (
+              <></>
+            )} */}
+                                        <label>Answer:</label>
                                         <input
                                           type="text"
                                           name={`question-${currentQuestionIndex}`}
                                           value={value}
                                           onChange={(e) => onAnswerSelected3(e)}
+                                          placeholder="Enter your answer"
+                                          readOnly
                                         />
                                       </div>
                                       <div>
@@ -1924,14 +1983,36 @@ useEffect(() => {
                                     "NATI( Numeric Answer type of questions with integer values)"
                                   ) && (
                                     <div className="calculator">
-                                      <h2>{questionData.questions[currentQuestionIndex].useranswer.ans} </h2>
-
+                                      {/* <h2>Answer:{questionData.questions[currentQuestionIndex].useranswer.ans} </h2> */}
+                                      {/* {questionData.questions[
+                                        currentQuestionIndex
+                                      ].useranswer.ans !== undefined ? (
+                                        <h2>
+                                          Answer:{" "}
+                                          {
+                                            questionData.questions[
+                                              currentQuestionIndex
+                                            ].useranswer.ans
+                                          }
+                                        </h2>
+                                      ) : (
+                                        // <h2>Answer: Not available</h2>
+                                        <></>
+                                      )} */}
+                                       {/* {answers[currentQuestionIndex] !== undefined ? (
+              <h2>Answer: {answers[currentQuestionIndex]}</h2>
+            ) : (
+              <></>
+            )} */}
                                       <div className="display">
+                                      <label>Answer:</label>
                                         <input
                                           type="text"
                                           name={`question-${currentQuestionIndex}`}
                                           value={value}
                                           onChange={(e) => onAnswerSelected3(e)}
+                                          placeholder="Enter your answer"
+                                          readOnly
                                         />
                                       </div>
                                       <div>
@@ -2076,7 +2157,7 @@ useEffect(() => {
                                       </div>
                                     </div>
                                   )}
- {/* calculator ============ */}
+                                {/* calculator ============ */}
                                 {currentQuestionType &&
                                   currentQuestionType.typeofQuestion &&
                                   currentQuestionType.typeofQuestion.includes(
@@ -2185,8 +2266,7 @@ useEffect(() => {
                         <i className="fa-solid fa-angles-left"></i> Back
                       </button>
                       <button onClick={handleNextQuestion}>Next</button>
-                    
-                    
+
                       <button
                         style={{ background: "#f0a607da" }}
                         onClick={handleSubmit}
@@ -2277,4 +2357,3 @@ useEffect(() => {
 };
 
 export default QuestionPaper;
-

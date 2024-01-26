@@ -203,7 +203,7 @@ FROM
     LEFT OUTER JOIN paragraph p ON q.document_Id = p.document_Id
     LEFT OUTER JOIN paragraphqno pq ON p.paragraph_Id = pq.paragraph_Id AND q.question_id = pq.question_id
     LEFT OUTER JOIN ots_document doc ON q.document_Id = doc.document_Id
-    LEFT OUTER JOIN user_responses ur ON q.document_Id = doc.document_Id
+    LEFT OUTER JOIN user_responses ur ON q.question_id = ur.question_id
 
 WHERE 
     doc.testCreationTableId = ?
@@ -244,7 +244,8 @@ ORDER BY q.question_id ASC;
             questionImgName: row.questionImgName,
             documen_name: row.documen_name,
             options: [option],
-
+            subjectId: row.subjectId,
+            sectionId: row.sectionId,
             qtype: {
               qtypeId: row.qtypeId,
               qtype_text: row.qtype_text,
@@ -254,6 +255,7 @@ ORDER BY q.question_id ASC;
               answer_text: row.answer_text,
             },
             useranswer: {
+              urid: row.question_id,
               ans: row.user_answer,
               
             },
@@ -267,6 +269,7 @@ ORDER BY q.question_id ASC;
             },
             paragraph: {},
             paragraphqno: {},
+
           };
 
           if (row.paragraph_Id && row.paragraphQNo) {
@@ -893,19 +896,19 @@ router.delete('/clearResponse/:questionId', async (req, res) => {
 });
 
 
-router.get("/answer", async (req, res) => {
-  try {
-    // const { questionId } = req.params;
-    const [results] = await db.query(`
-    SELECT question_id,answer_text FROM answer;
-    `);
+// router.get("/answer", async (req, res) => {
+//   try {
+//     // const { questionId } = req.params;
+//     const [results] = await db.query(`
+//     SELECT question_id,answer_text FROM answer;
+//     `);
 
-    res.json(results);
-  } catch (error) {
-    console.error("Error:", error.message);
-    res.status(500).send("Internal Server Error");
-  }
-});
+//     res.json(results);
+//   } catch (error) {
+//     console.error("Error:", error.message);
+//     res.status(500).send("Internal Server Error");
+//   }
+// });
 
 // router.get("/questionCount", async (req, res) => {
 //   const { testCreationTableId, subjectId, sectionId } = req.params;

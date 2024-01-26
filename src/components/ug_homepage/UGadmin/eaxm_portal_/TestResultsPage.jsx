@@ -385,7 +385,7 @@ const TestResultsPage = () => {
       </div>
 
       <br />
-      {/* 
+      
       <div className="testResultTable">
         <table id="customers" >
           <tr>
@@ -403,7 +403,7 @@ const TestResultsPage = () => {
             </tr>
           ))}
         </table>
-      </div> */}
+      </div>
     </div>
   );
 };
