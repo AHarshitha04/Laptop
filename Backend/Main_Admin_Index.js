@@ -12,6 +12,7 @@ const path = require('path');
 const imagesDirectory = path.join(__dirname, 'uploads');
 app.use('/uploads', express.static(imagesDirectory));
 const ughomepage_banner_login = require('./mainWebsitAdmin/ughomepage_banner_login')
+const db = require('./databases/db2');
 
 //---------------------- databases admin_project imports ----------------------
 const db1 = require('./databases/db1');
@@ -73,6 +74,17 @@ app.use("/Employee_info", Employee_info);
 const BuyCourses =require('./StudentDashboard/BuyCourses')
 
 app.use("/BuyCourses", BuyCourses);
+
+app.get('/subjects2', async (req, res) => {
+  // Fetch subjects
+  try {
+    const [rows] = await db.query('select t.testCreationTableId,t.TestName,s.subjectId,s.subjectName from test_creation_table as t,course_subjects as cs,subjects as s where t.courseCreationId=cs.courseCreationId and s.subjectId=cs.subjectId and t.testCreationTableId=2 ;');
+    res.json(rows);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
