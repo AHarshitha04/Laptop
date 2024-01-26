@@ -75,10 +75,36 @@ const BuyCourses =require('./StudentDashboard/BuyCourses')
 
 app.use("/BuyCourses", BuyCourses);
 
-app.get('/subjects2', async (req, res) => {
+
+
+
+
+app.get('/TestActivation', async (req, res) => {
   // Fetch subjects
   try {
-    const [rows] = await db.query('select t.testCreationTableId,t.TestName,s.subjectId,s.subjectName from test_creation_table as t,course_subjects as cs,subjects as s where t.courseCreationId=cs.courseCreationId and s.subjectId=cs.subjectId and t.testCreationTableId=2 ;');
+    const [rows] = await db.query(`SELECT
+    t.testCreationTableId,
+    t.TestName,
+    t.TotalQuestions,
+    s.subjectId,
+    s.subjectName,
+    sc.sectionId,
+    sc.sectionName,
+    sc.noOfQuestions
+FROM
+    test_creation_table AS t
+LEFT JOIN course_subjects AS cs
+ON
+    t.courseCreationId = cs.courseCreationId
+LEFT JOIN subjects AS s
+ON
+    s.subjectId = cs.subjectId
+LEFT JOIN sections AS sc
+ON
+    sc.subjectId = s.subjectId    
+    
+WHERE
+    t.testCreationTableId = 3`);
     res.json(rows);
   } catch (error) {
     console.error(error);

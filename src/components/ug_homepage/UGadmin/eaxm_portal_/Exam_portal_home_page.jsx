@@ -664,13 +664,13 @@ export const Quiz_Courses = () => {
                       ) : (
                         <>
                           <div className="card_container">
-                            <div className="first_card">
+                           
                               {loading ? (
                                 <p>Loading...</p>
                               ) : (
                                 filteredExams.map((cardItem) => (
                                   <React.Fragment key={cardItem.examId}>
-                                    <div>
+                                    <div className="first_card">
                                       <img
                                         src={iitjee}
                                         alt="card"
@@ -707,7 +707,7 @@ export const Quiz_Courses = () => {
                                   </React.Fragment>
                                 ))
                               )}
-                            </div>
+                            
                           </div>
                         </>
                       )}

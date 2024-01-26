@@ -18,6 +18,7 @@ import Account_info from "../UGadmin/login/Account_info";
 
 import { FaLock, FaUserAlt, FaImage } from "react-icons/fa";
 import Image_Upload_for_Ac_ADMIN from "./Image_Upload_for_Ac_ADMIN";
+import TestActivation_admin from "./TestActivation_admin";
 
 // import logo2 from './logo2.jpeg'
 // import HomeLandingPage from "../Frontend/Pages/HomeLandingPage/HomeLandingPage";
@@ -37,6 +38,7 @@ const Leftnav = () => {
 
   const [showregisteredstudent, setShowregisteredstudent] = useState(false);
   const [showImage_Upload_for_Ac, setShowImage_Upload_for_Ac] = useState(false);
+  const [showTestActivation_admin, setShowTestActivation_admin] = useState(false);
   
   const handledisplaydashboard = () => {
     setShowdashboard(true);
@@ -46,7 +48,9 @@ const Leftnav = () => {
     setTestcreationadmin(false);
     setDocumentUpload_admin(false);
     setShowregisteredstudent(false);
-    setShowImage_Upload_for_Ac(false)
+    setShowImage_Upload_for_Ac(false);
+    setShowTestActivation_admin(false);
+    
   };
 
   const handleshowExamcreation_admin = () => {
@@ -58,6 +62,8 @@ const Leftnav = () => {
     setDocumentUpload_admin(false);
     setShowregisteredstudent(false);
     setShowImage_Upload_for_Ac(false)
+    setShowTestActivation_admin(false);
+
 
   };
   const handleshowCoursecreation_admin = () => {
@@ -69,6 +75,8 @@ const Leftnav = () => {
     setDocumentUpload_admin(false);
     setShowregisteredstudent(false);
     setShowImage_Upload_for_Ac(false)
+    setShowTestActivation_admin(false);
+
 
   };
   const handleInstructionPage_admin = () => {
@@ -79,7 +87,9 @@ const Leftnav = () => {
     setTestcreationadmin(false);
     setDocumentUpload_admin(false);
     setShowregisteredstudent(false);
-    setShowImage_Upload_for_Ac(false)
+    setShowImage_Upload_for_Ac(false);
+    setShowTestActivation_admin(false);
+
 
   };
 
@@ -92,6 +102,8 @@ const Leftnav = () => {
     setDocumentUpload_admin(false);
     setShowregisteredstudent(false);
     setShowImage_Upload_for_Ac(false)
+    setShowTestActivation_admin(false);
+
 
   };
 
@@ -103,9 +115,23 @@ const Leftnav = () => {
     setTestcreationadmin(false);
     setDocumentUpload_admin(true);
     setShowregisteredstudent(false);
-    setShowImage_Upload_for_Ac(false)
+    setShowImage_Upload_for_Ac(false);
+    setShowTestActivation_admin(false);
+
 
   };
+
+const  handleTestActivation_admin =()=>{
+  setShowdashboard(false);
+  setShowExamcreation_admin(false);
+  setshowCoursecreation_admin(false);
+  setInstructionPage_admin(false);
+  setTestcreationadmin(false);
+  setDocumentUpload_admin(false);
+  setShowregisteredstudent(false);
+  setShowImage_Upload_for_Ac(false)
+  setShowTestActivation_admin(true);
+}
 
   const handleregisteredstudent = () => {
     setShowdashboard(false);
@@ -116,6 +142,8 @@ const Leftnav = () => {
     setDocumentUpload_admin(false);
     setShowregisteredstudent(true);
     setShowImage_Upload_for_Ac(false)
+    setShowTestActivation_admin(false);
+
 
   };
 
@@ -128,6 +156,8 @@ const Leftnav = () => {
     setDocumentUpload_admin(false);
     setShowregisteredstudent(false);
     setShowImage_Upload_for_Ac(true)
+    setShowTestActivation_admin(false);
+
   }
   return (
     <>
@@ -228,6 +258,23 @@ const Leftnav = () => {
                 </p>
               </Link>
             </li>
+
+            <li>
+              {/* <Link to="/DocumentUpload" onClick={handleshowDocumentUpload_admin} className="LeftnavLinks"> */}
+              <Link
+                onClick={handleTestActivation_admin}
+                className="LeftnavLinks"
+              >
+                {/* <img width={40} src={dashboard} alt="" /> */}
+                <p>
+                  <i class="fa-solid fa-folder-open logo_-clr"></i>
+               Test Activation
+                </p>
+              </Link>
+            </li>
+          
+
+
             <li>
               <Link className="LeftnavLinks" to="/HomeLandingPage">
                 <p>
@@ -296,6 +343,13 @@ const Leftnav = () => {
       {showDocumentUpload_admin ? (
         <>
           <DocumentUpload_admin />
+        </>
+      ) : null}
+
+
+{showTestActivation_admin ? (
+        <>
+     <TestActivation_admin />
         </>
       ) : null}
 
