@@ -2,7 +2,9 @@ import React from 'react'
 
 const TestActivation_admin = () => {
   return (
-    <div></div>
+    <div>
+        
+    </div>
   )
 }
 
