@@ -5,8 +5,39 @@ import "./styles/StudentDashbord.css";
 import Student_profileUpdate from "./Student_profileUpdate";
 import { MdMenu } from "react-icons/md";
 import BuyCourses from "./BuyCourses";
+import Doubtsection from "./Doubtsection";
+
+
+
+
 
 const Student_dashboard = () => {
+   const userRole = localStorage.getItem("userRole");
+  return (
+    <>
+      <StudentDashbordheader />
+      {userRole === "admin" && (
+        <div>
+          {/* <p>Admin View: Show all features</p> */}
+          {/* Admin-specific content goes here */}
+          <StudentDashbordsettings />
+        </div>
+      )}
+
+      {userRole === "viewer" && (
+        <div>
+          {/* <p>Admin View: Show all features</p> */}
+          {/* Admin-specific content goes here */}
+          <Student_dashboardparectcontainer />
+        </div>
+      )}
+    </>
+  );
+}
+
+export default Student_dashboard
+
+export const Student_dashboardparectcontainer = () => {
   const [studentDashbordconatiner, setStudentDashbordconatiner] =
     useState(true);
 
@@ -174,7 +205,7 @@ const Student_dashboard = () => {
   );
 };
 
-export default Student_dashboard;
+
 
 export const StudentDashbordheader = () => {
   const [showQuizmobilemenu, setShowQuizmobilemenu] = useState(false);
@@ -323,7 +354,11 @@ export const StudentDashbordmyresult = () => {
 };
 
 export const StudentDashborddountsection = () => {
-  return <div>StudentDashborddountsection</div>;
+  return (
+    <div>
+      <Doubtsection/>
+    </div>
+  );
 };
 
 export const StudentDashbordbookmark = () => {

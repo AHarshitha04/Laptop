@@ -18,7 +18,7 @@ import Account_info from "../UGadmin/login/Account_info";
 
 import { FaLock, FaUserAlt, FaImage } from "react-icons/fa";
 import Image_Upload_for_Ac_ADMIN from "./Image_Upload_for_Ac_ADMIN";
-import TestActivation_admin from "./TestActivation_admin";
+import { StudentDashborddountsection } from "../UGadmin/eaxm_portal_/StudentDashboard/Student_dashboard";
 
 // import logo2 from './logo2.jpeg'
 // import HomeLandingPage from "../Frontend/Pages/HomeLandingPage/HomeLandingPage";
@@ -38,8 +38,9 @@ const Leftnav = () => {
 
   const [showregisteredstudent, setShowregisteredstudent] = useState(false);
   const [showImage_Upload_for_Ac, setShowImage_Upload_for_Ac] = useState(false);
-  const [showTestActivation_admin, setShowTestActivation_admin] = useState(false);
-  
+    const [showStudent_Doubt_Section, setshowStudent_Doubt_Section] =
+      useState(false);
+
   const handledisplaydashboard = () => {
     setShowdashboard(true);
     setShowExamcreation_admin(false);
@@ -48,9 +49,8 @@ const Leftnav = () => {
     setTestcreationadmin(false);
     setDocumentUpload_admin(false);
     setShowregisteredstudent(false);
-    setShowImage_Upload_for_Ac(false);
-    setShowTestActivation_admin(false);
-    
+    setShowImage_Upload_for_Ac(false)
+    setshowStudent_Doubt_Section(false);
   };
 
   const handleshowExamcreation_admin = () => {
@@ -75,7 +75,7 @@ const Leftnav = () => {
     setDocumentUpload_admin(false);
     setShowregisteredstudent(false);
     setShowImage_Upload_for_Ac(false)
-    setShowTestActivation_admin(false);
+    setshowStudent_Doubt_Section(false);
 
 
   };
@@ -87,8 +87,8 @@ const Leftnav = () => {
     setTestcreationadmin(false);
     setDocumentUpload_admin(false);
     setShowregisteredstudent(false);
-    setShowImage_Upload_for_Ac(false);
-    setShowTestActivation_admin(false);
+    setShowImage_Upload_for_Ac(false)
+    setshowStudent_Doubt_Section(false);
 
 
   };
@@ -102,7 +102,7 @@ const Leftnav = () => {
     setDocumentUpload_admin(false);
     setShowregisteredstudent(false);
     setShowImage_Upload_for_Ac(false)
-    setShowTestActivation_admin(false);
+    setshowStudent_Doubt_Section(false);
 
 
   };
@@ -115,8 +115,8 @@ const Leftnav = () => {
     setTestcreationadmin(false);
     setDocumentUpload_admin(true);
     setShowregisteredstudent(false);
-    setShowImage_Upload_for_Ac(false);
-    setShowTestActivation_admin(false);
+    setShowImage_Upload_for_Ac(false)
+    setshowStudent_Doubt_Section(false);
 
 
   };
@@ -142,7 +142,7 @@ const  handleTestActivation_admin =()=>{
     setDocumentUpload_admin(false);
     setShowregisteredstudent(true);
     setShowImage_Upload_for_Ac(false)
-    setShowTestActivation_admin(false);
+    setshowStudent_Doubt_Section(false);
 
 
   };
@@ -156,9 +156,23 @@ const  handleTestActivation_admin =()=>{
     setDocumentUpload_admin(false);
     setShowregisteredstudent(false);
     setShowImage_Upload_for_Ac(true)
-    setShowTestActivation_admin(false);
+    setshowStudent_Doubt_Section(false);
 
   }
+
+    const handleStudent_Doubt_Section = () => {
+      setShowdashboard(false);
+      setShowExamcreation_admin(false);
+      setshowCoursecreation_admin(false);
+      setInstructionPage_admin(false);
+      setTestcreationadmin(false);
+      setDocumentUpload_admin(false);
+      setShowregisteredstudent(false);
+      setShowImage_Upload_for_Ac(false);
+    setshowStudent_Doubt_Section(true);
+
+    };
+
   return (
     <>
       <div className="left_nav_bar_container">
@@ -290,17 +304,32 @@ const  handleTestActivation_admin =()=>{
                   <i>
                     <FaUserAlt />
                   </i>
-                  Regestered student info
+                  Regestered-students-info
                 </p>
               </Link>
             </li>
             <li>
-              <Link className="LeftnavLinks" onClick={handleImage_Upload_for_Ac}>
+              <Link
+                className="LeftnavLinks"
+                onClick={handleImage_Upload_for_Ac}
+              >
                 <p>
                   <i>
                     <FaUserAlt />
                   </i>
-                 Image Upload
+                  Image Upload
+                </p>
+              </Link>
+            </li>
+
+            <li>
+              <Link
+                className="LeftnavLinks"
+                onClick={handleStudent_Doubt_Section}
+              >
+                <p>
+                  <i>{/* <FaUserAlt /> */}</i>
+                  Student-Doubt-Section
                 </p>
               </Link>
             </li>
@@ -359,12 +388,9 @@ const  handleTestActivation_admin =()=>{
         </div>
       ) : null}
 
-{showImage_Upload_for_Ac ? (
-        
-          <Image_Upload_for_Ac_ADMIN />
-        
-      ) : null}
+      {showImage_Upload_for_Ac ? <Image_Upload_for_Ac_ADMIN /> : null}
 
+      {showStudent_Doubt_Section ? <StudentDashborddountsection /> : null}
     </>
   );
 };

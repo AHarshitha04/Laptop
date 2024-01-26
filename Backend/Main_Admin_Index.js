@@ -14,6 +14,11 @@ app.use('/uploads', express.static(imagesDirectory));
 const ughomepage_banner_login = require('./mainWebsitAdmin/ughomepage_banner_login')
 const db = require('./databases/db2');
 
+const http = require("http");
+const socketIO = require("socket.io");
+
+ const server = http.createServer(app);
+ const io = socketIO(server);
 //---------------------- databases admin_project imports ----------------------
 const db1 = require('./databases/db1');
 //---------------------- databases admin_project1  imports----------------------
@@ -72,8 +77,12 @@ app.use("/Employee_info", Employee_info);
 //----------------------------------------------------Student Dashbord-------------------------------------------------------
 
 const BuyCourses =require('./StudentDashboard/BuyCourses')
+const Doubtsection = require("./StudentDashboard/Doubtsection");
+
 
 app.use("/BuyCourses", BuyCourses);
+app.use("/Doubtsection", Doubtsection);
+
 
 
 

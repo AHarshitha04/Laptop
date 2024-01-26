@@ -16,13 +16,15 @@
   width: 240px;
   height: auto;
   background: #fff;
+  border-right: 1px solid rgba(0, 0, 0, 0.288);
+
 }
 
 /* background: #2f2467;
     color: white; */
 .ugquiz_StudentDashbordconatiner_left
   .ugquiz_StudentDashbordconatiner_left_menu {
-  padding: 2rem 0;
+  padding: 2rem 0.5rem;
   width: 100%;
   text-align: left;
   display: flex;
@@ -30,8 +32,7 @@
   gap: 1.5rem;
   /* justify-content: center; */
   align-items: center;
-  border-right: 1px solid rgba(0, 0, 0, 0.288);
-  height: 85vh;
+  /* height: 85vh; */
 }
 
 .ugquiz_StudentDashbordconatiner_left
