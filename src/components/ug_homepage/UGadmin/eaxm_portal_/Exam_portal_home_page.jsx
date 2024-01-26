@@ -41,8 +41,11 @@ const Exam_portal_home_page = () => {
   return (
     <>
       <Header />
-      <Home_section />
-      <Quiz_Courses />
+      <div>
+        <Home_section />
+        <Quiz_Courses />
+      </div>
+
       <Footer />
     </>
   );
@@ -110,8 +113,8 @@ export const Header = () => {
 
       if (response.ok) {
         // Token is valid, continue processing user data
-     const userData = await response.json();
-     setUserData(userData);
+        const userData = await response.json();
+        setUserData(userData);
         // ... process userData
       }
     } catch (error) {
@@ -161,8 +164,6 @@ export const Header = () => {
 
   // ----------------- dashborad ---------------------/
 
-
-
   //  localStorage.setItem("isLoggedIn", "true");
   return (
     <>
@@ -193,7 +194,7 @@ export const Header = () => {
                       className="courses_btn"
                       onClick={toggleCoursesBtnContainer}
                     >
-                      courses
+                      ourses
                     </button>
                     {coursesBtnContainerVisible ? (
                       <div className="courses">
@@ -226,73 +227,74 @@ export const Header = () => {
                         </li>
                       </>
                     )} */}
-{isLoggedIn === true ? (
-  <>
-     {(userRole === "admin" ||
-                      userRole === "ugotsadmin" ||
-                      userRole === "ugadmin") && (
-                      <>
-                        <li>
-                          <button>
-                            <Link to="/Quiz_dashboard">ADMIN Settings</Link>
-                          </button>
-                        </li>
-                      </>
-                    )}
-                     {userRole === "viewer" && (
-                      <>
-                        <button>
-                          <Link to="/student_dashboard">DashBoard</Link>
-                        </button>
-                      </>
-                    )}
-  </>
-):null}
-
-
-                   
-                  </div>
-                  <div>
                     {isLoggedIn === true ? (
                       <>
                         {(userRole === "admin" ||
                           userRole === "ugotsadmin" ||
                           userRole === "ugadmin") && (
                           <>
-                            <button id="dropdownmenu_foradim_page_btn">
-                              <img
-                                title={userData.username}
-                                src={userData.imageData}
-                                alt={`Image ${userData.user_Id}`}
-                              />
-                              <div className="dropdownmenu_foradim_page">
-                                {/* <Link to={`/userread/${user.id}`} className="btn btn-success mx-2">Read</Link> */}
-                                {/* <Link to={`/userdeatailspage/${user.id}`} >Account-info</Link> */}
-                                <Link to="/student_dashboard">My profile</Link>
-                                <Link onClick={handleLogout}>Logout</Link>
-                              </div>
-                            </button>
+                            <li>
+                              <button>
+                                <Link to="/Quiz_dashboard">Admin Settings</Link>
+                              </button>
+                            </li>
                           </>
                         )}
-
                         {userRole === "viewer" && (
                           <>
-                            <button id="dropdownmenu_foradim_page_btn">
-                           <img
-  title={userData.username}
-  src={userData.imageData}
-  alt={`Image ${userData.user_Id}`}
-/>
-                              <div className="dropdownmenu_foradim_page">
-                                {/* <Link to={`/userread/${user.id}`} className="btn btn-success mx-2">Read</Link> */}
-                                {/* <Link to={`/userdeatailspage/${user.id}`} >Account-info</Link> */}
-                                <Link to="/student_dashboard">My profile</Link>
-                                <Link onClick={handleLogout}>Logout</Link>
-                              </div>
+                            <button>
+                              <Link to="/student_dashboard">DashBoard</Link>
                             </button>
                           </>
                         )}
-                        {/* <button id="dropdownmenu_foradim_page_btn">
+                      </>
+                    ) : null}
+                  </div>
+                </ul>
+              </div>
+
+              <div className="quiz_app_quiz_menu_login_btn_contaioner">
+                <div>
+                  {isLoggedIn === true ? (
+                    <>
+                      {(userRole === "admin" ||
+                        userRole === "ugotsadmin" ||
+                        userRole === "ugadmin") && (
+                        <>
+                          <button id="dropdownmenu_foradim_page_btn">
+                            <img
+                              title={userData.username}
+                              src={userData.imageData}
+                              alt={`Image ${userData.user_Id}`}
+                            />
+                            <div className="dropdownmenu_foradim_page">
+                              {/* <Link to={`/userread/${user.id}`} className="btn btn-success mx-2">Read</Link> */}
+                              {/* <Link to={`/userdeatailspage/${user.id}`} >Account-info</Link> */}
+                              <Link to="/student_dashboard">My profile</Link>
+                              <Link onClick={handleLogout}>Logout</Link>
+                            </div>
+                          </button>
+                        </>
+                      )}
+
+                      {userRole === "viewer" && (
+                        <>
+                          <button id="dropdownmenu_foradim_page_btn">
+                            <img
+                              title={userData.username}
+                              src={userData.imageData}
+                              alt={`Image ${userData.user_Id}`}
+                            />
+                            <div className="dropdownmenu_foradim_page">
+                              {/* <Link to={`/userread/${user.id}`} className="btn btn-success mx-2">Read</Link> */}
+                              {/* <Link to={`/userdeatailspage/${user.id}`} >Account-info</Link> */}
+                              <Link to="/student_dashboard">My profile</Link>
+                              <Link onClick={handleLogout}>Logout</Link>
+                            </div>
+                          </button>
+                        </>
+                      )}
+                      {/* <button id="dropdownmenu_foradim_page_btn">
                           <img
                             title={userData.username}
                             src={userData.imageData}
@@ -304,37 +306,36 @@ export const Header = () => {
                             <Link onClick={handleLogout}>Logout</Link>
                           </div>
                         </button> */}
-                      </>
-                    ) : (
-                      <>
-                        <a class="uglogin_btn" href="/UgadminHome">
-                          Login/Registration
-                        </a>
-                      </>
-                    )}
+                    </>
+                  ) : (
+                    <>
+                      <a class="ugQUIz_login_btn" href="/UgadminHome">
+                        Login/Registration
+                      </a>
+                    </>
+                  )}
 
-                    {isLoggedIn === "flase" && (
-                      <>
-                        <button id="dropdownmenu_foradim_page_btn">
-                          {/* {userData.username} */}
-                          <div className="dropdownmenu_foradim_page">
-                            {/* <Link to={`/userread/${user.id}`} className="btn btn-success mx-2">Read</Link> */}
+                  {isLoggedIn === "flase" && (
+                    <>
+                      <button id="dropdownmenu_foradim_page_btn">
+                        {/* {userData.username} */}
+                        <div className="dropdownmenu_foradim_page">
+                          {/* <Link to={`/userread/${user.id}`} className="btn btn-success mx-2">Read</Link> */}
 
-                            {/* <Link to={`/userdeatailspage/${user.id}`} >Acount-info</Link> */}
-                            {/* <Link to="/Account_info">Acount-info</Link>
+                          {/* <Link to={`/userdeatailspage/${user.id}`} >Acount-info</Link> */}
+                          {/* <Link to="/Account_info">Acount-info</Link>
 
                             <Link onClick={handleLogout}>Logout</Link> */}
-                          </div>
-                        </button>
-                      </>
-                    )}
-                  </div>
-                </ul>
-              </div>
-              <div className="quz_menu" onClick={QuiZ_menu}>
-                <div className="lines"></div>
-                <div className="lines"></div>
-                <div className="lines"></div>
+                        </div>
+                      </button>
+                    </>
+                  )}
+                </div>
+                <div className="quz_menu" onClick={QuiZ_menu}>
+                  <div className="lines"></div>
+                  <div className="lines"></div>
+                  <div className="lines"></div>
+                </div>
               </div>
             </div>
           );
@@ -349,9 +350,9 @@ export const Header = () => {
 // ------------------------------------------------------------------------- home section ---------------------------------------------
 
 export const Home_section = () => {
-   const userRole = localStorage.getItem("userRole");
-   const [isLoggedIn, setIsLoggedIn] = useState(false);
-   const [userData, setUserData] = useState({});
+  const userRole = localStorage.getItem("userRole");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userData, setUserData] = useState({});
 
   useEffect(() => {
     const checkLoggedIn = () => {
@@ -364,51 +365,49 @@ export const Home_section = () => {
     checkLoggedIn();
   }, []);
 
-   const fetchUserData = async () => {
-     try {
-       const token = localStorage.getItem("token");
-       const response = await fetch(
-         "http://localhost:5001/ughomepage_banner_login/user",
-         {
-           headers: {
-             Authorization: `Bearer ${token}`,
-           },
-         }
-       );
+  const fetchUserData = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(
+        "http://localhost:5001/ughomepage_banner_login/user",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-       if (!response.ok) {
-         // Token is expired or invalid, redirect to login page
-         localStorage.removeItem("isLoggedIn");
-         localStorage.removeItem("token");
-         setIsLoggedIn(false);
-         Navigate("/uglogin"); // Assuming you have the 'navigate' function available
+      if (!response.ok) {
+        // Token is expired or invalid, redirect to login page
+        localStorage.removeItem("isLoggedIn");
+        localStorage.removeItem("token");
+        setIsLoggedIn(false);
+        Navigate("/uglogin"); // Assuming you have the 'navigate' function available
 
-         return;
-       }
+        return;
+      }
 
-       if (response.ok) {
-         // Token is valid, continue processing user data
-         const userData = await response.json();
-         setUserData(userData);
-         // ... process userData
-       }
-     } catch (error) {
-       console.error("Error fetching user data:", error);
-     }
-   };
-
+      if (response.ok) {
+        // Token is valid, continue processing user data
+        const userData = await response.json();
+        setUserData(userData);
+        // ... process userData
+      }
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  };
 
   return (
     <>
       <div className="quiz__Home_continer">
-
         {isLoggedIn === true ? (
-<>
-  <h2>welcomes <span>{userData.username}</span> to EGRADTUTOR</h2>
-</>
-           ):null}
-
-      
+          <>
+            <h4>
+              welcomes <span>{userData.username}</span> to EGRADTUTOR
+            </h4>
+          </>
+        ) : null}
 
         <div>
           <div className="quiz__Home_continer_left">
@@ -541,7 +540,6 @@ export const Quiz_Courses = () => {
     setshowcard2(false);
     setshowcardactive1(true);
     setshowcardactive2(false);
-   
   };
 
   // ---------------------------------------------------------- onclick displaycurrentexamsug function--------------------------------------------------------
@@ -550,7 +548,6 @@ export const Quiz_Courses = () => {
     setshowcard2(true);
     setshowcardactive1(false);
     setshowcardactive2(true);
-    
   };
 
   // ----------------- h
@@ -576,34 +573,34 @@ export const Quiz_Courses = () => {
   const [noOfCourses, setNoOfCourses] = useState([]);
   const [loading, setLoading] = useState(true);
 
-useEffect(() => {
-  const fetchData = async () => {
-    try {
-      const examResponse = await axios.get(
-        `http://localhost:5001/Cards/examData`
-      );
-      setExamCardName(examResponse.data);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const examResponse = await axios.get(
+          `http://localhost:5001/Cards/examData`
+        );
+        setExamCardName(examResponse.data);
 
-      const courseResponse = await fetch(
-        "http://localhost:5001/Cards/courses/count"
-      );
+        const courseResponse = await fetch(
+          "http://localhost:5001/Cards/courses/count"
+        );
 
-      if (!courseResponse.ok) {
-        throw new Error("Network response was not ok");
+        if (!courseResponse.ok) {
+          throw new Error("Network response was not ok");
+        }
+
+        const courseData = await courseResponse.json();
+        setNoOfCourses(courseData);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setNoexam(true); // Set Noexam to true if there is an error
+      } finally {
+        setLoading(false);
       }
+    };
 
-      const courseData = await courseResponse.json();
-      setNoOfCourses(courseData);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-      setNoexam(true); // Set Noexam to true if there is an error
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  fetchData();
-}, []);
+    fetchData();
+  }, []);
 
   const currentDate = new Date(); // Get the current date
   const filteredExams = examCardName.filter(
@@ -612,7 +609,7 @@ useEffect(() => {
       currentDate <= new Date(exam.endDate)
   );
 
-  const [noexam,setNoexam]=useState(false)
+  const [noexam, setNoexam] = useState(false);
   return (
     <>
       <div className="Quiz_cards_page">
@@ -662,57 +659,57 @@ useEffect(() => {
 
                     {/* ----------------------------------- h--------------------- */}
                     <div className="CurrentCourses_div">
-                      <h1>Current Exams</h1>
                       {noexam ? (
                         <p>coming soon</p>
                       ) : (
                         <>
-                        <div className="card_container">
-                        
-
-                          <div className="first_card">
-                            {loading ? (
-                              <p>Loading...</p>
-                            ) : (
-                              filteredExams.map((cardItem) => (
-                                <React.Fragment key={cardItem.examId}>
-                                  <div>
-                                    <img src={iitjee} alt="card" width={350} />
-                                    <h3>{cardItem.examName}</h3>
-                                    <li>
-                                      Validity: ({cardItem.startDate}) to (
-                                      {cardItem.endDate})
-                                    </li>
-                                    <li>
-                                      {noOfCourses.map(
-                                        (count) =>
-                                          count.examId === cardItem.examId && (
-                                            <p key={count.examId}>
-                                              No of Courses:{" "}
-                                              {count.numberOfCourses}
-                                            </p>
-                                          )
-                                      )}
-                                    </li>
-                                    <li>
-                                      <br />
-                                      <div className="start_now">
-                                        <Link
-                                          to={`/feachingcourse/${cardItem.examId}`}
-                                        >
-                                          Start Now
-                                        </Link>
-                                      </div>
-                                    </li>
-                                  </div>
-                                </React.Fragment>
-                              ))
-                            )}
+                          <div className="card_container">
+                           
+                              {loading ? (
+                                <p>Loading...</p>
+                              ) : (
+                                filteredExams.map((cardItem) => (
+                                  <React.Fragment key={cardItem.examId}>
+                                    <div className="first_card">
+                                      <img
+                                        src={iitjee}
+                                        alt="card"
+                                        width={350}
+                                      />
+                                      <h3>{cardItem.examName}</h3>
+                                      <li>
+                                        Validity: ({cardItem.startDate}) to (
+                                        {cardItem.endDate})
+                                      </li>
+                                      <li>
+                                        {noOfCourses.map(
+                                          (count) =>
+                                            count.examId ===
+                                              cardItem.examId && (
+                                              <li key={count.examId}>
+                                                No of Courses:{" "}
+                                                {count.numberOfCourses}
+                                              </li>
+                                            )
+                                        )}
+                                      </li>
+                                      <li>
+                                        <br />
+                                        <div className="start_now">
+                                          <Link
+                                            to={`/feachingcourse/${cardItem.examId}`}
+                                          >
+                                            Start Now
+                                          </Link>
+                                        </div>
+                                      </li>
+                                    </div>
+                                  </React.Fragment>
+                                ))
+                              )}
+                            
                           </div>
-
-                        </div>
                         </>
-                        
                       )}
                     </div>
                     {/* ----------------------------------- h--------------------- */}
@@ -1078,7 +1075,6 @@ export const Footer = () => {
       <i class="fa-brands fa-youtube"></i>          
       </div>
     </div>  */}
-    
       </div>
     </div>
   );

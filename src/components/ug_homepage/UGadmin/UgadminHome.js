@@ -17,8 +17,12 @@ const UgadminHome = () => {
     <div>
       {userRole === "admin" && (
         <div>
+
+          {/* <p>admin View: Show limited features</p> */}
+
           <p>admin View: Show limited features</p>
         
+
           <Quiz_dashboard />
 
           {/* Viewer-specific content goes here */}
@@ -27,7 +31,7 @@ const UgadminHome = () => {
 
       {userRole === "ugotsadmin" && (
         <div>
-          <p>ugotsadmin View: Show limited features</p>
+          {/* <p>ugotsadmin View: Show limited features</p> */}
 
           <Quiz_dashboard />
 
@@ -37,7 +41,7 @@ const UgadminHome = () => {
 
       {userRole === "ugadmin" && (
         <div>
-          <p>ugadmin View: Show limited features</p>
+          {/* <p>ugadmin View: Show limited features</p> */}
 
           <Quiz_dashboard />
 

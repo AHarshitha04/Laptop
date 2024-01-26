@@ -15,9 +15,48 @@ const ButtonsFunctionality = ({
   VisitedCount,
   questionData,
   updateQuestionStatus,
+
+  setVisitedCount,
+  updateCounters,
+
+
 }) => {
 
   const [wtimer, setWTimer] = useState(0);
+
+ 
+ 
+  const [activeQuestion, setActiveQuestion] = useState(0);
+const [answeredQuestions, setAnsweredQuestions] = useState([]);
+const [isPaused, setIsPaused] = useState(false);
+
+
+
+
+const renderQuestionButtons = Array.isArray(questionData.questions)
+? questionData.questions.map((question, index) => {
+    let className = " right_bar_Buttons";
+    const questionKey = question.id || index;
+    const questionStatusAtIndex = questionStatus && questionStatus[index];
+
+
+    if (questionStatusAtIndex === "answered") {
+      className += " instruction-btn1";
+    } else if (questionStatusAtIndex === "notAnswered") {
+      className += " instruction-btn2";
+    } else if (questionStatusAtIndex === "marked") {
+      className += " instruction-btn3";
+    } else if (questionStatusAtIndex === "Answered but marked for review") {
+      className += " instruction-btn4";
+    } else if (questionStatusAtIndex === "notVisited") {
+      className += " instruction-btn5";
+    } 
+
+    // Highlight the current question being displayed
+    if (index === activeQuestion) {
+      className += " active-question";
+    }
+
 
   const [activeQuestion, setActiveQuestion] = useState(0);
   const [answeredQuestions, setAnsweredQuestions] = useState([]);
@@ -41,10 +80,34 @@ const ButtonsFunctionality = ({
           className += " instruction-btn5";
         }
 
+
+    return (
+      <li key={questionKey}>
+        <button
+          onClick={() => handleButtonClick(index + 1,)}
+          className={className}
+        >
+          {index + 1}
+        </button>
+      </li>
+    );
+  })
+: null;
+ 
+ 
+
+
+
+
+
+
+const handleButtonClick = useCallback((questionNumber) => {
+
         // Highlight the current question being displayed
         if (index === activeQuestion) {
           className += " active-question";
         }
+
 
         return (
           <li key={questionKey}>
@@ -97,7 +160,55 @@ const ButtonsFunctionality = ({
       updateQuestionStatus(questionStatus[questionIndex]);
      
     }, [questionStatus, setQuestionStatus, onQuestionSelect, answeredQuestions, updateQuestionStatus]);
-  
+
+  const questionIndex = questionNumber - 1;
+
+  let updatedStatus;
+
+  if (questionStatus[questionIndex] === "answered") {
+    updatedStatus = "notAnswered"; // Change this line to set the status to "notAnswered"
+    onQuestionSelect(questionNumber, "notAnswered");
+    setAnsweredQuestions((prevAnsweredQuestions) => [...prevAnsweredQuestions, questionNumber]);
+    setIsPaused(false);
+  } else if (questionStatus[questionIndex] === "notAnswered") {
+    updatedStatus = "notAnswered";
+    onQuestionSelect(questionNumber, "notAnswered");
+    setAnsweredQuestions((prevAnsweredQuestions) => [...prevAnsweredQuestions, questionNumber]);
+    setIsPaused(false);
+  } else if (questionStatus[questionIndex] === "notVisited") {
+    updatedStatus = "notAnswered"; // Change this line to set the status to "notVisited" if you prefer
+    onQuestionSelect(questionNumber, "notVisited");
+    setAnsweredQuestions((prevAnsweredQuestions) => [...prevAnsweredQuestions, questionNumber]);
+    setIsPaused(false);
+  } else {
+    updatedStatus = "answered";
+    onQuestionSelect(questionNumber);
+    setAnsweredQuestions((prevAnsweredQuestions) => [...prevAnsweredQuestions, questionNumber]);
+    setIsPaused(false);
+  }
+
+   // If the question is visited, decrease VisitedCount
+   if (questionStatus[questionIndex] !== "notVisited") {
+    setVisitedCount((prevVisitedCount) => prevVisitedCount - 1);
+  }
+
+  // Update the question status
+  setQuestionStatus((prevQuestionStatus) => [
+    ...prevQuestionStatus.slice(0, questionIndex),
+    updatedStatus,
+    ...prevQuestionStatus.slice(questionIndex + 1),
+  ]);
+
+  // Update the question status in the QuestionPaper component
+  updateQuestionStatus(updatedStatus);
+
+}, [questionStatus, setQuestionStatus, onQuestionSelect, setIsPaused, answeredQuestions, updateQuestionStatus, updateCounters]);
+
+
+
+
+
+
   
   
     ButtonsFunctionality.propTypes = {
@@ -187,7 +298,16 @@ const ButtonsFunctionality = ({
     <>
       <div className="right-side-bar">
         <div className="rightSidebar-topHeader">
-          <img
+
+
+        <img
+                            title={userData.username}
+                            src={userData.imageData}
+                            alt={`Image ${userData.user_Id}`}
+                          />
+          <p>Name of the person :  {userData.username}</p>
+          <p>Time Left: {WformatTime(wtimer)}</p>
+  <img
             title={userData.username}
             src={userData.imageData}
             alt={`Image ${userData.user_Id}`}
@@ -195,6 +315,7 @@ const ButtonsFunctionality = ({
           <p>Name of the person: {userData.username}</p>
 
           {/* <p>Time Left: {WformatTime(wtimer)}</p> */}
+
         </div>
 
         <div className="buttons_container">

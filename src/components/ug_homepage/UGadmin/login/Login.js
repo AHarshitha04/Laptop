@@ -14,6 +14,7 @@ import "./Login.css";
 
 // ------------ img ---------------
 import loginlogo from "./asserts/loginlogo.jpeg";
+import { nav } from "../eaxm_portal_/DATA/Data";
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -61,39 +62,27 @@ const handleLogin = async (e) => {
     <>
       {/* ------------------ header ------------------- */}
       <div>
-        <div className="ugexam_header">
+        <div className="Quiz_main_page_header">
           {NavData.map((NavData, index) => {
             return (
               <>
-                <div className="header  ug_quizheader" key={index}>
-                  <div className={NavData.logo_img_container}>
-                    <Link to={"/"}>
-                      <img src={NavData.logo} alt="" />
-                    </Link>
+                <div key={index} className="Quiz_main_page_navbar">
+                  <div className="Quizzlogo">
+                    <img src={NavData.logo} alt="" />
                   </div>
+                  {/* <li  className={showcardactive1?"showcardactive":"showcardactivenone"}> */}
 
-                  <div className="exam_login_menu">
-                    <li>
-                      <Link
-                        to="/Exam_portal_home_page"
-                        className={NavData.navlist}
-                      >
-                        {NavData.link1}
+                  <div className="quiz_app_quiz_menu_login_btn_contaioner">
+                    <button style={{ background: "none" }}>
+                      <Link to="/Exam_portal_home_page" className="Quiz__home">
+                        Home
                       </Link>
-                    </li>
-                    <Link
-                      to="/Register"
-                      
-                      className={NavData.login}
-                    >
-                      Register
-                    </Link>
-                    {/* <div className="mobile_menu mobile_menu_non"onClick={() => setshowMenu(!showMenu)}  >
-              <div className={showMenu ? "rotate_right  " :"lines "}></div>
-              <div className={showMenu ? "no_lines  " :"lines "}></div>
-              <div className={showMenu ? "rotate_left  " :"lines "}></div>
-              </div> */}
-                    {/* <a href="#"><AiOutlineMenu/></a> */}{" "}
+                    </button>
+                    <div>
+                      <a class="ugQUIz_login_btn" href="/Register">
+                        Registration
+                      </a>
+                    </div>
                   </div>
                 </div>
               </>
@@ -128,18 +117,18 @@ const handleLogin = async (e) => {
                   <MdAlternateEmail />
                   <input
                     type="email"
-                    placeholder="EMAIL ID"
+                    placeholder="Email ID"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
                   />
                 </label>
-                <br />
+
                 <label>
                   <FaLock />
                   <input
                     type="password"
-                    placeholder="PASSWORD"
+                    placeholder="Password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
@@ -152,6 +141,8 @@ const handleLogin = async (e) => {
               <p>
                 Don't have an account ?<Link to="/Register">Register here</Link>
               </p>
+
+              <Link to="/OTS_ForgotPassword">Forgot Password ?</Link>
             </div>
           </div>
         </div>

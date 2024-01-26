@@ -59,6 +59,7 @@ const TestResultsPage = () => {
   const [answeredCount, setAnsweredCount] = useState(0);
   const [notAnsweredCount, setNotAnsweredCount] = useState(0);
 
+
   // const data = [
   //   {
   //     name: 'Page A',
@@ -301,6 +302,7 @@ const TestResultsPage = () => {
           <p>Name: {userData.username}</p>
           <p>Email: {userData.email}</p>
         </div>
+ 
       </div>
 
       <div className="testResultTable">

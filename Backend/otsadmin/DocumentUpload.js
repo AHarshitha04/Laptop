@@ -71,6 +71,178 @@ router.get('/tests', async (req, res) => {
   });
   
 
+  
+  
+  // router.post("/upload", upload.single("document"), async (req, res) => {
+  //   const docxFilePath = `uploads/${req.file.filename}`;
+  //   const outputDir = `uploads/${req.file.originalname}`;
+  //   const docName = `${req.file.originalname}`;
+  //   try {
+  //     await fs.mkdir(outputDir, { recursive: true });
+  //     const result = await mammoth.convertToHtml({ path: docxFilePath });
+  //     const htmlContent = result.value;
+  //     const $ = cheerio.load(htmlContent);
+  //     const textResult = await mammoth.extractRawText({ path: docxFilePath });
+  //     const textContent = textResult.value;
+  //     const textSections = textContent.split('\n\n');
+   
+  //     const [documentResult] = await db.query("INSERT INTO ots_document SET ?", {
+  //       documen_name: docName,
+  //             testCreationTableId: req.body.testCreationTableId,
+  //             subjectId: req.body.subjectId,
+  //             sectionId:req.body.sectionId,
+  //           });
+  //           const document_Id = documentResult.insertId;
+   
+   
+  //     // Get all images in the order they appear in the HTML
+  //     const images = [];
+  //     $('img').each(function (i, element) {
+  //       const base64Data = $(this).attr('src').replace(/^data:image\/\w+;base64,/, '');
+  //       const imageBuffer = Buffer.from(base64Data, 'base64');
+  //       images.push(imageBuffer);
+  //     });
+   
+   
+  //     let j=0;let image_index=0;
+  //     let que_id=0;let k=1;
+  //     console.log(textSections);
+  //     let qtypeMappings = {
+  //       MCQ4: 1,
+  //       MCQ5: 2,
+  //       MSQN: 3,
+  //       MSQ: 4,
+  //       NATI:5,
+  //       NATD:6,
+  //       TF:7,
+  //       CTQ:8,
+  //               };
+  //     for (let i = 0; i < textSections.length; i++) {
+  //       if (textSections[i].includes('[qtype]')) {
+  //         const qtypeText = textSections[i].replace('[qtype]', '').trim();
+  //         if (qtypeMappings.hasOwnProperty(qtypeText)){
+  //           const qtypeRecord = {
+  //             qtype_text: textSections[i].replace('[qtype]', ''),
+  //             question_id: que_id,
+  //             quesionTypeId: qtypeMappings[qtypeText],
+  //           };
+  //           await insertRecord('qtype', qtypeRecord);
+  //         }
+  //         console.log()
+          
+  //       } else if (textSections[i].includes('[ans]')) {
+  //         // Save in the answer table
+  //         const answerRecord = {
+  //           answer_text: textSections[i].replace('[ans]', ''),
+  //           question_id: que_id
+  //         };
+  //         await insertRecord('answer', answerRecord);
+  //       } else if (textSections[i].includes('[Marks]')) {
+  //         // Save in the marks table
+  //         const marksRecord = {
+  //           marks_text: textSections[i].replace('[Marks]', ''),
+  //           question_id: que_id
+  //         };
+  //         await insertRecord('marks', marksRecord);
+  //       }else if (textSections[i].includes('[sortid]')) {
+  //         const sortidRecord = {
+  //           sortid_text: textSections[i].replace('[sortid]', ''),
+  //           question_id: que_id
+  //         };
+  //         await insertRecord('sortid', sortidRecord);
+  //       }
+  //       else if (textSections[i].includes('[Q]')) {
+  //         const imageName = `snapshot_${document_Id}_${req.body.subjectId}_question_${k}.png`;k++;
+  //         const imagePath = `${outputDir}/${imageName}`;
+  //         await fs.writeFile(imagePath, images[image_index]);image_index++;
+  //         const questionRecord = {
+  //           questionImgName: imageName,
+  //           testCreationTableId: req.body.testCreationTableId,
+  //           subjectId: req.body.subjectId,
+  //           document_Id: document_Id,
+  //           sectionId: req.body.sectionId
+  //         };
+  //         que_id = await insertRecord('questions', questionRecord);
+  //         // question_id.push(Question_id)
+  
+  //       }
+  //       else if (textSections[i].includes('(a)')) {
+  //         const imageName = `snapshot_${document_Id}_${req.body.subjectId}_option_a_${k}.png`;
+  //         const imagePath = `${outputDir}/${imageName}`;
+  //         await fs.writeFile(imagePath, images[image_index]);image_index++;
+  //         const optionRecord = {
+  //           optionImgName: imageName,
+  //           option_index:'a',
+  //           question_id: que_id
+  //         };
+  //         await insertRecord('options', optionRecord);
+          
+  //       }else if (textSections[i].includes('(b)')) {
+  //         const imageName = `snapshot_${document_Id}_${req.body.subjectId}_option_b_${k}.png`;
+  //         const imagePath = `${outputDir}/${imageName}`;
+  //         await fs.writeFile(imagePath, images[image_index]);image_index++;
+  //         const optionRecord = {
+  //           optionImgName: imageName,
+  //           option_index:'b',
+  //           question_id: que_id
+  //         };
+  //         await insertRecord('options', optionRecord);
+          
+  //       }else if (textSections[i].includes('(c)')) {
+  //         const imageName = `snapshot_${document_Id}_${req.body.subjectId}_option_c_${k}.png`;
+  //         const imagePath = `${outputDir}/${imageName}`;
+  //         await fs.writeFile(imagePath, images[image_index]);image_index++;
+  //         const optionRecord = {
+  //           optionImgName: imageName,
+  //           option_index:'c',
+  //           question_id: que_id
+  //         };
+  //         await insertRecord('options', optionRecord);
+          
+  //       }else if (textSections[i].includes('(d)')) {
+  //         const imageName = `snapshot_${document_Id}_${req.body.subjectId}_option_d_${k}.png`;
+  //         const imagePath = `${outputDir}/${imageName}`;
+  //         await fs.writeFile(imagePath, images[image_index]);image_index++;
+  //         const optionRecord = {
+  //           optionImgName: imageName,
+  //           option_index:'d',
+  //           question_id: que_id
+  //         };
+  //         await insertRecord('options', optionRecord);
+          
+  //       }else if (textSections[i].includes('(e)')) {
+  //         const imageName = `snapshot_${document_Id}_${req.body.subjectId}_option_d_${k}.png`;
+  //         const imagePath = `${outputDir}/${imageName}`;
+  //         await fs.writeFile(imagePath, images[image_index]);image_index++;
+  //         const optionRecord = {
+  //           optionImgName: imageName,
+  //           option_index:'e',
+  //           question_id: que_id
+  //         };
+  //         await insertRecord('options', optionRecord);
+          
+  //       }else if (textSections[i].includes('[soln]')) {
+  //         const imageName = `snapshot_${document_Id}_${req.body.subjectId}_solution_${k}.png`;
+  //         const imagePath = `${outputDir}/${imageName}`;
+  //         await fs.writeFile(imagePath, images[image_index]);image_index++;
+  //         const solutionRecord = {
+  //           solutionImgName: imageName,
+  //           question_id: que_id
+  //         };
+  //         await insertRecord('solution', solutionRecord);
+          
+  //       }
+
+  //     }
+   
+  //     res.send('Text content and images extracted and saved to the database with the selected topic ID successfully.');
+  //   } catch (error) {
+  //     console.error(error);
+  //     res.status(500).send('Error extracting content and saving it to the database.');
+  //   }
+  // });
+
+
   router.post("/upload", upload.single("document"), async (req, res) => {
       const docxFilePath = `uploads/${req.file.filename}`;
       const outputDir = `uploads/${req.file.originalname}`;
@@ -303,6 +475,15 @@ router.get('/tests', async (req, res) => {
   //     const textContent = textResult.value;
   //     const textSections = textContent.split('\n\n');
    
+
+      const [documentResult] = await db.query("INSERT INTO ots_document SET ?", {
+        documen_name: docName,
+        testCreationTableId: req.body.testCreationTableId,
+        subjectId: req.body.subjectId,
+        sectionId: req.body.sectionId,
+      });
+      const document_Id = documentResult.insertId;
+
   //     const [documentResult] = await db.query("INSERT INTO ots_document SET ?", {
   //       documen_name: docName,
   //             testCreationTableId: req.body.testCreationTableId,
@@ -311,6 +492,7 @@ router.get('/tests', async (req, res) => {
   //           });
   //           const document_Id = documentResult.insertId;
    
+
    
   //     // Get all images in the order they appear in the HTML
   //     const images = [];
@@ -320,6 +502,177 @@ router.get('/tests', async (req, res) => {
   //       images.push(imageBuffer);
   //     });
    
+      let j = 0;
+      let image_index = 0;
+      let que_id = 0;
+      let k = 1;
+      console.log(textSections);
+      const marksPattern = /\[Marks\](\d+),(\d+)/;
+      let qtypeMappings = {
+              MCQ4: 1,
+              MCQ5: 2,
+              MSQN: 3,
+              MSQ: 4,
+              NATI:5,
+              NATD:6,
+              TF:7,
+              CTQ:8,
+                      };
+      for (let i = 0; i < textSections.length; i++) {
+        if (textSections[i].includes('[qtype]')) {
+          const qtypeText = textSections[i].replace('[qtype]', '').trim();
+          if (qtypeMappings.hasOwnProperty(qtypeText)){
+                      const qtypeRecord = {
+                        qtype_text: textSections[i].replace('[qtype]', ''),
+                        question_id: que_id,
+                        quesionTypeId: qtypeMappings[qtypeText],
+                      };
+                      await insertRecord('qtype', qtypeRecord);
+                    }
+                    console.log()
+                    
+        } else if (textSections[i].includes('[ans]')) {
+        // Save in the answer table
+          const answerRecord = {
+            answer_text: textSections[i].replace('[ans]', ''),
+            question_id: que_id
+          };
+          await insertRecord('answer', answerRecord);
+        } else {
+          const match = textSections[i].match(marksPattern);
+          if (match) {
+            const marksText = match[1];
+            const nMarksText = match[2];
+            // Save in the marks table
+            const marksRecord = {
+              marks_text: marksText,
+              nmarks_text: nMarksText,
+              question_id: que_id
+            };
+            await insertRecord('marks', marksRecord);
+          } else if (textSections[i].includes('[sortid]')) {
+            const sortidRecord = {
+                        sortid_text: textSections[i].replace('[sortid]', ''),
+                        question_id: que_id
+                      };
+                      await insertRecord('sortid', sortidRecord);
+          }
+          else if (textSections[i].includes('[Q]')) {
+                    const imageName = `snapshot_${document_Id}_${req.body.subjectId}_question_${k}.png`;k++;
+                    const imagePath = `${outputDir}/${imageName}`;
+                    await fs.writeFile(imagePath, images[image_index]);image_index++;
+                    const questionRecord = {
+                      questionImgName: imageName,
+                      testCreationTableId: req.body.testCreationTableId,
+                      subjectId: req.body.subjectId,
+                      document_Id: document_Id,
+                      sectionId: req.body.sectionId
+                    };
+                    que_id = await insertRecord('questions', questionRecord);
+                    // question_id.push(Question_id)
+            
+                  }
+                  else if (textSections[i].includes('(a)')) {
+                    const imageName = `snapshot_${document_Id}_${req.body.subjectId}_option_a_${k}.png`;
+                    const imagePath = `${outputDir}/${imageName}`;
+                    await fs.writeFile(imagePath, images[image_index]);image_index++;
+                    const optionRecord = {
+                      optionImgName: imageName,
+                      option_index:'a',
+                      question_id: que_id
+                    };
+                    await insertRecord('options', optionRecord);
+                    
+                  }else if (textSections[i].includes('(b)')) {
+                    const imageName = `snapshot_${document_Id}_${req.body.subjectId}_option_b_${k}.png`;
+                    const imagePath = `${outputDir}/${imageName}`;
+                    await fs.writeFile(imagePath, images[image_index]);image_index++;
+                    const optionRecord = {
+                      optionImgName: imageName,
+                      option_index:'b',
+                      question_id: que_id
+                    };
+                    await insertRecord('options', optionRecord);
+                    
+                  }else if (textSections[i].includes('(c)')) {
+                    const imageName = `snapshot_${document_Id}_${req.body.subjectId}_option_c_${k}.png`;
+                    const imagePath = `${outputDir}/${imageName}`;
+                    await fs.writeFile(imagePath, images[image_index]);image_index++;
+                    const optionRecord = {
+                      optionImgName: imageName,
+                      option_index:'c',
+                      question_id: que_id
+                    };
+                    await insertRecord('options', optionRecord);
+                    
+                  }else if (textSections[i].includes('(d)')) {
+                    const imageName = `snapshot_${document_Id}_${req.body.subjectId}_option_d_${k}.png`;
+                    const imagePath = `${outputDir}/${imageName}`;
+                    await fs.writeFile(imagePath, images[image_index]);image_index++;
+                    const optionRecord = {
+                      optionImgName: imageName,
+                      option_index:'d',
+                      question_id: que_id
+                    };
+                    await insertRecord('options', optionRecord);
+                    
+                  }else if (textSections[i].includes('(e)')) {
+                    const imageName = `snapshot_${document_Id}_${req.body.subjectId}_option_d_${k}.png`;
+                    const imagePath = `${outputDir}/${imageName}`;
+                    await fs.writeFile(imagePath, images[image_index]);image_index++;
+                    const optionRecord = {
+                      optionImgName: imageName,
+                      option_index:'e',
+                      question_id: que_id
+                    };
+                    await insertRecord('options', optionRecord);
+                    
+                  }else if (textSections[i].includes('[soln]')) {
+                    const imageName = `snapshot_${document_Id}_${req.body.subjectId}_solution_${k}.png`;
+                    const imagePath = `${outputDir}/${imageName}`;
+                    await fs.writeFile(imagePath, images[image_index]);image_index++;
+                    const solutionRecord = {
+                      solutionImgName: imageName,
+                      question_id: que_id
+                    };
+                    await insertRecord('solution', solutionRecord);
+        }else if (textSections[i].includes('[PRG]')) {
+          const imageName = `snapshot_${document_Id}_${req.body.subjectId}_paragraph_${k}.png`;
+          const imagePath = `${outputDir}/${imageName}`;
+          await fs.writeFile(imagePath, images[image_index]);image_index++;
+          const paragraphRecord = {
+            paragraphImg: imageName,
+            document_Id: document_Id,
+          }
+          paragraph_Id = await insertRecord('paragraph', paragraphRecord);
+          // await insertRecord('paragraph', paragraphRecord);
+        } else if (textSections[i].includes('[PQNo]')) {
+          // Save in the marks table
+          const paragraphqnoRecord = {
+            paragraphQNo: textSections[i].replace('[PQNo]', ''),
+            paragraph_Id: paragraph_Id,
+            question_id: que_id
+          };
+          await insertRecord('paragraphqno', paragraphqnoRecord);
+        }
+      }
+    }
+      res.send('Text content and images extracted and saved to the database with the selected topic ID successfully.');
+        } catch (error) {
+          console.error(error);
+          res.status(500).send('Error extracting content and saving it to the database.');
+        }
+      });
+  async function insertRecord(table, record) {
+    try {
+      const [result] = await db.query(`INSERT INTO ${table} SET ?`, record);
+      console.log(`${table} id: ${result.insertId}`);
+      return result.insertId;
+    } catch (err) {
+      console.error(`Error inserting data into ${table}: ${err}`);
+      throw err;
+    }
+
    
   //     let j=0;let image_index=0;
   //     let que_id=0;let k=1;
@@ -468,6 +821,7 @@ router.get('/tests', async (req, res) => {
   //     throw err;
   //   }
   // }
+
    
   // const imagesDirectory = path.join(__dirname, 'uploads');
   // router.use('/uploads', express.static(imagesDirectory));
@@ -509,6 +863,32 @@ router.get('/tests', async (req, res) => {
     try {
       const [rows] = await db.query(`
 
+        SELECT DISTINCT
+          q.question_id, q.questionImgName, 
+          o.option_id, o.optionImgName,o.option_index,
+          s.solution_id, s.solutionImgName, 
+          qt.qtypeId,qt.qtype_text,
+          ans.answer_id,ans.answer_text,
+          m.markesId ,m.marks_text,
+          si.sort_id ,si.sortid_text,
+          doc.documen_name, doc.sectionId, 
+          doc.subjectId, doc.testCreationTableId ,
+          P.paragraphImg,p.paragraph_Id
+        FROM 
+          questions q 
+          LEFT OUTER JOIN options o ON q.question_id = o.question_id
+          LEFT OUTER JOIN qtype qt ON q.question_id = qt.question_id 
+          LEFT OUTER JOIN answer ans ON q.question_id = ans.question_id 
+          LEFT OUTER JOIN marks m ON q.question_id = m.question_id 
+          LEFT OUTER JOIN sortid si ON q.question_id = si.question_id 
+          LEFT OUTER JOIN solution s ON q.question_id = s.question_id 
+          LEFT OUTER JOIN paragraph p ON q.question_id = p.question_id
+          LEFT OUTER JOIN ots_document doc ON q.document_Id  = doc.document_Id  
+        WHERE 
+          doc.testCreationTableId = ? AND doc.subjectId = ? AND doc.sectionId = ? ORDER BY q.question_id ASC;
+      `, [testCreationTableId, subjectId, sectionId]);
+
+
       SELECT DISTINCT
       q.question_id, q.questionImgName,
       o.option_id, o.optionImgName, o.option_index,
@@ -535,6 +915,7 @@ router.get('/tests', async (req, res) => {
   WHERE
       doc.testCreationTableId = ? AND doc.subjectId = ? AND doc.sectionId = ?
   ORDER BY q.question_id ASC;
+
 
   
  
@@ -619,6 +1000,83 @@ router.get('/tests', async (req, res) => {
       res.status(500).json({ error: 'Internal Server Error' });
     }
   });
+  // router.get('/fulldocimages/:testCreationTableId/:subjectId/:sectionId', async (req, res) => {
+  //   const { testCreationTableId, subjectId, sectionId } = req.params;
+  //   try {
+  //     const [rows] = await db.query(`
+  //       SELECT DISTINCT
+  //         q.question_id, q.questionImgName, 
+  //         o.option_id, o.optionImgName,o.option_index, 
+  //         qt.qtypeId,qt.qtype_text,
+  //         si.sort_id ,si.sortid_text,
+  //         doc.documen_name, doc.sectionId, 
+  //         doc.subjectId, doc.testCreationTableId ,
+  //         P.paragraphImg,p.paragraph_Id
+  //       FROM 
+  //         questions q 
+  //         LEFT OUTER JOIN options o ON q.question_id = o.question_id
+  //         LEFT OUTER JOIN qtype qt ON q.question_id = qt.question_id 
+  //         LEFT OUTER JOIN sortid si ON q.question_id = si.question_id  
+  //         LEFT OUTER JOIN paragraph p ON q.question_id = p.question_id
+  //         LEFT OUTER JOIN ots_document doc ON q.document_Id  = doc.document_Id  
+  //       WHERE 
+  //         doc.testCreationTableId = ? AND doc.subjectId = ? AND doc.sectionId = ? ORDER BY q.question_id ASC;
+  //     `, [testCreationTableId, subjectId, sectionId]);
+  
+  //     // Check if rows is not empty
+  //     if (rows.length > 0) {
+  //       const questionData = {
+  //         questions: [],
+  //       };
+  
+  //       // Organize data into an array of questions
+  //       rows.forEach(row => {
+  //         const existingQuestion = questionData.questions.find(q => q.question_id === row.question_id);
+  
+  //         if (existingQuestion) {
+  //           // Question already exists, add option to the existing question
+  //           existingQuestion.options.push({
+  //             option_id: row.option_id,
+  //             option_index:row.option_index,
+  //             optionImgName: row.optionImgName,
+  //           });
+  //         } else {
+  //           // Question doesn't exist, create a new question
+  //           const newQuestion = {
+  //             question_id: row.question_id,
+  //             questionImgName: row.questionImgName,
+  //             documen_name: row.documen_name,
+  //             options: [
+  //               {
+  //                 option_id: row.option_id,
+  //                 optionImgName: row.optionImgName,
+  //               },
+  //             ],
+  //             qtype:{
+  //               qtypeId:row.qtypeId,
+  //               qtype_text:row.qtype_text,
+  //             },
+  //             sortid:{
+  //               sort_id:row.sort_id,
+  //               sortid_text:row.sortid_text
+  //             },
+  //           };
+  
+  //           questionData.questions.push(newQuestion);
+  //         }
+  //       });
+  
+  
+  //       res.json(questionData);
+  //     } else {
+  //       // Handle the case where no rows are returned (empty result set)
+  //       res.status(404).json({ error: 'No data found' });
+  //     }
+  //   } catch (error) {
+  //     console.error('Error fetching question data:', error);
+  //     res.status(500).json({ error: 'Internal Server Error' });
+  //   }
+  // });
 
   // router.get('/fulldocimages/:testCreationTableId/:subjectId/:sectionId', async (req, res) => {
   //   const { testCreationTableId, subjectId, sectionId } = req.params;
