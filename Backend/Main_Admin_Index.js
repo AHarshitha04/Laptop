@@ -11,7 +11,7 @@ const jsSHA = require('jssha');
 const axios = require('axios');
 const FormData = require('form-data');
 app.use(cors({
-  origin: 'http://localhost:3000',  
+  origin: 'http://localhost:3000',
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true,
 }));
@@ -81,57 +81,136 @@ const BuyCourses =require('./StudentDashboard/BuyCourses')
 
 app.use("/BuyCourses", BuyCourses);
 
-app.post('/payu-proxy', async (req, res) => {
-  console.log(req.body);
+// app.post('/payu-proxy', async (req, res) => {
+//   console.log(req.body);
 
+//   try {
+
+//     const txnid = 123;
+//     const amount = 1;
+//     const email = 'test@getMaxListeners.com';
+//     const productinfo = 'testing env';
+//     const firstname = 'John'; // Use actual user data here
+//     const phone = '1234567890'; // Add phone parameter
+//     const YOUR_MERCHANT_SALT = "WSRuqJafAmgvQ22Ztmzhixel1fTlZhgg";
+//     const YOUR_MERCHANT_KEY = '2RJzQH';
+
+
+//     // Create the hashString
+//     const hashString = `${YOUR_MERCHANT_KEY}|${txnid}|${amount}|${productinfo}|${firstname}|${email}|${phone}|||||||||${YOUR_MERCHANT_SALT}`;
+
+//     // Use the jsSHA library to generate the hash
+//     const sha = new jsSHA('SHA-512', 'TEXT');
+//     sha.update(hashString);
+//     const hash = sha.getHash('HEX');
+
+//     // Set up the required parameters for the PayU API
+//     const surl = 'http://localhost:3000/success';
+//     const furl = 'http://localhost:3000/';
+
+//     // Create FormData object
+//     const formData = new FormData();
+//     formData.append('key', YOUR_MERCHANT_KEY);
+//     formData.append('txnid', txnid);
+//     formData.append('amount', amount);
+//     formData.append('productinfo', productinfo);
+//     formData.append('firstname', firstname);
+//     formData.append('email', email);
+//     formData.append('phone', phone);
+//     formData.append('surl', surl);
+//     formData.append('furl', furl);
+//     formData.append('hash', hash);
+
+//     // Make an HTTP request with axios
+//     const response = await axios.post('https://secure.payu.in/_payment', formData, {
+//       headers: {
+//         'Content-Type': 'multipart/form-data'
+//         // Add any other headers if needed
+//       },
+//     });
+
+//     console.log(response.data);
+
+//     res.json(response.data);
+//   } catch (error) {
+//     console.error('Error:', error.message);
+//     res.status(500).json({
+//       status: false,
+//       message: 'Internal Server Error',
+//     });
+//   }
+// });
+
+// app.use((req, res, next) => {
+//   res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+//   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+//   next();
+// });
+
+// const PayU =require('./quiz_ots/PayU')
+// app.use("/PayU",PayU)
+//  const PayU =require('./quiz_ots/PayU')
+
+
+
+
+
+const PayU = require("payu");
+
+
+const PayUClient = new PayU({
+  key: '2RJzQH',
+  salt: 'WSRuqJafAmgvQ22Ztmzhixel1fTlZhgg',
+}, 'LIVE');
+
+// const paymentDetails = {
+//   // Provide your payment details here
+// };
+
+// Initiate the payment
+// payuClient.paymentInitiate(paymentDetails)
+//   .then((res) => {
+//     console.log(res);
+//   })
+//   .catch((err) => {
+//     console.error(err);
+//   });
+
+app.post('/payu-initiate', async (req, res) => {
   try {
+    const {
+      txnid,
+      amount,
+      productinfo,
+      firstname,
+      email,
+      phone,
+      surl,
+      furl,
+      hash,
+    } = req.body;
 
-    const txnid = 123;
-    const amount = 1;
-    const email = 'test@getMaxListeners.com';
-    const productinfo = 'testing env';
-    const firstname = 'John'; // Use actual user data here
-    const phone = '1234567890'; // Add phone parameter
-    const YOUR_MERCHANT_SALT = 'WSRuqJafAmgvQ22Ztmzhixel1fTlZhgg';
-    const YOUR_MERCHANT_KEY = '2RJzQH';
+    if (!txnid) {
+      return res.status(400).json({
+        status: false,
+        message: 'Transaction ID (txnid) is required.',
+      });
+    }
 
-
-    // Create the hashString
-    const hashString = `${YOUR_MERCHANT_KEY}|${txnid}|${amount}|${productinfo}|${firstname}|${email}|${phone}|||||||||${YOUR_MERCHANT_SALT}`;
-
-    // Use the jsSHA library to generate the hash
-    const sha = new jsSHA('SHA-512', 'TEXT');
-    sha.update(hashString);
-    const hash = sha.getHash('HEX');
-
-    // Set up the required parameters for the PayU API
-    const surl = 'http://localhost:3000/success';
-    const furl = 'http://localhost:3000/';
-
-    // Create FormData object
-    const formData = new FormData();
-    formData.append('key', YOUR_MERCHANT_KEY);
-    formData.append('txnid', txnid);
-    formData.append('amount', amount);
-    formData.append('productinfo', productinfo);
-    formData.append('firstname', firstname);
-    formData.append('email', email);
-    formData.append('phone', phone);
-    formData.append('surl', surl);
-    formData.append('furl', furl);
-    formData.append('hash', hash);
-
-    // Make an HTTP request with axios
-    const response = await axios.post('https://test.payu.in/_payment', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-        // Add any other headers if needed
-      },
+    // Use the PayUClient to initiate payment
+    const paymentResult = await PayUClient.paymentInitiate({
+      txnid,
+      amount,
+      productinfo,
+      firstname,
+      email,
+      phone,
+      surl,
+      furl,
+      hash,
     });
 
-    console.log(response.data);
-
-    res.json(response.data);
+    res.json(paymentResult);
   } catch (error) {
     console.error('Error:', error.message);
     res.status(500).json({
@@ -140,10 +219,8 @@ app.post('/payu-proxy', async (req, res) => {
     });
   }
 });
-// const PayU =require('./quiz_ots/PayU')
-// app.use("/PayU",PayU)
- const PayU =require('./quiz_ots/PayU')
- app.use("/PayU",PayU)
+
+//  app.use("/PayU",PayU)
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
   });
