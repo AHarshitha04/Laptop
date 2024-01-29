@@ -745,3 +745,286 @@ router.get('/tests', async (req, res) => {
   //       .send("Error extracting content and saving it to the database.");
   //   }
   // });
+
+
+
+
+
+
+  // router.post("/upload1", upload.single("document"), async (req, res) => {
+  //     const docxFilePath = `uploads/${req.file.filename}`;
+  //     const outputDir = `uploads/${req.file.originalname}_images`;
+  //     const docName = `${req.file.originalname}`;
+  //     try {
+  //       await fs.mkdir(outputDir, { recursive: true });
+  //       const result = await mammoth.convertToHtml({ path: docxFilePath });
+  //       const htmlContent = result.value;
+  //       const $ = cheerio.load(htmlContent);
+  //       const textResult = await mammoth.extractRawText({ path: docxFilePath });
+  //       const textContent = textResult.value;
+  //       const textSections = textContent.split("\n\n");
+    
+  //       // Insert documentName and get documentId
+  //       const [documentResult] = await db.query("INSERT INTO ots_document SET ?", {
+  //         documen_name: docName,
+  //         testCreationTableId: req.body.testCreationTableId,
+  //         subjectId: req.body.subjectId,
+  //         sectionId: req.body.sectionId,
+  //       });
+  //       const document_Id = documentResult.insertId;
+    
+  //       // Get all images in the order they routerear in the HTML
+  //       const images = [];
+  //       $("img").each(function (i, element) {
+  //         const base64Data = $(this)
+  //           .attr("src")
+  //           .replace(/^data:image\/\w+;base64,/, "");
+  //         const imageBuffer = Buffer.from(base64Data, "base64");
+  //         images.push(imageBuffer);
+  //       });
+    
+  //       let j = 0;
+  //       let Question_id;
+  //       for (let i = 0; i < images.length; i++) {
+  //         if (j == 0) {
+  //           const questionRecord = {
+  //             question_img: images[i],
+  //             testCreationTableId: req.body.testCreationTableId,
+  //             sectionId: req.body.sectionId,
+  //             document_Id: document_Id,
+  //             subjectId: req.body.subjectId,
+  //           };
+  //           console.log(j);
+  //           Question_id = await insertRecord("questions", questionRecord);
+  //           j++;
+  //         } else if (j > 0 && j < 5) {
+  //           const optionRecord = {
+  //             option_img: images[i],
+  //             question_id: Question_id,
+  //           };
+  //           console.log(j);
+  //           await insertRecord("options", optionRecord);
+  //           j++;
+  //         } else if (j == 5) {
+  //           const solutionRecord = {
+  //             solution_img: images[i],
+  //             question_id: Question_id,
+  //           };
+  //           console.log(j);
+  //           await insertRecord("solution", solutionRecord);
+  //           j = 0;
+  //         }
+  //       }
+  //       res.send(
+  //         "Text content and images extracted and saved to the database with the selected topic ID successfully."
+  //       );
+  //     } catch (error) {
+  //       console.error(error);
+  //       res
+  //         .status(500)
+  //         .send("Error extracting content and saving it to the database.");
+  //     }
+  //   });
+
+
+
+  // router.post("/upload", upload.single("document"), async (req, res) => {
+  //   const docxFilePath = `uploads/${req.file.filename}`;
+  //   const outputDir = `uploads/${req.file.originalname}_images`;
+  //   const docName = `${req.file.originalname}`;
+  
+  //   try {
+  //     await fs.mkdir(outputDir, { recursive: true });
+  
+  //     const result = await mammoth.convertToHtml({ path: docxFilePath });
+  //     const htmlContent = result.value;
+  //     const $ = cheerio.load(htmlContent);
+  
+  //     const textResult = await mammoth.extractRawText({ path: docxFilePath });
+  //     const textContent = textResult.value;
+  //     const textSections = textContent.split("\n\n");
+  
+  //     // Insert documentName and get documentId
+  //     const [documentResult] = await db.query("INSERT INTO ots_document SET ?", {
+  //       documen_name: docName,
+  //       testCreationTableId: req.body.testCreationTableId,
+  //       subjectId: req.body.subjectId,
+  //       sectionId: req.body.sectionId,
+  //     });
+  
+  //     const document_Id = documentResult.insertId;
+  //     let images = [];
+  //     let que_id = 0;
+  //     let k = 1;
+  
+  //     const marksPattern = /\[Marks\](\d+),(\d+)/;
+  //     let qtypeMappings = {
+  //       MCQ4: 1,
+  //       MCQ5: 2,
+  //       MSQN: 3,
+  //       MSQ: 4,
+  //       NATI: 5,
+  //       NATD: 6,
+  //       TF: 7,
+  //       CTQ: 8,
+  //     };
+  
+  //     for (let i = 0; i < textSections.length; i++) {
+  //       if (textSections[i].includes('[qtype]')) {
+  //         const qtypeText = textSections[i].replace('[qtype]', '').trim();
+  //         if (qtypeMappings.hasOwnProperty(qtypeText)) {
+  //           const qtypeRecord = {
+  //             qtype_text: textSections[i].replace('[qtype]', ''),
+  //             question_id: que_id,
+  //             // questionTypeId: qtypeMappings[qtypeText],
+  //           };
+  //           await insertRecord('qtype', qtypeRecord);
+  //         }console.log();
+  //       } else if (textSections[i].includes('[ans]')) {
+  //         const answerRecord = {
+  //           answer_text: textSections[i].replace('[ans]', ''),
+  //           question_id: que_id,
+  //         };
+  //         await insertRecord('answer', answerRecord);
+  //       } else {
+  //         const match = textSections[i].match(marksPattern);
+  //         if (match) {
+  //           const marksText = match[1];
+  //           const nMarksText = match[2];
+  //           const marksRecord = {
+  //             marks_text: marksText,
+  //             nmarks_text: nMarksText,
+  //             question_id: que_id,
+  //           };
+  //           await insertRecord('marks', marksRecord);
+  //         } else if (textSections[i].includes('[sortid]')) {
+  //           const sortidRecord = {
+  //             sortid_text: textSections[i].replace('[sortid]', ''),
+  //             question_id: que_id,
+  //           };
+  //           await insertRecord('sortid', sortidRecord);
+  //         } else if (textSections[i].includes('[Q]')) {
+  //           if (k <= images.length) {
+  //             const questionRecord = {
+  //               question_img: images[k - 1],
+  //               testCreationTableId: req.body.testCreationTableId,
+  //               sectionId: req.body.sectionId,
+  //               document_Id: document_Id,
+  //               subjectId: req.body.subjectId,
+  //             };
+  
+  //             que_id = await insertRecord('questions', questionRecord);
+  //             k++;
+  //           } else {
+  //             console.error("Not enough images for questions");
+  //           }
+  //         }else if (textSections[i].includes('(a)')) {
+  //           if (k <= images.length) {
+  //             const optionRecord = {
+  //               option_img: images[k - 1], // Using the same image as the corresponding question
+  //               option_index: 'a',
+  //               question_id: que_id,
+  //             };
+  //             await insertRecord('options', optionRecord);
+  //             k++;
+  //           } else {
+  //             console.error("Not enough images for options");
+  //           }
+  //         } else if (textSections[i].includes('(b)')) {
+  //           if (k <= images.length) {
+  //             const optionRecord = {
+  //               option_img: images[k - 1],
+  //               option_index: 'b',
+  //               question_id: que_id,
+  //             };
+  //             await insertRecord('options', optionRecord);
+  //             k++;
+  //           } else {
+  //             console.error("Not enough images for options");
+  //           }
+  //         } else if (textSections[i].includes('(c)')) {
+  //           if (k <= images.length) {
+  //             const optionRecord = {
+  //               option_img: images[k - 1],
+  //               option_index: 'c',
+  //               question_id: que_id,
+  //             };
+  //             await insertRecord('options', optionRecord);
+  //             k++;
+  //           } else {
+  //             console.error("Not enough images for options");
+  //           }
+  //         } else if (textSections[i].includes('(d)')) {
+  //           if (k <= images.length) {
+  //             const optionRecord = {
+  //               option_img: images[k - 1],
+  //               option_index: 'd',
+  //               question_id: que_id,
+  //             };
+  //             await insertRecord('options', optionRecord);
+  //             k++;
+  //           } else {
+  //             console.error("Not enough images for options");
+  //           }
+  //         } else if (textSections[i].includes('(e)')) {
+  //           if (k <= images.length) {
+  //             const optionRecord = {
+  //               option_img: images[k - 1],
+  //               option_index: 'e',
+  //               question_id: que_id,
+  //             };
+  //             await insertRecord('options', optionRecord);
+  //             k++;
+  //           } else {
+  //             console.error("Not enough images for options");
+  //           }
+  //         } else if (textSections[i].includes('[soln]')) {
+  //           if (k <= images.length) {
+  //             const solutionRecord = {
+  //               solution_img: images[k - 1],
+  //               question_id: que_id,
+  //             };
+  //             await insertRecord('solution', solutionRecord);
+  //             k++;
+  //           } else {
+  //             console.error("Not enough images for the solution");
+  //           }
+  //         } else if (textSections[i].includes('[PRG]')) {
+  //           const paragraphRecord = {
+  //             paragraph_img: images[k - 1],
+  //             document_Id: document_Id,
+  //           };
+  //           paragraph_Id = await insertRecord('paragraph', paragraphRecord);
+  //         } else if (textSections[i].includes('[PQNo]')) {
+  //           const paragraphqnoRecord = {
+  //             paragraphQNo: textSections[i].replace('[PQNo]', ''),
+  //             paragraph_Id: paragraph_Id,
+  //             question_id: que_id,
+  //           };
+  //           await insertRecord('paragraphqno', paragraphqnoRecord);
+  //         }
+  //       }
+  //     }
+  
+  //     res.send(
+  //       "Text content and images extracted and saved to the database with the selected topic ID successfully."
+  //     );
+  //   } catch (error) {
+  //     console.error(error);
+  //     res
+  //       .status(500)
+  //       .send("Error extracting content and saving it to the database.");
+  //   }
+  // });
+  
+  // async function insertRecord(table, record) {
+  //   try {
+  //     const [result] = await db.query(`INSERT INTO ${table} SET ?`, record);
+  //     console.log(`${table} id: ${result.insertId}`);
+  //     return result.insertId;
+  //   } catch (err) {
+  //     console.error(`Error inserting data into ${table}: ${err}`);
+  //     throw err;
+  //   }
+  // }
+  
