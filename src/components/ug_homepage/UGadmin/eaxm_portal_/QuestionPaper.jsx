@@ -1539,6 +1539,40 @@ const QuestionPaper = () => {
     // Add more conditions or handle the case where the question type is not recognized
     return "Answer not available";
   }
+
+useEffect(() => {
+  const resumeTest = async () => {
+    try {
+      // Fetch test details and user responses
+      const response = await axios.get(
+        `http://localhost:5001/QuestionPaper/getTestDetails/${userData.id}/${testCreationTableId}`
+      );
+      const { testDetails, userResponses } = response.data;
+
+      // Set the fetched test details and responses in your state
+      setQuestionData(userResponses);
+      // Set other necessary states based on the fetched data
+
+      // If there are user responses, set them in your state to resume the test
+      if (userResponses) {
+        setAnsweredQuestionsMap((prevMap) => ({
+          ...prevMap,
+          ...userResponses,
+        }));
+        // Set other necessary states based on the fetched responses
+
+        // Update the current question index based on the resumed test
+        const resumedQuestionIndex = Object.keys(userResponses).length;
+        setCurrentQuestionIndex(resumedQuestionIndex);
+      }
+    } catch (error) {
+      console.error("Error resuming test:", error.message);
+    }
+  };
+
+  resumeTest();
+}, [userData.id, testCreationTableId]);
+
   // const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   return (
     <div>

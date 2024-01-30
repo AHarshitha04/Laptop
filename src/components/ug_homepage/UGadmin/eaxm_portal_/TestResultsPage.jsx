@@ -3,6 +3,7 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 // import ButtonsFunctionality from "./ButtonsFunctionality";
 import "./TestResultPage.css";
 import DemoDeleteItsNotImp from "./DemoDeleteItsNotImp";
+import axios from "axios";
 
 const TestResultsPage = () => {
   const [userData, setUserData] = useState({});
@@ -145,7 +146,7 @@ const TestResultsPage = () => {
     const fetchQuestionCount = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5001/QuestionPaper/attemptCount/${testCreationTableId}/2`
+          `http://localhost:5001/QuestionPaper/attemptCount/${testCreationTableId}/${userData.id}`
         );
         const data = await response.json();
         setAttemptCount(data);
@@ -163,7 +164,7 @@ const TestResultsPage = () => {
     const fetchQuestionCount = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5001/QuestionPaper/correctAnswers/${testCreationTableId}/2`
+          `http://localhost:5001/QuestionPaper/correctAnswers/${testCreationTableId}/${userData.id}`
         );
         const data = await response.json();
         setCorrectAnswersCount(data);
@@ -181,7 +182,7 @@ const TestResultsPage = () => {
     const fetchQuestionCount = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5001/QuestionPaper/incorrectAnswers/${testCreationTableId}/2`
+          `http://localhost:5001/QuestionPaper/incorrectAnswers/${testCreationTableId}/${userData.id}`
         );
         const data = await response.json();
         setIncorrectAnswersCount(data);
@@ -218,7 +219,7 @@ const TestResultsPage = () => {
     const fetchQuestionCount = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5001/QuestionPaper/score/${testCreationTableId}/2`
+          `http://localhost:5001/QuestionPaper/score/${testCreationTableId}/${userData.id}`
         );
         const data = await response.json();
         setScoreCount(data);
@@ -269,13 +270,16 @@ const TestResultsPage = () => {
     const fetchQuestionCount = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5001/QuestionPaper/getTimeLeftSubmissions/${userId}/${testCreationTableId}`
+          `http://localhost:5001/QuestionPaper/getTimeLeftSubmissions/${testCreationTableId}/${userData.id}`
+          // `http://localhost:5001/QuestionPaper/score/${testCreationTableId}/${userData.id}`
           // `http://localhost:5001/QuestionPaper/getTimeLeftSubmissions/2/1`
-
         );
         const data = await response.json();
         setTimeSpent(data);
-        // console.log(setAttemptCount, data);
+        console.log(data);
+        console.log(testCreationTableId);
+
+        console.log(setAttemptCount, data);
       } catch (error) {
         console.error("Error fetching question count:", error);
       }
@@ -283,9 +287,28 @@ const TestResultsPage = () => {
 
     fetchQuestionCount();
   }, [testCreationTableId, userId]);
-  console.log("hello")
-  console.log(TimeSpent);
+  // console.log("hello")
+  // console.log(TimeSpent);
+  const [userResponse, setUserResponse] = useState([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5001/QuestionPaper/user_answer"
+        );
+        setUserResponse(response.data);
+        
+      } catch (error) {
+        console.error("Error fetching user response:", error.message);
+      }
+    };
 
+    fetchData();
+  }, []);
+
+
+
+  
   return (
     <div className="testResult_-container">
       <h1>Scrore Card</h1>
@@ -302,7 +325,6 @@ const TestResultsPage = () => {
           <p>Name: {userData.username}</p>
           <p>Email: {userData.email}</p>
         </div>
- 
       </div>
 
       <div className="testResultTable">
@@ -349,22 +371,20 @@ const TestResultsPage = () => {
               )}
             </td>
             <td>{score.netMarks}</td>
-            {
-  TimeSpent ? (
-    TimeSpent.map((time, index) => {
-      console.log('Time:', time); // Add this line for debugging
-      return (
-        <tr key={index}>
-          <td>{time.time_left}</td>
-        </tr>
-      );
-    })
-  ) : (
-    <tr>
-      <td colSpan="6">Loading...</td>
-    </tr>
-  )
-}
+            {TimeSpent ? (
+              TimeSpent.map((time, index) => {
+                console.log("Time:", time); // Add this line for debugging
+                return (
+                  <tr key={index}>
+                    <td>{time.time_left}</td>
+                  </tr>
+                );
+              })
+            ) : (
+              <tr>
+                <td colSpan="6">Loading...</td>
+              </tr>
+            )}
             {/* {
               TimeSpent.map((time, index) => (
                 <tr key={index}>
@@ -385,11 +405,9 @@ const TestResultsPage = () => {
           </tr>
         </table>
       </div>
-
       <br />
-      
       <div className="testResultTable">
-        <table id="customers" >
+        <table id="customers">
           <tr>
             <td>Question No.</td>
             <td>Selected Option</td>
@@ -399,8 +417,9 @@ const TestResultsPage = () => {
           {answer.map((answerData, index) => (
             <tr key={index}>
               <td>Question: {answerData.question_id}</td>
-              <td></td>
-              <td></td>
+
+              <td>{answerData.trimmed_user_answer}</td>
+              <td>{answerData.status}</td>
               <td>{answerData.answer_text}</td>
             </tr>
           ))}
