@@ -8,7 +8,7 @@ const mysql = require("mysql");
     user: 'root',
     password: '',
 
-    database: 'adminnew',
+    database: 'admin_project',
 
   
   });

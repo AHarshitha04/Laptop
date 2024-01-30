@@ -537,6 +537,43 @@ router.post('/submitTimeLeft', async (req, res) => {
     res.status(500).json({ success: false, message: 'Internal server error' });
   }
 });
+// router.get("/score/:testCreationTableId/:user_Id",
+
+// router.get(
+//   "/getTimeLeftSubmissions/:testCreationTableId/:userId",
+//   (req, res) => {
+//     const { user_Id, testCreationTableId } = req.params;
+
+//     // Log the parameters to the console
+//     console.log("Received request with user_Id:", user_Id);
+//     console.log(
+//       "Received request with testCreationTableId:",
+//       testCreationTableId
+//     );
+
+//     if (!testCreationTableId || !user_Id) {
+//       return res.status(400).json({ error: "Missing required parameters" });
+//     }
+
+//     const query = `
+//        SELECT tlsot.*
+//     FROM time_left_submission_of_t\est tlsot
+//     JOIN user_responses ur ON tlsot.user_Id = ur.user_Id AND tlsot.testCreationTableId = ur.testCreationTableId
+//     WHERE tlsot.user_Id = ? AND tlsot.testCreationTableId = ?
+  
+//     LIMIT 1;
+//     `;
+
+//     db.query(query, [user_Id, testCreationTableId], (err, results) => {
+//       if (err) {
+//         console.error("Error executing the query:", err);
+//         res.status(500).json({ error: "Internal Server Error" });
+//       } else {
+//         res.json(results);
+//       }
+//     });
+//   }
+// );
 
 // router.get('/getTimeLeftSubmissions/:userId/:testCreationTableId', async (req, res) => {
 //   try {
@@ -909,22 +946,40 @@ router.delete('/clearResponse/:questionId', async (req, res) => {
 //   }
 // });
 
-// router.get("/questionCount", async (req, res) => {
-//   const { testCreationTableId, subjectId, sectionId } = req.params;
-//   try {
-//     const [results, fields] = await db.execute(
-//       `SELECT t.testCreationTableId, COUNT(q.question_id) AS total_question_count 
-//       FROM 
-//       test_creation_table t 
-//       LEFT JOIN questions q ON t.testCreationTableId = q.testCreationTableId 
-//       WHERE t.testCreationTableId = 2;`
-//     );
-//     res.json(results);
-//   } catch (error) {
-//     console.error("Error fetching course count:", error);
-//     res.status(500).json({ error: "Internal Server Error" });
-//   }
-// });
+router.get("/answer", async (req, res) => {
+  try {
+    // const { questionId } = req.params;
+    const [results] = await db.query(`
+SELECT a.question_id, a.answer_text, ur.user_answer, TRIM(COALESCE(ur.user_answer, '--')) AS trimmed_user_answer, TRIM(a.answer_text) AS trimmed_answer_text, LENGTH(TRIM(COALESCE(ur.user_answer, '--'))) AS user_answer_length, LENGTH(TRIM(a.answer_text)) AS answer_text_length, CASE WHEN TRIM(BINARY ur.user_answer) = TRIM(BINARY a.answer_text) AND ur.user_answer IS NOT NULL AND ur.user_answer != '' THEN 'correct' WHEN ur.user_answer IS NULL THEN 'N/A' ELSE 'incorrect' END AS status FROM answer a LEFT JOIN user_responses ur ON a.question_id = ur.question_id;
+
+
+
+    `);
+
+    res.json(results);
+  } catch (error) {
+    console.error("Error:", error.message);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+
+router.get("/questionCount", async (req, res) => {
+  const { testCreationTableId, subjectId, sectionId } = req.params;
+  try {
+    const [results, fields] = await db.execute(
+      `SELECT t.testCreationTableId, COUNT(q.question_id) AS total_question_count 
+      FROM 
+      test_creation_table t 
+      LEFT JOIN questions q ON t.testCreationTableId = q.testCreationTableId 
+      WHERE t.testCreationTableId = 2;`
+    );
+    res.json(results);
+  } catch (error) {
+    console.error("Error fetching course count:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
 router.get("/questionCount/:testCreationTableId", async (req, res) => {
   const { testCreationTableId } = req.params;
   try {
@@ -1383,6 +1438,26 @@ router.get("/:userId", async (req, res) => {
 
     res.status(200).json(sanitizedUserResponses);
   });
+});
+
+
+
+
+// Example route to get test details and responses
+router.get("/getTestDetails/:userId/:testCreationTableId", async (req, res) => {
+  const { userId, testCreationTableId } = req.params;
+
+  try {
+    // Fetch test details and responses from the database based on userId and testCreationTableId
+    // Replace the following with your actual database queries
+    const testDetails = await fetchTestDetails(userId, testCreationTableId);
+    const userResponses = await fetchUserResponses(userId, testCreationTableId);
+
+    res.json({ testDetails, userResponses });
+  } catch (error) {
+    console.error("Error fetching test details and responses:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 });
 
 module.exports = router;
