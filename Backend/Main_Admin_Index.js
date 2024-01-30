@@ -100,12 +100,14 @@ app.get('/TestActivation/:testCreationTableId', async (req, res) => {
     sc.sectionName,
     sc.noOfQuestions,
     subquery2.numberOfQuestionsInSection,
-    subquery.numberOfQuestionsInSubject
+    subquery.numberOfQuestionsInSubject,
+    MAX(ts.status) AS status
 FROM
     test_creation_table AS t
 LEFT JOIN course_subjects AS cs ON t.courseCreationId = cs.courseCreationId
 LEFT JOIN subjects AS s ON s.subjectId = cs.subjectId
 LEFT JOIN sections AS sc ON t.testCreationTableId = sc.testCreationTableId AND sc.subjectId = s.subjectId
+LEFT JOIN test_states AS ts ON t.testCreationTableId = ts.testCreationTableId
 LEFT JOIN (
     SELECT
         q.testCreationTableId,
@@ -139,9 +141,6 @@ GROUP BY
     sc.noOfQuestions,
     subquery.numberOfQuestionsInSubject,
     subquery2.numberOfQuestionsInSection;
-
-
-
 `, [testCreationTableId]);
 
     // Initialize the tests array
@@ -156,6 +155,7 @@ GROUP BY
         if (existingSubject) {
           // Subject already exists, add section to existing subject
           existingSubject.sections.push({
+            status:row.status,
             sectionId: row.sectionId,
             sectionName: row.sectionName,
             numberOfQuestionsInSection:row.numberOfQuestionsInSection,
@@ -164,6 +164,7 @@ GROUP BY
         } else {
           // Subject does not exist, create a new subject
           existingTest.subjects.push({
+            status:row.status,
             subjectId: row.subjectId,
             subjectName: row.subjectName,
             numberOfQuestionsInSubject:row.numberOfQuestionsInSubject,
@@ -178,6 +179,7 @@ GROUP BY
       } else {
         // Test does not exist, create a new test with subject and section
         tests.push({
+          status:row.status,
           testCreationTableId: row.testCreationTableId,
           TestName: row.TestName,
           TotalQuestions: row.TotalQuestions,
