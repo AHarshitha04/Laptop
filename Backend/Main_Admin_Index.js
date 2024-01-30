@@ -108,28 +108,26 @@ LEFT JOIN subjects AS s ON s.subjectId = cs.subjectId
 LEFT JOIN sections AS sc ON t.testCreationTableId = sc.testCreationTableId AND sc.subjectId = s.subjectId
 LEFT JOIN (
     SELECT
+        q.testCreationTableId,
         q.subjectId,
         COUNT(q.question_id) AS numberOfQuestionsInSubject
     FROM
         questions AS q
-    WHERE
-        q.testCreationTableId = 3
     GROUP BY
+        q.testCreationTableId,
         q.subjectId
-) AS subquery ON s.subjectId = subquery.subjectId
+) AS subquery ON t.testCreationTableId = subquery.testCreationTableId AND s.subjectId = subquery.subjectId
 LEFT JOIN (
     SELECT
+        q.testCreationTableId,
         q.sectionId,
         COUNT(q.question_id) AS numberOfQuestionsInSection
     FROM
         questions AS q
-    WHERE
-        q.testCreationTableId = 3
     GROUP BY
+        q.testCreationTableId,
         q.sectionId
-) AS subquery2 ON sc.sectionId = subquery2.sectionId
-WHERE
-    t.testCreationTableId = 3
+) AS subquery2 ON t.testCreationTableId = subquery2.testCreationTableId AND sc.sectionId = subquery2.sectionId
 GROUP BY
     t.testCreationTableId,
     t.TestName,
@@ -141,6 +139,7 @@ GROUP BY
     sc.noOfQuestions,
     subquery.numberOfQuestionsInSubject,
     subquery2.numberOfQuestionsInSection;
+
 
 
 `, [testCreationTableId]);
@@ -203,6 +202,26 @@ GROUP BY
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
+// Add a new endpoint for updating test activation status
+app.post('/updateTestActivationStatus/:testCreationTableId', async (req, res) => {
+  const { testCreationTableId } = req.params;
+  const { status } = req.body;
+
+  try {
+    // Assuming you have a 'test_states' table with columns 'teststatesId', 'status', and 'testCreationTableId'
+    await db.query('INSERT INTO test_states (status, testCreationTableId) VALUES (?, ?) ON DUPLICATE KEY UPDATE status = ?', [status, testCreationTableId, status]);
+
+    res.json({ success: true, message: 'Activation state updated successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+
+
+
 
 
 // SELECT
