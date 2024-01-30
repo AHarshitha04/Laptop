@@ -79,7 +79,7 @@ import payUPamentPage from './payUPamentPage';
 
 const PayUMoneyForm = () => {
   const [form, setForm] = useState({ name: '', email: '', number: '', amount: 0 });
-  const [toggle, setToggle] = useState(1);
+  const [toggle, setToggle] = useState(true);
   const [hash, setHash] = useState(null);
   const [transactionId, setTransactionId] = useState('abc');
 
@@ -102,11 +102,11 @@ const PayUMoneyForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     // GiHelmetHeadShot(); // Assuming GiHelmetHeadShot is defined elsewhere
-    setToggle(2);
+    setToggle(false);
   };
 
   const getHash = () => {
-    axios.post('/payu/hash', { ...form, transactionId: transactionId })
+    axios.post('http://localhost:5001/hash', { ...form, transactionId: transactionId })
       .then(res => {
         setHash(res.data.hash);
         setTransactionId(res.data.transactionId);
@@ -119,11 +119,12 @@ const PayUMoneyForm = () => {
 
   useEffect(() => {
     generateTransactionID();
+    getHash();
   }, []);
 
   return (
     <>
-      {toggle === 1 && (
+      {toggle  && (
         <div>
           <div><h1>PayU Integration</h1></div>
           <form onSubmit={handleSubmit}>
@@ -148,7 +149,7 @@ const PayUMoneyForm = () => {
           </form>
         </div>
       )}
-      {toggle === 2 && <payUPamentPage setToggle={setToggle} form={form} hash={hash} transactionId={transactionId} />}
+      {!toggle && <payUPamentPage setToggle={setToggle} form={form} hash={hash} transactionId={transactionId} />}
     </>
   );
 };
