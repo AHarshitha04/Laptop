@@ -673,9 +673,11 @@ const StudentRegistrationPage = () => {
            
           </div>
         </section>
+
         <div className="submitBTn">
           <input className="btnSubmit" type="submit" value="submit" />
         </div>
+        
         </form>
     </div>
   );
