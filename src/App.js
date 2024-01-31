@@ -127,6 +127,7 @@ import EmployeeDashboard from "./components/EmployeePortal/EmployeeDashboard.js"
 import QUiZ_ForgotPassword from "./components/ug_homepage/UGadmin/login/QUiZ_ForgotPassword.js";
 import QUIZ_ResetPassword from "./components/ug_homepage/UGadmin/login/QUIZ_ResetPassword.js";
 import EmployeeLOGIN_differentation from "./components/EmployeePortal/EmployeeLOGIN_differentation.js";
+import QuizPaper from "./components/ug_homepage/UGadmin/QuizPaper.jsx";
 
 
 // import QUiZ_ForgotPassword from "./components/ug_homepage/UGadmin/login/QUiZ_ForgotPassword.js";
@@ -362,6 +363,7 @@ const App = () => {
 
       {/* <Footer /> */}
       {/* <LandingPage /> */}
+      <QuizPaper/>
     </Router>
   );
 };

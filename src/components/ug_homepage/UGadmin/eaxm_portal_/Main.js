@@ -1570,6 +1570,20 @@ const QuestionPaper = () => {
             <div class="quiz_exam_interface_SUBJECTS_CONTAINER">
               <div>
                 <div class="subjects_BTN_container">
+                  {/* {questionData.map((subject,Index) => (
+                    <li key={Index}>
+                      <p>{subject.subjectId}</p>
+                    </li>
+                  ))} */}
+                  {/* <li>
+                    <button class="subject_btn">Mathematics</button>
+                  </li>
+                  <li>
+                    <button class="subject_btn">Physics</button>
+                  </li>
+                  <li>
+                    <button class="subject_btn">Chemistry</button>
+                  </li> */}
                   <li>
                     <h6>Time Left: {WformatTime(wtimer)}</h6>
                   </li>
@@ -1811,7 +1825,6 @@ const QuestionPaper = () => {
                                   ) && (
                                     <div className="calculator">
                                       <div className="display">
-   
                                         <label>Answer:</label>
                                         <input
                                           type="text"
@@ -1820,7 +1833,7 @@ const QuestionPaper = () => {
                                           onChange={(e) => onAnswerSelected3(e)}
                                           placeholder="Enter your answer"
                                           readOnly
-                                          defaultValue={answeredQuestionsMap[currentQuestion.question_id] || ''}
+                            
                                         />
                                       </div>
                                       <div>
@@ -1971,8 +1984,7 @@ const QuestionPaper = () => {
                                   currentQuestionType.typeofQuestion.includes(
                                     "NATI( Numeric Answer type of questions with integer values)"
                                   ) && (
-                                    <div className="calculator">
-
+                                    <div className="calculator">                      
                                       <div className="display">
                                         <label>Answer:</label>
                                         <input
