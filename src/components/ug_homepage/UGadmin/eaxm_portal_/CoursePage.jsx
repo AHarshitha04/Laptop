@@ -83,7 +83,7 @@ const CoursePage = () => {
               {/* <Link to={`/Test_List/${courseDetails.courseCreationId}`}>
                 Test Page
               </Link> */}
-              <Link to={`/feachingcourse/${courseDetails.examId}`} > Buy Now</Link>
+              <Link to={`/coursedataSRP/${courseDetails.courseCreationId}`} > Buy Now</Link>
             </div>
           </div>
         ))}

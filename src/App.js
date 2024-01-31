@@ -85,7 +85,7 @@ import Instructions from "./components/ug_homepage/UGadmin/eaxm_portal_/Instruct
 import General_intructions_page from "./components/ug_homepage/UGadmin/eaxm_portal_/General_intructions_page.jsx";
 
 import CoursePage from "./components/ug_homepage/UGadmin/eaxm_portal_/CoursePage.jsx";
-
+import StudentRegistationPage from "./components/ug_homepage/UGadmin/eaxm_portal_/StudentRegistationPage.jsx"
 // import ExamSummary from './components/ug_homepage/UGadmin/eaxm_portal_/Exam_Summary';
 import SubmitPage from "./components/ug_homepage/UGadmin/eaxm_portal_/Submit_Page";
 import TestResultsPage from "./components/ug_homepage/UGadmin/eaxm_portal_/TestResultsPage";
@@ -118,6 +118,7 @@ import EmployeeDashboard from "./components/EmployeePortal/EmployeeDashboard.js"
 import QUiZ_ForgotPassword from "./components/ug_homepage/UGadmin/login/QUiZ_ForgotPassword.js";
 import QUIZ_ResetPassword from "./components/ug_homepage/UGadmin/login/QUIZ_ResetPassword.js";
 import EmployeeLOGIN_differentation from "./components/EmployeePortal/EmployeeLOGIN_differentation.js";
+import { Read } from "./components/ug_homepage/UGadmin/eaxm_portal_/Read.jsx";
 
 
 // import QUiZ_ForgotPassword from "./components/ug_homepage/UGadmin/login/QUiZ_ForgotPassword.js";
@@ -255,6 +256,12 @@ const App = () => {
           path="/feachingcourse/:examId"
           element={<CoursePage />}
         />
+
+        <Route
+          path="/coursedataSRP/:courseCreationId"
+          element={<StudentRegistationPage />}
+        />
+        <Route path='/login_UserData' element={<Read />} />
         <Route
           path="/Test_List/:courseCreationId"
           element={<PrivateRoute element={<FullTest />} />}
