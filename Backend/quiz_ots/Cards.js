@@ -32,6 +32,8 @@ router.get("/examData", async (req, res) => {
     }
   });
 
+
+
   router.get('/courses/count', async (req, res) => {
     try {
       const [results, fields] = await db.execute(

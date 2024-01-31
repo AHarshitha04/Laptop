@@ -253,7 +253,7 @@ const App = () => {
         {/* ========================================================= quiz exam routes ====================================================================== */}
         <Route
           path="/feachingcourse/:examId"
-          element={<PrivateRoute element={<CoursePage />} />}
+          element={<CoursePage />}
         />
         <Route
           path="/Test_List/:courseCreationId"

@@ -39,8 +39,7 @@ const ImeageUpload =require('./otsadmin/ImeageUpload')
 
 const Cards =require('./quiz_ots/Cards')
 const QuestionPaper = require('./quiz_ots/QuestionPaper')
-
-
+const StudentRegistationPage = require('./quiz_ots/StudentRegistationPage')
 
 //-------------------- empolyee portal imports -------------------------------------
 
@@ -67,6 +66,7 @@ app.use('/ImeageUpload',ImeageUpload)
 
 app.use('/Cards',Cards)
 app.use('/QuestionPaper',QuestionPaper)
+app.use('/StudentRegistationPage',StudentRegistationPage)
 
 //-------------------- empolyee portal  -------------------------------------
 const Employee_info=require('./EMPLOYEE_PORTAL/Employee_Info')

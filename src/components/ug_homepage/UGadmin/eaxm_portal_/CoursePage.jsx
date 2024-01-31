@@ -80,9 +80,10 @@ const CoursePage = () => {
             </li>
             <br />
             <div className="start_now">
-              <Link to={`/Test_List/${courseDetails.courseCreationId}`}>
+              {/* <Link to={`/Test_List/${courseDetails.courseCreationId}`}>
                 Test Page
-              </Link>
+              </Link> */}
+              <Link to={`/feachingcourse/${courseDetails.examId}`} > Buy Now</Link>
             </div>
           </div>
         ))}
