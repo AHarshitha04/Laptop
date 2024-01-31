@@ -2264,6 +2264,45 @@ router.post("/response", async (req, res) => {
 //       WHERE user_Id = ? AND testCreationTableId = ? AND question_id = ?
 
 
+// router.put('/updateResponse/:questionId', async (req, res) => {
+//   try {
+//     const questionId = parseInt(req.params.questionId, 10);
+//     const { updatedResponse, userId, testCreationTableId } = req.body;
+
+//     if (
+//       updatedResponse &&
+//       updatedResponse.optionIndexes1 &&
+//       updatedResponse.optionIndexes2
+//     ) {
+//       const userAnswer1 = updatedResponse.optionIndexes1;
+//       const userAnswer2 = updatedResponse.optionIndexes2.join(',');
+
+//       const sql = 'UPDATE user_responses SET user_answer = ? WHERE question_id = ?';
+
+//       db.query(sql, [userAnswer1 + userAnswer2, questionId], (err, result) => {
+//         if (err) {
+//           console.error('Error updating response in the database:', err);
+//           res.status(500).json({ success: false, message: 'Internal server error' });
+//         } else {
+//           if (result.affectedRows > 0) {
+//             console.log(`Response for question ${questionId} updated successfully`);
+//             res.json({ success: true, message: 'Response updated successfully' });
+//           } else {
+//             console.error(`No records found for question ${questionId}`);
+//             res.status(404).json({ success: false, message: 'Response not found' });
+//           }
+//         }
+//       });
+//     } else {
+//       console.error(`Invalid updated response data for question ${questionId}`);
+//       res.status(400).json({ success: false, message: 'Invalid updated response data' });
+//     }
+//   } catch (error) {
+//     console.error('Error handling the request:', error);
+//     res.status(500).json({ success: false, message: 'Internal server error' });
+//   }
+// });
+
 router.put('/updateResponse/:questionId', async (req, res) => {
   try {
     const questionId = parseInt(req.params.questionId, 10);
@@ -2271,15 +2310,25 @@ router.put('/updateResponse/:questionId', async (req, res) => {
 
     if (
       updatedResponse &&
-      updatedResponse.optionIndexes1 &&
-      updatedResponse.optionIndexes2
+      (updatedResponse.optionIndexes1 || updatedResponse.optionIndexes2)
     ) {
-      const userAnswer1 = updatedResponse.optionIndexes1;
-      const userAnswer2 = updatedResponse.optionIndexes2.join(',');
+      let userAnswer = '';
+
+      if (updatedResponse.optionIndexes1) {
+        userAnswer += updatedResponse.optionIndexes1.join('');
+      }
+
+      if (updatedResponse.optionIndexes2) {
+        userAnswer += updatedResponse.optionIndexes2.join('');
+      }
+
+      if (updatedResponse.calculatorInputValue) {
+        userAnswer += updatedResponse.calculatorInputValue;
+      }
 
       const sql = 'UPDATE user_responses SET user_answer = ? WHERE question_id = ?';
 
-      db.query(sql, [userAnswer1 + userAnswer2, questionId], (err, result) => {
+      db.query(sql, [userAnswer, questionId], (err, result) => {
         if (err) {
           console.error('Error updating response in the database:', err);
           res.status(500).json({ success: false, message: 'Internal server error' });
@@ -2302,7 +2351,6 @@ router.put('/updateResponse/:questionId', async (req, res) => {
     res.status(500).json({ success: false, message: 'Internal server error' });
   }
 });
-
 
 router.delete('/clearResponse/:questionId', async (req, res) => {
   try {

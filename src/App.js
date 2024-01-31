@@ -363,7 +363,7 @@ const App = () => {
 
       {/* <Footer /> */}
       {/* <LandingPage /> */}
-      <QuizPaper/>
+      {/* <QuizPaper/> */}
     </Router>
   );
 };

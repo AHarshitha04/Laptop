@@ -386,7 +386,7 @@
 //       console.error("Error storing in local storage:", error);
 //     }
 //   };
-
+ 
 //   //end Subjects fetching use effect code
 
 //   //users fetching use effect code
@@ -450,6 +450,8 @@
 
 //     fetchData();
 //   }, [testCreationTableId]);
+
+
 
 //   const currentQuestion =
 //     questionData.questions && questionData.questions[currentQuestionIndex];
@@ -1207,7 +1209,7 @@
 //       (selectedAnswersMap2[currentQuestion.question_id] &&
 //         selectedAnswersMap2[currentQuestion.question_id].length > 0) ||
 //       calculatorInputValue !== "";
-
+  
 //     if (isCurrentQuestionAnswered) {
 //       // If the current question is answered, update the status
 //       const updatedQuestionStatus = [...questionStatus];
@@ -1215,37 +1217,37 @@
 //       setQuestionStatus(updatedQuestionStatus);
 //     }
 //     //-----------------buttons functionality end--------------
-
+  
 //     try {
 //       const questionId =
 //         questionData.questions[currentQuestionIndex].question_id;
 //       console.log("Response cleared successfully ");
-
+  
 //       // Clear response for radio buttons (MCQ)
 //       const updatedSelectedAnswersMap1 = { ...selectedAnswersMap1 };
 //       updatedSelectedAnswersMap1[questionId] = undefined;
 //       setSelectedAnswersMap1(updatedSelectedAnswersMap1);
-
+  
 //       // Clear response for checkboxes (MSQ)
 //       const updatedSelectedAnswersMap2 = { ...selectedAnswersMap2 };
 //       updatedSelectedAnswersMap2[questionId] = [];
 //       setSelectedAnswersMap2(updatedSelectedAnswersMap2);
-
+  
 //       const updatedSelectedAnswersMap3 = { ...onAnswerSelected3 };
 //       updatedSelectedAnswersMap3[questionId] = [];
 //       setSelectedAnswersMap3(updatedSelectedAnswersMap3);
-
+  
 //       // Send a request to your server to clear the user's response for the current question
 //       const response = await axios.delete(
 //         `http://localhost:5001/QuestionPaper/clearResponse/${questionId}`
 //       );
-
+  
 //       if (response.status === 200) {
 //         console.log("Response cleared successfully");
-
+  
 //         // Clear the stored calculator value in local storage
 //         localStorage.removeItem(`calculatorValue_${questionId}`);
-
+  
 //         // Update any state or perform additional actions as needed
 //       } else {
 //         console.error("Failed to clear response:", response.data);
@@ -1254,6 +1256,8 @@
 //       console.error("Error clearing response:", error);
 //     }
 //   };
+  
+  
 
 //   // -------------------------------END OF BUTTONS FUNCTIONALITIES-----------------------------------
 
@@ -2070,7 +2074,32 @@
 
 // export default QuestionPaper;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //sample
+
 
 import React, { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
@@ -2099,7 +2128,7 @@ const QuestionPaper = () => {
       : []
   );
   const [sections, setSections] = useState([]);
-  // const [currentQuestionType, setCurrentQuestionType] = useState(null);
+  const [currentQuestionType, setCurrentQuestionType] = useState(null);
 
   // console.log("hiii");
   // console.log("calculator:", value);
@@ -2460,7 +2489,7 @@ const QuestionPaper = () => {
       console.error("Error storing in local storage:", error);
     }
   };
-
+ 
   //end Subjects fetching use effect code
 
   //users fetching use effect code
@@ -2504,25 +2533,27 @@ const QuestionPaper = () => {
   }, [questionStatus]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // fetchData();
-        const response = await fetch(
-          `http://localhost:5001/QuestionPaper/questionOptions/${testCreationTableId}`
-        );
+     const fetchData = async () => {
+    try {
+      // fetchData();
+      const response = await fetch(
+        `http://localhost:5001/QuestionPaper/questionOptions/${testCreationTableId}`
+      );
 
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-
-        const data = await response.json();
-        setQuestionData(data);
-      } catch (error) {
-        console.error("Error fetching question data:", error);
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
       }
-    };
+
+      const data = await response.json();
+      setQuestionData(data);
+    } catch (error) {
+      console.error("Error fetching question data:", error);
+    }
+  };
     fetchData();
   }, [testCreationTableId]);
+
+
 
   const currentQuestion =
     questionData.questions && questionData.questions[currentQuestionIndex];
@@ -2559,52 +2590,32 @@ const QuestionPaper = () => {
   const [originalStatuses, setOriginalStatuses] = useState(
     Array(questionData.questions.length).fill("notVisited")
   );
-  // const [questionTypes, setQuestionTypes] = useState([]);
+  const [questionTypes, setQuestionTypes] = useState([]);
+  useEffect(() => {
+    const fetchQuestionTypes = async () => {
+      try {
+        if (questionData && questionData.questions) {
+          const qID = questionData.questions[currentQuestionIndex].question_id;
 
-  // useEffect(() => {
-  //   const fetchQuestionTypes = async () => {
-  //     try {
+          const responseQuestionTypes = await fetch(
+            `http://localhost:5001/QuestionPaper/questionType/${qID}`
+          );
+          const questionTypes = await responseQuestionTypes.json();
+          setQuestionTypes(questionTypes);
+          // console.log(responseQuestionTypes);
+          const currentQuestionType = questionTypes.find(
+            (q) => q.question_id === qID
+          );
 
-  //       console.log("Fetching question types...");
-        
-  //       if (questionData && questionData.questions) {
-  //         // Ensure the currentQuestionIndex is within bounds
-  //         if (currentQuestionIndex < questionData.questions.length) {
-  //           const qID =
-  //             questionData.questions[currentQuestionIndex].question_id;
+          setCurrentQuestionType(currentQuestionType);
+        }
+      } catch (error) {
+        console.error("Error fetching question types:", error);
+      }
+    };
 
-  //           console.log("questionData", qID);
-
-  //           const responseQuestionTypes = await fetch(
-  //             `http://localhost:5001/QuestionPaper/questionType/${qID}`
-  //           );
-
-  //           // if (responseQuestionTypes.ok) {
-  //           //   const questionTypes = await responseQuestionTypes.json();
-
-  //           //   console.log("Question types:", questionTypes);
-              
-  //           //   setQuestionTypes(questionTypes);
-
-  //           //   const currentQuestionType = questionTypes.find(
-  //           //     (q) => q.question_id === qID
-  //           //   );
-
-  //           //   setCurrentQuestionType(currentQuestionType);
-  //           // } else {
-  //           //   console.error(
-  //           //     `Error fetching question types. Status: ${responseQuestionTypes.status}`
-  //           //   );
-  //           // }
-  //         }
-  //       }
-  //     } catch (error) {
-  //       console.error("Error fetching question types:", error);
-  //     }
-  //   };
-
-  //   fetchQuestionTypes();
-  // }, [questionData, currentQuestionIndex]);
+    fetchQuestionTypes();
+  }, [questionData, currentQuestionIndex]);
 
   useEffect(() => {
     // Call the updateCounters function initially when the component mounts
@@ -2750,18 +2761,18 @@ const QuestionPaper = () => {
   //         if (calculatorInputValue !== storedCalculatorInputValue) {
   //           const selectedOption1 =
   //             selectedAnswersMap1[currentQuestion.question_id];
-
+  
   //           const selectedOption2 =
   //             selectedAnswersMap2[currentQuestion.question_id];
-
+  
   //           const optionIndexes1 =
   //             selectedOption1 !== undefined ? [selectedOption1] : [];
   //           const optionIndexes2 =
   //             selectedOption2 !== undefined ? selectedOption2 : [];
-
+  
   //           const questionId = currentQuestion.question_id;
   //           const hasAnswered = answeredQuestionsMap[questionId];
-
+  
   //           if (hasAnswered) {
   //             const updatedResponse = {
   //               optionIndexes1: optionIndexes1.map((index) =>
@@ -2772,7 +2783,7 @@ const QuestionPaper = () => {
   //               ),
   //               calculatorInputValue: calculatorInputValue,
   //             };
-
+  
   //             const updateResponse = await axios.put(
   //               `http://localhost:5001/QuestionPaper/updateResponse/${questionId}`,
   //               {
@@ -2863,254 +2874,83 @@ const QuestionPaper = () => {
   //       console.error("Error handling next click:", error);
   //     }
   //   }
-
+    
   //   // --------------------------------end of button functionality --------------------------------------------------
   // };
 
 
 
-  // 30/01-23 working code
-  // const handleSaveNextQuestion = async () => {
-  //   const updatedQuestionStatus = [...questionStatus];
-  //   const calculatorInputValue = value;
-  //   // const currentQuestion = questionData.questions[currentQuestionIndex];
 
-  //   const isCurrentQuestionAnswered =
-  //     selectedAnswersMap1[currentQuestion.question_id] !== undefined ||
-  //     (selectedAnswersMap2[currentQuestion.question_id] &&
-  //       selectedAnswersMap2[currentQuestion.question_id].length > 0) ||
-  //     calculatorInputValue !== "";
 
-  //   if (!isCurrentQuestionAnswered) {
-  //     window.alert("Please answer the question before proceeding.");
-  //   } else {
-  //     updatedQuestionStatus[currentQuestionIndex] = "answered";
-  //     setQuestionStatus(updatedQuestionStatus);
-
-  //     setCurrentQuestionIndex((prevIndex) => {
-  //       if (prevIndex < questionData.questions.length - 1) {
-  //         return prevIndex + 1;
-  //       }
-  //     });
-
-  //     try {
-  //       // const currentQuestion = questionData.questions[currentQuestionIndex];
-  //       const subjectId = currentQuestion.subjectId;
-  //       const sectionId = currentQuestion.sectionId;
-
-  //       // const token = localStorage.getItem("token");
-  //       // const response_user = await fetch(
-  //       //   "http://localhost:5001/ughomepage_banner_login/user",
-  //       //   {
-  //       //     headers: {
-  //       //       Authorization: `Bearer ${token}`,
-  //       //     },
-  //       //   }
-  //       // );
-
-  //       if (userData.id) {
-  //         // const userData = await response_user.json();
-  //         setUserData(userData);
-  //         const userId = userData.id;
-
-  //         if (!questionData) {
-  //           console.error("Data or questions are null or undefined");
-  //           return;
-  //         }
-
-  //         const question_Id = currentQuestion.question_id.toString();
-
-  //         const valueObject = {
-  //           testCreationTableId: testCreationTableId,
-  //           value: calculatorInputValue,
-  //           question_id: question_Id,
-  //         };
-
-  //         // Use await with localStorage.setItem
-  //         await localStorage.setItem(
-  //           `calculatorValue_${question_Id}`,
-  //           JSON.stringify(valueObject)
-  //         );
-
-  //         // Introduce a small delay before retrieving the stored value
-  //         // This ensures that the local storage has enough time to update
-  //         await new Promise((resolve) => setTimeout(resolve, 100));
-
-  //         const storedValue = localStorage.getItem(
-  //           `calculatorValue_${question_Id}`
-  //         );
-  //         const storedCalculatorInputValue = storedValue
-  //           ? JSON.parse(storedValue).value
-  //           : null;
-
-  //         if (calculatorInputValue === storedCalculatorInputValue) {
-  //           const selectedOption1 =
-  //             selectedAnswersMap1[currentQuestion.question_id];
-
-  //           const selectedOption2 =
-  //             selectedAnswersMap2[currentQuestion.question_id];
-
-  //           const optionIndexes1 =
-  //             selectedOption1 !== undefined ? [selectedOption1] : [];
-  //           const optionIndexes2 =
-  //             selectedOption2 !== undefined ? selectedOption2 : [];
-
-  //           const questionId = currentQuestion.question_id;
-  //           const hasAnswered = answeredQuestionsMap[questionId];
-
-  //           if (hasAnswered) {
-  //             const updatedResponse = {
-  //               optionIndexes1: optionIndexes1.map((index) =>
-  //                 String.fromCharCode("a".charCodeAt(0) + index)
-  //               ),
-  //               optionIndexes2: optionIndexes2.map((index) =>
-  //                 String.fromCharCode("a".charCodeAt(0) + index)
-  //               ),
-  //               calculatorInputValue: calculatorInputValue,
-  //             };
-
-  //             const updateResponse = await axios.put(
-  //               `http://localhost:5001/QuestionPaper/updateResponse/${questionId}`,
-  //               {
-  //                 updatedResponse,
-  //                 userId,
-  //                 testCreationTableId,
-  //                 subjectId,
-  //                 sectionId,
-  //               }
-  //             );
-  //             // Handle the response...
-  //           } else {
-  //             const responses = {
-  //               userId: userId,
-  //               testCreationTableId: testCreationTableId,
-  //               subjectId: subjectId,
-  //               sectionId: sectionId,
-  //               [questionId]: {
-  //                 optionIndexes1: optionIndexes1.map((index) =>
-  //                   String.fromCharCode("a".charCodeAt(0) + index)
-  //                 ),
-  //                 optionIndexes2: optionIndexes2.map((index) =>
-  //                   String.fromCharCode("a".charCodeAt(0) + index)
-  //                 ),
-  //                 calculatorInputValue: calculatorInputValue,
-  //               },
-  //             };
-
-  //             // Update answeredQuestionsMap to indicate that the question has been answered
-  //             setAnsweredQuestionsMap((prevMap) => ({
-  //               ...prevMap,
-  //               [questionId]: true,
-  //             }));
-
-  //             // If the user has answered, update the existing response
-  //             if (hasAnswered) {
-  //               const updatedResponse = {
-  //                 optionIndexes1: optionIndexes1.map((index) =>
-  //                   String.fromCharCode("a".charCodeAt(0) + index)
-  //                 ),
-  //                 optionIndexes2: optionIndexes2.map((index) =>
-  //                   String.fromCharCode("a".charCodeAt(0) + index)
-  //                 ),
-  //                 calculatorInputValue: calculatorInputValue,
-  //               };
-
-  //               const updateResponse = await axios.put(
-  //                 `http://localhost:5001/QuestionPaper/updateResponse/${questionId}`,
-  //                 {
-  //                   updatedResponse,
-  //                   userId,
-  //                   testCreationTableId,
-  //                   subjectId,
-  //                   sectionId,
-  //                 }
-  //               );
-  //             } else {
-  //               // Responses object
-  //               const responses = {
-  //                 userId: userId,
-  //                 testCreationTableId: testCreationTableId,
-  //                 subjectId: subjectId,
-  //                 sectionId: sectionId,
-  //                 [questionId]: {
-  //                   optionIndexes1: optionIndexes1.map((index) =>
-  //                     String.fromCharCode("a".charCodeAt(0) + index)
-  //                   ),
-  //                   optionIndexes2: optionIndexes2.map((index) =>
-  //                     String.fromCharCode("a".charCodeAt(0) + index)
-  //                   ),
-  //                   calculatorInputValue: calculatorInputValue,
-  //                 },
-  //               };
-
-  //               // If the user has not answered, save a new response
-  //               const saveResponse = await axios.post(
-  //                 "http://localhost:5001/QuestionPaper/response",
-  //                 {
-  //                   responses,
-  //                   userId,
-  //                   testCreationTableId,
-  //                   subjectId,
-  //                   sectionId,
-  //                 }
-  //               );
-
-  //               // Handle the response...
-  //               setClickCount((prevCount) => prevCount + 1);
-  //             }
-  //           }
-  //         }
-  //       }
-  //     } catch (error) {
-  //       console.error("Error handling next click:", error);
-  //     }
-  //   }
-  //   // --------------------------------end of button functionality --------------------------------------------------
-  // };
 
   const handleSaveNextQuestion = async () => {
-    try {
-      const updatedQuestionStatus = [...questionStatus];
-      const calculatorInputValue = value;
+    const updatedQuestionStatus = [...questionStatus];
+    const calculatorInputValue = value;
+    const currentQuestion = questionData.questions[currentQuestionIndex];
   
-      const isCurrentQuestionAnswered =
-        selectedAnswersMap1[currentQuestion.question_id] !== undefined ||
-        (selectedAnswersMap2[currentQuestion.question_id] &&
-          selectedAnswersMap2[currentQuestion.question_id].length > 0) ||
-        calculatorInputValue !== "";
+    const isCurrentQuestionAnswered =
+      selectedAnswersMap1[currentQuestion.question_id] !== undefined ||
+      (selectedAnswersMap2[currentQuestion.question_id] &&
+        selectedAnswersMap2[currentQuestion.question_id].length > 0) ||
+      calculatorInputValue !== "";
   
-      if (!isCurrentQuestionAnswered) {
-        window.alert("Please answer the question before proceeding.");
-      } else {
-        updatedQuestionStatus[currentQuestionIndex] = "answered";
-        setQuestionStatus(updatedQuestionStatus);
+    if (!isCurrentQuestionAnswered) {
+      window.alert("Please answer the question before proceeding.");
+    } else {
+      updatedQuestionStatus[currentQuestionIndex] = "answered";
+      setQuestionStatus(updatedQuestionStatus);
   
-        // Save the current question index before updating the state
-        const nextQuestionIndex = currentQuestionIndex + 1;
+      setCurrentQuestionIndex((prevIndex) => {
+        if (prevIndex < questionData.questions.length - 1) {
+          return prevIndex + 1;
+        }
+      });
   
-        setCurrentQuestionIndex(nextQuestionIndex);
+      try {
+        const currentQuestion = questionData.questions[currentQuestionIndex];
+        const subjectId = currentQuestion.subjectId;
+        const sectionId = currentQuestion.sectionId;
   
-        if (userData.id) {
+        const token = localStorage.getItem("token");
+        const response_user = await fetch(
+          "http://localhost:5001/ughomepage_banner_login/user",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+  
+        if (response_user.ok) {
+          const userData = await response_user.json();
+          setUserData(userData);
           const userId = userData.id;
-          const subjectId = currentQuestion.subjectId;
-          const sectionId = currentQuestion.sectionId;
-          const questionId = currentQuestion.question_id.toString();
+  
+          if (!questionData) {
+            console.error("Data or questions are null or undefined");
+            return;
+          }
+  
+          const question_Id = currentQuestion.question_id.toString();
   
           const valueObject = {
             testCreationTableId: testCreationTableId,
             value: calculatorInputValue,
-            question_id: questionId,
+            question_id: question_Id,
           };
   
+          // Use await with localStorage.setItem
           await localStorage.setItem(
-            `calculatorValue_${questionId}`,
+            `calculatorValue_${question_Id}`,
             JSON.stringify(valueObject)
           );
   
+          // Introduce a small delay before retrieving the stored value
+          // This ensures that the local storage has enough time to update
           await new Promise((resolve) => setTimeout(resolve, 100));
   
           const storedValue = localStorage.getItem(
-            `calculatorValue_${questionId}`
+            `calculatorValue_${question_Id}`
           );
           const storedCalculatorInputValue = storedValue
             ? JSON.parse(storedValue).value
@@ -3128,28 +2968,8 @@ const QuestionPaper = () => {
             const optionIndexes2 =
               selectedOption2 !== undefined ? selectedOption2 : [];
   
+            const questionId = currentQuestion.question_id;
             const hasAnswered = answeredQuestionsMap[questionId];
-  
-            const responses = {
-              userId: userId,
-              testCreationTableId: testCreationTableId,
-              subjectId: subjectId,
-              sectionId: sectionId,
-              [questionId]: {
-                optionIndexes1: optionIndexes1.map((index) =>
-                  String.fromCharCode("a".charCodeAt(0) + index)
-                ),
-                optionIndexes2: optionIndexes2.map((index) =>
-                  String.fromCharCode("a".charCodeAt(0) + index)
-                ),
-                calculatorInputValue: calculatorInputValue,
-              },
-            };
-  
-            setAnsweredQuestionsMap((prevMap) => ({
-              ...prevMap,
-              [questionId]: true,
-            }));
   
             if (hasAnswered) {
               const updatedResponse = {
@@ -3162,7 +2982,7 @@ const QuestionPaper = () => {
                 calculatorInputValue: calculatorInputValue,
               };
   
-              await axios.put(
+              const updateResponse = await axios.put(
                 `http://localhost:5001/QuestionPaper/updateResponse/${questionId}`,
                 {
                   updatedResponse,
@@ -3172,240 +2992,95 @@ const QuestionPaper = () => {
                   sectionId,
                 }
               );
+              // Handle the response...
             } else {
-              await axios.post(
-                "http://localhost:5001/QuestionPaper/response",
-                {
-                  responses,
-                  userId,
-                  testCreationTableId,
-                  subjectId,
-                  sectionId,
-                }
-              );
-              setClickCount((prevCount) => prevCount + 1);
+              const responses = {
+                userId: userId,
+                testCreationTableId: testCreationTableId,
+                subjectId: subjectId,
+                sectionId: sectionId,
+                [questionId]: {
+                  optionIndexes1: optionIndexes1.map((index) =>
+                    String.fromCharCode("a".charCodeAt(0) + index)
+                  ),
+                  optionIndexes2: optionIndexes2.map((index) =>
+                    String.fromCharCode("a".charCodeAt(0) + index)
+                  ),
+                  calculatorInputValue: calculatorInputValue,
+                },
+              };
+  
+              // Update answeredQuestionsMap to indicate that the question has been answered
+              setAnsweredQuestionsMap((prevMap) => ({
+                ...prevMap,
+                [questionId]: true,
+              }));
+  
+              // If the user has answered, update the existing response
+              if (hasAnswered) {
+                const updatedResponse = {
+                  optionIndexes1: optionIndexes1.map((index) =>
+                    String.fromCharCode("a".charCodeAt(0) + index)
+                  ),
+                  optionIndexes2: optionIndexes2.map((index) =>
+                    String.fromCharCode("a".charCodeAt(0) + index)
+                  ),
+                  calculatorInputValue: calculatorInputValue,
+                };
+    
+                const updateResponse = await axios.put(
+                  `http://localhost:5001/QuestionPaper/updateResponse/${questionId}`,
+                  {
+                    updatedResponse,
+                    userId,
+                    testCreationTableId,
+                    subjectId,
+                    sectionId,
+                  }
+                );
+              } else {
+                // Responses object
+                const responses = {
+                  userId: userId,
+                  testCreationTableId: testCreationTableId,
+                  subjectId: subjectId,
+                  sectionId: sectionId,
+                  [questionId]: {
+                    optionIndexes1: optionIndexes1.map((index) =>
+                      String.fromCharCode("a".charCodeAt(0) + index)
+                    ),
+                    optionIndexes2: optionIndexes2.map((index) =>
+                      String.fromCharCode("a".charCodeAt(0) + index)
+                    ),
+                    calculatorInputValue: calculatorInputValue,
+                  },
+                };
+  
+                // If the user has not answered, save a new response
+                const saveResponse = await axios.post(
+                  "http://localhost:5001/QuestionPaper/response",
+                  {
+                    responses,
+                    userId,
+                    testCreationTableId,
+                    subjectId,
+                    sectionId,
+                  }
+                );
+  
+                // Handle the response...
+                setClickCount((prevCount) => prevCount + 1);
+              }
             }
           }
         }
+      } catch (error) {
+        console.error("Error handling next click:", error);
       }
-    } catch (error) {
-      console.error("Error handling next click:", error);
     }
+    // --------------------------------end of button functionality --------------------------------------------------
   };
   
-
-
-  // 30/01-23 working code end
-
-
-  // const handleSaveNextQuestion = async () => {
-  //   try {
-  //     const updatedQuestionStatus = [...questionStatus];
-  //     const calculatorInputValue = value;
-
-  //     // Store the updated index in a variable
-  //     let updatedIndex;
-
-  //     setCurrentQuestionIndex((prevIndex) => {
-  //       if (prevIndex < questionData.questions.length - 1) {
-  //         updatedIndex = prevIndex + 1;
-  //         return updatedIndex;
-  //       }
-  //     });
-
-  //     // Access the current question using the stored index
-  //     const currentQuestion = questionData.questions[updatedIndex];
-
-  //     const isCurrentQuestionAnswered =
-  //       selectedAnswersMap1[currentQuestion.question_id] !== undefined ||
-  //       (selectedAnswersMap2[currentQuestion.question_id] &&
-  //         selectedAnswersMap2[currentQuestion.question_id].length > 0) ||
-  //       calculatorInputValue !== "";
-
-  //     if (!isCurrentQuestionAnswered) {
-  //       window.alert("Please answer the question before proceeding.");
-  //       return; // Stop execution if the question is not answered
-  //     }
-
-  //     updatedQuestionStatus[updatedIndex] = "answered";
-  //     setQuestionStatus(updatedQuestionStatus);
-
-  //     try {
-  //       const subjectId = currentQuestion.subjectId;
-  //       const sectionId = currentQuestion.sectionId;
-
-  //       const token = localStorage.getItem("token");
-  //       const response_user = await fetch(
-  //         "http://localhost:5001/ughomepage_banner_login/user",
-  //         {
-  //           headers: {
-  //             Authorization: `Bearer ${token}`,
-  //           },
-  //         }
-  //       );
-
-  //       if (response_user.ok) {
-  //         const userData = await response_user.json();
-  //         setUserData(userData);
-  //         const userId = userData.id;
-
-  //         if (!questionData) {
-  //           console.error("Data or questions are null or undefined");
-  //           return;
-  //         }
-
-  //         const question_Id = currentQuestion.question_id.toString();
-
-  //         const valueObject = {
-  //           testCreationTableId: testCreationTableId,
-  //           value: calculatorInputValue,
-  //           question_id: question_Id,
-  //         };
-
-  //         // Use await with localStorage.setItem
-  //         await localStorage.setItem(
-  //           `calculatorValue_${question_Id}`,
-  //           JSON.stringify(valueObject)
-  //         );
-
-  //         // Introduce a small delay before retrieving the stored value
-  //         // This ensures that the local storage has enough time to update
-  //         await new Promise((resolve) => setTimeout(resolve, 100));
-
-  //         const storedValue = localStorage.getItem(
-  //           `calculatorValue_${question_Id}`
-  //         );
-  //         const storedCalculatorInputValue = storedValue
-  //           ? JSON.parse(storedValue).value
-  //           : null;
-
-  //         if (calculatorInputValue === storedCalculatorInputValue) {
-  //           const selectedOption1 =
-  //             selectedAnswersMap1[currentQuestion.question_id];
-
-  //           const selectedOption2 =
-  //             selectedAnswersMap2[currentQuestion.question_id];
-
-  //           const optionIndexes1 =
-  //             selectedOption1 !== undefined ? [selectedOption1] : [];
-  //           const optionIndexes2 =
-  //             selectedOption2 !== undefined ? selectedOption2 : [];
-
-  //           const questionId = currentQuestion.question_id;
-  //           const hasAnswered = answeredQuestionsMap[questionId];
-
-  //           if (hasAnswered) {
-  //             const updatedResponse = {
-  //               optionIndexes1: optionIndexes1.map((index) =>
-  //                 String.fromCharCode("a".charCodeAt(0) + index)
-  //               ),
-  //               optionIndexes2: optionIndexes2.map((index) =>
-  //                 String.fromCharCode("a".charCodeAt(0) + index)
-  //               ),
-  //               calculatorInputValue: calculatorInputValue,
-  //             };
-
-  //             const updateResponse = await axios.put(
-  //               `http://localhost:5001/QuestionPaper/updateResponse/${questionId}`,
-  //               {
-  //                 updatedResponse,
-  //                 userId,
-  //                 testCreationTableId,
-  //                 subjectId,
-  //                 sectionId,
-  //               }
-  //             );
-  //             // Handle the response...
-  //           } else {
-  //             const responses = {
-  //               userId: userId,
-  //               testCreationTableId: testCreationTableId,
-  //               subjectId: subjectId,
-  //               sectionId: sectionId,
-  //               [questionId]: {
-  //                 optionIndexes1: optionIndexes1.map((index) =>
-  //                   String.fromCharCode("a".charCodeAt(0) + index)
-  //                 ),
-  //                 optionIndexes2: optionIndexes2.map((index) =>
-  //                   String.fromCharCode("a".charCodeAt(0) + index)
-  //                 ),
-  //                 calculatorInputValue: calculatorInputValue,
-  //               },
-  //             };
-
-  //             // Update answeredQuestionsMap to indicate that the question has been answered
-  //             setAnsweredQuestionsMap((prevMap) => ({
-  //               ...prevMap,
-  //               [questionId]: true,
-  //             }));
-
-  //             // If the user has answered, update the existing response
-  //             if (hasAnswered) {
-  //               const updatedResponse = {
-  //                 optionIndexes1: optionIndexes1.map((index) =>
-  //                   String.fromCharCode("a".charCodeAt(0) + index)
-  //                 ),
-  //                 optionIndexes2: optionIndexes2.map((index) =>
-  //                   String.fromCharCode("a".charCodeAt(0) + index)
-  //                 ),
-  //                 calculatorInputValue: calculatorInputValue,
-  //               };
-
-  //               const updateResponse = await axios.put(
-  //                 `http://localhost:5001/QuestionPaper/updateResponse/${questionId}`,
-  //                 {
-  //                   updatedResponse,
-  //                   userId,
-  //                   testCreationTableId,
-  //                   subjectId,
-  //                   sectionId,
-  //                 }
-  //               );
-  //               // Handle the response...
-  //             } else {
-  //               // Responses object
-  //               const responses = {
-  //                 userId: userId,
-  //                 testCreationTableId: testCreationTableId,
-  //                 subjectId: subjectId,
-  //                 sectionId: sectionId,
-  //                 [questionId]: {
-  //                   optionIndexes1: optionIndexes1.map((index) =>
-  //                     String.fromCharCode("a".charCodeAt(0) + index)
-  //                   ),
-  //                   optionIndexes2: optionIndexes2.map((index) =>
-  //                     String.fromCharCode("a".charCodeAt(0) + index)
-  //                   ),
-  //                   calculatorInputValue: calculatorInputValue,
-  //                 },
-  //               };
-
-  //               // If the user has not answered, save a new response
-  //               const saveResponse = await axios.post(
-  //                 "http://localhost:5001/QuestionPaper/response",
-  //                 {
-  //                   responses,
-  //                   userId,
-  //                   testCreationTableId,
-  //                   subjectId,
-  //                   sectionId,
-  //                 }
-  //               );
-
-  //               // Handle the response...
-  //               setClickCount((prevCount) => prevCount + 1);
-  //             }
-  //           }
-  //         }
-  //       }
-  //     } catch (error) {
-  //       console.error("Error handling next click:", error);
-  //     }
-  //   } catch (error) {
-  //     console.error("Error handling next click:", error);
-  //   }
-  // };
-
   // const handleNextQuestion = async () => {
   //   const currentQuestion = questionData.questions[currentQuestionIndex];
 
@@ -3532,12 +3207,14 @@ const QuestionPaper = () => {
   //   }
   // };
 
+
+
   //1
 
   const handleNextQuestion = async () => {
     try {
       const currentQuestion = questionData.questions[currentQuestionIndex];
-
+  
       // Check if the current question is answered
       const calculatorInputValue = value;
       const isCurrentQuestionAnswered =
@@ -3545,34 +3222,32 @@ const QuestionPaper = () => {
         (selectedAnswersMap2[currentQuestion.question_id] &&
           selectedAnswersMap2[currentQuestion.question_id].length > 0) ||
         calculatorInputValue !== "";
-
+  
       if (!isCurrentQuestionAnswered) {
         // If the current question is not answered, update the status
         const updatedQuestionStatus = [...questionStatus];
         updatedQuestionStatus[currentQuestionIndex] = "notAnswered";
         setQuestionStatus(updatedQuestionStatus);
-
+  
         // You may also show a message or perform other actions to indicate that the question is not answered
         console.log("Question not answered!");
       } else {
         // Log a message indicating that the question is answered
         console.log("Question answered!");
       }
-
+  
       // Move to the next question index
       setCurrentQuestionIndex((prevIndex) =>
-        prevIndex < questionData.questions.length - 1
-          ? prevIndex + 1
-          : prevIndex
+        prevIndex < questionData.questions.length - 1 ? prevIndex + 1 : prevIndex
       );
-
+  
       // Fetch the next set of questions
       // const response = await fetch(
       //   `http://localhost:5001/QuestionPaper/questionOptions/${testCreationTableId}`
       // );
       // const result = await response.json();
       // setQuestionData(result);
-
+  
       // Fetch user data using the token
       const token = localStorage.getItem("token");
       const response_user = await fetch(
@@ -3583,37 +3258,35 @@ const QuestionPaper = () => {
           },
         }
       );
-
+  
       if (response_user.ok) {
         const userData = await response_user.json();
         setUserData(userData);
-
+  
         // Ensure userId is defined
         const userId = userData.id;
-
+  
         // Log relevant information
         console.log("Test Creation Table ID:", testCreationTableId);
         console.log("Current user_Id:", userId);
-
+  
         // Ensure questionData is not null or undefined
         if (!questionData || !questionData.questions) {
           console.error("Data or questions are null or undefined");
           return;
         }
-
+  
         // Extract information for the current question
         const currentQuestion = questionData.questions[currentQuestionIndex];
-        const selectedOption1 =
-          selectedAnswersMap1[currentQuestion.question_id];
-        const selectedOption2 =
-          selectedAnswersMap2[currentQuestion.question_id];
-
+        const selectedOption1 = selectedAnswersMap1[currentQuestion.question_id];
+        const selectedOption2 = selectedAnswersMap2[currentQuestion.question_id];
+  
         // Map selected options to indexes
         const optionIndexes1 =
           selectedOption1 !== undefined ? [selectedOption1] : [];
         const optionIndexes2 =
           selectedOption2 !== undefined ? selectedOption2 : [];
-
+  
         // Prepare data to be sent in the response
         const questionId = currentQuestion.question_id;
         const responses = {
@@ -3628,28 +3301,28 @@ const QuestionPaper = () => {
             ),
           },
         };
-
+  
         // Save the response to the server
         const saveResponse = await axios.post(
           "http://localhost:5001/QuestionPaper/response",
           { responses }
         );
-
+  
         // Log the response and update state
         console.log(saveResponse.data);
         console.log("Handle Next Click - New Response Saved");
-
+  
         setAnsweredQuestionsMap((prevMap) => ({
           ...prevMap,
           [questionId]: true,
         }));
-
+  
         setClickCount((prevCount) => prevCount + 1);
       } else {
         // Handle errors, e.g., if user data fetch fails
         console.error("Error fetching user data");
       }
-
+  
       // Check if there are more questions, and if not, calculate the result
       if (currentQuestionIndex === questionData.questions.length - 1) {
         // setShowResult(true);
@@ -3659,7 +3332,7 @@ const QuestionPaper = () => {
       console.error("Error handling next click:", error);
     }
   };
-
+  
   const markForReview = async () => {
     setCurrentQuestionIndex((prevIndex) => {
       if (prevIndex < questionData.questions.length - 1) {
@@ -3686,6 +3359,7 @@ const QuestionPaper = () => {
     setQuestionStatus(updatedQuestionStatus);
 
     try {
+
       // fetchData();
       // const response = await fetch(
       //   `http://localhost:5001/QuestionPaper/questionOptions/${testCreationTableId}`
@@ -3970,7 +3644,7 @@ const QuestionPaper = () => {
       (selectedAnswersMap2[currentQuestion.question_id] &&
         selectedAnswersMap2[currentQuestion.question_id].length > 0) ||
       calculatorInputValue !== "";
-
+  
     if (isCurrentQuestionAnswered) {
       // If the current question is answered, update the status
       const updatedQuestionStatus = [...questionStatus];
@@ -3978,37 +3652,37 @@ const QuestionPaper = () => {
       setQuestionStatus(updatedQuestionStatus);
     }
     //-----------------buttons functionality end--------------
-
+  
     try {
       const questionId =
         questionData.questions[currentQuestionIndex].question_id;
       // console.log("Response cleared successfully ");
-
+  
       // Clear response for radio buttons (MCQ)
       const updatedSelectedAnswersMap1 = { ...selectedAnswersMap1 };
       updatedSelectedAnswersMap1[questionId] = undefined;
       setSelectedAnswersMap1(updatedSelectedAnswersMap1);
-
+  
       // Clear response for checkboxes (MSQ)
       const updatedSelectedAnswersMap2 = { ...selectedAnswersMap2 };
       updatedSelectedAnswersMap2[questionId] = [];
       setSelectedAnswersMap2(updatedSelectedAnswersMap2);
-
+  
       const updatedSelectedAnswersMap3 = { ...onAnswerSelected3 };
       updatedSelectedAnswersMap3[questionId] = [];
       setSelectedAnswersMap3(updatedSelectedAnswersMap3);
-
+  
       // Send a request to your server to clear the user's response for the current question
       const response = await axios.delete(
         `http://localhost:5001/QuestionPaper/clearResponse/${questionId}`
       );
-
+  
       if (response.status === 200) {
         // console.log("Response cleared successfully");
-
+  
         // Clear the stored calculator value in local storage
         localStorage.removeItem(`calculatorValue_${questionId}`);
-
+  
         // Update any state or perform additional actions as needed
       } else {
         console.error("Failed to clear response:", response.data);
@@ -4017,6 +3691,8 @@ const QuestionPaper = () => {
       console.error("Error clearing response:", error);
     }
   };
+  
+  
 
   // -------------------------------END OF BUTTONS FUNCTIONALITIES-----------------------------------
 
@@ -4064,19 +3740,7 @@ const QuestionPaper = () => {
     // Add more conditions or handle the case where the question type is not recognized
     return "Answer not available";
   }
-// //   // const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-
-// const currentQuestionType = questionData.questions.currentQuestion.quesion_type.typeofQuestion;
-// console.log(questionData.questions)
-// console.log("typeofQuestion", currentQuestionType);
-// const [currentQuestionType, setCurrentQuestionType] = useState(null);
-const currentQuestionType =
-  currentQuestion && currentQuestion.quesion_type
-    ? currentQuestion.quesion_type.typeofQuestion
-    : null;
-
-console.log("Current Question Type:", currentQuestionType);
-
+  // const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   return (
     <div className="QuestionPaper_-container">
       <div className="quiz_exam_interface_header">
@@ -4099,21 +3763,13 @@ console.log("Current Question Type:", currentQuestionType);
                   </li>
                 </div>
 
-                {/* <h3>
+                <h3>
                   Question Type:
                   {questionTypes.map((type) => (
                     <li key={type.quesionTypeId}>
                       <p>{type.typeofQuestion}</p>
                     </li>
                   ))}
-                </h3> */}
-                <h3>
-                  {/* Question Type: */}
-                  {/* {questionData.questions && questionData.quesion_type( 
-                    
-                      <p>{questionData.quesion_type}</p>
-                    
-                  )} */}
                 </h3>
               </div>
 
@@ -4133,16 +3789,10 @@ console.log("Current Question Type:", currentQuestionType);
             {/* --------------- quiz question container -------------------- */}
 
             <div class="quiz_exam_interface_exam_CONTAINEr">
-              { questionData.questions.length > 0 && (
+              {questionData.questions && questionData.questions.length > 0 && (
                 <>
                   <div className="quiz_exam_interface_exam_subCONTAINEr">
                     <div className="quiz_exam_interface_exam_qN_Q">
-                 <div>
-                 Question Type:
-                 {currentQuestion.quesion_type && (
-              <p>{currentQuestion.quesion_type.typeofQuestion}</p>
-            )}
-                 </div>
                       {/* <h3>Question:{currentQuestion.sortid.sortid_text}</h3> */}
                       <h3>{currentQuestionIndex + 1}</h3>
 
@@ -4190,7 +3840,9 @@ console.log("Current Question Type:", currentQuestionType);
                           currentQuestion.options.map((option, optionIndex) => (
                             <div className="option" key={option.option_id}>
                               <li key={optionIndex}>
-                                {currentQuestionType.includes(
+                                {currentQuestionType &&
+                                  currentQuestionType.typeofQuestion &&
+                                  currentQuestionType.typeofQuestion.includes(
                                     "MCQ4(MCQ with 4 Options)"
                                   ) && (
                                     <div>
@@ -4223,7 +3875,9 @@ console.log("Current Question Type:", currentQuestionType);
                                       />
                                     </div>
                                   )}
-                                {currentQuestionType.includes(
+                                {currentQuestionType &&
+                                  currentQuestionType.typeofQuestion &&
+                                  currentQuestionType.typeofQuestion.includes(
                                     "MCQ5(MCQ with 5 Options)"
                                   ) && (
                                     <div>
@@ -4256,7 +3910,9 @@ console.log("Current Question Type:", currentQuestionType);
                                       />
                                     </div>
                                   )}
-                                {currentQuestionType.includes(
+                                {currentQuestionType &&
+                                  currentQuestionType.typeofQuestion &&
+                                  currentQuestionType.typeofQuestion.includes(
                                     "MSQN(MSQ with -ve marking)"
                                   ) && (
                                     <div>
@@ -4294,7 +3950,9 @@ console.log("Current Question Type:", currentQuestionType);
                                       />
                                     </div>
                                   )}
-                                {currentQuestionType.includes(
+                                {currentQuestionType &&
+                                  currentQuestionType.typeofQuestion &&
+                                  currentQuestionType.typeofQuestion.includes(
                                     "MSQ(MSQ without -ve marking)"
                                   ) && (
                                     <div>
@@ -4333,7 +3991,9 @@ console.log("Current Question Type:", currentQuestionType);
                                     </div>
                                   )}
                                 {/* calculator ============ */}
-                                {currentQuestionType.includes(
+                                {currentQuestionType &&
+                                  currentQuestionType.typeofQuestion &&
+                                  currentQuestionType.typeofQuestion.includes(
                                     "NATD( Numeric Answer type of questions with Decimal values)"
                                   ) && (
                                     <div className="calculator">
@@ -4490,7 +4150,9 @@ console.log("Current Question Type:", currentQuestionType);
                                       </div>
                                     </div>
                                   )}
-                                {currentQuestionType.includes(
+                                {currentQuestionType &&
+                                  currentQuestionType.typeofQuestion &&
+                                  currentQuestionType.typeofQuestion.includes(
                                     "NATI( Numeric Answer type of questions with integer values)"
                                   ) && (
                                     <div className="calculator">
@@ -4648,7 +4310,9 @@ console.log("Current Question Type:", currentQuestionType);
                                     </div>
                                   )}
                                 {/* calculator ============ */}
-                                {currentQuestionType.includes(
+                                {currentQuestionType &&
+                                  currentQuestionType.typeofQuestion &&
+                                  currentQuestionType.typeofQuestion.includes(
                                     "TF(True or false)"
                                   ) && (
                                     <div>
@@ -4682,7 +4346,9 @@ console.log("Current Question Type:", currentQuestionType);
                                     </div>
                                   )}
 
-                                {currentQuestionType.includes(
+                                {currentQuestionType &&
+                                  currentQuestionType.typeofQuestion &&
+                                  currentQuestionType.typeofQuestion.includes(
                                     "CTQ(Comprehension type of questions )"
                                   ) && (
                                     <div>
@@ -4842,3 +4508,4 @@ console.log("Current Question Type:", currentQuestionType);
 };
 
 export default QuestionPaper;
+
