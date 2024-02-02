@@ -14,7 +14,8 @@ const QuestionPaper = () => {
   const [questionData, setQuestionData] = useState({ questions: [] });
   const [value, setValue] = useState("");
 
-  const { subjectId, testCreationTableId, userId, question_id, user_Id } = useParams();
+  const { subjectId, testCreationTableId, userId, question_id, user_Id } =
+    useParams();
   const [Subjects, setSubjects] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedSubject, setSelectedSubject] = useState(null);
@@ -128,7 +129,7 @@ const QuestionPaper = () => {
   };
 
   const handleNo = () => {
-    navigate(`/QuestionPaper/questionOptions/${testCreationTableId}`);
+    setShowExamSumary(false);
   };
 
   const [activeQuestion, setActiveQuestion] = useState(0);
@@ -165,35 +166,35 @@ const QuestionPaper = () => {
   // ------------------------------------------END OF TIMER FUNCTION------------------------
   const [timeLeftAtSubmission, setTimeLeftAtSubmission] = useState(0);
 
-// -------------------------overall time-------------------------------
-const [wtimer, setWTimer] = useState(0);
-const WformatTime = (seconds) => {
-  const hours = Math.floor(seconds / 3600);
-  const minutes = Math.floor((seconds % 3600) / 60);
-  const remainingSeconds = seconds % 60;
-  return `${hours > 9 ? hours : "0" + hours}:${
-    minutes > 9 ? minutes : "0" + minutes
-  }:${remainingSeconds > 9 ? remainingSeconds : "0" + remainingSeconds}`;
-  // return hours * 3600 + minutes * 60 + seconds;
-
-};
-useEffect(() => {
-  // setWTimer(wtimer);
-  let interval;
-  interval = setInterval(() => {
-    setWTimer((prevTimer) => prevTimer + 1);
-  }, 1000);
-
-  return () => {
-    clearInterval(interval);
+  // -------------------------overall time-------------------------------
+  const [wtimer, setWTimer] = useState(0);
+  const WformatTime = (seconds) => {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const remainingSeconds = seconds % 60;
+    return `${hours > 9 ? hours : "0" + hours}:${
+      minutes > 9 ? minutes : "0" + minutes
+    }:${remainingSeconds > 9 ? remainingSeconds : "0" + remainingSeconds}`;
+    // return hours * 3600 + minutes * 60 + seconds;
   };
-}, [wtimer]);
-// ----------------------------end overall time--------------------------
+  useEffect(() => {
+    // setWTimer(wtimer);
+    let interval;
+    interval = setInterval(() => {
+      setWTimer((prevTimer) => prevTimer + 1);
+    }, 1000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [wtimer]);
+  // ----------------------------end overall time--------------------------
   //-----------------------------TYPES OF INPUT VALUES for ANSWERING FORMATE
 
   const onAnswerSelected1 = (optionIndex) => {
     const questionId = questionData.questions[currentQuestionIndex].question_id;
     const charcodeatopt = String.fromCharCode("a".charCodeAt(0) + optionIndex);
+
     console.log("questionId from onAnswerSelected1 : ", questionId);
     const questionIndex = currentQuestionIndex + 1;
     console.log(`Question Index: ${questionIndex}`);
@@ -241,8 +242,15 @@ useEffect(() => {
     updatedSelectedAnswers[activeQuestion] = optionIndex;
     setSelectedAnswers(updatedSelectedAnswers);
   };
-
+  const [answers, setAnswers] = useState(
+    Array(questionData.questions.length).fill("")
+  );
   const onAnswerSelected3 = (e) => {
+    // Handle updating the state when the user answers a question
+    const updatedAnswers = [...answers];
+    updatedAnswers[currentQuestionIndex] = e.target.value;
+    setAnswers(updatedAnswers);
+
     if (
       !questionData.questions ||
       !questionData.questions[currentQuestionIndex]
@@ -368,7 +376,6 @@ useEffect(() => {
 
     fetchData();
   }, [testCreationTableId]);
-  //end questionOptions use effect code
 
   const currentQuestion =
     questionData.questions && questionData.questions[currentQuestionIndex];
@@ -554,7 +561,6 @@ useEffect(() => {
 
   //       const questionId = currentQuestion.question_id;
 
-
   //       if(answeredQuestionsMap[questionId]){
   //         const updatedResponse = {
   //           optionIndexes1: optionIndexes1.map((index) =>
@@ -564,14 +570,14 @@ useEffect(() => {
   //             String.fromCharCode("a".charCodeAt(0) + index)
   //           ),
   //         };
-  
+
   //         const updateResponse = await axios.put(
   //           `http://localhost:5001/QuestionPaper/updateResponse/${questionId}`,
   //           {
   //             updatedResponse,
   //           }
   //         );
-  
+
   //         console.log(updateResponse.data);
   //         console.log("Handle Next Click - Response Updated");
   //       }else{
@@ -608,8 +614,6 @@ useEffect(() => {
   //       }));
 
   //       }
-
-       
 
   //       setClickCount((prevCount) => prevCount + 1);
   //     }
@@ -714,7 +718,7 @@ useEffect(() => {
 
   //       const questionId = currentQuestion.question_id;
 
-  //       const hasAnswered = answeredQuestionsMap[questionId];     
+  //       const hasAnswered = answeredQuestionsMap[questionId];
   //       // If the user has answered, update the existing response
   //       if (hasAnswered) {
   //         const updatedResponse = {
@@ -789,38 +793,47 @@ useEffect(() => {
     const updatedQuestionStatus = [...questionStatus];
     const calculatorInputValue = value;
     const currentQuestion = questionData.questions[currentQuestionIndex];
-  
+
     const isCurrentQuestionAnswered =
       selectedAnswersMap1[currentQuestion.question_id] !== undefined ||
       (selectedAnswersMap2[currentQuestion.question_id] &&
         selectedAnswersMap2[currentQuestion.question_id].length > 0) ||
       calculatorInputValue !== "";
-  
+
     const isResponseCleared =
       selectedAnswersMap1[currentQuestion.question_id] === null ||
       selectedAnswersMap2[currentQuestion.question_id]?.length === 0;
-  
+
     if (!isCurrentQuestionAnswered) {
       window.alert("Please answer the question before proceeding.");
     } else {
       const updatedQuestionStatus = [...questionStatus];
       updatedQuestionStatus[currentQuestionIndex] = "answered";
       setQuestionStatus(updatedQuestionStatus);
-  
+
       setCurrentQuestionIndex((prevIndex) => {
         if (prevIndex < questionData.questions.length - 1) {
           return prevIndex + 1;
         }
       });
-  
+
       try {
+        const currentQuestion = questionData.questions[currentQuestionIndex];
+        const subjectId = currentQuestion.subjectId;
+        const sectionId = currentQuestion.sectionId;
+
+        console.log("hello, hii");
+        console.log(" Current Test Creation Table ID:", testCreationTableId);
+        console.log("Current user_Id:", userData.id);
+        console.log("Current Subject Id:", subjectId);
+        console.log("Current Section Id:", sectionId);
         // Fetch question options
         const response = await fetch(
           `http://localhost:5001/QuestionPaper/questionOptions/${testCreationTableId}`
         );
         const result = await response.json();
         setQuestionData(result);
-  
+
         // Fetch user data
         const token = localStorage.getItem("token");
         const response_user = await fetch(
@@ -831,36 +844,34 @@ useEffect(() => {
             },
           }
         );
-  
+
         if (response_user.ok) {
           const userData = await response_user.json();
           setUserData(userData);
-  
+
           const userId = userData.id;
-  
-          console.log("Test Creation Table ID:", testCreationTableId);
-          console.log("Current user_Id:", userId);
-  
+          // const subjectId = questionData.subjectId;
+
           if (!questionData || !questionData.questions) {
             console.error("Data or questions are null or undefined");
             return;
           }
-  
+
           const calculatorInputValue = value;
           const currentQuestion = questionData.questions[currentQuestionIndex];
           const selectedOption1 =
             selectedAnswersMap1[currentQuestion.question_id];
           const selectedOption2 =
             selectedAnswersMap2[currentQuestion.question_id];
-  
+
           const optionIndexes1 =
             selectedOption1 !== undefined ? [selectedOption1] : [];
           const optionIndexes2 =
             selectedOption2 !== undefined ? selectedOption2 : [];
-  
+
           const questionId = currentQuestion.question_id;
           const hasAnswered = answeredQuestionsMap[questionId];
-  
+
           if (hasAnswered) {
             const updatedResponse = {
               optionIndexes1: optionIndexes1.map((index) =>
@@ -878,17 +889,21 @@ useEffect(() => {
                 updatedResponse,
                 userId,
                 testCreationTableId,
+                subjectId,
+                sectionId,
               }
             );
-            console.log("egrad", updateRespons)
-            console.log("updatedResponse", updatedResponse)
-            console.log("hiiii")
+            console.log("egrad", updateRespons);
+            console.log("updatedResponse", updatedResponse);
+            console.log("hiiii");
             console.log("The question answer is  updated");
             // You can perform additional actions if the question is already answered
           } else {
             const responses = {
               userId: userId,
               testCreationTableId: testCreationTableId,
+              subjectId: subjectId,
+              sectionId: sectionId,
               [questionId]: {
                 optionIndexes1: optionIndexes1.map((index) =>
                   String.fromCharCode("a".charCodeAt(0) + index)
@@ -899,46 +914,28 @@ useEffect(() => {
                 calculatorInputValue: calculatorInputValue,
               },
             };
-            console.log("hello")
+            console.log("hello");
             console.log("The question is answered for the first time");
-            console.log("responses", responses)
+            console.log("responses", responses);
             // You can perform additional actions if the question is answered for the first time
-  
+
             // Update answeredQuestionsMap to indicate that the question has been answered
             setAnsweredQuestionsMap((prevMap) => ({
               ...prevMap,
               [questionId]: true,
             }));
-  
+
             // If the user has answered, update the existing response
             if (hasAnswered) {
-              const updatedResponse = {
-                optionIndexes1: optionIndexes1.map((index) =>
-                  String.fromCharCode("a".charCodeAt(0) + index)
-                ),
-                optionIndexes2: optionIndexes2.map((index) =>
-                  String.fromCharCode("a".charCodeAt(0) + index)
-                ),
-                calculatorInputValue: calculatorInputValue,
-              };
-  
-              const updateResponse = await axios.put(
-                `http://localhost:5001/QuestionPaper/updateResponse/${userId}/${testCreationTableId}/${questionId}`,
-                {
-                  updatedResponse,
-                  userId,
-                  testCreationTableId,
-                }
-              );
-  
-              console.log(updateResponse.data);
               console.log("Existing Response Updated");
-              console.log("updated reponse is saved")
+              console.log("updated reponse is saved");
             } else {
               // Responses object
               const responses = {
                 userId: userId,
                 testCreationTableId: testCreationTableId,
+                subjectId: subjectId,
+                sectionId: sectionId,
                 [questionId]: {
                   optionIndexes1: optionIndexes1.map((index) =>
                     String.fromCharCode("a".charCodeAt(0) + index)
@@ -949,7 +946,7 @@ useEffect(() => {
                   calculatorInputValue: calculatorInputValue,
                 },
               };
-  
+
               // If the user has not answered, save a new response
               const saveResponse = await axios.post(
                 "http://localhost:5001/QuestionPaper/response",
@@ -957,14 +954,16 @@ useEffect(() => {
                   responses,
                   userId,
                   testCreationTableId,
+                  subjectId,
+                  sectionId,
                 }
               );
-  
+
               console.log(saveResponse.data);
               console.log("New Response Saved");
-              console.log("reponse is saved")
+              console.log("reponse is saved");
             }
-  
+
             setClickCount((prevCount) => prevCount + 1);
           }
         }
@@ -974,7 +973,178 @@ useEffect(() => {
     }
     // --------------------------------end of button functionality --------------------------------------------------
   };
-  
+
+  // const handleNextQuestion = async () => {
+  //   const currentQuestion = questionData.questions[currentQuestionIndex];
+  //   const isCurrentQuestionAnswered =
+  //     selectedAnswersMap1[currentQuestion.question_id] !== undefined ||
+  //     (selectedAnswersMap2[currentQuestion.question_id] &&
+  //       selectedAnswersMap2[currentQuestion.question_id].length > 0);
+
+  //   if (!isCurrentQuestionAnswered) {
+  //     // If the current question is not answered, update the status
+  //     const updatedQuestionStatus = [...questionStatus];
+  //     updatedQuestionStatus[currentQuestionIndex] = "notAnswered";
+  //     setQuestionStatus(updatedQuestionStatus);
+
+  //     // You may also show a message or perform other actions to indicate that the question is not answered
+  //     console.log("Question not answered!");
+  //   } else {
+  //     // You may also show a message or perform other actions to indicate that the question is not answered
+  //     console.log("Question not answered!");
+  //   }
+
+  //   const response = await fetch(
+  //     `http://localhost:5001/QuestionPaper/questionOptions/${testCreationTableId}`
+  //   );
+  //   const result = await response.json();
+  //   setQuestionData(result);
+
+  //   setCurrentQuestionIndex((prevIndex) => {
+  //     if (prevIndex < questionData.questions.length - 1) {
+  //       return prevIndex + 1;
+  //     }
+  //   });
+
+  //   try {
+  //     // Fetch question options
+  //     const response = await fetch(
+  //       `http://localhost:5001/QuestionPaper/questionOptions/${testCreationTableId}`
+  //     );
+  //     const result = await response.json();
+  //     setQuestionData(result);
+
+  //     // Fetch user data
+  //     const token = localStorage.getItem("token");
+  //     const response_user = await fetch(
+  //       "http://localhost:5001/ughomepage_banner_login/user",
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       }
+  //     );
+
+  //     if (response_user.ok) {
+  //       const userData = await response_user.json();
+  //       setUserData(userData);
+
+  //       const userId = userData.id;
+
+  //       console.log("Test Creation Table ID:", testCreationTableId);
+  //       console.log("Current user_Id:", userId);
+
+  //       if (!questionData || !questionData.questions) {
+  //         console.error("Data or questions are null or undefined");
+  //         return;
+  //       }
+
+  //       const currentQuestion = questionData.questions[currentQuestionIndex];
+  //       const questionId = currentQuestion.question_id;
+  //       const calculatorInputValue = value;
+
+  //       const selectedOption1 = selectedAnswersMap1[questionId];
+  //       const selectedOption2 = selectedAnswersMap2[questionId];
+
+  //       const optionIndexes1 =
+  //         selectedOption1 !== undefined ? [selectedOption1] : [];
+  //       const optionIndexes2 =
+  //         selectedOption2 !== undefined ? selectedOption2 : [];
+
+  //       const hasAnswered = answeredQuestionsMap[questionId];
+
+  //       if (hasAnswered) {
+  //         const updatedResponse = {
+  //           optionIndexes1: optionIndexes1.map((index) =>
+  //             String.fromCharCode("a".charCodeAt(0) + index)
+  //           ),
+  //           optionIndexes2: optionIndexes2.map((index) =>
+  //             String.fromCharCode("a".charCodeAt(0) + index)
+  //           ),
+  //           calculatorInputValue: calculatorInputValue,
+  //         };
+
+  //         const updateRespons = await axios.put(
+  //           `http://localhost:5001/QuestionPaper/updateResponse/${questionId}`,
+  //           {
+  //             updatedResponse,
+  //             userId,
+  //             testCreationTableId,
+  //           }
+  //         );
+  //         console.log("egrad", updateRespons);
+  //         console.log("updatedResponse", updatedResponse);
+  //         console.log("hiiii");
+  //         console.log("The question answer is updated");
+  //         // You can perform additional actions if the question is already answered
+  //       } else {
+  //         const responses = {
+  //           userId: userId,
+  //           testCreationTableId: testCreationTableId,
+  //           [questionId]: {
+  //             optionIndexes1: optionIndexes1.map((index) =>
+  //               String.fromCharCode("a".charCodeAt(0) + index)
+  //             ),
+  //             optionIndexes2: optionIndexes2.map((index) =>
+  //               String.fromCharCode("a".charCodeAt(0) + index)
+  //             ),
+  //             calculatorInputValue: calculatorInputValue,
+  //           },
+  //         };
+  //         console.log("hello");
+  //         console.log("The question is answered for the first time");
+  //         console.log("responses", responses);
+  //         // You can perform additional actions if the question is answered for the first time
+
+  //         // Update answeredQuestionsMap to indicate that the question has been answered
+  //         setAnsweredQuestionsMap((prevMap) => ({
+  //           ...prevMap,
+  //           [questionId]: true,
+  //         }));
+
+  //         // If the user has answered, update the existing response
+  //         if (hasAnswered) {
+  //           console.log("Existing Response Updated 1");
+  //           console.log("updated response is saved");
+  //         } else {
+  //           // Responses object
+  //           const responses = {
+  //             userId: userId,
+  //             testCreationTableId: testCreationTableId,
+  //             [questionId]: {
+  //               optionIndexes1: optionIndexes1.map((index) =>
+  //                 String.fromCharCode("a".charCodeAt(0) + index)
+  //               ),
+  //               optionIndexes2: optionIndexes2.map((index) =>
+  //                 String.fromCharCode("a".charCodeAt(0) + index)
+  //               ),
+  //               calculatorInputValue: calculatorInputValue,
+  //             },
+  //           };
+
+  //           // If the user has not answered, save a new response
+  //           const saveResponse = await axios.post(
+  //             "http://localhost:5001/QuestionPaper/response",
+  //             {
+  //               responses,
+  //               userId,
+  //               testCreationTableId,
+  //             }
+  //           );
+
+  //           console.log(saveResponse.data);
+  //           console.log("New Response Saved");
+  //           console.log("response is saved");
+  //         }
+
+  //         setClickCount((prevCount) => prevCount + 1);
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.error("Error handling next click:", error);
+  //   }
+  //   // --------------------------------end of button functionality --------------------------------------------------
+  // };
 
   const handleNextQuestion = async () => {
     const currentQuestion = questionData.questions[currentQuestionIndex];
@@ -1097,7 +1267,6 @@ useEffect(() => {
       calculateResult();
     }
   };
-
   const markForReview = async () => {
     setCurrentQuestionIndex((prevIndex) => {
       if (prevIndex < questionData.questions.length - 1) {
@@ -1228,12 +1397,14 @@ useEffect(() => {
 
   //    // Log the time left at the moment of submission
   // console.log("Time Left at Submission:", WformatTime(wtimer));
-  
+
   // };
 
-  
   const handleSubmit = async () => {
-    window.alert("Your Test has been Submitted!! Click Ok to See Result.");
+    window.alert(
+      "Your Test has been Submitted!! Click Ok to See Result.",
+      calculateResult()
+    );
     setShowExamSumary(true);
     calculateResult();
     const counts = calculateQuestionCounts();
@@ -1245,32 +1416,34 @@ useEffect(() => {
 
     // const timeLeftInSeconds = wtimer;
     const formattedTime = WformatTime(wtimer);
-  
+
     // Log the time left at the moment of submission
     console.log("Time Left at Submission:", formattedTime);
-  
+
     try {
       // Make a POST request to your server to submit time left
-      const response = await fetch('http://localhost:5001/QuestionPaper/submitTimeLeft', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          userId: userData.id, /* Replace with actual user ID */
-          testCreationTableId: testCreationTableId, /* Replace with actual test creation table ID */
-          timeLeft: formattedTime,
-        }),
-      });
-  
+      const response = await fetch(
+        "http://localhost:5001/QuestionPaper/submitTimeLeft",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId: userData.id /* Replace with actual user ID */,
+            testCreationTableId:
+              testCreationTableId /* Replace with actual test creation table ID */,
+            timeLeft: formattedTime,
+          }),
+        }
+      );
+
       const result = await response.json();
       console.log(result);
     } catch (error) {
-      console.error('Error submitting time left:', error);
+      console.error("Error submitting time left:", error);
     }
   };
-  
-  
 
   const handlePreviousClick = () => {
     setCurrentQuestionIndex((prevIndex) => {
@@ -1357,13 +1530,37 @@ useEffect(() => {
     localStorage.setItem("calculatorInputValue", value);
   }, [value]);
 
+  // Function to get the answer for the current question
+  function getAnswerForCurrentQuestion() {
+    const currentQuestion = questionData.questions[currentQuestionIndex];
+
+    if (currentQuestion && currentQuestion.useranswer) {
+      const { useranswer, typeofQuestion } = currentQuestion;
+
+      // Check if typeofQuestion is defined before using includes
+      if (typeofQuestion && typeofQuestion.includes) {
+        // Adjust the logic based on your data structure
+        if (typeofQuestion.includes("NATD")) {
+          return useranswer.ans; // For questions with Decimal values
+        } else if (typeofQuestion.includes("NATI")) {
+          return useranswer.ans; // For questions with Integer values
+        }
+      }
+    }
+
+    // Add more conditions or handle the case where the question type is not recognized
+    return "Answer not available";
+  }
+  // const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   return (
-    <div>
+    <div className="QuestionPaper_-container">
+
       <div className="quiz_exam_interface_header">
         <div className="quiz_exam_interface_header_LOGO">
           <img src={logo} alt="" />
         </div>
       </div>
+
       {!showExamSumary ? (
         <div className="quiz_exam_interface_body">
           {/* --------------- quiz examconatiner -------------------- */}
@@ -1374,16 +1571,7 @@ useEffect(() => {
               <div>
                 <div class="subjects_BTN_container">
                   <li>
-                    <button class="subject_btn">Mathematics</button>
-                  </li>
-                  <li>
-                    <button class="subject_btn">Physics</button>
-                  </li>
-                  <li>
-                    <button class="subject_btn">Chemistry</button>
-                  </li>
-                  <li>
-                  <h6>Time Left: {WformatTime(wtimer)}</h6>
+                    <h6>Time Left: {WformatTime(wtimer)}</h6>
                   </li>
                 </div>
 
@@ -1417,7 +1605,8 @@ useEffect(() => {
                 <>
                   <div className="quiz_exam_interface_exam_subCONTAINEr">
                     <div className="quiz_exam_interface_exam_qN_Q">
-                      <h3>Question:{currentQuestion.sortid.sortid_text}</h3>
+                      {/* <h3>Question:{currentQuestion.sortid.sortid_text}</h3> */}
+                      <h3>{currentQuestionIndex + 1}</h3>
 
                       {currentQuestion.paragraph &&
                         currentQuestion.paragraph.paragraphImg && (
@@ -1428,7 +1617,7 @@ useEffect(() => {
                               alt={`ParagraphImage ${currentQuestion.paragraph.paragraph_Id}`}
                               style={{ width: "700px" }}
                             />
-                            <h2>Question:</h2>
+                            <h2>Question: </h2>
                           </>
                         )}
 
@@ -1437,11 +1626,21 @@ useEffect(() => {
                         alt={`Question ${currentQuestion.question_id}`}
                         style={{ width: "583px" }}
                       />
+                      {/* <h1> {currentQuestion.question_id}</h1> */}
                     </div>
 
                     <div>
                       <div className="quiz_exam_interface_exam_qN_Q_options">
-                        <h3>Options:</h3>
+                        {/* <h3>Options:</h3> */}
+                        {currentQuestionType &&
+                          currentQuestionType.typeofQuestion &&
+                          !currentQuestionType.typeofQuestion.includes(
+                            "NATD"
+                          ) &&
+                          !currentQuestionType.typeofQuestion.includes(
+                            "NATI"
+                          ) && <h3>Options:</h3>}
+
                         {currentQuestion.options &&
                           Array.isArray(currentQuestion.options) &&
                           currentQuestion.options.filter(
@@ -1529,7 +1728,6 @@ useEffect(() => {
                                     "MSQN(MSQ with -ve marking)"
                                   ) && (
                                     <div>
-                                      {" "}
                                       <input
                                         className="opt_btns"
                                         type="checkbox"
@@ -1604,6 +1802,8 @@ useEffect(() => {
                                       />{" "}
                                     </div>
                                   )}
+                                {/* calculator ============ */}
+
                                 {currentQuestionType &&
                                   currentQuestionType.typeofQuestion &&
                                   currentQuestionType.typeofQuestion.includes(
@@ -1611,11 +1811,16 @@ useEffect(() => {
                                   ) && (
                                     <div className="calculator">
                                       <div className="display">
+   
+                                        <label>Answer:</label>
                                         <input
                                           type="text"
                                           name={`question-${currentQuestionIndex}`}
                                           value={value}
                                           onChange={(e) => onAnswerSelected3(e)}
+                                          placeholder="Enter your answer"
+                                          readOnly
+                                          defaultValue={answeredQuestionsMap[currentQuestion.question_id] || ''}
                                         />
                                       </div>
                                       <div>
@@ -1767,12 +1972,16 @@ useEffect(() => {
                                     "NATI( Numeric Answer type of questions with integer values)"
                                   ) && (
                                     <div className="calculator">
+
                                       <div className="display">
+                                        <label>Answer:</label>
                                         <input
                                           type="text"
                                           name={`question-${currentQuestionIndex}`}
                                           value={value}
                                           onChange={(e) => onAnswerSelected3(e)}
+                                          placeholder="Enter your answer"
+                                          readOnly
                                         />
                                       </div>
                                       <div>
@@ -1917,6 +2126,7 @@ useEffect(() => {
                                       </div>
                                     </div>
                                   )}
+                                {/* calculator ============ */}
                                 {currentQuestionType &&
                                   currentQuestionType.typeofQuestion &&
                                   currentQuestionType.typeofQuestion.includes(
@@ -2025,6 +2235,7 @@ useEffect(() => {
                         <i className="fa-solid fa-angles-left"></i> Back
                       </button>
                       <button onClick={handleNextQuestion}>Next</button>
+
                       <button
                         style={{ background: "#f0a607da" }}
                         onClick={handleSubmit}
@@ -2100,12 +2311,13 @@ useEffect(() => {
             {/* <Link to='/SubmitPage'>YES</Link> */}
 
             {/* <button onClick={handleYes}>YES</button> */}
-            <Link
+            {/* <Link
               to={`/TestResultsPage/${testCreationTableId}`}
               style={{ background: "red", fontWeight: "bold", padding: "10px" }}
             >
               Yes
-            </Link>
+            </Link> */}
+            <Link to='/InputValueDemo'>Yes</Link>
             <button onClick={handleNo}>NO</button>
           </div>
         </div>
@@ -2115,47 +2327,3 @@ useEffect(() => {
 };
 
 export default QuestionPaper;
-
-
-
-
-router.put('/updateResponse/:questionId', async (req, res) => {
-    try {
-      const questionId = parseInt(req.params.questionId, 10);
-      const { updatedResponse, userId, testCreationTableId } = req.body;
-  
-      if (
-        updatedResponse &&
-        updatedResponse.optionIndexes1 &&
-        updatedResponse.optionIndexes2
-      ) {
-        const userAnswer1 = updatedResponse.optionIndexes1;
-        const userAnswer2 = updatedResponse.optionIndexes2.join(',');
-  
-        const sql = 'UPDATE user_responses SET user_answer = ? WHERE question_id = ?';
-  
-        db.query(sql, [userAnswer1 + userAnswer2, questionId], (err, result) => {
-          if (err) {
-            console.error('Error updating response in the database:', err);
-            res.status(500).json({ success: false, message: 'Internal server error' });
-          } else {
-            if (result.affectedRows > 0) {
-              console.log(`Response for question ${questionId} updated successfully`);
-              res.json({ success: true, message: 'Response updated successfully' });
-            } else {
-              console.error(`No records found for question ${questionId}`);
-              res.status(404).json({ success: false, message: 'Response not found' });
-            }
-          }
-        });
-      } else {
-        console.error(`Invalid updated response data for question ${questionId}`);
-        res.status(400).json({ success: false, message: 'Invalid updated response data' });
-      }
-    } catch (error) {
-      console.error('Error handling the request:', error);
-      res.status(500).json({ success: false, message: 'Internal server error' });
-    }
-  });
-  
-  

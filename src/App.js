@@ -127,6 +127,7 @@ import EmployeeDashboard from "./components/EmployeePortal/EmployeeDashboard.js"
 import QUiZ_ForgotPassword from "./components/ug_homepage/UGadmin/login/QUiZ_ForgotPassword.js";
 import QUIZ_ResetPassword from "./components/ug_homepage/UGadmin/login/QUIZ_ResetPassword.js";
 import EmployeeLOGIN_differentation from "./components/EmployeePortal/EmployeeLOGIN_differentation.js";
+import QuizPaper from "./components/ug_homepage/UGadmin/eaxm_portal_/QuizPaper.jsx";
 
 
 // import QUiZ_ForgotPassword from "./components/ug_homepage/UGadmin/login/QUiZ_ForgotPassword.js";
@@ -286,6 +287,8 @@ const App = () => {
           path="/QuestionPaper/questionOptions/:testCreationTableId"
           element={<PrivateRoute element={<DemoDeleteItsNotImp />} />}
         /> 
+           {/* <QuizPaper path="/QuestionPaper/questionOptions/:testCreationTableId"
+          element={<PrivateRoute element={<GettinggInstructions />} />}/> */}
 
 {/* ----------------demo------------------------------------------------------------------ */}
 
@@ -328,6 +331,8 @@ const App = () => {
           path="/Instruction/editIns/:instructionId/"
           element={<PrivateRoute element={<GettinggInstructions />} />}
         />
+   
+
         <Route
           path="/InstructionPage/editIns/:instructionId/:id"
           element={<PrivateRoute element={<UpdateInstruction />} />}
@@ -362,6 +367,7 @@ const App = () => {
 
       {/* <Footer /> */}
       {/* <LandingPage /> */}
+      {/* <QuizPaper/> */}
     </Router>
   );
 };

@@ -9,6 +9,11 @@ const pool = mysql.createPool({
   database: "admin_project",
 
 
+  // database: 'adminnew',
+  database: 'adminnew',
+]
+]
+
   waitForConnections: true,
   connectionLimit: 1000,
   queueLimit: 0,
