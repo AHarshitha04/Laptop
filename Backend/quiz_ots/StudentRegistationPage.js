@@ -105,6 +105,47 @@ router.get("/coursedataSRP/:courseCreationId", async (req, res) => {
     }
   });
 
+
+
+router.post('/studentForm', async (req, res) => {
+  try {
+    const formData = req.body;
+    const query = `
+      INSERT INTO otsstudentregistation 
+        (candidateName, dateOfBirth, GenderId, CategoryId, emailId, confirmEmailId, contactNo,fatherName,occupation,mobileNo,line1,state_id,districts_id,pincode,BatchId)
+      VALUES 
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )
+    `;
+    const values = [
+      formData.candidateName,
+      formData.dateOfBirth,
+      formData.GenderId,
+      formData.CategoryId,
+      formData.emailId,
+      formData.confirmEmailId,
+      formData.contactNo,
+      formData.fatherName,
+      formData.occupation,
+      formData.mobileNo,
+      formData.line1,
+      formData.state_id,
+      formData.districts_id,
+      formData.pincode,
+      formData.BatchId,
+    ];
+
+    await db.query(query, values);
+
+    res.status(201).json({ message: 'Form submitted successfully' });
+  } catch (error) {
+    console.error('Error saving form data:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+
+
+  
   router.post("/student", uploads.fields([
     { name: "files1", maxCount: 1 },
     { name: "filess", maxCount: 1 },
