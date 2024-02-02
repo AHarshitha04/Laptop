@@ -9,7 +9,7 @@ const mysql = require("mysql");
     password: '',
 
     // database: 'adminnew',
-    database: 'quiz_app_admin',
+    database: 'adminnew',
 
 
   

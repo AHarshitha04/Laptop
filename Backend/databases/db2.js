@@ -6,7 +6,7 @@ const pool = mysql.createPool({
   password: '',
 
   // database: 'adminnew',
-  database: 'quiz_app_admin',
+  database: 'adminnew',
 
   waitForConnections: true,
   connectionLimit: 1000,

@@ -285,7 +285,7 @@ const App = () => {
 
        <Route
           path="/QuestionPaper/questionOptions/:testCreationTableId"
-          element={<PrivateRoute element={<QuizPaper />} />}
+          element={<PrivateRoute element={<DemoDeleteItsNotImp />} />}
         /> 
            {/* <QuizPaper path="/QuestionPaper/questionOptions/:testCreationTableId"
           element={<PrivateRoute element={<GettinggInstructions />} />}/> */}
@@ -367,10 +367,7 @@ const App = () => {
 
       {/* <Footer /> */}
       {/* <LandingPage /> */}
-<<<<<<< HEAD
       {/* <QuizPaper/> */}
-=======
->>>>>>> cc8f6cb24dac352f3c151239d14e9f8a2d331d5a
     </Router>
   );
 };
