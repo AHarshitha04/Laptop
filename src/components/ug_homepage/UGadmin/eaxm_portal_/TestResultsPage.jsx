@@ -708,6 +708,40 @@ const TestResultsPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+]
+        const response = await axios.get(
+          "http://localhost:5001/QuestionPaper/user_answer"
+        );
+        setUserResponse(response.data);
+        
+
+        const response = await fetch(
+          `http://localhost:5001/QuestionPaper/getTimeLeftSubmissions/${testCreationTableId}/${userData.id}`
+          // `http://localhost:5001/QuestionPaper/score/${testCreationTableId}/${userData.id}`
+          // `http://localhost:5001/QuestionPaper/getTimeLeftSubmissions/2/1`
+        );
+        const data = await response.json();
+        setTimeSpent(data);
+        console.log(data);
+        console.log(testCreationTableId);
+
+        console.log(setAttemptCount, data);
+
+      } catch (error) {
+        console.error("Error fetching user response:", error.message);
+      }
+    };
+
+
+
+    fetchQuestionCount();
+  }, [testCreationTableId, userId]);
+  // console.log("hello")
+  // console.log(TimeSpent);
+  const [userResponse, setUserResponse] = useState([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
         const response = await axios.get(
           "http://localhost:5001/QuestionPaper/user_answer"
         );
