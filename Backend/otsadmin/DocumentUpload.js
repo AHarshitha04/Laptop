@@ -2,14 +2,14 @@ const express = require('express');
 const router = express.Router();
 const db = require('../databases/db2');
 // const dbHelper = require('../dbHelper');
-
+ 
 const multer = require('multer');
 const mammoth = require('mammoth');
 const cheerio = require('cheerio');
 const path = require('path');
 const fs = require('fs').promises;
-
-
+ 
+ 
 const storage = multer.diskStorage({
   destination: async (req, file, cb) => {
     const uploadDir = 'uploads/';
@@ -23,9 +23,9 @@ const storage = multer.diskStorage({
     // cb(null, file.originalname);
   },
 });
-
+ 
 const upload = multer({ storage });
-
+ 
 router.get('/tests', async (req, res) => {
     try {
         const [rows] = await db.query('SELECT testCreationTableId, TestName FROM test_creation_table');
@@ -35,7 +35,7 @@ router.get('/tests', async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
   });
-  
+ 
    
   router.get('/subjects/:testCreationTableId', async (req, res) => {
     const { testCreationTableId } = req.params;
@@ -69,8 +69,8 @@ router.get('/tests', async (req, res) => {
       res.status(500).json({ error: 'Internal Server Error' });
     }
   });
-  
-
+ 
+ 
   router.post("/upload", upload.single("document"), async (req, res) => {
       const docxFilePath = `uploads/${req.file.filename}`;
       const outputDir = `uploads/${req.file.originalname}`;
@@ -290,6 +290,8 @@ router.get('/tests', async (req, res) => {
         res.status(500).send('Error fetching image list.');
       }
     });
+
+    
   // router.post("/upload", upload.single("document"), async (req, res) => {
   //   const docxFilePath = `uploads/${req.file.filename}`;
   //   const outputDir = `uploads/${req.file.originalname}`;
@@ -346,7 +348,7 @@ router.get('/tests', async (req, res) => {
   //           await insertRecord('qtype', qtypeRecord);
   //         }
   //         console.log()
-          
+         
   //       } else if (textSections[i].includes('[ans]')) {
   //         // Save in the answer table
   //         const answerRecord = {
@@ -381,7 +383,7 @@ router.get('/tests', async (req, res) => {
   //         };
   //         que_id = await insertRecord('questions', questionRecord);
   //         // question_id.push(Question_id)
-  
+ 
   //       }
   //       else if (textSections[i].includes('(a)')) {
   //         const imageName = `snapshot_${document_Id}_${req.body.subjectId}_option_a_${k}.png`;
@@ -393,7 +395,7 @@ router.get('/tests', async (req, res) => {
   //           question_id: que_id
   //         };
   //         await insertRecord('options', optionRecord);
-          
+         
   //       }else if (textSections[i].includes('(b)')) {
   //         const imageName = `snapshot_${document_Id}_${req.body.subjectId}_option_b_${k}.png`;
   //         const imagePath = `${outputDir}/${imageName}`;
@@ -404,7 +406,7 @@ router.get('/tests', async (req, res) => {
   //           question_id: que_id
   //         };
   //         await insertRecord('options', optionRecord);
-          
+         
   //       }else if (textSections[i].includes('(c)')) {
   //         const imageName = `snapshot_${document_Id}_${req.body.subjectId}_option_c_${k}.png`;
   //         const imagePath = `${outputDir}/${imageName}`;
@@ -415,7 +417,7 @@ router.get('/tests', async (req, res) => {
   //           question_id: que_id
   //         };
   //         await insertRecord('options', optionRecord);
-          
+         
   //       }else if (textSections[i].includes('(d)')) {
   //         const imageName = `snapshot_${document_Id}_${req.body.subjectId}_option_d_${k}.png`;
   //         const imagePath = `${outputDir}/${imageName}`;
@@ -426,7 +428,7 @@ router.get('/tests', async (req, res) => {
   //           question_id: que_id
   //         };
   //         await insertRecord('options', optionRecord);
-          
+         
   //       }else if (textSections[i].includes('(e)')) {
   //         const imageName = `snapshot_${document_Id}_${req.body.subjectId}_option_d_${k}.png`;
   //         const imagePath = `${outputDir}/${imageName}`;
@@ -437,7 +439,7 @@ router.get('/tests', async (req, res) => {
   //           question_id: que_id
   //         };
   //         await insertRecord('options', optionRecord);
-          
+         
   //       }else if (textSections[i].includes('[soln]')) {
   //         const imageName = `snapshot_${document_Id}_${req.body.subjectId}_solution_${k}.png`;
   //         const imagePath = `${outputDir}/${imageName}`;
@@ -447,9 +449,9 @@ router.get('/tests', async (req, res) => {
   //           question_id: que_id
   //         };
   //         await insertRecord('solution', solutionRecord);
-          
+         
   //       }
-
+ 
   //     }
    
   //     res.send('Text content and images extracted and saved to the database with the selected topic ID successfully.');
@@ -487,9 +489,9 @@ router.get('/tests', async (req, res) => {
   //   }
   // });
   // end -------------------
-  
-  
-  // doc name getting 
+ 
+ 
+  // doc name getting
   router.get("/documentName", async (req, res) => {
     try {
       const query =
@@ -501,14 +503,14 @@ router.get('/tests', async (req, res) => {
       res.status(500).json({ error: "Internal Server Error" });
     }
   });
-  
+ 
   // end ----------
-  
+ 
   router.get('/fulldocimages/:testCreationTableId/:subjectId/:sectionId', async (req, res) => {
     const { testCreationTableId, subjectId, sectionId } = req.params;
     try {
       const [rows] = await db.query(`
-
+ 
       SELECT DISTINCT
       q.question_id, q.questionImgName,
       o.option_id, o.optionImgName, o.option_index,
@@ -535,8 +537,8 @@ router.get('/tests', async (req, res) => {
   WHERE
       doc.testCreationTableId = ? AND doc.subjectId = ? AND doc.sectionId = ?
   ORDER BY q.question_id ASC;
-
-  
+ 
+ 
  
       `, [testCreationTableId, subjectId, sectionId]);
  
@@ -619,46 +621,46 @@ router.get('/tests', async (req, res) => {
       res.status(500).json({ error: 'Internal Server Error' });
     }
   });
-
+ 
   // router.get('/fulldocimages/:testCreationTableId/:subjectId/:sectionId', async (req, res) => {
   //   const { testCreationTableId, subjectId, sectionId } = req.params;
   //   try {
   //     const [rows] = await db.query(`
-  //       SELECT 
-  //         q.question_id, q.questionImgName, 
+  //       SELECT
+  //         q.question_id, q.questionImgName,
   //         o.option_id, o.optionImgName,o.option_index,
-  //         s.solution_id, s.solutionImgName, 
+  //         s.solution_id, s.solutionImgName,
   //         qt.qtypeId,qt.qtype_text,
   //         ans.answer_id,ans.answer_text,
   //         m.markesId ,m.marks_text,
   //         si.sort_id ,si.sortid_text,
-  //         doc.documen_name, doc.sectionId, 
+  //         doc.documen_name, doc.sectionId,
   //         doc.subjectId, doc.testCreationTableId ,
   //         P.paragraphImg,p.paragraph_Id
-  //       FROM 
-  //         questions q 
+  //       FROM
+  //         questions q
   //         LEFT OUTER JOIN options o ON q.question_id = o.question_id
-  //         LEFT OUTER JOIN qtype qt ON q.question_id = qt.question_id 
-  //         LEFT OUTER JOIN answer ans ON q.question_id = ans.question_id 
-  //         LEFT OUTER JOIN marks m ON q.question_id = m.question_id 
-  //         LEFT OUTER JOIN sortid si ON q.question_id = si.question_id 
-  //         LEFT OUTER JOIN solution s ON q.question_id = s.question_id 
+  //         LEFT OUTER JOIN qtype qt ON q.question_id = qt.question_id
+  //         LEFT OUTER JOIN answer ans ON q.question_id = ans.question_id
+  //         LEFT OUTER JOIN marks m ON q.question_id = m.question_id
+  //         LEFT OUTER JOIN sortid si ON q.question_id = si.question_id
+  //         LEFT OUTER JOIN solution s ON q.question_id = s.question_id
   //         LEFT OUTER JOIN paragraph p ON q.question_id = p.question_id
-  //         LEFT OUTER JOIN ots_document doc ON q.testCreationTableId = doc.testCreationTableId 
-  //       WHERE 
+  //         LEFT OUTER JOIN ots_document doc ON q.testCreationTableId = doc.testCreationTableId
+  //       WHERE
   //         doc.testCreationTableId = ? AND doc.subjectId = ? AND doc.sectionId = ?;
   //     `, [testCreationTableId, subjectId, sectionId]);
-  
+ 
   //     // Check if rows is not empty
   //     if (rows.length > 0) {
   //       const questionData = {
   //         questions: [],
   //       };
-  
+ 
   //       // Organize data into an array of questions
   //       rows.forEach(row => {
   //         const existingQuestion = questionData.questions.find(q => q.question_id === row.question_id);
-  
+ 
   //         if (existingQuestion) {
   //           // Question already exists, add option to the existing question
   //           existingQuestion.options.push({
@@ -699,12 +701,12 @@ router.get('/tests', async (req, res) => {
   //               sortid_text:row.sortid_text
   //             },
   //           };
-  
+ 
   //           questionData.questions.push(newQuestion);
   //         }
   //       });
-  
-  
+ 
+ 
   //       res.json(questionData);
   //     } else {
   //       // Handle the case where no rows are returned (empty result set)
@@ -715,8 +717,8 @@ router.get('/tests', async (req, res) => {
   //     res.status(500).json({ error: 'Internal Server Error' });
   //   }
   // });
-
-  //doc delete 
+ 
+  //doc delete
   router.delete('/DocumentDelete/:document_Id', async (req, res) => {
     const document_Id = req.params.document_Id;
    
@@ -729,16 +731,16 @@ router.get('/tests', async (req, res) => {
     }
   });
   //  end for document section code ------------------------------------------/
-  
+ 
   module.exports = router;
-
-
-  
+ 
+ 
+ 
   // doc upload code -----------------
   // router.post("/upload", upload.single("document"), async (req, res) => {
   //   const docxFilePath = `uploads/${req.file.filename}`;
   //   const outputDir = `uploads/${req.file.originalname}_images`;
-  
+ 
   //   const docName = `${req.file.originalname}`;
   //   try {
   //     await fs.mkdir(outputDir, { recursive: true });
@@ -748,7 +750,7 @@ router.get('/tests', async (req, res) => {
   //     const textResult = await mammoth.extractRawText({ path: docxFilePath });
   //     const textContent = textResult.value;
   //     const textSections = textContent.split("\n\n");
-  
+ 
   //     // Insert documentName and get documentId
   //     const [documentResult] = await db.query("INSERT INTO ots_document SET ?", {
   //       documen_name: docName,
@@ -756,7 +758,7 @@ router.get('/tests', async (req, res) => {
   //       subjectId: req.body.subjectId,
   //     });
   //     const document_Id = documentResult.insertId;
-  
+ 
   //     // Get all images in the order they routerear in the HTML
   //     const images = [];
   //     $("img").each(function (i, element) {
@@ -766,7 +768,7 @@ router.get('/tests', async (req, res) => {
   //       const imageBuffer = Buffer.from(base64Data, "base64");
   //       images.push(imageBuffer);
   //     });
-  
+ 
   //     let j = 0;
   //     let Question_id;
   //     for (let i = 0; i < images.length; i++) {

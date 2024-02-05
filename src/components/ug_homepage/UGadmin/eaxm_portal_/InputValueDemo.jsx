@@ -1,7 +1,12 @@
 
 
+// import React, { useState, useEffect } from "react";
+ 
+
+
 
 // import React, { useState, useEffect } from "react";
+
 
 // const InputValueDemo = () => {
 //   const [questions, setQuestions] = useState([
@@ -12,8 +17,15 @@
 //     // Add more questions as needed
 //   ]);
 
+ 
 //   const [currentQuestion, setCurrentQuestion] = useState(0);
 //   const [calculatorInput, setCalculatorInput] = useState("");
+ 
+
+
+//   const [currentQuestion, setCurrentQuestion] = useState(0);
+//   const [calculatorInput, setCalculatorInput] = useState("");
+
 
 //   useEffect(() => {
 //     // Load answers from localStorage when component mounts
@@ -31,9 +43,17 @@
 //     newQuestions[currentQuestion].answer = event.target.value;
 //     setQuestions(newQuestions);
 
+ 
 //     // Synchronize calculatorInput with regular input
 //     setCalculatorInput(event.target.value);
 //   };
+ 
+
+
+//     // Synchronize calculatorInput with regular input
+//     setCalculatorInput(event.target.value);
+//   };
+
 
 //   const handleNextQuestion = () => {
 //     if (currentQuestion < questions.length - 1) {
@@ -53,6 +73,21 @@
 //       setCalculatorInput(questions[currentQuestion - 1].answer || "");
 //     }
 //   };
+
+ 
+//   const handleCalculatorButtonClick = (value) => {
+//     setCalculatorInput((prevInput) => prevInput + value);
+//   };
+ 
+//   const handleCalculatorClear = () => {
+//     setCalculatorInput("");
+//   };
+ 
+//   const handleCalculatorDelete = () => {
+//     setCalculatorInput((prevInput) => prevInput.slice(0, -1));
+//   };
+ 
+
 
 //   const handleCalculatorButtonClick = (value) => {
 //     setCalculatorInput((prevInput) => prevInput + value);
@@ -143,6 +178,19 @@
 //   );
 // };
 
+ 
+// export default InputValueDemo;
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+import React, { useState, useEffect } from "react";
+ 
+
+
 // export default InputValueDemo;
 
 
@@ -153,6 +201,7 @@
 
 import React, { useState, useEffect } from "react";
 
+
 const InputValueDemo = () => {
   const [questions, setQuestions] = useState([
     { id: 1, text: "What is your favorite color?", answer: "" },
@@ -161,17 +210,31 @@ const InputValueDemo = () => {
     { id: 4, text: "What is your favorite movie?", answer: "" },
   ]);
 
+ 
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [calculatorInput, setCalculatorInput] = useState("");
+ 
+
+
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [calculatorInput, setCalculatorInput] = useState("");
+
 
   useEffect(() => {
     const storedAnswers = JSON.parse(localStorage.getItem("quizAnswers")) || [];
     setQuestions(storedAnswers);
   }, []);
 
+ 
   useEffect(() => {
     localStorage.setItem("quizAnswers", JSON.stringify(questions));
   }, [questions]);
+
+
+  useEffect(() => {
+    localStorage.setItem("quizAnswers", JSON.stringify(questions));
+  }, [questions]);
+
 
   const handleInputChange = (event) => {
     const newQuestions = [...questions];
@@ -189,6 +252,19 @@ const InputValueDemo = () => {
       console.log("Quiz completed");
     }
   };
+ 
+  const handleCalculatorButtonClick = (value) => {
+    setCalculatorInput((prevInput) => prevInput + value);
+  };
+ 
+  const handleCalculatorClear = () => {
+    setCalculatorInput("");
+  };
+ 
+  const handleCalculatorDelete = () => {
+    setCalculatorInput((prevInput) => prevInput.slice(0, -1));
+  };
+ 
 
   const handleCalculatorButtonClick = (value) => {
     setCalculatorInput((prevInput) => prevInput + value);
@@ -201,6 +277,7 @@ const InputValueDemo = () => {
   const handleCalculatorDelete = () => {
     setCalculatorInput((prevInput) => prevInput.slice(0, -1));
   };
+
 
   const handleCalculatorEqual = () => {
     const evaluatedValue = eval(calculatorInput);
@@ -273,4 +350,9 @@ const InputValueDemo = () => {
   );
 };
 
+ 
 export default InputValueDemo;
+
+
+export default InputValueDemo;
+

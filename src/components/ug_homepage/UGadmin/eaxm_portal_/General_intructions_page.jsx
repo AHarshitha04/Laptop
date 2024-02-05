@@ -468,7 +468,6 @@ export const General_intructions_page_container = ({ seconds }) => {
             className="checkbox"
           />
           <p>
-            {" "}
             I agree to these <b> Terms and Conditions.</b>
           </p>
         </div>
@@ -542,9 +541,10 @@ export const General_intructions_page_container = ({ seconds }) => {
             // to={`/getPaperData/${testCreationTableId}/${minsubjectid}`}
             //  onClick={openPopup}
             //  to={`/getPaperData/${testCreationTableId}`} 
-            to={`/QuestionPaper/questionOptions/${testCreationTableId}`} 
+            // to={`/QuestionPaper/questionOptions/${testCreationTableId}`} 
             className="gn_next_btn"
-
+            to={`/QuestionPaper/questionOptions/${testCreationTableId}`} 
+            
             // to={`/General_intructions_page/${test.testCreationTableId}/${minsubjectid}`}
             >
             I am ready to begin <AiOutlineArrowRight />

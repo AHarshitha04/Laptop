@@ -34,6 +34,7 @@
     font-size: 14px;
     text-transform: uppercase;
     /* padding: 5px; */
+    text-align: left;
 }
 .couresotc_-table_-tBody {
     text-align: center;
@@ -45,4 +46,18 @@
     background: #37556c;
     padding: 10px;
     margin-bottom: 5px;
+}
+
+@media (max-width:1300px) {
+    .couresotc_-table tr th {
+    font-size: 13px;
+    padding: 1px 0px;
+}
+    .couresotc_-table_-tBody tr td {
+    font-size: 12px;
+    text-transform: uppercase;
+    padding: 2px;
+    text-align: left;
+}
+    
 }

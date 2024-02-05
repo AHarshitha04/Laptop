@@ -36,10 +36,9 @@ const Account_info = () => {
 
   return (
     <>
-     
       {userRole === "admin" && (
         <div>
-          <p>Admin View: Show all features</p>
+          {/* <p>Admin View: Show all features</p> */}
           {/* Admin-specific content goes here */}
           <Users />
         </div>
@@ -92,9 +91,6 @@ export const Users = () => {
     }
   };
 
-
-
-
   const handleRegister = async (e) => {
     e.preventDefault();
 
@@ -145,38 +141,39 @@ export const Users = () => {
         setProfileImage(null);
         window.location.href = "/uglogin";
       }
-  setAdminadduser(false)
-window.location.reload();
+      setAdminadduser(false);
+      window.location.reload();
     } catch (error) {
       setMessage(error.response?.data?.error || "Error registering user");
       console.error("Error:", error);
     }
   };
-const handleRegisterclose=()=>{
-  setAdminadduser(false)
-}
-    const [username, setUsername] = useState("");    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [profileImage, setProfileImage] = useState(null);
-    const [message, setMessage] = useState("");
-    const [smessage, setSMessage] = useState("");
+  const handleRegisterclose = () => {
+    setAdminadduser(false);
+  };
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [profileImage, setProfileImage] = useState(null);
+  const [message, setMessage] = useState("");
+  const [smessage, setSMessage] = useState("");
 
-    const isEmailValid = (email) => {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      return emailRegex.test(email);
-    };
+  const isEmailValid = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
 
-    const isPasswordValid = (password) => {
-      return password.length >= 6;
-    };
+  const isPasswordValid = (password) => {
+    return password.length >= 6;
+  };
 
-    const isUsernameValid = (username) => {
-      return username.length >= 3;
-    };
+  const isUsernameValid = (username) => {
+    return username.length >= 3;
+  };
 
-const [adminadduser, setAdminadduser] = useState(false);
+  const [adminadduser, setAdminadduser] = useState(false);
   const handleadminadduser = () => {
-    setAdminadduser(true)
+    setAdminadduser(true);
   };
   return (
     <div className="act_infocontainer">
@@ -345,9 +342,6 @@ const [adminadduser, setAdminadduser] = useState(false);
 //   );
 // };
 
-
-
-
 export const Users_info = () => {
   const [userData, setUserData] = useState({});
   useEffect(() => {
@@ -380,33 +374,31 @@ export const Users_info = () => {
 
   console.log(userData.profile_image);
 
-   return (
-     <>
-       {/* <img
+  return (
+    <>
+      {/* <img
         src={`http://localhost:5001/uploads/${question.documen_name}/${option.optionImgName}`}
         alt={`Option ${option.option_id}`}
       /> */}
-       <div className="profilepic">
-         <p>User ID: {userData.user_Id}</p>
-         <h2>Username: {userData.username}</h2>
-         <p>Email: {userData.email}</p>
-         {/* <img
+      <div className="profilepic">
+        <p>User ID: {userData.user_Id}</p>
+        <h2>Username: {userData.username}</h2>
+        <p>Email: {userData.email}</p>
+        {/* <img
           src={`http://localhost:5001/profilesimages/${profileImage_1704542933934.jpg}`}
           alt={`Option ${option.option_id}`}
         /> */}
-         <img src={userData.imageData} alt={`Image ${userData.user_Id}`} />
-         {/* <img
+        <img src={userData.imageData} alt={`Image ${userData.user_Id}`} />
+        {/* <img
           key={userData.user_Id}
           src={userData.profile_image}
           alt={`Image ${userData.user_Id}`}
         /> */}
-         {/* <img src={userData.profile_image} alt="Profile" /> */}
-       </div>
-     </>
-   );
-}; 
-
-
+        {/* <img src={userData.profile_image} alt="Profile" /> */}
+      </div>
+    </>
+  );
+};
 
 // headers
 
@@ -433,11 +425,11 @@ export const Users_info = () => {
 //                </Link>
 //              </button>
 
-//              {/* <button className="quiz_sign_UP">                   
+//              {/* <button className="quiz_sign_UP">
 //                     Sign up
 //                   </button> */}
 //              <div className="Quiz_main_page_login_signUp_btn">
-//                {/* 
+//                {/*
 //                       <Link to='/'><button onClick={Quiz_login}>
 //                    Login
 //                   </button></Link> */}
@@ -457,3 +449,44 @@ export const Users_info = () => {
 //      );
 //    })}
 //  </div>;
+
+// router.get("/act_info", (req, res) => {
+//   const query = "SELECT * FROM log WHERE role = 'viewer' ";
+
+//   db1.query(query, (error, results) => {
+//     if (error) {
+//       console.error("Error executing query: " + error.stack);
+//       return res.status(500).send("Error retrieving data from database.");
+//     }
+
+//     if (!results || results.length === 0) {
+//       console.log("No data found.");
+//       return res.status(404).send("No data found.");
+//     }
+
+//     const dataWithImages = results
+//       .map((result) => {
+//         if (!result.profile_image) {
+//           console.log("Image data is missing for a row.");
+//           return null; // Skip this entry or handle it accordingly
+//         }
+
+//         const base64 = result.profile_image.toString("base64");
+//         // Add all the fields along with the profile_image in the response
+//         return {
+//           id: result.user_Id,
+//           username: result.username,
+//           email: result.email,
+//           role: result.role,
+//           // Add other fields as needed
+//           profile_image: `data:image/png;base64,${base64}`,
+//         };
+//       })
+//       .filter((item) => item !== null); // Remove null entries
+
+//     // console.log("Retrieved data from log table:");
+//     // console.log(dataWithImages);
+
+//     res.json(dataWithImages); // Sending the processed data with images as a response
+//   });
+// });

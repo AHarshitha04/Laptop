@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import PropTypes from "prop-types";
 import { useParams } from "react-router-dom";
 import "./styles/RightSidebar.css";
+import axios from "axios";
 
 const ButtonsFunctionality = ({
   onQuestionSelect,
@@ -16,7 +17,6 @@ const ButtonsFunctionality = ({
   questionData,
   updateQuestionStatus,
 }) => {
-
   const [wtimer, setWTimer] = useState(0);
 
   const [activeQuestion, setActiveQuestion] = useState(0);
@@ -45,12 +45,26 @@ const ButtonsFunctionality = ({
         if (index === activeQuestion) {
           className += " active-question";
         }
+        // Different tooltip text for each button
+        let tooltipText = "";
+        if (questionStatusAtIndex === "answered") {
+          tooltipText = "Answered";
+        } else if (questionStatusAtIndex === "notAnswered") {
+          tooltipText = "Not Answered";
+        } else if (questionStatusAtIndex === "marked") {
+          tooltipText = "Marked for review";
+        } else if (questionStatusAtIndex === "Answered but marked for review") {
+          tooltipText = "Answered but marked for review";
+        } else if (questionStatusAtIndex === "notVisited") {
+          tooltipText = "Not Visited";
+        }
 
         return (
           <li key={questionKey}>
             <button
               onClick={() => handleButtonClick(index + 1)}
               className={className}
+              title={tooltipText}
             >
               {index + 1}
             </button>
@@ -59,25 +73,29 @@ const ButtonsFunctionality = ({
       })
     : null;
 
-
-
-    const handleButtonClick = useCallback((questionNumber) => {
+  const handleButtonClick = useCallback(
+    (questionNumber) => {
       const questionIndex = questionNumber - 1;
-     
+
       if (questionStatus[questionIndex] === "answered") {
         // If answered, navigate to the selected question
         onQuestionSelect(questionNumber);
-      } else if (questionStatus[questionIndex] === "notAnswered" || questionStatus[questionIndex] === "notVisited") {
-        // If not answered or not visited, mark it as not answered and navigate to the selected question
+      } else if (
+        questionStatus[questionIndex] === "notAnswered" ||
+        questionStatus[questionIndex] === "notVisited"
+      ) {
         setQuestionStatus((prevQuestionStatus) => [
           ...prevQuestionStatus.slice(0, questionIndex),
           "notAnswered",
           ...prevQuestionStatus.slice(questionIndex + 1),
         ]);
-     
+
         // Update other necessary state or perform additional logic
         onQuestionSelect(questionNumber, "notAnswered");
-        setAnsweredQuestions((prevAnsweredQuestions) => [...prevAnsweredQuestions, questionNumber]);
+        setAnsweredQuestions((prevAnsweredQuestions) => [
+          ...prevAnsweredQuestions,
+          questionNumber,
+        ]);
         setIsPaused(false);
       } else {
         // If the button was clicked, mark it as answered
@@ -86,21 +104,29 @@ const ButtonsFunctionality = ({
           "answered",
           ...prevQuestionStatus.slice(questionIndex + 1),
         ]);
-     
+
         // Update other necessary state or perform additional logic
         onQuestionSelect(questionNumber);
-        setAnsweredQuestions((prevAnsweredQuestions) => [...prevAnsweredQuestions, questionNumber]);
+        setAnsweredQuestions((prevAnsweredQuestions) => [
+          ...prevAnsweredQuestions,
+          questionNumber,
+        ]);
         setIsPaused(false);
       }
-     
+
       // Update the question status in the QuestionPaper component
       updateQuestionStatus(questionStatus[questionIndex]);
-     
-    }, [questionStatus, setQuestionStatus, onQuestionSelect, answeredQuestions, updateQuestionStatus]);
-  
-  
-  
-    ButtonsFunctionality.propTypes = {
+    },
+    [
+      questionStatus,
+      setQuestionStatus,
+      onQuestionSelect,
+      answeredQuestions,
+      updateQuestionStatus,
+    ]
+  );
+
+  ButtonsFunctionality.propTypes = {
     onQuestionSelect: PropTypes.func.isRequired,
     questionStatus: PropTypes.arrayOf(PropTypes.string),
     seconds: PropTypes.number, // Add the appropriate prop type
@@ -115,7 +141,7 @@ const ButtonsFunctionality = ({
     data: PropTypes.object, // Add the appropriate prop type
     updateQuestionStatus: PropTypes.func.isRequired, // Add the prop type
   };
-  // const [timer, setWTimer] = useState(0);
+
   const WformatTime = (seconds) => {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
@@ -124,34 +150,23 @@ const ButtonsFunctionality = ({
       minutes > 9 ? minutes : "0" + minutes
     }:${remainingSeconds > 9 ? remainingSeconds : "0" + remainingSeconds}`;
   };
+
   useEffect(() => {
-    setWTimer(wtimer);
-    let interval;
-    interval = setInterval(() => {
-      setWTimer((prevTimer) => prevTimer + 1);
+    const interval = setInterval(() => {
+      setWTimer((prevTimer) => prevTimer - 1);
     }, 1000);
 
+    // Clear the interval and handle time-up logic when timer reaches 0
+    if (wtimer <= 0) {
+      clearInterval(interval);
+      // Handle time-up logic here (e.g., navigate to a different component)
+    }
+
+    // Clean up the interval on component unmount or when navigating away
     return () => {
       clearInterval(interval);
     };
   }, [wtimer]);
-
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     setWTimer((prevTimer) => prevTimer - 1);
-  //   }, 1000);
-
-  //   // Clear the interval and handle time-up logic when timer reaches 0
-  //   if (wtimer <= 0) {
-  //     clearInterval(interval);
-  //     // Handle time-up logic here (e.g., navigate to a different component)
-  //   }
-
-  //   // Clean up the interval on component unmount or when navigating away
-  //   return () => {
-  //     clearInterval(interval);
-  //   };
-  // }, [wtimer]);
 
   //user name
   const [userData, setUserData] = useState({});
@@ -192,7 +207,7 @@ const ButtonsFunctionality = ({
             src={userData.imageData}
             alt={`Image ${userData.user_Id}`}
           />
-          <p>Name of the person: {userData.username}</p>
+          <p>Name of the person : {userData.username}</p>
 
           {/* <p>Time Left: {WformatTime(wtimer)}</p> */}
         </div>
@@ -207,32 +222,47 @@ const ButtonsFunctionality = ({
           <h4 className="sidebar-footer-header">Legend</h4>
           <div className="footer-btns">
             <div className="inst-btns">
-              <button className="instruction-btn1 r_S_B_BTNS">
+              <button
+                className="instruction-btn1 r_S_B_BTNS"
+                title="answeredCount"
+              >
                 {answeredCount}
               </button>
               <span>Answerd</span>
             </div>
             <div className="inst-btns">
-              <button className="instruction-btn2 r_S_B_BTNS">
+              <button
+                className="instruction-btn2 r_S_B_BTNS"
+                title="notAnsweredCount"
+              >
                 {notAnsweredCount}
               </button>
               <span>Not Answered</span>
             </div>
             <div className="inst-btns">
-              <button className="instruction-btn3 r_S_B_BTNS">
+              <button
+                className="instruction-btn3 r_S_B_BTNS"
+                title="answeredmarkedForReviewCount"
+              >
                 {answeredmarkedForReviewCount}
               </button>
               <span>Marked</span>
             </div>
             <div className="inst-btns">
-              <button className="instruction-btn4 r_S_B_BTNS">
+              <button
+                className="instruction-btn4 r_S_B_BTNS"
+                title="markedForReviewCount"
+              >
                 {markedForReviewCount}
               </button>
               <span>Answered but marked for review</span>
             </div>{" "}
             <div className="inst-btns">
               {" "}
-              <button className="instruction-btn5 r_S_B_BTNS">
+              <button
+                className="instruction-btn5 r_S_B_BTNS"
+                title="VisitedCount"
+              >
                 {VisitedCount}
               </button>
               <span>Not Visited</span>

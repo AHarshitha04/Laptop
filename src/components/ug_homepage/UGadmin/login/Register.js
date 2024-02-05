@@ -269,44 +269,37 @@ const handleRegister = async (e) => {
   return (
     <>
       <div>
-        <div className="ugexam_header">
-          {NavData.map((NavData, index) => {
-            return (
-              <>
-                <div className="header  ug_quizheader" key={index}>
-                  <div className={NavData.logo_img_container}>
-                    <Link to={"/"}>
+        <div>
+          <div className="Quiz_main_page_header">
+            {NavData.map((NavData, index) => {
+              return (
+                <>
+                  <div key={index} className="Quiz_main_page_navbar">
+                    <div className="Quizzlogo">
                       <img src={NavData.logo} alt="" />
-                    </Link>
-                  </div>
+                    </div>
+                    {/* <li  className={showcardactive1?"showcardactive":"showcardactivenone"}> */}
 
-                  <div className="exam_login_menu">
-                    <li>
-                      <Link
-                        to="/Exam_portal_home_page"
-                        className={NavData.navlist}
-                      >
-                        {NavData.link1}
-                      </Link>
-                    </li>
-                    <Link
-                      to="/uglogin"
-                      href="https://online-ug.egradtutor.in"
-                      className={NavData.login}
-                    >
-                      Login
-                    </Link>
-                    {/* <div className="mobile_menu mobile_menu_non"onClick={() => setshowMenu(!showMenu)}  >
-              <div className={showMenu ? "rotate_right  " :"lines "}></div>
-              <div className={showMenu ? "no_lines  " :"lines "}></div>
-              <div className={showMenu ? "rotate_left  " :"lines "}></div>
-              </div> */}
-                    {/* <a href="#"><AiOutlineMenu/></a> */}{" "}
+                    <div className="quiz_app_quiz_menu_login_btn_contaioner">
+                      <button style={{ background: "none" }}>
+                        <Link
+                          to="/Exam_portal_home_page"
+                          className="Quiz__home"
+                        >
+                          Home
+                        </Link>
+                      </button>
+                      <div>
+                        <a class="ugQUIz_login_btn" href="/uglogin">
+                          Login
+                        </a>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </>
-            );
-          })}
+                </>
+              );
+            })}
+          </div>
         </div>
       </div>
 
@@ -314,55 +307,56 @@ const handleRegister = async (e) => {
       <div className="ug_logincontainer">
         <div className="ug_logincontainer_box">
           <h2>Register</h2>
-          <form onSubmit={handleRegister}>
-            <label>
-              <FaUserAlt />
-              <input
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="Username"
-              />
-            </label>
+          <div className="login_from_continer">
+            <form onSubmit={handleRegister}>
+              <label>
+                <FaUserAlt />
+                <input
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  placeholder="Username"
+                />
+              </label>
 
-            <label>
-              <MdAlternateEmail />
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Email"
-              />
-            </label>
+              <label>
+                <MdAlternateEmail />
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Email"
+                />
+              </label>
 
-            <label>
-              <FaLock />
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Password"
-              />
-            </label>
+              <label>
+                <FaLock />
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Password"
+                />
+              </label>
 
-            {/* Input for profile image */}
-            <label>
-              <FaImage />
-              <input
-                type="file"
-                accept="image/*"
-                onChange={(e) => setProfileImage(e.target.files[0])}
-              />
-            </label>
+              {/* Input for profile image */}
+              <label>
+                <FaImage />
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => setProfileImage(e.target.files[0])}
+                />
+              </label>
 
-            <br />
-            {message && <p style={{ color: "red" }}>{message}</p>}
-            {smessage && <p style={{ color: "green" }}>{smessage}</p>}
+              {message && <p style={{ color: "red" }}>{message}</p>}
+              {smessage && <p style={{ color: "green" }}>{smessage}</p>}
 
-            <button type="submit">Register</button>
-          </form>
-          <p>
-            Already have an account? <Link to="/uglogin">Login here</Link>
-          </p>
+              <button type="submit">Register</button>
+            </form>
+            <p>
+              Already have an account? <Link to="/uglogin">Login here</Link>
+            </p>
+          </div>
         </div>
       </div>
     </>
