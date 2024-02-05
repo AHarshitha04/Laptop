@@ -245,29 +245,30 @@ try {
   ]);
    mailOptions = {
     from: 'egradtutorweb@gmail.com',
-    to: formData.emailId, // Use the user's email from the form
+    to: formData.emailId, 
     subject: 'Form Submission Confirmation',
     html: `
+    <img src="Backend\logo\logo.png" alt="eGradTutor">
       <p>Thank you for submitting the form. Your details have been received:</p>
-      <ul>
-        <li>Candidate Name: ${formData.candidateName}</li>
-        <li>Date of Birth: ${formData.dateOfBirth}</li>
-        <li>Gender: ${genderName}</li>
-        <li>Category: ${categoryName}</li>
-        <li>Contact No: ${formData.contactNo}</li>
-        <li>Father's Name: ${formData.fatherName}</li>
-        <li>Occupation: ${formData.occupation}</li>
-        <li>Mobile No: ${formData.mobileNo}</li>
-        <li>Address: ${formData.line1}</li>
-        <li>State: ${stateName}</li>
-        <li>District: ${districtName}</li>
-        <li>Pincode: ${formData.pincode}</li>
-        <li>Batch: ${batchName}</li>
-        <li>Qualification: ${qualificationName}</li>
-        <li>College Name: ${formData.NameOfCollege}</li>
-        <li>Passing Year: ${formData.passingYear}</li>
-        <li>Marks: ${formData.marks}</li>
-      </ul>
+      <div>
+        <p>Candidate Name: ${formData.candidateName}</p>
+        <p>Date of Birth: ${formData.dateOfBirth}</p>
+        <p>Gender: ${genderName}</p>
+        <p>Category: ${categoryName}</p>
+        <p>Contact No: ${formData.contactNo}</p>
+        <p>Father's Name: ${formData.fatherName}</p>
+        <p>Occupation: ${formData.occupation}</p>
+        <p>Mobile No: ${formData.mobileNo}</p>
+        <p>Address: ${formData.pne1}</p>
+        <p>State: ${stateName}</p>
+        <p>District: ${districtName}</p>
+        <p>Pincode: ${formData.pincode}</p>
+        <p>Batch: ${batchName}</p>
+        <p>Quapfication: ${qualificationName}</p>
+        <p>College Name: ${formData.NameOfCollege}</p>
+        <p>Passing Year: ${formData.passingYear}</p>
+        <p>Marks: ${formData.marks}</p>
+      </div>
     `
   };
 } catch (error) {
