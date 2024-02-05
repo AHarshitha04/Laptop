@@ -603,6 +603,9 @@ import noimg from "./NoImages.jpg";
 
 const DisplayFormData = ({ formData,getGenderName, onSubmit, onBack }) => {
   console.log(formData)
+
+  
+
   return (
     <div>
       {/* Display the entered data */}

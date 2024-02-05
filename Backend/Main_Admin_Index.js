@@ -83,7 +83,85 @@ const Doubtsection = require("./StudentDashboard/Doubtsection");
 app.use("/BuyCourses", BuyCourses);
 app.use("/Doubtsection", Doubtsection);
 
+app.get('/buynow', (req, res) => {
+ /// if student already exist with that email 
+  //insert data into database for student student 
+  //transation id generation dataetimesec into table aginst student id and test id,actualprice ,
+   // const {email,firstname,phone}=getstudentdetails(student id)
+  //payintergarete(res,txnid,amount,email,productinfo,firstname,phone,"",'','','','',surl,furl)
+  // const { txnid, amount, productinfo, firstname, email, phone } = req.body;
+  
+});
+function getstudentdetails(studentid){
+  //select * from student where student id
+  //return object 
 
+}
+function payUintegrate(res,txnid,amount,email,productinfo,firstname,phone,udf1,udf2,udf3,udf4,udf5,surl,furl){
+ 
+  const YOUR_MERCHANT_SALT = 'cZpZ0nxjmFYG3p5bZ0odsbtdGhpZlyWx';
+  const YOUR_MERCHANT_KEY = '3LtnTS';
+ 
+
+  const hashString = (
+    YOUR_MERCHANT_KEY +
+    "|" +
+    txnid +
+    "|" +
+    amount +
+    "|" +
+    productinfo +
+    "|" +
+    firstname +
+    "|" +
+    email +
+    "|" +
+    udf1 +
+    "|" +
+    udf2 +
+    "|" +
+    udf3 +
+    "|" +
+    udf4 +
+    "|" +
+    udf5 +
+    "||||||" +
+    YOUR_MERCHANT_SALT
+  );
+  // Use the jsSHA library to generate the hash
+  const sha = new jsSHA('SHA-512', 'TEXT');
+  sha.update(hashString);
+  const hash = sha.getHash('HEX');
+
+
+
+  // Render the PayU form
+  res.send(`
+    <!DOCTYPE html>
+    <html lang="en">
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>PayU Form</title>
+      </head>
+      <body onload="document.payuform.submit()">
+        <form action="https://test.payu.in/_payment" method="post" name="payuform">
+          <input type="hidden" name="key" value="${YOUR_MERCHANT_KEY}">
+          <input type="hidden" name="txnid" value="${txnid}">
+          <input type="hidden" name="amount" value="${amount}">
+          <input type="hidden" name="productinfo" value="${productinfo}">
+          <input type="hidden" name="firstname" value="${firstname}">
+          <input type="hidden" name="email" value="${email}">
+          <input type="hidden" name="phone" value="${phone}">
+          <input type="hidden" name="surl" value="${surl}">
+          <input type="hidden" name="furl" value="${furl}">
+          <input type="hidden" name="hash" value="${hash}">
+          <input type="submit" value="Submit">
+        </form>
+      </body>
+    </html>
+  `);
+}
 
 app.get('/TestActivation/:testCreationTableId', async (req, res) => {
   const { testCreationTableId } = req.params;
