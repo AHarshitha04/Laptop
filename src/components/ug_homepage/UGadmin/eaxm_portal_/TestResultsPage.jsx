@@ -561,7 +561,10 @@ const TestResultsPage = () => {
     const fetchQuestionCount = async () => {
       try {
         const response = await fetch(
+
           `http://localhost:5001/QuestionPaper/attemptCount/${testCreationTableId}/${userData.id}`
+
+
         );
         const data = await response.json();
         setAttemptCount(data);
@@ -579,7 +582,11 @@ const TestResultsPage = () => {
     const fetchQuestionCount = async () => {
       try {
         const response = await fetch(
+
           `http://localhost:5001/QuestionPaper/correctAnswers/${testCreationTableId}/${userData.id}`
+
+          `http://localhost:5001/QuestionPaper/correctAnswers/${testCreationTableId}/8`
+
         );
         const data = await response.json();
         setCorrectAnswersCount(data);
@@ -597,7 +604,11 @@ const TestResultsPage = () => {
     const fetchQuestionCount = async () => {
       try {
         const response = await fetch(
+
           `http://localhost:5001/QuestionPaper/incorrectAnswers/${testCreationTableId}/${userData.id}`
+
+          `http://localhost:5001/QuestionPaper/incorrectAnswers/${testCreationTableId}/8`
+
         );
         const data = await response.json();
         setIncorrectAnswersCount(data);
@@ -634,7 +645,11 @@ const TestResultsPage = () => {
     const fetchQuestionCount = async () => {
       try {
         const response = await fetch(
+
           `http://localhost:5001/QuestionPaper/score/${testCreationTableId}/${userData.id}`
+
+          `http://localhost:5001/QuestionPaper/score/${testCreationTableId}/8`
+
         );
         const data = await response.json();
         setScoreCount(data);

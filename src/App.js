@@ -98,6 +98,7 @@ import CoursePage from "./components/ug_homepage/UGadmin/eaxm_portal_/CoursePage
 // import ExamSummary from './components/ug_homepage/UGadmin/eaxm_portal_/Exam_Summary';
 import SubmitPage from "./components/ug_homepage/UGadmin/eaxm_portal_/Submit_Page";
 import TestResultsPage from "./components/ug_homepage/UGadmin/eaxm_portal_/TestResultsPage";
+import InputValueDemo from "./components/ug_homepage/UGadmin/eaxm_portal_/InputValueDemo";
 
 // {/* ---------------------------------  Exam_portal_admin_integration ------------- */}
 
@@ -309,6 +310,8 @@ const App = () => {
           path="/TestResultsPage/:testCreationTableId"
           element={<PrivateRoute element={<TestResultsPage />} />}
         />
+        <Route path="/InputValueDemo"
+           element={<InputValueDemo />}/>
         {/* <Route path='/ExamSummary'  element={<ExamSummary />} /> */}
         {/* ---------------------------------  Exam_portal_admin_integration ------------- */}
         <Route

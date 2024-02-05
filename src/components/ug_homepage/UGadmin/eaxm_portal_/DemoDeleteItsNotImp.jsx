@@ -2268,7 +2268,11 @@ const QuestionPaper = () => {
     const questionId = questionData.questions[currentQuestionIndex].question_id;
     const charcodeatopt = String.fromCharCode("a".charCodeAt(0) + optionIndex);
 
+
     // console.log("questionId from onAnswerSelected1 : ", questionId);
+
+    console.log("questionId from onAnswerSelected1 : ", questionId);
+
     const questionIndex = currentQuestionIndex + 1;
     // console.log(`Question Index: ${questionIndex}`);
     // console.log(`Clicked Option Index: ${charcodeatopt}`);
@@ -2318,6 +2322,7 @@ const QuestionPaper = () => {
   const [answers, setAnswers] = useState(
     Array(questionData.questions.length).fill("")
   );
+
 
   // const onAnswerSelected3 = (e) => {
   //   // Handle updating the state when the user answers a question
@@ -2413,6 +2418,7 @@ const QuestionPaper = () => {
   //     console.error('Error storing in local storage:', error);
   //   }
   // };
+
 
   const onAnswerSelected3 = (e) => {
     const inputValue = e.target.value;
@@ -3071,6 +3077,7 @@ const QuestionPaper = () => {
   const handleSaveNextQuestion = async () => {
     try {
       const updatedQuestionStatus = [...questionStatus];
+
       const calculatorInputValue = value;
   
       const isCurrentQuestionAnswered =
@@ -3130,6 +3137,101 @@ const QuestionPaper = () => {
   
             const hasAnswered = answeredQuestionsMap[questionId];
   
+
+      updatedQuestionStatus[currentQuestionIndex] = "answered";
+      setQuestionStatus(updatedQuestionStatus);
+
+      setCurrentQuestionIndex((prevIndex) => {
+        if (prevIndex < questionData.questions.length - 1) {
+          return prevIndex + 1;
+        }
+      });
+
+      try {
+        const currentQuestion = questionData.questions[currentQuestionIndex];
+        const subjectId = currentQuestion.subjectId;
+        const sectionId = currentQuestion.sectionId;
+        const currentQuestionType = currentQuestion.typeofQuestion;
+
+        console.log("hello, hii");
+        console.log(" Current Test Creation Table ID:", testCreationTableId);
+        console.log("Current user_Id:", userData.id);
+        console.log("Current Subject Id:", subjectId);
+        console.log("Current Section Id:", sectionId);
+        console.log("Current Question Type:", currentQuestionType);
+        // Fetch question options
+        const response = await fetch(
+          `http://localhost:5001/QuestionPaper/questionOptions/${testCreationTableId}`
+        );
+        const result = await response.json();
+        setQuestionData(result);
+
+        // Fetch user data
+        const token = localStorage.getItem("token");
+        const response_user = await fetch(
+          "http://localhost:5001/ughomepage_banner_login/user",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (response_user.ok) {
+          const userData = await response_user.json();
+          setUserData(userData);
+
+          const userId = userData.id;
+          // const subjectId = questionData.subjectId;
+
+          if (!questionData || !questionData.questions) {
+            console.error("Data or questions are null or undefined");
+            return;
+          }
+
+          const calculatorInputValue = value;
+          const currentQuestion = questionData.questions[currentQuestionIndex];
+          const selectedOption1 =
+            selectedAnswersMap1[currentQuestion.question_id];
+          const selectedOption2 =
+            selectedAnswersMap2[currentQuestion.question_id];
+
+          const optionIndexes1 =
+            selectedOption1 !== undefined ? [selectedOption1] : [];
+          const optionIndexes2 =
+            selectedOption2 !== undefined ? selectedOption2 : [];
+
+          const questionId = currentQuestion.question_id;
+          const hasAnswered = answeredQuestionsMap[questionId];
+
+          if (hasAnswered) {
+            const updatedResponse = {
+              optionIndexes1: optionIndexes1.map((index) =>
+                String.fromCharCode("a".charCodeAt(0) + index)
+              ),
+              optionIndexes2: optionIndexes2.map((index) =>
+                String.fromCharCode("a".charCodeAt(0) + index)
+              ),
+              calculatorInputValue: calculatorInputValue,
+            };
+
+            const updateRespons = await axios.put(
+              `http://localhost:5001/QuestionPaper/updateResponse/${questionId}`,
+              {
+                updatedResponse,
+                userId,
+                testCreationTableId,
+                subjectId,
+                sectionId,
+              }
+            );
+            console.log("egrad", updateRespons);
+            console.log("updatedResponse", updatedResponse);
+            console.log("hiiii");
+            console.log("The question answer is  updated");
+            // You can perform additional actions if the question is already answered
+          } else {
+
             const responses = {
               userId: userId,
               testCreationTableId: testCreationTableId,
@@ -3152,6 +3254,7 @@ const QuestionPaper = () => {
             }));
   
             if (hasAnswered) {
+
               const updatedResponse = {
                 optionIndexes1: optionIndexes1.map((index) =>
                   String.fromCharCode("a".charCodeAt(0) + index)
@@ -3160,6 +3263,26 @@ const QuestionPaper = () => {
                   String.fromCharCode("a".charCodeAt(0) + index)
                 ),
                 calculatorInputValue: calculatorInputValue,
+
+              console.log("Existing Response Updated");
+              console.log("updated reponse is saved");
+            } else {
+              // Responses object
+              const responses = {
+                userId: userId,
+                testCreationTableId: testCreationTableId,
+                subjectId: subjectId,
+                sectionId: sectionId,
+                [questionId]: {
+                  optionIndexes1: optionIndexes1.map((index) =>
+                    String.fromCharCode("a".charCodeAt(0) + index)
+                  ),
+                  optionIndexes2: optionIndexes2.map((index) =>
+                    String.fromCharCode("a".charCodeAt(0) + index)
+                  ),
+                  calculatorInputValue: calculatorInputValue,
+                },
+
               };
   
               await axios.put(
@@ -4064,6 +4187,7 @@ const QuestionPaper = () => {
     // Add more conditions or handle the case where the question type is not recognized
     return "Answer not available";
   }
+
 // //   // const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
 // const currentQuestionType = questionData.questions.currentQuestion.quesion_type.typeofQuestion;
@@ -4076,6 +4200,67 @@ const currentQuestionType =
     : null;
 
 console.log("Current Question Type:", currentQuestionType);
+
+  // const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+
+  const [setCurrentQuestion] = useState();
+  const [calculatorInput, setCalculatorInput] = useState("");
+
+  useEffect(() => {
+    const storedAnswers = JSON.parse(localStorage.getItem("quizAnswers")) || [];
+    setQuestionData(storedAnswers);
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("quizAnswers", JSON.stringify(questionData));
+  }, [questionData]);
+
+  const handleInputChange = (event) => {
+    const newQuestions = [...questionData];
+    newQuestions[currentQuestion].answer = event.target.value;
+    setQuestionData(newQuestions);
+    setCalculatorInput(event.target.value);
+  };
+
+  // const handleNavigation = (offset) => {
+  //   const nextQuestion = currentQuestion + offset;
+  //   if (nextQuestion >= 0 && nextQuestion < questions.length) {
+  //     setCurrentQuestion(nextQuestion);
+  //     setCalculatorInput(questions[nextQuestion].answer || "");
+  //   } else {
+  //     console.log("Quiz completed");
+  //   }
+  // };
+
+  const handleCalculatorButtonClick = (value) => {
+    setCalculatorInput((prevInput) => prevInput + value);
+  };
+
+  const handleCalculatorClear = () => {
+    setCalculatorInput("");
+  };
+
+  const handleCalculatorDelete = () => {
+    setCalculatorInput((prevInput) => prevInput.slice(0, -1));
+  };
+
+  const handleCalculatorEqual = () => {
+    const evaluatedValue = eval(calculatorInput);
+    const newQuestions = [...questionData];
+    newQuestions[currentQuestion].answer = isNaN(evaluatedValue)
+      ? ""
+      : evaluatedValue;
+    setQuestionData(newQuestions);
+    setCalculatorInput("");
+  };
+
+  // const handleClearResponse = () => {
+  //   const newQuestions = [...questionData];
+  //   newQuestions[currentQuestion].answer = "";
+  //   setQuestionData(newQuestions);
+  //   setCalculatorInput("");
+  // };
+
 
   return (
     <div className="QuestionPaper_-container">
@@ -4333,10 +4518,289 @@ console.log("Current Question Type:", currentQuestionType);
                                     </div>
                                   )}
                                 {/* calculator ============ */}
+
                                 {currentQuestionType.includes(
+
+
+                                {/* {currentQuestionType &&
+                                  currentQuestionType.typeofQuestion &&
+                                  currentQuestionType.typeofQuestion.includes(
+
                                     "NATD( Numeric Answer type of questions with Decimal values)"
                                   ) && (
                                     <div className="calculator">
+                                      <div className="display">
+
+                                        <label>Answer:</label>
+                                        <input
+                                          type="text"
+                                          name={`question-${currentQuestionIndex}`}
+                                          value={value}
+                                          onChange={(e) => onAnswerSelected3(e)}
+                                          placeholder="Enter your answer"
+                                          readOnly
+                                         
+                                        />
+                                      </div>
+                                      <div>
+                                        <input
+                                          type="button"
+                                          value="AC"
+                                          onClick={(e) => setValue("")}
+                                        />
+                                        <input
+                                          type="button"
+                                          value="DE"
+                                          onClick={(e) =>
+                                            setValue(value.slice(0, -1))
+                                          }
+                                        />
+                                        <input
+                                          type="button"
+                                          value="."
+                                          onClick={(e) =>
+                                            setValue(value + e.target.value)
+                                          }
+                                        />
+                                        <input
+                                          type="button"
+                                          value="/"
+                                          onClick={(e) =>
+                                            setValue(value + e.target.value)
+                                          }
+                                        />
+                                      </div>
+                                      <div>
+                                        <input
+                                          type="button"
+                                          value="7"
+                                          onClick={(e) =>
+                                            setValue(value + e.target.value)
+                                          }
+                                        />
+                                        <input
+                                          type="button"
+                                          value="8"
+                                          onClick={(e) =>
+                                            setValue(value + e.target.value)
+                                          }
+                                        />
+                                        <input
+                                          type="button"
+                                          value="9"
+                                          onClick={(e) =>
+                                            setValue(value + e.target.value)
+                                          }
+                                        />
+                                        <input
+                                          type="button"
+                                          value="*"
+                                          onClick={(e) =>
+                                            setValue(value + e.target.value)
+                                          }
+                                        />
+                                      </div>
+                                      <div>
+                                        <input
+                                          type="button"
+                                          value="4"
+                                          onClick={(e) =>
+                                            setValue(value + e.target.value)
+                                          }
+                                        />
+                                        <input
+                                          type="button"
+                                          value="5"
+                                          onClick={(e) =>
+                                            setValue(value + e.target.value)
+                                          }
+                                        />
+                                        <input
+                                          type="button"
+                                          value="6"
+                                          onClick={(e) =>
+                                            setValue(value + e.target.value)
+                                          }
+                                        />
+                                        <input
+                                          type="button"
+                                          value="+"
+                                          onClick={(e) =>
+                                            setValue(value + e.target.value)
+                                          }
+                                        />
+                                      </div>
+                                      <div>
+                                        <input
+                                          type="button"
+                                          value="1"
+                                          onClick={(e) =>
+                                            setValue(value + e.target.value)
+                                          }
+                                        />
+                                        <input
+                                          type="button"
+                                          value="2"
+                                          onClick={(e) =>
+                                            setValue(value + e.target.value)
+                                          }
+                                        />
+                                        <input
+                                          type="button"
+                                          value="3"
+                                          onClick={(e) =>
+                                            setValue(value + e.target.value)
+                                          }
+                                        />
+                                        <input
+                                          type="button"
+                                          value="-"
+                                          onClick={(e) =>
+                                            setValue(value + e.target.value)
+                                          }
+                                        />
+                                      </div>
+                                      <div>
+                                        <input
+                                          type="button"
+                                          value="00"
+                                          onClick={(e) =>
+                                            setValue(value + e.target.value)
+                                          }
+                                        />
+                                        <input
+                                          type="button"
+                                          value="0"
+                                          onClick={(e) =>
+                                            setValue(value + e.target.value)
+                                          }
+                                        />
+                                        <input
+                                          type="button"
+                                          value="="
+                                          className="equal"
+                                          onClick={(e) => setValue(eval(value))}
+                                        />
+                                      </div>
+                                    </div>
+                                  )} */}
+                                {currentQuestionType &&
+                                  currentQuestionType.typeofQuestion &&
+                                  currentQuestionType.typeofQuestion.includes(
+                                    "NATD( Numeric Answer type of questions with Decimal values)"
+                                  ) && (
+                                    <div className="calculator">
+                                      <div className="display">
+                                        <label>Answer:</label>
+                                        <input
+                                          type="text"
+                                          name={`question-${currentQuestionIndex}`}
+                                          // value={value}
+                                          value={questionData.questions[currentQuestion].answer}
+                                          onChange={handleInputChange}
+                                          // onChange={(e) => {
+                                          //   setValue(e.target.value);
+                                          //   onAnswerSelected3(e);
+                                          // }}
+                                          placeholder="Enter your answer"
+                                          readOnly
+                                        />
+                                      </div>
+                                      <div>
+                                        <input
+                                          type="button"
+                                          value="AC"
+                                          onClick={() => setValue("")}
+                                        />
+                                        <input
+                                          type="button"
+                                          value="DE"
+                                          onClick={() =>
+                                            setValue(value.slice(0, -1))
+                                          }
+                                        />
+                                        <input
+                                          type="button"
+                                          value="."
+                                          onClick={() => setValue(value + ".")}
+                                        />
+                                        <input
+                                          type="button"
+                                          value="/"
+                                          onClick={() => setValue(value + "/")}
+                                        />
+                                      </div>
+                                      <div>
+                                        {[7, 8, 9, "*"].map((num) => (
+                                          <input
+                                            key={num}
+                                            type="button"
+                                            value={num}
+                                            onClick={() =>
+                                              setValue(value + num)
+                                            }
+                                          />
+                                        ))}
+                                      </div>
+                                      <div>
+                                        {[4, 5, 6, "+"].map((num) => (
+                                          <input
+                                            key={num}
+                                            type="button"
+                                            value={num}
+                                            onClick={() =>
+                                              setValue(value + num)
+                                            }
+                                          />
+                                        ))}
+                                      </div>
+                                      <div>
+                                        {[1, 2, 3, "-"].map((num) => (
+                                          <input
+                                            key={num}
+                                            type="button"
+                                            value={num}
+                                            onClick={() =>
+                                              setValue(value + num)
+                                            }
+                                          />
+                                        ))}
+                                      </div>
+                                      <div>
+                                        <input
+                                          type="button"
+                                          value="00"
+                                          onClick={() => setValue(value + "00")}
+                                        />
+                                        <input
+                                          type="button"
+                                          value="0"
+                                          onClick={() => setValue(value + "0")}
+                                        />
+                                        <input
+                                          type="button"
+                                          value="="
+                                          className="equal"
+                                          onClick={() => setValue(eval(value))}
+                                        />
+                                      </div>
+                                    </div>
+                                  )}
+
+                                {currentQuestionType.includes(
+                                    "NATI( Numeric Answer type of questions with integer values)"
+                                  ) && (
+                                    <div className="calculator">
+
+
+                                {/* {currentQuestionType &&
+                                  currentQuestionType.typeofQuestion &&
+                                  currentQuestionType.typeofQuestion.includes(
+                                    "NATI( Numeric Answer type of questions with integer values)"
+                                  ) && (
+                                    <div className="calculator">
+                                   
+
                                       <div className="display">
                                         <label>Answer:</label>
                                         <input
@@ -4489,18 +4953,26 @@ console.log("Current Question Type:", currentQuestionType);
                                         />
                                       </div>
                                     </div>
-                                  )}
-                                {currentQuestionType.includes(
+                                  )} */}
+                                {currentQuestionType &&
+                                  currentQuestionType.typeofQuestion &&
+                                  currentQuestionType.typeofQuestion.includes(
                                     "NATI( Numeric Answer type of questions with integer values)"
                                   ) && (
                                     <div className="calculator">
                                       <div className="display">
+
+                                      <input type="text" value={[currentQuestionIndex].answer} onChange={handleInputChange} />
+    
                                         <label>Answer:</label>
                                         <input
                                           type="text"
                                           name={`question-${currentQuestionIndex}`}
                                           value={value}
-                                          onChange={(e) => onAnswerSelected3(e)}
+                                          onChange={(e) => {
+                                            setValue(e.target.value);
+                                            onAnswerSelected3(e);
+                                          }}
                                           placeholder="Enter your answer"
                                           readOnly
                                         />
@@ -4509,140 +4981,78 @@ console.log("Current Question Type:", currentQuestionType);
                                         <input
                                           type="button"
                                           value="AC"
-                                          onClick={(e) => setValue("")}
+                                          onClick={() => setValue("")}
                                         />
                                         <input
                                           type="button"
                                           value="DE"
-                                          onClick={(e) =>
+                                          onClick={() =>
                                             setValue(value.slice(0, -1))
                                           }
                                         />
                                         <input
                                           type="button"
                                           value="."
-                                          onClick={(e) =>
-                                            setValue(value + e.target.value)
-                                          }
+                                          onClick={() => setValue(value + ".")}
                                         />
                                         <input
                                           type="button"
                                           value="/"
-                                          onClick={(e) =>
-                                            setValue(value + e.target.value)
-                                          }
+                                          onClick={() => setValue(value + "/")}
                                         />
                                       </div>
                                       <div>
-                                        <input
-                                          type="button"
-                                          value="7"
-                                          onClick={(e) =>
-                                            setValue(value + e.target.value)
-                                          }
-                                        />
-                                        <input
-                                          type="button"
-                                          value="8"
-                                          onClick={(e) =>
-                                            setValue(value + e.target.value)
-                                          }
-                                        />
-                                        <input
-                                          type="button"
-                                          value="9"
-                                          onClick={(e) =>
-                                            setValue(value + e.target.value)
-                                          }
-                                        />
-                                        <input
-                                          type="button"
-                                          value="*"
-                                          onClick={(e) =>
-                                            setValue(value + e.target.value)
-                                          }
-                                        />
+                                        {[7, 8, 9, "*"].map((num) => (
+                                          <input
+                                            key={num}
+                                            type="button"
+                                            value={num}
+                                            onClick={() =>
+                                              setValue(value + num)
+                                            }
+                                          />
+                                        ))}
                                       </div>
                                       <div>
-                                        <input
-                                          type="button"
-                                          value="4"
-                                          onClick={(e) =>
-                                            setValue(value + e.target.value)
-                                          }
-                                        />
-                                        <input
-                                          type="button"
-                                          value="5"
-                                          onClick={(e) =>
-                                            setValue(value + e.target.value)
-                                          }
-                                        />
-                                        <input
-                                          type="button"
-                                          value="6"
-                                          onClick={(e) =>
-                                            setValue(value + e.target.value)
-                                          }
-                                        />
-                                        <input
-                                          type="button"
-                                          value="+"
-                                          onClick={(e) =>
-                                            setValue(value + e.target.value)
-                                          }
-                                        />
+                                        {[4, 5, 6, "+"].map((num) => (
+                                          <input
+                                            key={num}
+                                            type="button"
+                                            value={num}
+                                            onClick={() =>
+                                              setValue(value + num)
+                                            }
+                                          />
+                                        ))}
                                       </div>
                                       <div>
-                                        <input
-                                          type="button"
-                                          value="1"
-                                          onClick={(e) =>
-                                            setValue(value + e.target.value)
-                                          }
-                                        />
-                                        <input
-                                          type="button"
-                                          value="2"
-                                          onClick={(e) =>
-                                            setValue(value + e.target.value)
-                                          }
-                                        />
-                                        <input
-                                          type="button"
-                                          value="3"
-                                          onClick={(e) =>
-                                            setValue(value + e.target.value)
-                                          }
-                                        />
-                                        <input
-                                          type="button"
-                                          value="-"
-                                          onClick={(e) =>
-                                            setValue(value + e.target.value)
-                                          }
-                                        />
+                                        {[1, 2, 3, "-"].map((num) => (
+                                          <input
+                                            key={num}
+                                            type="button"
+                                            value={num}
+                                            onClick={() =>
+                                              setValue(value + num)
+                                            }
+                                          />
+                                        ))}
                                       </div>
                                       <div>
                                         <input
                                           type="button"
                                           value="00"
-                                          onClick={(e) =>
-                                            setValue(value + e.target.value)
-                                          }
+                                          onClick={() => setValue(value + "00")}
                                         />
                                         <input
                                           type="button"
                                           value="0"
-                                          onClick={(e) =>
-                                            setValue(value + e.target.value)
-                                          }
+                                          onClick={() => setValue(value + "0")}
                                         />
                                         <input
                                           type="button"
                                           value="="
                                           className="equal"
-                                          onClick={(e) => setValue(eval(value))}
+                                          onClick={() => setValue(eval(value))}
                                         />
                                       </div>
                                     </div>
@@ -4833,6 +5243,7 @@ console.log("Current Question Type:", currentQuestionType);
             >
               Yes
             </Link>
+            {/* <Link to='/InputValueDemo'>Yes</Link> */}
             <button onClick={handleNo}>NO</button>
           </div>
         </div>
