@@ -408,6 +408,26 @@ router.get('/testcourses', async (req, res) => {
       res.status(500).json({ error: 'Internal Server Error' });
     }
   });
+  // In your server code
+  router.get('/getQuestionCountForTest/:testId', async (req, res) => {
+    const { testId } = req.params;
+  
+    try {
+      const [rows] = await db.query(`
+        SELECT COUNT(*) AS count
+        FROM questions
+        WHERE testCreationTableId = ?
+      `, [testId]);
+  
+      const questionCount = rows[0].count;
+  
+      res.json({ count: questionCount });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  });
+
   
   
   module.exports = router;

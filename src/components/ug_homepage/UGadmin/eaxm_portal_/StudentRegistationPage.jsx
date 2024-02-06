@@ -601,8 +601,9 @@ import { useParams } from 'react-router-dom';
 import axios from "axios";
 import noimg from "./NoImages.jpg";
 
-const DisplayFormData = ({ formData,getGenderName, onSubmit, onBack }) => {
+const DisplayFormData = ({ formData,getGenderName,getCategoryName,getStateName,getDistrictName,getBatchName,getQualification, onSubmit, onBack }) => {
   console.log(formData)
+  console.log("edStatusId in DisplayFormData:", formData.edStatusId);
 
   
 
@@ -611,9 +612,29 @@ const DisplayFormData = ({ formData,getGenderName, onSubmit, onBack }) => {
       {/* Display the entered data */}
       <h1>Entered Data</h1>
     <div>
-      <p>Candidate Name: {formData.candidateName}</p>
-      <p>Date of Birth: {formData.dateOfBirth}</p>
-      <p>Gender: {getGenderName(formData.GenderId)}</p>
+      <p></p>
+      <p>CANDIDATE NAME(accoding to 10th memo): {formData.candidateName}</p>
+      <p>DATE OF BIRTH: {formData.dateOfBirth}</p>
+      <p>GENDER: {getGenderName(formData.gender)}</p>
+      <p>CATEGORY:{getCategoryName(formData.category)}</p>
+      <p>EMAIL ID:{formData.emailId}</p>
+      <p>CONTACT NO:{formData.contactNo} </p>
+      <p> FATHER'S/GUARDIAN'S DETAILS </p>
+      <p> FATHER'S NAME:{formData.fatherName}</p>
+      <p>OCCUPATION:{formData.occupation}</p>
+      <p>MOBILE NO:{formData.mobileNo}</p>
+      <p>COMMUNICATION ADDRESS</p>
+      <p>LINE1:{formData.line1}</p>
+      <p>SELECTED A STATE:{getStateName(formData.state_id)}</p>
+      <p>SELECTED A DISTRICT:{getDistrictName(formData.districts_id)}</p>
+      <p>PINCODE:{formData.pincode}</p>
+      <p>COURSE DETAILS</p>
+      <p>BATCH:{getBatchName(formData.BatchId)}</p>
+      <p>EDUCATION DETAILS</p>
+      <p>QUALIFICATION:{getQualification(formData.edStatusId)}</p>
+      <p>NAME OF COLLEGE (WITH CITY):{formData.NameOfCollege}</p>
+      <p>PASSING YEAR:{formData.passingYear}</p>
+      <p>MARKS IN %:{formData.marks}</p>
     </div>
 
       {/* Buttons to submit or go back */}
@@ -756,18 +777,40 @@ const StudentRegistrationPage = () => {
         };
       
         const handledistrictChange = (event) => {
-          const newDistrictId = event.target.value;
-          setSelecteddistrict(newDistrictId);
+          const value = event.target.value;
+          setSelecteddistrict(value);
+          setFormData((prevFormData) => ({
+            ...prevFormData,
+            districts_id: value,
+          }));
         };
+        
       
         const handleBatchChange = (event) => {
-          const BatchId  = event.target.value;
-          setSelectedBatch(BatchId);
+          const value  = event.target.value;
+          setSelectedBatch(value);
+          setFormData((prevFormData) => ({
+            ...prevFormData,
+            BatchId: value,
+          }));
         };
+
         const handleQualificationChange = (event) => {
-          const edStatusId  = event.target.value;
-          setselectedQualification(edStatusId);
+          const value = event.target.value;
+          console.log("Selected Qualification:", value);
+        
+          // If needed, perform any additional logic related to qualification
+          // For now, it's a simple assignment
+          setselectedQualification(value);
+          setFormData((prevFormData) => ({
+            ...prevFormData,
+            edStatusId: value,
+          }));
         };
+        // const handleQualificationChange = (event) => {
+        //   const edStatusId  = event.target.value;
+        //   setselectedQualification(edStatusId);
+        // };
         const handleInputChange = (e) => {
   const { name, value } = e.target;
 
@@ -788,9 +831,14 @@ const StudentRegistrationPage = () => {
     setSelectedBatch(value);
   } else if (name === "edStatusId") {
     console.log("Selected Qualification:", value);
-    setselectedQualification(value);
+    setselectedQualification(value, () => {
+      // Ensure that formData.edStatusId is also set
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        edStatusId: value,
+      }));
+    });
   }
-
   // Always update the formData with the new value
   setFormData({
     ...formData,
@@ -798,6 +846,15 @@ const StudentRegistrationPage = () => {
   });
 };
 
+
+
+
+// const setselectedQualification = (value) => {
+//   console.log("Inside setselectedQualification:", value);
+//   // If needed, perform any additional logic related to qualification
+//   // For now, it's a simple assignment
+//   setselectedQualification(value);
+// };
         
         
       
@@ -818,11 +875,12 @@ const StudentRegistrationPage = () => {
           }
         };
       
-
         const handleDisplayData = (e) => {
           e.preventDefault();
+          console.log("formData in DisplayFormData:", formData); 
           setDisplayFormData(formData);
         };
+        
         
         
 
@@ -875,9 +933,16 @@ const StudentRegistrationPage = () => {
       category: getCategoryName(selectedCategoryId),
       state_id: getStateName(selectedState),
       districts_id: getDistrictName(selecteddistrict),
+      BatchId:getBatchName(selectedBatch),
+      edStatusId:getQualification(selectedQualification)
     };
     setDisplayFormData(displayData);
-    console.log("Data to send:", formDataToSend);
+    console.log("Selected State:", selectedState);
+    console.log("Selected District:", selecteddistrict);
+    console.log("Selected Batch:", selectedBatch);
+    console.log("Selected Qualification:", selectedQualification);
+    console.log("Data to send:", displayData);
+    // console.log("Data to send:", formDataToSend);
     try {
       const response = await fetch(
                 `http://localhost:5001/StudentRegistationPage/studentForm/${courseCreationId}`,
@@ -937,21 +1002,41 @@ const StudentRegistrationPage = () => {
     return category ? category.Category : "";
   };
   
-  const getStateName = (stateId) => {
-    const state = states.find((s) => s.state_id === parseInt(stateId));
+  const getStateName = (state_id) => {
+    const state = states.find((s) => s.state_id === parseInt(state_id));
     return state ? state.name : "";
   };
   
-  const getDistrictName = (districtId) => {
-    const district = districts.find((d) => d.districts_id === parseInt(districtId));
+  const getDistrictName = (districts_id) => {
+    const district = districts.find((d) => d.districts_id === parseInt(districts_id));
     return district ? district.districts_name : "";
   };
 
+  const getBatchName = (BatchId) => {
+    const Batch = Batchs.find((b) => b.BatchId === parseInt(BatchId));
+    return Batch ? Batch.Batch : "";
+  };
+
+  const getQualification = (edStatusId) => {
+    console.log("edStatusId in getQualification:", edStatusId);
+    const Qualification = Qualifications.find((q) => q.edStatusId === parseInt(edStatusId));
+    console.log("Selected Qualification:", Qualification);
+    return Qualification ? Qualification.educationStatus : "";
+  };
+  
+  
+  
+  
   if (displayFormData) {
     return (
       <DisplayFormData
         formData={displayFormData}
         getGenderName={getGenderName}
+        getCategoryName={getCategoryName}
+        getStateName={getStateName}
+        getDistrictName={getDistrictName}
+        getBatchName={getBatchName}
+        getQualification={getQualification}
         onSubmit={handleFormSubmit}
         onBack={handleBack}
       />
@@ -1273,6 +1358,11 @@ const StudentRegistrationPage = () => {
         <DisplayFormData
           formData={displayFormData}
           getGenderName={getGenderName}
+        getCategoryName={getCategoryName}
+        getStateName={getStateName}
+        getDistrictName={getDistrictName}
+        getBatchName={getBatchName}
+        getQualification={getQualification}
           onSubmit={handleFormSubmit}
           onBack={handleBack}
         />

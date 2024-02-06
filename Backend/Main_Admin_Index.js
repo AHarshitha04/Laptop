@@ -92,11 +92,13 @@ app.get('/buynow', (req, res) => {
   // const { txnid, amount, productinfo, firstname, email, phone } = req.body;
   
 });
+
 function getstudentdetails(studentid){
   //select * from student where student id
   //return object 
 
 }
+
 function payUintegrate(res,txnid,amount,email,productinfo,firstname,phone,udf1,udf2,udf3,udf4,udf5,surl,furl){
  
   const YOUR_MERCHANT_SALT = 'cZpZ0nxjmFYG3p5bZ0odsbtdGhpZlyWx';

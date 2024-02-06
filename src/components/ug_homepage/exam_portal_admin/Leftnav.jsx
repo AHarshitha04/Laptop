@@ -287,7 +287,7 @@ const  handleTestActivation_admin =()=>{
               >
                 {/* <img width={40} src={dashboard} alt="" /> */}
                 <p>
-                  <i class="fa-solid fa-folder-open logo_-clr"></i>
+                <i class="fa-solid fa-arrow-up-from-bracket"></i>
                Test Activation
                 </p>
               </Link>
@@ -295,14 +295,14 @@ const  handleTestActivation_admin =()=>{
           
 
 
-            <li>
+            {/* <li>
               <Link className="LeftnavLinks" to="/HomeLandingPage">
                 <p>
                   <i class="fa-brands fa-quora"></i>
                   Quiz App
                 </p>
               </Link>
-            </li>
+            </li> */}
 
             <li>
               <Link className="LeftnavLinks" onClick={handleregisteredstudent}>
@@ -320,9 +320,7 @@ const  handleTestActivation_admin =()=>{
                 onClick={handleImage_Upload_for_Ac}
               >
                 <p>
-                  <i>
-                    <FaUserAlt />
-                  </i>
+                <i class="fa-regular fa-image"></i>
                   Image Upload
                 </p>
               </Link>
@@ -334,7 +332,7 @@ const  handleTestActivation_admin =()=>{
                 onClick={handleStudent_Doubt_Section}
               >
                 <p>
-                  <i>{/* <FaUserAlt /> */}</i>
+                <i class="fa-solid fa-question"></i>
                   Student-Doubt-Section
                 </p>
               </Link>
