@@ -7,7 +7,7 @@ const nodemailer = require('nodemailer');
 const imgconfig = multer.diskStorage({
     destination: (req, file, callback) => {
       //callback(null, "public/images");
-      callback(null, "../public");
+      callback(null, "uploads/OtsStudentimeages");
     },
     filename: (req, file, callback) => {
       callback(null, `image-${Date.now()}.${file.originalname}`);
@@ -133,15 +133,15 @@ router.post('/studentForm/:courseCreationId',  uploads.fields([
       const filename3 = files.filess3[0].filename;
 
       const courseCreationId = req.params.courseCreationId;
-
+      const generatedPassword = generateRandomPassword();
       const query = `
         INSERT INTO otsstudentregistation 
-          (courseCreationId, candidateName, dateOfBirth, GenderId, CategoryId, emailId, confirmEmailId, contactNo, fatherName, occupation, mobileNo, line1, state_id, districts_id, pincode, BatchId, edStatusId, NameOfCollege, passingYear, marks, UplodadPhto, Signature, Proof)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+          (candidateName, dateOfBirth, GenderId, CategoryId, emailId, confirmEmailId, contactNo, fatherName, occupation, mobileNo, line1, state_id, districts_id, pincode, BatchId, edStatusId, NameOfCollege, passingYear, marks, UplodadPhto, Signature, Proof,password)
+         VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `;
 
       const values = [
-        courseCreationId,
+       
         formData.candidateName,
         formData.dateOfBirth,
         formData.GenderId,
@@ -164,11 +164,24 @@ router.post('/studentForm/:courseCreationId',  uploads.fields([
         filename1,
         filename2,
         filename3,
+        generateRandomPassword(),
       ];
 
       await db.query(query, values);
 
+      const [result] = await db.query('SELECT LAST_INSERT_ID() AS studentregistationId');
+      const insertId = result[0].studentregistationId;
+      const courseOrdersQuery = `
+        INSERT INTO courseOrders 
+          (courseCreationId, studentregistationId)
+        VALUES (?, ?)
+      `;
+      const courseOrdersValues = [
+        courseCreationId,
+        insertId,
+      ];
 
+      await db.query(courseOrdersQuery, courseOrdersValues);
  // Sending email
     const transporter = nodemailer.createTransport({
       service: 'Gmail',
@@ -276,17 +289,17 @@ try {
   res.status(500).json({ message: 'Internal server error' });
 }
 
-    const [result] = await db.query('SELECT LAST_INSERT_ID() AS studentregistationId');
-    const insertId = result[0].studentregistationId;
+  //   const [result] = await db.query('SELECT LAST_INSERT_ID() AS studentregistationId');
+  //   const insertId = result[0].studentregistationId;
     
-    const generatedPassword = generateRandomPassword();
+  //   const generatedPassword = generateRandomPassword();
 
-    const loginQuery = `
-    INSERT INTO studentlogins (studentregistationId, emailId, password)
-    VALUES (?, ?, ?)
-  `;
-  const loginValues = [insertId, formData.emailId, generatedPassword];
-  await db.query(loginQuery, loginValues);
+  //   const loginQuery = `
+  //   INSERT INTO studentlogins (studentregistationId, emailId, password)
+  //   VALUES (?, ?, ?)
+  // `;
+  // const loginValues = [insertId, formData.emailId, generatedPassword];
+  // await db.query(loginQuery, loginValues);
 
     const loginMailOptions = {
       from: 'egradtutorweb@gmail.com',
@@ -337,10 +350,11 @@ function generateRandomPassword() {
   const randomUppercase2 = uppercaseLetters[Math.floor(Math.random() * uppercaseLetters.length)];
   const randomLowercase1 = lowercaseLetters[Math.floor(Math.random() * lowercaseLetters.length)];
   const randomLowercase2 = lowercaseLetters[Math.floor(Math.random() * lowercaseLetters.length)];
-  const randomNumber1 = numbers[Math.floor(Math.random() * numbers.length)];           
+  const randomNumber1 = numbers[Math.floor(Math.random() * numbers.length)];  
+  const randomNumber2 = numbers[Math.floor(Math.random() * numbers.length)];           
 
   // Concatenate characters to form the password
-  const password = randomUppercase1 + randomUppercase2 + randomLowercase1 + randomLowercase2 + randomNumber1;
+  const password = randomUppercase1 + randomUppercase2 + randomNumber2 + randomLowercase2 + randomNumber1 +randomLowercase1 ;
 
   return password;
 }
