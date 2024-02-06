@@ -19,6 +19,12 @@ const ButtonsFunctionality = ({
 }) => {
   const [wtimer, setWTimer] = useState(0);
 
+  const questions = questionData.questions ? questionData.questions.length : 0;
+  const remainingQuestions =
+    questions - VisitedCount - notAnsweredCount - answeredCount - markedForReviewCount - answeredmarkedForReviewCount;
+  
+  const NotVisited = remainingQuestions < 0 ? 0 : remainingQuestions;
+  
   const [activeQuestion, setActiveQuestion] = useState(0);
   const [answeredQuestions, setAnsweredQuestions] = useState([]);
   const [isPaused, setIsPaused] = useState(false);
@@ -73,23 +79,74 @@ const ButtonsFunctionality = ({
       })
     : null;
 
+  // const handleButtonClick = useCallback(
+  //   (questionNumber) => {
+  //     const questionIndex = questionNumber - 1;
+
+  //     if (questionStatus[questionIndex] === "answered") {
+  //       // If answered, navigate to the selected question
+  //       onQuestionSelect(questionNumber);
+  //     } else if (
+  //       questionStatus[questionIndex] === "notAnswered" ||
+  //       questionStatus[questionIndex] === "notVisited"
+  //     ) {
+  //       setQuestionStatus((prevQuestionStatus) => [
+  //         ...prevQuestionStatus.slice(0, questionIndex),
+  //         "notAnswered",
+  //         ...prevQuestionStatus.slice(questionIndex + 1),
+  //       ]);
+
+  //       // Update other necessary state or perform additional logic
+  //       onQuestionSelect(questionNumber, "notAnswered");
+  //       setAnsweredQuestions((prevAnsweredQuestions) => [
+  //         ...prevAnsweredQuestions,
+  //         questionNumber,
+  //       ]);
+  //       setIsPaused(false);
+  //     } else {
+  //       // If the button was clicked, mark it as answered
+  //       setQuestionStatus((prevQuestionStatus) => [
+  //         ...prevQuestionStatus.slice(0, questionIndex),
+  //         "answered",
+  //         ...prevQuestionStatus.slice(questionIndex + 1),
+  //       ]);
+
+  //       // Update other necessary state or perform additional logic
+  //       onQuestionSelect(questionNumber);
+  //       setAnsweredQuestions((prevAnsweredQuestions) => [
+  //         ...prevAnsweredQuestions,
+  //         questionNumber,
+  //       ]);
+  //       setIsPaused(false);
+  //     }
+
+  //     // Update the question status in the QuestionPaper component
+  //     updateQuestionStatus(questionStatus[questionIndex]);
+  //   },
+  //   [
+  //     questionStatus,
+  //     setQuestionStatus,
+  //     onQuestionSelect,
+  //     answeredQuestions,
+  //     updateQuestionStatus
+  //   ]
+  // );
   const handleButtonClick = useCallback(
     (questionNumber) => {
       const questionIndex = questionNumber - 1;
-
-      if (questionStatus[questionIndex] === "answered") {
-        // If answered, navigate to the selected question
-        onQuestionSelect(questionNumber);
-      } else if (
+  
+      if (
+        questionStatus[questionIndex] === "answered" ||
         questionStatus[questionIndex] === "notAnswered" ||
         questionStatus[questionIndex] === "notVisited"
       ) {
+        // If the question is answered, not answered, or not visited, update the status
         setQuestionStatus((prevQuestionStatus) => [
           ...prevQuestionStatus.slice(0, questionIndex),
           "notAnswered",
           ...prevQuestionStatus.slice(questionIndex + 1),
         ]);
-
+  
         // Update other necessary state or perform additional logic
         onQuestionSelect(questionNumber, "notAnswered");
         setAnsweredQuestions((prevAnsweredQuestions) => [
@@ -104,7 +161,7 @@ const ButtonsFunctionality = ({
           "answered",
           ...prevQuestionStatus.slice(questionIndex + 1),
         ]);
-
+  
         // Update other necessary state or perform additional logic
         onQuestionSelect(questionNumber);
         setAnsweredQuestions((prevAnsweredQuestions) => [
@@ -113,7 +170,7 @@ const ButtonsFunctionality = ({
         ]);
         setIsPaused(false);
       }
-
+  
       // Update the question status in the QuestionPaper component
       updateQuestionStatus(questionStatus[questionIndex]);
     },
@@ -122,10 +179,10 @@ const ButtonsFunctionality = ({
       setQuestionStatus,
       onQuestionSelect,
       answeredQuestions,
-      updateQuestionStatus,
+      updateQuestionStatus
     ]
   );
-
+  
   ButtonsFunctionality.propTypes = {
     onQuestionSelect: PropTypes.func.isRequired,
     questionStatus: PropTypes.arrayOf(PropTypes.string),
@@ -206,7 +263,6 @@ const ButtonsFunctionality = ({
             title={userData.username}
             src={userData.imageData}
             alt={`Image ${userData.user_Id}`}
-            style={{width:100,height:100}}
           />
           <p>Name of the person : {userData.username}</p>
 
@@ -215,7 +271,7 @@ const ButtonsFunctionality = ({
 
         <div className="buttons_container">
           <div className="ques-btn">
-            <ul className="btn-ul quesAns-btn ">{renderQuestionButtons}</ul>
+            <ul className="btn-ul quesAns-btn">{renderQuestionButtons}</ul>
           </div>
         </div>
 
@@ -264,9 +320,14 @@ const ButtonsFunctionality = ({
                 className="instruction-btn5 r_S_B_BTNS"
                 title="VisitedCount"
               >
-                {VisitedCount}
+                   {NotVisited}
+                {/* {VisitedCount} */}
               </button>
-              <span>Not Visited</span>
+              <span>Not Visited
+
+
+             
+              </span>
             </div>
           </div>
         </div>
