@@ -179,7 +179,36 @@ router.get("/questionType/:questionId", async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
-
+// SELECT 
+//       q.question_id, q.questionImgName, 
+//       o.option_id, o.optionImgName, o.option_index,
+//       s.solution_id, s.solutionImgName, 
+//       qt.qtypeId, qt.qtype_text,
+//       ur.user_answer, ur.user_Sno, qts.typeofQuestion,
+//       ans.answer_id, ans.answer_text,
+//       m.markesId, m.marks_text,
+//       si.sort_id, si.sortid_text,
+//       doc.documen_name, doc.sectionId, 
+//       doc.subjectId, doc.testCreationTableId,
+//       P.paragraphImg, p.paragraph_Id,
+//       pq.paragraphQNo_Id, pq.paragraphQNo, qts.quesionTypeId
+      
+//   FROM 
+//       questions q 
+//       LEFT OUTER JOIN options o ON q.question_id = o.question_id
+//       LEFT OUTER JOIN qtype qt ON q.question_id = qt.question_id 
+//       LEFT OUTER JOIN quesion_type qts ON qt.quesionTypeId = qts.quesionTypeId 
+//       LEFT OUTER JOIN answer ans ON q.question_id = ans.question_id 
+//       LEFT OUTER JOIN marks m ON q.question_id = m.question_id 
+//       LEFT OUTER JOIN sortid si ON q.question_id = si.question_id 
+//       LEFT OUTER JOIN solution s ON q.question_id = s.solution_id 
+//       LEFT OUTER JOIN paragraph p ON q.document_Id = p.document_Id
+//       LEFT OUTER JOIN paragraphqno pq ON p.paragraph_Id = pq.paragraph_Id AND q.question_id = pq.question_id
+//       LEFT OUTER JOIN ots_document doc ON q.document_Id = doc.document_Id
+//       LEFT OUTER JOIN user_responses ur ON q.question_id = ur.question_id and o.option_id = ur.option_id
+    
+//   WHERE 
+//       doc.testCreationTableId = ? ORDER BY q.question_id ASC;
 router.get("/questionOptions/:testCreationTableId", async (req, res) => {
   const { testCreationTableId } = req.params;
   try {
@@ -197,7 +226,7 @@ router.get("/questionOptions/:testCreationTableId", async (req, res) => {
       doc.subjectId, doc.testCreationTableId,
       P.paragraphImg, p.paragraph_Id,
       pq.paragraphQNo_Id, pq.paragraphQNo, qts.quesionTypeId
-    
+        
   FROM 
       questions q 
       LEFT OUTER JOIN options o ON q.question_id = o.question_id
@@ -210,11 +239,14 @@ router.get("/questionOptions/:testCreationTableId", async (req, res) => {
       LEFT OUTER JOIN paragraph p ON q.document_Id = p.document_Id
       LEFT OUTER JOIN paragraphqno pq ON p.paragraph_Id = pq.paragraph_Id AND q.question_id = pq.question_id
       LEFT OUTER JOIN ots_document doc ON q.document_Id = doc.document_Id
-      LEFT OUTER JOIN user_responses ur ON q.document_Id = doc.document_Id
+      LEFT OUTER JOIN user_responses ur ON q.question_id = ur.question_id and o.option_id = ur.option_id
     
   WHERE 
-      doc.testCreationTableId = 3
-  ORDER BY q.question_id ASC;
+      doc.testCreationTableId = ? 
+  
+  ORDER BY q.question_id ASC, o.option_index ASC;
+  
+  
   `,
       [testCreationTableId]
     );
@@ -234,6 +266,7 @@ router.get("/questionOptions/:testCreationTableId", async (req, res) => {
           option_id: row.option_id,
           option_index: row.option_index,
           optionImgName: row.optionImgName,
+          ans: row.user_answer,
         };
         if (existingQuestion) {
           const existingOption = existingQuestion.options.find(
@@ -267,7 +300,7 @@ router.get("/questionOptions/:testCreationTableId", async (req, res) => {
             },
             useranswer: {
               urid: row.question_id,
-              ans: row.user_answer,
+              // ans: row.user_answer,
               urid: row.question_id,
             },
             marks: {
@@ -1234,6 +1267,209 @@ router.get('/getTimeLeftSubmissions/:testCreationTableId/:userId', async (req, r
 
 
 //full score for overall test
+// router.get("/score/:testCreationTableId/:user_Id", async (req, res) => {
+//   const { testCreationTableId, user_Id } = req.params;
+ 
+//   try {
+//     if (!testCreationTableId || !user_Id) {
+//       return res.status(400).json({ error: "Missing required parameters" });
+//     }
+ 
+//     const [results, fields] = await db.execute(
+//       `
+//       (
+//         SELECT
+//             ur.user_Sno,
+//             ur.user_Id,
+//             ur.testCreationTableId,
+//             s.subjectId,
+//             ur.sectionId,
+//             ur.question_id,
+//             ur.user_answer,
+//             a.answer_text,
+//             m.marks_text,
+//             0 AS nmarks_text,
+//             s.QuestionLimit
+//         FROM
+//             user_responses ur
+//         JOIN answer a ON
+//             ur.question_id = a.question_id
+//         JOIN marks m ON
+//             ur.question_id = m.question_id
+//         JOIN sections s ON
+//             ur.sectionId = s.sectionId
+//         WHERE
+//             TRIM(ur.user_answer) = TRIM(a.answer_text) AND ur.user_Id = ? AND ur.testCreationTableId = ? AND (
+//                 s.QuestionLimit IS NULL OR s.QuestionLimit = 0
+//             )
+//     )
+//     UNION
+//     (
+//         SELECT
+//             ur.user_Sno,
+//             ur.user_Id,
+//             ur.testCreationTableId,
+//             s.subjectId,
+//             ur.sectionId,
+//             ur.question_id,
+//             ur.user_answer,
+//             a.answer_text,
+//             0 AS marks_text,
+//             m.nmarks_text,
+//             s.QuestionLimit
+//         FROM
+//             user_responses ur
+//         JOIN answer a ON
+//             ur.question_id = a.question_id
+//         JOIN marks m ON
+//             ur.question_id = m.question_id
+//         JOIN sections s ON
+//             ur.sectionId = s.sectionId
+//         WHERE
+//             TRIM(ur.user_answer) != TRIM(a.answer_text) AND ur.user_Id = ? AND ur.testCreationTableId = ? AND (
+//                 s.QuestionLimit IS NULL OR s.QuestionLimit = 0
+//             )
+//     )
+//     UNION
+//     (
+//         SELECT
+//             ur.user_Sno,
+//             ur.user_Id,
+//             ur.testCreationTableId,
+//             s.subjectId,
+//             ur.sectionId,
+//             ur.question_id,
+//             ur.user_answer,
+//             a.answer_text,
+//             m.marks_text,
+//             0 AS nmarks_text,
+//             s.QuestionLimit
+//         FROM
+//             user_responses ur
+//         JOIN answer a ON
+//             ur.question_id = a.question_id
+//         JOIN marks m ON
+//             ur.question_id = m.question_id
+//         JOIN sections s ON
+//             ur.sectionId = s.sectionId
+//         WHERE
+//             TRIM(ur.user_answer) = TRIM(a.answer_text) AND ur.user_Id = ? AND ur.testCreationTableId = ? AND s.QuestionLimit IS NOT NULL AND s.QuestionLimit > 0
+//         LIMIT 25
+//     )
+//     UNION
+//     (
+//         SELECT
+//             ur.user_Sno,
+//             ur.user_Id,
+//             ur.testCreationTableId,
+//             s.subjectId,
+//             ur.sectionId,
+//             ur.question_id,
+//             ur.user_answer,
+//             a.answer_text,
+//             0 AS marks_text,
+//             m.nmarks_text,
+//             s.QuestionLimit
+//         FROM
+//             user_responses ur
+//         JOIN answer a ON
+//             ur.question_id = a.question_id
+//         JOIN marks m ON
+//             ur.question_id = m.question_id
+//         JOIN sections s ON
+//             ur.sectionId = s.sectionId
+//         WHERE
+//             TRIM(ur.user_answer) != TRIM(a.answer_text) AND ur.user_Id = ? AND ur.testCreationTableId = ? AND s.QuestionLimit IS NOT NULL AND s.QuestionLimit > 0
+//         LIMIT 25
+//     );
+   
+//       `,
+//       [user_Id, testCreationTableId, user_Id, testCreationTableId, user_Id, testCreationTableId, user_Id, testCreationTableId]
+//     );
+ 
+//     // Initialize an object to hold subject-wise scores for sections with question limits
+//     let subjectScoresWithLimit = {};
+ 
+//     // Initialize an object to hold subject-wise scores for sections without question limits
+//     let subjectScoresWithoutLimit = {};
+ 
+//     results.forEach((row) => {
+//       const { subjectId, marks_text, nmarks_text, QuestionLimit } = row;
+ 
+//       // If the section has a QuestionLimit
+//       if (QuestionLimit !== null && QuestionLimit > 0) {
+//         // If subjectId doesn't exist in subjectScoresWithLimit, initialize it
+//         if (!subjectScoresWithLimit[subjectId]) {
+//           subjectScoresWithLimit[subjectId] = {
+//             totalMarks: 0,
+//             netMarks: 0,
+//             correctAnswersCount: 0,
+//             questionLimit: 0
+//           };
+//         }
+ 
+//         // Check if the correct answers count is within the question limit
+//         if (subjectScoresWithLimit[subjectId].correctAnswersCount < QuestionLimit) {
+//           subjectScoresWithLimit[subjectId].totalMarks += marks_text;
+//           subjectScoresWithLimit[subjectId].netMarks += marks_text - nmarks_text;
+//           subjectScoresWithLimit[subjectId].correctAnswersCount++;
+//         }
+ 
+//         // Set the question limit (assuming it's the same for all rows)
+//         subjectScoresWithLimit[subjectId].questionLimit = QuestionLimit;
+//       } else {
+//         // If the section does not have a QuestionLimit
+//         // If subjectId doesn't exist in subjectScoresWithoutLimit, initialize it
+//         if (!subjectScoresWithoutLimit[subjectId]) {
+//           subjectScoresWithoutLimit[subjectId] = {
+//             totalMarks: 0,
+//             netMarks: 0,
+//             correctAnswersCount: 0
+//           };
+//         }
+ 
+//         subjectScoresWithoutLimit[subjectId].totalMarks += marks_text;
+//         subjectScoresWithoutLimit[subjectId].netMarks += marks_text - nmarks_text;
+//         subjectScoresWithoutLimit[subjectId].correctAnswersCount++;
+//       }
+//     });
+ 
+//     // Calculate total and net marks for sections with question limits
+//     let totalMarksWithLimit = 0;
+//     let netMarksWithLimit = 0;
+ 
+//     Object.values(subjectScoresWithLimit).forEach((subjectScore) => {
+//       totalMarksWithLimit += subjectScore.totalMarks;
+//       netMarksWithLimit += subjectScore.netMarks;
+//     });
+ 
+//     // Calculate total and net marks for sections without question limits
+//     let totalMarksWithoutLimit = 0;
+//     let netMarksWithoutLimit = 0;
+ 
+//     Object.values(subjectScoresWithoutLimit).forEach((subjectScore) => {
+//       totalMarksWithoutLimit += subjectScore.totalMarks;
+//       netMarksWithoutLimit += subjectScore.netMarks;
+//     });
+ 
+//     // Calculate overall total and net marks
+//     const overallTotalMarks = totalMarksWithLimit + totalMarksWithoutLimit;
+//     const overallNetMarks = netMarksWithLimit + netMarksWithoutLimit;
+ 
+//     const overallScore = {
+//       overallTotalMarks,
+//       overallNetMarks,
+//       subjectScoresWithLimit,
+//       subjectScoresWithoutLimit
+//     };
+ 
+//     res.json(overallScore);
+//   } catch (error) {
+//     console.error("Error fetching scores:", error);
+//     res.status(500).json({ error: "Internal Server Error" });
+//   }
+// });  
+
 router.get("/score/:testCreationTableId/:user_Id", async (req, res) => {
   const { testCreationTableId, user_Id } = req.params;
  
@@ -1244,276 +1480,392 @@ router.get("/score/:testCreationTableId/:user_Id", async (req, res) => {
  
     const [results, fields] = await db.execute(
       `
-      (
-        SELECT
-            ur.user_Sno,
-            ur.user_Id,
-            ur.testCreationTableId,
-            s.subjectId,
-            ur.sectionId,
-            ur.question_id,
-            ur.user_answer,
-            a.answer_text,
-            m.marks_text,
-            0 AS nmarks_text,
-            s.QuestionLimit
-        FROM
-            user_responses ur
-        JOIN answer a ON
-            ur.question_id = a.question_id
-        JOIN marks m ON
-            ur.question_id = m.question_id
-        JOIN sections s ON
-            ur.sectionId = s.sectionId
-        WHERE
-            TRIM(ur.user_answer) = TRIM(a.answer_text) AND ur.user_Id = ? AND ur.testCreationTableId = ? AND (
-                s.QuestionLimit IS NULL OR s.QuestionLimit = 0
-            )
-    )
-    UNION
+     (
+    SELECT
+        ur.user_Sno,
+        ur.user_Id,
+        ur.testCreationTableId,
+        s.subjectId,
+        s.sectionName,
+        ur.sectionId,
+        ur.question_id,
+        ur.user_answer,
+        a.answer_text,
+        m.marks_text,
+        0 AS nmarks_text,
+        s.QuestionLimit
+    FROM
+        user_responses ur
+    JOIN answer a ON
+        ur.question_id = a.question_id
+    JOIN marks m ON
+        ur.question_id = m.question_id
+    JOIN sections s ON
+        ur.sectionId = s.sectionId
+    WHERE
+        TRIM(ur.user_answer) = TRIM(a.answer_text) AND ur.user_Id = 2 AND ur.testCreationTableId = 3 AND(
+            s.QuestionLimit IS NULL OR s.QuestionLimit = 0
+        )
+)
+UNION
     (
-        SELECT
-            ur.user_Sno,
-            ur.user_Id,
-            ur.testCreationTableId,
-            s.subjectId,
-            ur.sectionId,
-            ur.question_id,
-            ur.user_answer,
-            a.answer_text,
-            0 AS marks_text,
-            m.nmarks_text,
-            s.QuestionLimit
-        FROM
-            user_responses ur
-        JOIN answer a ON
-            ur.question_id = a.question_id
-        JOIN marks m ON
-            ur.question_id = m.question_id
-        JOIN sections s ON
-            ur.sectionId = s.sectionId
-        WHERE
-            TRIM(ur.user_answer) != TRIM(a.answer_text) AND ur.user_Id = ? AND ur.testCreationTableId = ? AND (
-                s.QuestionLimit IS NULL OR s.QuestionLimit = 0
-            )
-    )
-    UNION
+    SELECT
+        ur.user_Sno,
+        ur.user_Id,
+        ur.testCreationTableId,
+        s.subjectId,
+        ur.sectionId,
+        s.sectionName,
+        ur.question_id,
+        ur.user_answer,
+        a.answer_text,
+        0 AS marks_text,
+        m.nmarks_text,
+        s.QuestionLimit
+    FROM
+        user_responses ur
+    JOIN answer a ON
+        ur.question_id = a.question_id
+    JOIN marks m ON
+        ur.question_id = m.question_id
+    JOIN sections s ON
+        ur.sectionId = s.sectionId
+    WHERE
+        TRIM(ur.user_answer) != TRIM(a.answer_text) AND ur.user_Id = 2 AND ur.testCreationTableId = 3 AND(
+            s.QuestionLimit IS NULL OR s.QuestionLimit = 0
+        )
+)
+UNION
     (
-        SELECT
-            ur.user_Sno,
-            ur.user_Id,
-            ur.testCreationTableId,
-            s.subjectId,
-            ur.sectionId,
-            ur.question_id,
-            ur.user_answer,
-            a.answer_text,
-            m.marks_text,
-            0 AS nmarks_text,
-            s.QuestionLimit
-        FROM
-            user_responses ur
-        JOIN answer a ON
-            ur.question_id = a.question_id
-        JOIN marks m ON
-            ur.question_id = m.question_id
-        JOIN sections s ON
-            ur.sectionId = s.sectionId
-        WHERE
-            TRIM(ur.user_answer) = TRIM(a.answer_text) AND ur.user_Id = ? AND ur.testCreationTableId = ? AND s.QuestionLimit IS NOT NULL AND s.QuestionLimit > 0
-        LIMIT 25
-    )
-    UNION
+    SELECT
+        ur.user_Sno,
+        ur.user_Id,
+        ur.testCreationTableId,
+        s.subjectId,
+        ur.sectionId,
+        s.sectionName,
+        ur.question_id,
+        ur.user_answer,
+        a.answer_text,
+        m.marks_text,
+        0 AS nmarks_text,
+        s.QuestionLimit
+    FROM
+        user_responses ur
+    JOIN answer a ON
+        ur.question_id = a.question_id
+    JOIN marks m ON
+        ur.question_id = m.question_id
+    JOIN sections s ON
+        ur.sectionId = s.sectionId
+    WHERE
+        TRIM(ur.user_answer) = TRIM(a.answer_text) AND ur.user_Id = 2 AND ur.testCreationTableId = 3 AND s.QuestionLimit IS NOT NULL AND s.QuestionLimit > 0
+    LIMIT 25
+)
+UNION
     (
-        SELECT
-            ur.user_Sno,
-            ur.user_Id,
-            ur.testCreationTableId,
-            s.subjectId,
-            ur.sectionId,
-            ur.question_id,
-            ur.user_answer,
-            a.answer_text,
-            0 AS marks_text,
-            m.nmarks_text,
-            s.QuestionLimit
-        FROM
-            user_responses ur
-        JOIN answer a ON
-            ur.question_id = a.question_id
-        JOIN marks m ON
-            ur.question_id = m.question_id
-        JOIN sections s ON
-            ur.sectionId = s.sectionId
-        WHERE
-            TRIM(ur.user_answer) != TRIM(a.answer_text) AND ur.user_Id = ? AND ur.testCreationTableId = ? AND s.QuestionLimit IS NOT NULL AND s.QuestionLimit > 0
-        LIMIT 25
-    );
-   
+    SELECT
+        ur.user_Sno,
+        ur.user_Id,
+        ur.testCreationTableId,
+        s.subjectId,
+        ur.sectionId,
+        s.sectionName,
+        ur.question_id,
+        ur.user_answer,
+        a.answer_text,
+        0 AS marks_text,
+        m.nmarks_text,
+        s.QuestionLimit
+    FROM
+        user_responses ur
+    JOIN answer a ON
+        ur.question_id = a.question_id
+    JOIN marks m ON
+        ur.question_id = m.question_id
+    JOIN sections s ON
+        ur.sectionId = s.sectionId
+    WHERE
+        TRIM(ur.user_answer) != TRIM(a.answer_text) AND ur.user_Id = 2 AND ur.testCreationTableId = 3 AND s.QuestionLimit IS NOT NULL AND s.QuestionLimit > 0
+    LIMIT 25
+);
       `,
       [user_Id, testCreationTableId, user_Id, testCreationTableId, user_Id, testCreationTableId, user_Id, testCreationTableId]
     );
  
-    // Initialize an object to hold subject-wise scores for sections with question limits
-    let subjectScoresWithLimit = {};
+ // Initialize an object to hold subject-wise scores for sections with question limits
+ let subjectScoresWithLimit = {};
  
-    // Initialize an object to hold subject-wise scores for sections without question limits
-    let subjectScoresWithoutLimit = {};
+ // Initialize an object to hold subject-wise scores for sections without question limits
+ let subjectScoresWithoutLimit = {};
  
-    results.forEach((row) => {
-      const { subjectId, marks_text, nmarks_text, QuestionLimit } = row;
+ // Iterate over the results and calculate subject-wise scores
+ results.forEach((row) => {
+     const { subjectId, marks_text, nmarks_text, QuestionLimit } = row;
  
-      // If the section has a QuestionLimit
-      if (QuestionLimit !== null && QuestionLimit > 0) {
-        // If subjectId doesn't exist in subjectScoresWithLimit, initialize it
-        if (!subjectScoresWithLimit[subjectId]) {
-          subjectScoresWithLimit[subjectId] = {
-            totalMarks: 0,
-            netMarks: 0,
-            correctAnswersCount: 0,
-            questionLimit: 0
-          };
-        }
+     // Check if the section has a question limit
+     if (QuestionLimit !== null && QuestionLimit > 0) {
+         // If subjectId doesn't exist in subjectScoresWithLimit, initialize it
+         if (!subjectScoresWithLimit[subjectId]) {
+             subjectScoresWithLimit[subjectId] = {
+                 totalMarks: 0,
+                 netMarks: 0,
+                 correctAnswersCount: 0,
+                 questionLimit: 0
+             };
+         }
  
-        // Check if the correct answers count is within the question limit
-        if (subjectScoresWithLimit[subjectId].correctAnswersCount < QuestionLimit) {
-          subjectScoresWithLimit[subjectId].totalMarks += marks_text;
-          subjectScoresWithLimit[subjectId].netMarks += marks_text - nmarks_text;
-          subjectScoresWithLimit[subjectId].correctAnswersCount++;
-        }
+         // Update subject-wise scores for sections with question limits
+         if (subjectScoresWithLimit[subjectId].correctAnswersCount < QuestionLimit) {
+             subjectScoresWithLimit[subjectId].totalMarks += marks_text;
+             subjectScoresWithLimit[subjectId].netMarks += marks_text - nmarks_text;
+             subjectScoresWithLimit[subjectId].correctAnswersCount++;
+         }
  
-        // Set the question limit (assuming it's the same for all rows)
-        subjectScoresWithLimit[subjectId].questionLimit = QuestionLimit;
-      } else {
-        // If the section does not have a QuestionLimit
-        // If subjectId doesn't exist in subjectScoresWithoutLimit, initialize it
-        if (!subjectScoresWithoutLimit[subjectId]) {
-          subjectScoresWithoutLimit[subjectId] = {
-            totalMarks: 0,
-            netMarks: 0,
-            correctAnswersCount: 0
-          };
-        }
+         // Set the question limit (assuming it's the same for all rows)
+         subjectScoresWithLimit[subjectId].questionLimit = QuestionLimit;
+     } else {
+         // If the section does not have a question limit
+         // If subjectId doesn't exist in subjectScoresWithoutLimit, initialize it
+         if (!subjectScoresWithoutLimit[subjectId]) {
+             subjectScoresWithoutLimit[subjectId] = {
+                 totalMarks: 0,
+                 netMarks: 0,
+                 correctAnswersCount: 0
+             };
+         }
  
-        subjectScoresWithoutLimit[subjectId].totalMarks += marks_text;
-        subjectScoresWithoutLimit[subjectId].netMarks += marks_text - nmarks_text;
-        subjectScoresWithoutLimit[subjectId].correctAnswersCount++;
-      }
+         // Update subject-wise scores for sections without question limits
+         subjectScoresWithoutLimit[subjectId].totalMarks += marks_text;
+         subjectScoresWithoutLimit[subjectId].netMarks += marks_text - nmarks_text;
+         subjectScoresWithoutLimit[subjectId].correctAnswersCount++;
+     }
+ });
+ 
+ // Calculate overall total and net marks
+ let overallTotalMarks = 0;
+ let overallNetMarks = 0;
+ 
+ // Calculate total and net marks for sections with question limits
+ Object.values(subjectScoresWithLimit).forEach((subjectScore) => {
+     overallTotalMarks += subjectScore.totalMarks;
+     overallNetMarks += subjectScore.netMarks;
+ });
+ 
+ // Calculate total and net marks for sections without question limits
+ Object.values(subjectScoresWithoutLimit).forEach((subjectScore) => {
+     overallTotalMarks += subjectScore.totalMarks;
+     overallNetMarks += subjectScore.netMarks;
+ });
+ 
+ // Ensure object properties are defined before iterating
+ const subjectsArray = [];
+ 
+//  // Iterate over subjectScoresWithLimit and subjectScoresWithoutLimit
+//  Object.entries(subjectScoresWithLimit).forEach(([subjectId, scores]) => {
+//      subjectsArray.push({
+//          subjectId,
+//          sections: [{ sectionName: scores.sectionName, scores }]
+//      });
+//  });
+ 
+//  Object.entries(subjectScoresWithoutLimit).forEach(([subjectId, scores]) => {
+//      subjectsArray.push({
+//          subjectId,
+//          sections: [{ sectionName: scores.sectionName, scores }]
+//      });
+//  });
+ 
+ 
+// Ensure object properties are defined before iterating
+// const subjectsArray = [];
+ 
+// Iterate over subjectScoresWithLimit and subjectScoresWithoutLimit
+Object.entries(subjectScoresWithLimit).forEach(([subjectId, scores]) => {
+    const { sectionId, sectionName } = scores; // Destructuring sectionId and sectionName from scores
+    subjectsArray.push({
+        subjectId,
+        sections: [{ sectionId, sectionName, scores }] // Include both sectionId and sectionName here
     });
+});
  
-    // Calculate total and net marks for sections with question limits
-    let totalMarksWithLimit = 0;
-    let netMarksWithLimit = 0;
- 
-    Object.values(subjectScoresWithLimit).forEach((subjectScore) => {
-      totalMarksWithLimit += subjectScore.totalMarks;
-      netMarksWithLimit += subjectScore.netMarks;
+Object.entries(subjectScoresWithoutLimit).forEach(([subjectId, scores]) => {
+    const { sectionId, sectionName } = scores; // Destructuring sectionId and sectionName from scores
+    subjectsArray.push({
+        subjectId,
+        sections: [{ sectionId, sectionName, scores }] // Include both sectionId and sectionName here
     });
+});
  
-    // Calculate total and net marks for sections without question limits
-    let totalMarksWithoutLimit = 0;
-    let netMarksWithoutLimit = 0;
  
-    Object.values(subjectScoresWithoutLimit).forEach((subjectScore) => {
-      totalMarksWithoutLimit += subjectScore.totalMarks;
-      netMarksWithoutLimit += subjectScore.netMarks;
-    });
  
-    // Calculate overall total and net marks
-    const overallTotalMarks = totalMarksWithLimit + totalMarksWithoutLimit;
-    const overallNetMarks = netMarksWithLimit + netMarksWithoutLimit;
+ // Output the result
+ res.json({
+     overallTotalMarks,
+     overallNetMarks,
+     subjects: subjectsArray
+ });
  
-    const overallScore = {
-      overallTotalMarks,
-      overallNetMarks,
-      subjectScoresWithLimit,
-      subjectScoresWithoutLimit
-    };
  
-    res.json(overallScore);
   } catch (error) {
     console.error("Error fetching scores:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
-});  
-
-
+});
 
 
 router.post("/response", async (req, res) => {
   try {
-    console.log("Request Body:", req.body);
-    const { questionId, userId, testCreationTableId, subjectId, sectionId } = req.body;
-    console.log(`Response for question ${questionId} saved to the database`);
- 
-    // Validate data types
-    const userIdNumber = parseInt(userId, 10);
-    const testCreationTableIdNumber = parseInt(testCreationTableId, 10);
-    const subjectIdNumber = parseInt(subjectId, 10);
-    const sectionIdNumber = parseInt(sectionId, 10);
- 
-    if (isNaN(userIdNumber) || isNaN(testCreationTableIdNumber) || isNaN(subjectIdNumber) || isNaN(sectionIdNumber)) {
-      console.error("Invalid integer value for userId, testCreationTableId, or questionId");
-      return res.status(400).json({ success: false, message: "Invalid data types" });
-    }
+      console.log("Request Body:", req.body);
+      const { userId,questionId, testCreationTableId, subjectId, sectionId } = req.body;
+      console.log(`Response for question ${questionId} saved to the database`);
 
-    const sql =
-    "INSERT INTO user_responses (user_Id, testCreationTableId, subjectId, sectionId, question_id, user_answer) " +
-    "VALUES (?, ?, ?, ?, ?, ?) " +
-    "ON DUPLICATE KEY UPDATE user_answer = IF(VALUES(user_answer) <> '', VALUES(user_answer), user_answer)";
-  
+      // Validate data types
+      const userIdNumber = parseInt(userId, 10);
+      const testCreationTableIdNumber = parseInt(testCreationTableId, 10);
+      const subjectIdNumber = parseInt(subjectId, 10);
+      const sectionIdNumber = parseInt(sectionId, 10);
 
-    // const sql =
-    //   "INSERT INTO user_responses (user_Id, testCreationTableId, subject_id,section_id, question_id, user_answer) VALUES (?, ?, ?, ?, ?, ?)";
- 
-    const response = req.body[questionId];
- 
-    const questionIdNumber = parseInt(questionId, 10);
- 
-    if (isNaN(questionIdNumber)) {
-      console.error(`Invalid integer value for questionId: ${questionId}`);
-      return res.status(400).json({ success: false, message: "Invalid data types for questionId" });
-    }
- 
-    const optionIndexes1 = response.optionIndexes1;
-    const optionIndexes2 = response.optionIndexes2.join(",");
-    const calculatorInputValue = response.calculatorInputValue;
- 
-    const queryValues = [
-      userIdNumber,
-      testCreationTableIdNumber,
-      subjectIdNumber,
-      sectionIdNumber,
-      questionIdNumber,
-      optionIndexes1 + optionIndexes2 + " " + calculatorInputValue,
-    ];
- 
-    console.log("Executing SQL query:", sql, queryValues);
- 
-    try {
-      const result = await db.query(sql, queryValues);
- 
-      if (!result) {
-        console.error("Error saving response to the database");
-        res.status(500).json({ success: false, message: "Internal server error" });
-        return;
+      if (isNaN(userIdNumber) || isNaN(testCreationTableIdNumber) || isNaN(subjectIdNumber) || isNaN(sectionIdNumber)) {
+          console.error("Invalid integer value for userId, testCreationTableId, or questionId");
+          return res.status(400).json({ success: false, message: "Invalid data types" });
       }
- 
-      console.log(`Response for question ${questionIdNumber} saved to the database`);
-      res.json({ success: true, message: "Response saved successfully" });
-    } catch (dbError) {
-      console.error("Database query error:", dbError);
-      res.status(500).json({
-        success: false,
-        message: "Error saving response to the database",
-        dbError: dbError.message,
-      });
-    }
+
+      const sql =
+          "INSERT INTO user_responses (user_Id, testCreationTableId, subjectId, sectionId, question_id, user_answer,option_id) " +
+          "VALUES (?, ?, ?, ?, ?, ?,?) ";
+
+      const response = req.body[questionId];
+
+      const questionIdNumber = parseInt(questionId, 10);
+
+      if (isNaN(questionIdNumber)) {
+          console.error(`Invalid integer value for questionId: ${questionId}`);
+          return res.status(400).json({ success: false, message: "Invalid data types for questionId" });
+      }
+
+      const optionIndexes1 = response.optionIndexes1.join(",");
+      const optionIndexes2 = response.optionIndexes2.join(",");
+      
+      const optionIndexes1CharCodes = response.optionIndexes1CharCodes.join(",");
+      const optionIndexes2CharCodes = response.optionIndexes2CharCodes.join(",");
+      const calculatorInputValue = response.calculatorInputValue;
+
+      
+      const queryValues = [
+          userIdNumber,
+          testCreationTableIdNumber,
+          subjectIdNumber,
+          sectionIdNumber,
+          questionIdNumber,
+          optionIndexes1CharCodes + optionIndexes2CharCodes + calculatorInputValue,
+          optionIndexes1 + optionIndexes2,
+
+      ];
+      console.log("optionIndexes2---:", optionIndexes2);
+      console.log("Executing SQL query:", sql, queryValues);
+
+      try {
+          const result = await db.query(sql, queryValues);
+
+          if (!result) {
+              console.error("Error saving response to the database");
+              res.status(500).json({ success: false, message: "Internal server error" });
+              return;
+          }
+
+          console.log(`Response for question ${questionIdNumber} saved to the database`);
+          res.json({ success: true, message: "Response saved successfully" });
+      } catch (dbError) {
+          console.error("Database query error:", dbError);
+          res.status(500).json({
+              success: false,
+              message: "Error saving response to the database",
+              dbError: dbError.message,
+          });
+      }
   } catch (error) {
-    console.error("Error handling the request:", error);
-    res.status(500).json({ success: false, message: "Internal server error" });
+      console.error("Error handling the request:", error);
+      res.status(500).json({ success: false, message: "Internal server error" });
   }
 });
+
+
+
+// router.post("/response", async (req, res) => {
+//   try {
+//     console.log("Request Body:", req.body);
+//     const { questionId, userId, testCreationTableId, subjectId, sectionId } = req.body;
+//     console.log(`Response for question ${questionId} saved to the database`);
+ 
+//     // Validate data types
+//     const userIdNumber = parseInt(userId, 10);
+//     const testCreationTableIdNumber = parseInt(testCreationTableId, 10);
+//     const subjectIdNumber = parseInt(subjectId, 10);
+//     const sectionIdNumber = parseInt(sectionId, 10);
+ 
+//     if (isNaN(userIdNumber) || isNaN(testCreationTableIdNumber) || isNaN(subjectIdNumber) || isNaN(sectionIdNumber)) {
+//       console.error("Invalid integer value for userId, testCreationTableId, or questionId");
+//       return res.status(400).json({ success: false, message: "Invalid data types" });
+//     }
+
+//     const sql =
+//     "INSERT INTO user_responses (user_Id, testCreationTableId, subjectId, sectionId, question_id, user_answer) " +
+//     "VALUES (?, ?, ?, ?, ?, ?) " +
+//     "ON DUPLICATE KEY UPDATE user_answer = IF(VALUES(user_answer) <> '', VALUES(user_answer), user_answer)";
+  
+
+//     // const sql =
+//     //   "INSERT INTO user_responses (user_Id, testCreationTableId, subject_id,section_id, question_id, user_answer) VALUES (?, ?, ?, ?, ?, ?)";
+ 
+//     const response = req.body[questionId];
+ 
+//     const questionIdNumber = parseInt(questionId, 10);
+ 
+//     if (isNaN(questionIdNumber)) {
+//       console.error(`Invalid integer value for questionId: ${questionId}`);
+//       return res.status(400).json({ success: false, message: "Invalid data types for questionId" });
+//     }
+ 
+//     const optionIndexes1 = response.optionIndexes1;
+//     const optionIndexes2 = response.optionIndexes2.join(",");
+//     const calculatorInputValue = response.calculatorInputValue;
+ 
+//     const queryValues = [
+//       userIdNumber,
+//       testCreationTableIdNumber,
+//       subjectIdNumber,
+//       sectionIdNumber,
+//       questionIdNumber,
+//       optionIndexes1 + optionIndexes2 + " " + calculatorInputValue,
+//     ];
+ 
+//     console.log("Executing SQL query:", sql, queryValues);
+ 
+//     try {
+//       const result = await db.query(sql, queryValues);
+ 
+//       if (!result) {
+//         console.error("Error saving response to the database");
+//         res.status(500).json({ success: false, message: "Internal server error" });
+//         return;
+//       }
+ 
+//       console.log(`Response for question ${questionIdNumber} saved to the database`);
+//       res.json({ success: true, message: "Response saved successfully" });
+//     } catch (dbError) {
+//       console.error("Database query error:", dbError);
+//       res.status(500).json({
+//         success: false,
+//         message: "Error saving response to the database",
+//         dbError: dbError.message,
+//       });
+//     }
+//   } catch (error) {
+//     console.error("Error handling the request:", error);
+//     res.status(500).json({ success: false, message: "Internal server error" });
+//   }
+// });
 
 // router.post("/response", async (req, res) => {
 //   try {
@@ -1583,164 +1935,164 @@ router.post("/response", async (req, res) => {
 // });
 
 
-// router.put('/updateResponse/:user_Id/:testCreationTableId/:question_id', async (req, res) => {
-//   try {
-//     const { user_Id, testCreationTableId, question_id } = req.params;
+router.put('/updateResponse/:user_Id/:testCreationTableId/:question_id', async (req, res) => {
+  try {
+    const { user_Id, testCreationTableId, question_id } = req.params;
 
-//     const userIdNumber = parseInt(user_Id, 10);
-//     const testCreationTableIdNumber = parseInt(testCreationTableId, 10);
-//     const questionId = parseInt(question_id, 10);
+    const userIdNumber = parseInt(user_Id, 10);
+    const testCreationTableIdNumber = parseInt(testCreationTableId, 10);
+    const questionId = parseInt(question_id, 10);
 
-//     if (isNaN(userIdNumber) || isNaN(testCreationTableIdNumber) || isNaN(questionId)) {
-//       console.error("Invalid integer value for user_Id, testCreationTableId, or question_id");
-//       return res.status(400).json({ success: false, message: "Invalid data types" });
-//     }
+    if (isNaN(userIdNumber) || isNaN(testCreationTableIdNumber) || isNaN(questionId)) {
+      console.error("Invalid integer value for user_Id, testCreationTableId, or question_id");
+      return res.status(400).json({ success: false, message: "Invalid data types" });
+    }
 
-//     const optionIndexes1 = req.body.updatedResponse.optionIndexes1.join(",");
-//     const optionIndexes2 = req.body.updatedResponse.optionIndexes2.join(",");
-//     const calculatorInputValue = req.body.updatedResponse.calculatorInputValue;
+    const optionIndexes1 = req.body.updatedResponse.optionIndexes1.join(",");
+    const optionIndexes2 = req.body.updatedResponse.optionIndexes2.join(",");
+    const calculatorInputValue = req.body.updatedResponse.calculatorInputValue;
 
-//     // Check if the record exists
-//     const recordExistsQuery = `
-//       SELECT * FROM user_responses
-//       WHERE user_Id = ? AND testCreationTableId = ? AND question_id = ?
-//     `;
+    // Check if the record exists
+    const recordExistsQuery = `
+      SELECT * FROM user_responses
+      WHERE user_Id = ? AND testCreationTableId = ? AND question_id = ?
+    `;
 
-//     const recordExistsValues = [userIdNumber, testCreationTableIdNumber, questionId];
+    const recordExistsValues = [userIdNumber, testCreationTableIdNumber, questionId];
 
-//     const recordExists = await new Promise((resolve, reject) => {
-//       db.query(recordExistsQuery, recordExistsValues, (err, result) => {
-//         if (err) {
-//           console.error("Error checking if record exists:", err);
-//           reject(err);
-//         } else {
-//           resolve(result.length > 0);
-//         }
-//       });
-//     });
+    const recordExists = await new Promise((resolve, reject) => {
+      db.query(recordExistsQuery, recordExistsValues, (err, result) => {
+        if (err) {
+          console.error("Error checking if record exists:", err);
+          reject(err);
+        } else {
+          resolve(result.length > 0);
+        }
+      });
+    });
 
-//     if (recordExists) {
-//       // Update the existing record
-//       const updateQuery = `
-//         UPDATE user_responses
-//         SET user_answer = CONCAT(?, ',', ?, ' ', ?)
-//         WHERE user_Id = ? AND testCreationTableId = ? AND question_id = ?
-//       `;
+    if (recordExists) {
+      // Update the existing record
+      const updateQuery = `
+        UPDATE user_responses
+        SET user_answer = CONCAT(?, ',', ?, ' ', ?)
+        WHERE user_Id = ? AND testCreationTableId = ? AND question_id = ?
+      `;
 
-//       const updateValues = [
-//         optionIndexes1,
-//         optionIndexes2,
-//         calculatorInputValue,
-//         userIdNumber,
-//         testCreationTableIdNumber,
-//         questionId
-//       ];
+      const updateValues = [
+        optionIndexes1,
+        optionIndexes2,
+        calculatorInputValue,
+        userIdNumber,
+        testCreationTableIdNumber,
+        questionId
+      ];
 
-//       await new Promise((resolve, reject) => {
-//         db.query(updateQuery, updateValues, (err, result) => {
-//           if (err) {
-//             console.error("Error updating response in the database:", err);
-//             reject(err);
-//           } else {
-//             console.log(`Response for question ${questionId} updated in the database`);
-//             res.json({ success: true, message: "Response updated successfully" });
-//             resolve(result);
-//           }
-//         });
-//       });
-//     } else {
-//       // Insert a new record since it doesn't exist
-//       const insertQuery = `
-//         INSERT INTO user_responses (user_Id, testCreationTableId, question_id, user_answer)
-//         VALUES (?, ?, ?, CONCAT(?, ',', ?, ' ', ?))
-//       `;
+      await new Promise((resolve, reject) => {
+        db.query(updateQuery, updateValues, (err, result) => {
+          if (err) {
+            console.error("Error updating response in the database:", err);
+            reject(err);
+          } else {
+            console.log(`Response for question ${questionId} updated in the database`);
+            res.json({ success: true, message: "Response updated successfully" });
+            resolve(result);
+          }
+        });
+      });
+    } else {
+      // Insert a new record since it doesn't exist
+      const insertQuery = `
+        INSERT INTO user_responses (user_Id, testCreationTableId, question_id, user_answer)
+        VALUES (?, ?, ?, CONCAT(?, ',', ?, ' ', ?))
+      `;
 
-//       const insertValues = [
-//         userIdNumber,
-//         testCreationTableIdNumber,
-//         questionId,
-//         optionIndexes1,
-//         optionIndexes2,
-//         calculatorInputValue
-//       ];
+      const insertValues = [
+        userIdNumber,
+        testCreationTableIdNumber,
+        questionId,
+        optionIndexes1,
+        optionIndexes2,
+        calculatorInputValue
+      ];
 
-//       await new Promise((resolve, reject) => {
-//         db.query(insertQuery, insertValues, (err, result) => {
-//           if (err) {
-//             console.error("Error inserting new response in the database:", err);
-//             reject(err);
-//           } else {
-//             console.log(`New response for question ${questionId} inserted in the database`);
-//             res.json({ success: true, message: "Response inserted successfully" });
-//             resolve(result);
-//           }
-//         });
-//       });
-//     }
-//   } catch (error) {
-//     console.error("Error handling update request:", error);
-//     res.status(500).json({ success: false, message: "Internal server error" });
-//   }
-// });
+      await new Promise((resolve, reject) => {
+        db.query(insertQuery, insertValues, (err, result) => {
+          if (err) {
+            console.error("Error inserting new response in the database:", err);
+            reject(err);
+          } else {
+            console.log(`New response for question ${questionId} inserted in the database`);
+            res.json({ success: true, message: "Response inserted successfully" });
+            resolve(result);
+          }
+        });
+      });
+    }
+  } catch (error) {
+    console.error("Error handling update request:", error);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+});
 
 
-// router.put('/updateResponse/:user_Id/:testCreationTableId/:question_id', async (req, res) => {
-//   try {
-//     const { user_Id, testCreationTableId, question_id } = req.params;
+router.put('/updateResponse/:user_Id/:testCreationTableId/:question_id', async (req, res) => {
+  try {
+    const { user_Id, testCreationTableId, question_id } = req.params;
 
-//     // Validate data types
-//     const userIdNumber = parseInt(user_Id, 10);
-//     const testCreationTableIdNumber = parseInt(testCreationTableId, 10);
-//     const questionId = parseInt(question_id, 10);
+    // Validate data types
+    const userIdNumber = parseInt(user_Id, 10);
+    const testCreationTableIdNumber = parseInt(testCreationTableId, 10);
+    const questionId = parseInt(question_id, 10);
 
-//     if (isNaN(userIdNumber) || isNaN(testCreationTableIdNumber) || isNaN(questionId)) {
-//       console.error("Invalid integer value for user_Id, testCreationTableId, or question_id");
-//       return res.status(400).json({ success: false, message: "Invalid data types" });
-//     }
+    if (isNaN(userIdNumber) || isNaN(testCreationTableIdNumber) || isNaN(questionId)) {
+      console.error("Invalid integer value for user_Id, testCreationTableId, or question_id");
+      return res.status(400).json({ success: false, message: "Invalid data types" });
+    }
 
-//     const optionIndexes1 = req.body.updatedResponse.optionIndexes1.join(",");
-//     const optionIndexes2 = req.body.updatedResponse.optionIndexes2.join(",");
-//     const calculatorInputValue = req.body.updatedResponse.calculatorInputValue;
+    const optionIndexes1 = req.body.updatedResponse.optionIndexes1.join(",");
+    const optionIndexes2 = req.body.updatedResponse.optionIndexes2.join(",");
+    const calculatorInputValue = req.body.updatedResponse.calculatorInputValue;
 
-//     const updateQuery = `
-//       UPDATE user_responses
-//       SET user_answer = CONCAT(?, ',', ?, ' ', ?)
-//       WHERE user_Id = ? AND testCreationTableId = ? AND question_id = ?
-//     `;
+    const updateQuery = `
+      UPDATE user_responses
+      SET user_answer = CONCAT(?, ',', ?, ' ', ?)
+      WHERE user_Id = ? AND testCreationTableId = ? AND question_id = ?
+    `;
 
-//     const updateValues = [
-//       optionIndexes1,
-//       optionIndexes2,
-//       calculatorInputValue,
-//       userIdNumber,
-//       testCreationTableIdNumber,
-//       questionId
-//     ];
+    const updateValues = [
+      optionIndexes1,
+      optionIndexes2,
+      calculatorInputValue,
+      userIdNumber,
+      testCreationTableIdNumber,
+      questionId
+    ];
 
-//     await new Promise((resolve, reject) => {
-//       db.query(updateQuery, updateValues, (err, result) => {
-//         if (err) {
-//           console.error("Error updating response in the database:", err);
-//           reject(err);
-//         } else {
-//           if (result.affectedRows > 0) {
-//             console.log(`Response for question ${questionId} updated in the database`);
-//             res.json({ success: true, message: "Response updated successfully" });
-//           } else {
-//             // If no rows were affected, it means the specified combination of
-//             // user_Id, testCreationTableId, and question_id was not found.
-//             // You might want to consider inserting a new record in this case.
-//             res.status(404).json({ success: false, message: "Response not found" });
-//           }
-//           resolve(result);
-//         }
-//       });
-//     });
-//   } catch (error) {
-//     console.error("Error handling update request:", error);
-//     res.status(500).json({ success: false, message: "Internal server error" });
-//   }
-// });
+    await new Promise((resolve, reject) => {
+      db.query(updateQuery, updateValues, (err, result) => {
+        if (err) {
+          console.error("Error updating response in the database:", err);
+          reject(err);
+        } else {
+          if (result.affectedRows > 0) {
+            console.log(`Response for question ${questionId} updated in the database`);
+            res.json({ success: true, message: "Response updated successfully" });
+          } else {
+            // If no rows were affected, it means the specified combination of
+            // user_Id, testCreationTableId, and question_id was not found.
+            // You might want to consider inserting a new record in this case.
+            res.status(404).json({ success: false, message: "Response not found" });
+          }
+          resolve(result);
+        }
+      });
+    });
+  } catch (error) {
+    console.error("Error handling update request:", error);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+});
 // UPDATE user_responses
 //       SET user_answer = CONCAT(?, ',', ?, ' ', ?)
 //       WHERE user_Id = ? AND testCreationTableId = ? AND question_id = ?
@@ -1795,13 +2147,14 @@ router.put('/updateResponse/:questionId', async (req, res) => {
       (updatedResponse.optionIndexes1 || updatedResponse.optionIndexes2)
     ) {
       let userAnswer = '';
+     
 
       if (updatedResponse.optionIndexes1) {
         userAnswer += updatedResponse.optionIndexes1.join('');
       }
 
       if (updatedResponse.optionIndexes2) {
-        userAnswer += updatedResponse.optionIndexes2.join('');
+        userAnswer += updatedResponse.optionIndexes2.join(',');
       }
 
       if (updatedResponse.calculatorInputValue) {

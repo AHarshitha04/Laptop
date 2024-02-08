@@ -2,14 +2,18 @@ import React, { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import ButtonsFunctionality from "./ButtonsFunctionality";
-
 import DemoDeleteItsNotImp2 from "./DemoDeleteItsNotImp2";
 
-import "./styles/Paper.css";
-//logo in header
-import logo from "./asserts/egradtutor_logo.png";
+// import logos from "./uploads/upload format_Chemistry(1-20).docx/snapshot_48_3_question_1.png";
 
-const QuestionPaper = () => {
+import "./styles/Paper.css";
+
+//logo in header
+
+import logo from "./asserts/egradtutor_logo.png";
+import { index } from "d3-array";
+
+const DemoDeleteItsNotImp = () => {
   // --------------------------------------CONST VARIABLES DECLARATIONS--------------------------
   const [questionData, setQuestionData] = useState({ questions: [] });
   const [value, setValue] = useState("");
@@ -25,10 +29,8 @@ const QuestionPaper = () => {
       : []
   );
   const [sections, setSections] = useState([]);
-  const [currentQuestionType, setCurrentQuestionType] = useState(null);
 
-  console.log("hiii");
-  console.log("calculator:", value);
+  const vl = value;
   // console.log("calculator:", setValue)
   const navigate = useNavigate();
   const [answeredCount, setAnsweredCount] = useState(0);
@@ -37,9 +39,19 @@ const QuestionPaper = () => {
     useState(0);
   const [markedForReviewCount, setMarkedForReviewCount] = useState(0);
   const [VisitedCount, setVisitedCount] = useState(0);
+  const [NotVisited, setNotVisited] = useState(0);
+
   const [showExamSumary, setShowExamSumary] = useState(false);
 
   const [calculatorValue, setCalculatorValue] = useState("");
+
+  const questions = questionData.questions ? questionData.questions.length : 0;
+  const remainingQuestions =
+    questions - VisitedCount - notAnsweredCount - answeredCount - markedForReviewCount - answeredmarkedForReviewCount;
+  
+  const NotVisitedb = remainingQuestions < 0 ? 0 : remainingQuestions;
+  
+
 
   const calculateQuestionCounts = () => {
     let answered = 0;
@@ -47,7 +59,7 @@ const QuestionPaper = () => {
     let markedForReview = 0;
     let answeredmarkedForReviewCount = 0;
     let VisitedCount = 0;
-
+    let NotVisited = 0;
     questionStatus.forEach((status, index) => {
       if (status === "answered") {
         answered++;
@@ -97,16 +109,28 @@ const QuestionPaper = () => {
     setAnsweredmarkedForReviewCount(marked);
     setMarkedForReviewCount(markedForReview);
     setVisitedCount(Visited);
-  };
+  }; 
 
   const [selectedAnswers, setSelectedAnswers] = useState(
     Array(questionData.length).fill("")
   );
 
-  const handleQuestionSelect = (questionNumber) => {
-    setCurrentQuestionIndex(questionNumber - 1);
-    setActiveQuestion(questionNumber - 1);
+  // const handleQuestionSelect = (questionNumber) => { 
+  //    const updatedQuestionStatus = [...questionStatus]; 
+  //   setCurrentQuestionIndex(questionNumber - 1);
+  //   updatedQuestionStatus[currentQuestionIndex] = "answered";
+  //   setActiveQuestion(questionNumber - 1);
+  // };
+  const handleQuestionSelect = (questionNumber) => { 
+    const updatedQuestionStatus = [...questionStatus]; 
+    const updatedIndex = questionNumber - 1; // Calculate the updated index
+  
+    setCurrentQuestionIndex(updatedIndex); // Update the current question index
+    updatedQuestionStatus[updatedIndex] = "notAnswered"; // Update the question status at the updated index
+    setActiveQuestion(updatedIndex); // Set the active question to the updated index
   };
+  
+
 
   const [clickCount, setClickCount] = useState(0);
 
@@ -124,7 +148,7 @@ const QuestionPaper = () => {
   const handleYes = async () => {
     const userId = userData.id;
 
-    console.log(userId);
+    // console.log(userId);
     navigate(`/TestResultsPage/${testCreationTableId}`);
   };
 
@@ -188,18 +212,32 @@ const QuestionPaper = () => {
       clearInterval(interval);
     };
   }, [wtimer]);
-  // ----------------------------end overall time--------------------------
-  //-----------------------------TYPES OF INPUT VALUES for ANSWERING FORMATE
 
+
+  // const correctOptionId = questionData.questions[currentQuestionIndex].correct_option_id;
+  // console.log('correctOptionId',correctOptionId)
+  
+  // main
   const onAnswerSelected1 = (optionIndex) => {
     const questionId = questionData.questions[currentQuestionIndex].question_id;
     const charcodeatopt = String.fromCharCode("a".charCodeAt(0) + optionIndex);
 
-    console.log("questionId from onAnswerSelected1 : ", questionId);
+    // console.log("questionId from onAnswerSelected1 : ", questionId);
     const questionIndex = currentQuestionIndex + 1;
-    console.log(`Question Index: ${questionIndex}`);
-    console.log(`Clicked Option Index: ${charcodeatopt}`);
+    // console.log(`Question Index: ${questionIndex}`);
+    // console.log(`Clicked Option Index: ${charcodeatopt}`);
+    console.log('Selected option index:', optionIndex);
 
+
+    const selectedOption = questionData.questions[currentQuestionIndex].options[optionIndex];
+    // Retrieve the option ID
+    const optionId = selectedOption.option_id;
+
+    // Log the selected option index ID and option ID
+    console.log('Selected option index:', optionIndex);
+    console.log('Selected option ID:', optionId);
+
+    
     setSelectedAnswersMap1((prevMap) => ({
       ...prevMap,
       [questionId]: optionIndex,
@@ -208,54 +246,98 @@ const QuestionPaper = () => {
     const updatedSelectedAnswers = [...selectedAnswers];
     updatedSelectedAnswers[activeQuestion] = optionIndex;
     setSelectedAnswers(updatedSelectedAnswers);
-    console.log(
-      "questionId from updatedSelectedAnswers : ",
-      updatedSelectedAnswers
-    );
+    // console.log(
+    //   "questionId from updatedSelectedAnswers : ",
+    //   updatedSelectedAnswers
+    // );
   };
-
   const onAnswerSelected2 = (optionIndex) => {
     const questionId = questionData.questions[currentQuestionIndex].question_id;
     const charcodeatopt = String.fromCharCode("a".charCodeAt(0) + optionIndex);
-    console.log("questionId from onAnswerSelected2 : ", questionId);
+    
+    // Retrieve the existing selected options for the current question
+    const existingSelection = selectedAnswersMap2[questionId] || [];
+    
+    // Check if the selected option is already in the existing selection
+    const isSelected = existingSelection.includes(optionIndex);
+    
+    // Update the selection based on whether the option was already selected or not
+    const updatedSelection = isSelected
+        ? existingSelection.filter((index) => index !== optionIndex) // Deselect the option if already selected
+        : [...existingSelection, optionIndex]; // Select the option if not already selected
 
-    const questionIndex = currentQuestionIndex + 1;
-    console.log(`Question Index: ${questionIndex}`);
-    console.log(`Clicked Option Index: ${charcodeatopt}`);
-    setSelectedAnswersMap2((prevMap) => {
-      const updatedSelection = [...(prevMap[questionId] || [])];
-      const index = updatedSelection.indexOf(optionIndex);
-
-      if (index !== -1) {
-        updatedSelection.splice(index, 1);
-      } else {
-        updatedSelection.push(optionIndex);
-      }
-
-      return {
+    // Update the selected answers map with the updated selection for the current question
+    setSelectedAnswersMap2((prevMap) => ({
         ...prevMap,
         [questionId]: updatedSelection,
-      };
-    });
+    }));
 
+    // Update the selected answers array for the active question
     const updatedSelectedAnswers = [...selectedAnswers];
-    updatedSelectedAnswers[activeQuestion] = optionIndex;
+    updatedSelectedAnswers[activeQuestion] = updatedSelection;
     setSelectedAnswers(updatedSelectedAnswers);
-  };
-  const [answers, setAnswers] = useState(
-    Array(questionData.questions.length).fill("")
-  );
+};
+// main 
+//   const onAnswerSelected1 = (optionIndex) => {
+//     const questionId = questionData.questions[currentQuestionIndex].question_id;
+//     const charcodeatopt = String.fromCharCode("a".charCodeAt(0) + optionIndex);
+
+//     // Get the correct option ID from questionData
+//     const correctOptionId = questionData.questions[currentQuestionIndex].correct_option_id;
+
+//     // Store both the selected option index and the correct option ID
+//     setSelectedAnswersMap1((prevMap) => ({
+//         ...prevMap,
+//         [questionId]: {
+//             selectedOptionIndex: optionIndex,
+//             correctOptionId: correctOptionId
+//         },
+//     }));
+
+//     const updatedSelectedAnswers = [...selectedAnswers];
+//     updatedSelectedAnswers[activeQuestion] = optionIndex;
+//     setSelectedAnswers(updatedSelectedAnswers);
+// };
+
+  // const onAnswerSelected2 = (optionIndex) => {
+  //   const questionId = questionData.questions[currentQuestionIndex].question_id;
+  //   const charcodeatopt = String.fromCharCode("a".charCodeAt(0) + optionIndex);
+  //   // console.log("questionId from onAnswerSelected2 : ", questionId);
+
+  //   const questionIndex = currentQuestionIndex + 1;
+  //   // console.log(`Question Index: ${questionIndex}`);
+  //   // console.log(`Clicked Option Index: ${charcodeatopt}`);
+  //   setSelectedAnswersMap2((prevMap) => {
+  //     const updatedSelection = [...(prevMap[questionId] || [])];
+  //     const index = updatedSelection.indexOf(optionIndex);
+
+  //     if (index !== -1) {
+  //       updatedSelection.splice(index, 1);
+  //     } else {
+  //       updatedSelection.push(optionIndex);
+  //     }
+
+  //     return {
+  //       ...prevMap,
+  //       [questionId]: updatedSelection,
+  //     };
+  //   });
+
+  //   const updatedSelectedAnswers = [...selectedAnswers];
+  //   updatedSelectedAnswers[activeQuestion] = optionIndex;
+  //   setSelectedAnswers(updatedSelectedAnswers);
+  // };
+
   const onAnswerSelected3 = (e) => {
-    // Handle updating the state when the user answers a question
-    const updatedAnswers = [...answers];
-    updatedAnswers[currentQuestionIndex] = e.target.value;
-    setAnswers(updatedAnswers);
+    const inputValue = e.target.value;
+    const parsedValue = parseFloat(inputValue);
+
+    setValue(parsedValue);
 
     if (
       !questionData.questions ||
       !questionData.questions[currentQuestionIndex]
     ) {
-      // Handle the case where questions are not defined
       console.error("Invalid question data or index");
       return;
     }
@@ -263,57 +345,36 @@ const QuestionPaper = () => {
     const currentQuestion = questionData.questions[currentQuestionIndex];
     const questionId = currentQuestion.question_id;
 
-    console.log("questionId from onAnswerSelected3:", questionId);
-    console.log("Current Question:", currentQuestion);
-
-    const inputValue = e.target.value;
-    const parsedValue = parseFloat(inputValue);
-
     setSelectedAnswersMap3((prevMap) => ({
       ...prevMap,
       [questionId]: parsedValue,
     }));
 
-    setValue(parsedValue.toString());
+    // Directly set the value attribute of the input field
+    const inputField = document.getElementById(
+      `question-${currentQuestionIndex}`
+    );
+    if (inputField) {
+      inputField.value = parsedValue.toString();
+    }
+
     console.log("Calculator Value:", parsedValue);
     console.log("Calculator Input Text Box Value:", inputValue);
+
+    // Debugging statements
+    console.log("Attempting to store in local storage...");
+
+    try {
+      localStorage.setItem(
+        `calculatorValue_${questionId}`,
+        JSON.stringify({ value: parsedValue })
+      );
+      console.log("Value stored in local storage:", parsedValue);
+    } catch (error) {
+      console.error("Error storing in local storage:", error);
+    }
   };
 
-  // -------------- -------------- END TYPES OF INPUT VALUES ANSWERING FORMATE
-
-  // -------------------------------------------USE EFFECT FETCHING CODE-------------------------------
-
-  //Subjects fetching use effect code
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const responseSubjects = await fetch(
-          `http://localhost:5001/QuestionPaper/subjects/${testCreationTableId}`
-        );
-        const subjectsData = await responseSubjects.json();
-        setSubjects(subjectsData);
-
-        const leastSubjectId =
-          subjectsData.length > 0
-            ? Math.min(...subjectsData.map((subject) => subject.subjectId))
-            : null;
-
-        const defaultSubjectId = subjectId || leastSubjectId;
-
-        const selectedAnswersForSubject =
-          selectedAnswersMap1[defaultSubjectId] || [];
-        setSelectedAnswers(selectedAnswersForSubject);
-
-        const linkUrl = `/subjects/${testCreationTableId}/${
-          subjectId || leastSubjectId
-        }`;
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    fetchData();
-  }, [testCreationTableId, subjectId, selectedAnswersMap1]);
   //end Subjects fetching use effect code
 
   //users fetching use effect code
@@ -357,30 +418,36 @@ const QuestionPaper = () => {
   }, [questionStatus]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(
-          `http://localhost:5001/QuestionPaper/questionOptions/${testCreationTableId}`
-        );
 
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
 
-        const data = await response.json();
-        setQuestionData(data);
-      } catch (error) {
-        console.error("Error fetching question data:", error);
-      }
-    };
-
-    fetchData();
+    // Check if testCreationTableId is defined before making the request
+    if (testCreationTableId) {
+      fetchData();
+    }
   }, [testCreationTableId]);
+
+  const fetchData = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:5001/QuestionPaper/questionOptions/${testCreationTableId}`
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      setQuestionData(data);
+    } catch (error) {
+      console.error("Error fetching question data:", error);
+    }
+  };
 
   const currentQuestion =
     questionData.questions && questionData.questions[currentQuestionIndex];
 
   const [userData, setUserData] = useState({});
+  // user data
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -412,32 +479,6 @@ const QuestionPaper = () => {
   const [originalStatuses, setOriginalStatuses] = useState(
     Array(questionData.questions.length).fill("notVisited")
   );
-  const [questionTypes, setQuestionTypes] = useState([]);
-  useEffect(() => {
-    const fetchQuestionTypes = async () => {
-      try {
-        if (questionData && questionData.questions) {
-          const qID = questionData.questions[currentQuestionIndex].question_id;
-
-          const responseQuestionTypes = await fetch(
-            `http://localhost:5001/QuestionPaper/questionType/${qID}`
-          );
-          const questionTypes = await responseQuestionTypes.json();
-          setQuestionTypes(questionTypes);
-          // console.log(responseQuestionTypes);
-          const currentQuestionType = questionTypes.find(
-            (q) => q.question_id === qID
-          );
-
-          setCurrentQuestionType(currentQuestionType);
-        }
-      } catch (error) {
-        console.error("Error fetching question types:", error);
-      }
-    };
-
-    fetchQuestionTypes();
-  }, [questionData, currentQuestionIndex]);
 
   useEffect(() => {
     // Call the updateCounters function initially when the component mounts
@@ -456,73 +497,504 @@ const QuestionPaper = () => {
 
     const questionId = questionData.questions[currentQuestionIndex].question_id;
 
-    if (selectedAnswersMap3.hasOwnProperty(questionId)) {
-      setValue(selectedAnswersMap3[questionId].toString());
+    // Retrieve the stored value from local storage when the component mounts
+    const storedValue = localStorage.getItem(`calculatorValue_${questionId}`);
+    if (storedValue) {
+      const parsedValue = JSON.parse(storedValue).value;
+      setValue(parsedValue);
+      // console.log("Stored Value:", parsedValue);
     } else {
-      setValue(""); // Clear the input if there is no selected answer
+      setValue(""); // Clear the input if there is no stored value
+      // console.log("No stored value found.");
     }
-  }, [currentQuestionIndex, selectedAnswersMap3]);
-
-  useEffect(() => {
-    console.log("Updated Map in useEffect:", selectedAnswersMap3);
-  }, [selectedAnswersMap3]);
+  }, [currentQuestionIndex, questionData]);
 
   // const handleSaveNextQuestion = async () => {
-  //   // ------------------------------------ button functionality --------------------------------------------
-  //   // Update question status for the current question
-  //   const updatedQuestionStatus = [...questionStatus];
+  //   try {
+  //     const updatedQuestionStatus = [...questionStatus];
+  //     const calculatorInputValue = value;
+   
+  //     console.log("Current Question Index:", currentQuestionIndex);
+  //     console.log("Current Question:", currentQuestion);
+   
+  //     const isCurrentQuestionAnswered =
+  //       selectedAnswersMap1[currentQuestion.question_id] !== undefined ||
+  //       (selectedAnswersMap2[currentQuestion.question_id] &&
+  //         selectedAnswersMap2[currentQuestion.question_id].length > 0) ||
+  //       calculatorInputValue !== "";
+   
+  //     console.log("Is Current Question Answered:", isCurrentQuestionAnswered);
+   
+  //     if (!isCurrentQuestionAnswered) {
+  //       window.alert("Please answer the question before proceeding.");
+  //     } else {
+  //       updatedQuestionStatus[currentQuestionIndex] = "answered";
+  //       setQuestionStatus(updatedQuestionStatus);
+   
+  //       setCurrentQuestionIndex((prevIndex) =>
+  //         prevIndex < questionData.questions.length - 1
+  //           ? prevIndex + 1
+  //           : prevIndex
+  //       );
+   
+  //       if (userData.id) {
+  //         const userId = userData.id;
+  //         const subjectId = currentQuestion.subjectId;
+  //         const sectionId = currentQuestion.sectionId;
+  //         const questionId = currentQuestion.question_id.toString();
+   
+  //         const valueObject = {
+  //           testCreationTableId: testCreationTableId,
+  //           value: calculatorInputValue,
+  //           question_id: questionId,
+  //         };
+   
+  //         // Store the calculator value in local storage
+  //         localStorage.setItem(
+  //           `calculatorValue_${questionId}`,
+  //           JSON.stringify(valueObject)
+  //         );
+   
+  //         // Introduce a small delay before retrieving the stored value
+  //         // This ensures that the local storage has enough time to update
+  //         await new Promise((resolve) => setTimeout(resolve, 100));
+   
+  //         // Retrieve the stored calculator value
+  //         const storedValue = localStorage.getItem(
+  //           `calculatorValue_${questionId}`
+  //         );
+  //         const storedCalculatorInputValue = storedValue
+  //           ? JSON.parse(storedValue).value
+  //           : null;
+   
+  //         if (calculatorInputValue === storedCalculatorInputValue) {
+  //           const selectedOption1 =
+  //             selectedAnswersMap1[currentQuestion.question_id];
+   
+  //           const selectedOption2 =
+  //             selectedAnswersMap2[currentQuestion.question_id];
+   
+  //           const optionIndexes1 =
+  //             selectedOption1 !== undefined ? [selectedOption1] : [];
+  //           const optionIndexes2 =
+  //             selectedOption2 !== undefined ? selectedOption2 : [];
+   
+  //           const hasAnswered = answeredQuestionsMap[questionId];
+   
+  //           // Construct the responses object
+  //           const responses = {
+  //             questionId: questionId,
+  //             hasAnswered: hasAnswered,
+  //             userId: userId,
+  //             testCreationTableId: testCreationTableId,
+  //             subjectId: subjectId,
+  //             sectionId: sectionId,
+  //             [questionId]: {
+  //               optionIndexes1: optionIndexes1.map((index) =>
+  //                 String.fromCharCode("a".charCodeAt(0) + index)
+  //               ),
+  //               optionIndexes2: optionIndexes2.map((index) =>
+  //                 String.fromCharCode("a".charCodeAt(0) + index)
+  //               ),
+  //               calculatorInputValue: calculatorInputValue,
+  //             },
+  //           };
+   
+  //           // Mark the question as answered
+  //           setAnsweredQuestionsMap((prevMap) => ({
+  //             ...prevMap,
+  //             [questionId]: true,
+  //           }));
+   
+  //           if (hasAnswered) {
+  //             // If the question has been answered before, update the existing response with a PUT request
+  //             console.log("Making API request to update the existing response...");
+  
+  //             const updatedResponse = {
+  //               optionIndexes1: optionIndexes1.map((index) =>
+  //                 String.fromCharCode("a".charCodeAt(0) + index)
+  //               ),
+  //               optionIndexes2: optionIndexes2.map((index) =>
+  //                 String.fromCharCode("a".charCodeAt(0) + index)
+  //               ),
+  //               calculatorInputValue: calculatorInputValue,
+  //             };
+  
+  //             await fetch(`http://localhost:5001/QuestionPaper/updateResponse/${questionId}`, {
+  //               method: "PUT",
+  //               headers: {
+  //                 "Content-Type": "application/json",
+  //               },
+  //               body: JSON.stringify({
+  //                 updatedResponse,
+  //                 userId,
+  //                 testCreationTableId,
+  //                 subjectId,
+  //                 sectionId,
+  //               }),
+  //             });
+  
+  //             console.log("Handling the response after updating...");
+  //           } else {
+  //             // If the question is being answered for the first time, save a new response with a POST request
+  //             console.log("Making API request to save a new response...");
+  
+  //             await fetch("http://localhost:5001/QuestionPaper/response", {
+  //               method: "POST",
+  //               headers: {
+  //                 "Content-Type": "application/json",
+  //               },
+  //               body: JSON.stringify(responses),
+  //             });
+  
+  //             console.log("Handling the response after saving...");
+  //           }
+  //         }
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.error("Error handling next click:", error);
+  //   }
+  // };
+  
+  const [responseCleared, setResponseCleared] = useState(false);
+  const handleSaveNextQuestion = async () => {
+    try {
+      const updatedQuestionStatus = [...questionStatus];
+      const calculatorInputValue = value;
+   
+      console.log("Current Question Index:", currentQuestionIndex);
+      console.log("Current Question:", currentQuestion);
+   
+      const isCurrentQuestionAnswered =
+        selectedAnswersMap1[currentQuestion.question_id] !== undefined ||
+        (selectedAnswersMap2[currentQuestion.question_id] &&
+          selectedAnswersMap2[currentQuestion.question_id].length > 0) ||
+        calculatorInputValue !== "";
+   
+      console.log("Is Current Question Answered:", isCurrentQuestionAnswered);
+   
+      if (!isCurrentQuestionAnswered) {
+        window.alert("Please answer the question before proceeding.");
+      } else {
+        updatedQuestionStatus[currentQuestionIndex] = "answered";
+        setQuestionStatus(updatedQuestionStatus);
+   
+        setCurrentQuestionIndex((prevIndex) =>
+          prevIndex < questionData.questions.length - 1
+            ? prevIndex + 1
+            : prevIndex
+        );
+   
+        if (userData.id) {
+          const userId = userData.id;
+          const subjectId = currentQuestion.subjectId;
+          const sectionId = currentQuestion.sectionId;
+          const questionId = currentQuestion.question_id.toString();
+   
+          const valueObject = {
+            testCreationTableId: testCreationTableId,
+            value: calculatorInputValue,
+            question_id: questionId,
+          };
+   
+          // Store the calculator value in local storage
+          localStorage.setItem(
+            `calculatorValue_${questionId}`,
+            JSON.stringify(valueObject)
+          );
+   
+          // Introduce a small delay before retrieving the stored value
+          // This ensures that the local storage has enough time to update
+          await new Promise((resolve) => setTimeout(resolve, 100));
+   
+          // Retrieve the stored calculator value
+          const storedValue = localStorage.getItem(
+            `calculatorValue_${questionId}`
+          );
+          const storedCalculatorInputValue = storedValue
+            ? JSON.parse(storedValue).value
+            : null;
+   
+          if (calculatorInputValue === storedCalculatorInputValue) {
+            const selectedOption1 =
+              selectedAnswersMap1[currentQuestion.question_id];
+   
+            const selectedOption2 =
+              selectedAnswersMap2[currentQuestion.question_id];
+   
+            const optionIndexes1 =
+              selectedOption1 !== undefined ? [selectedOption1] : [];
+            const optionIndexes2 =
+              selectedOption2 !== undefined ? selectedOption2 : [];
+   
+            const hasAnswered = answeredQuestionsMap[questionId];
+   
+            // Construct the responses object
+            // const responses = {
+            //   questionId: questionId,
+            //   hasAnswered: hasAnswered,
+            //   userId: userId,
+            //   testCreationTableId: testCreationTableId,
+            //   subjectId: subjectId,
+            //   sectionId: sectionId,
+            //   [questionId]: {
+            //     optionIndexes1: optionIndexes1.map((index) => {
+            //         const selectedOption = questionData.questions[currentQuestionIndex].options[index];
+            //         return selectedOption.option_id;
+            //     }),
+            //     optionIndexes2: optionIndexes2.map((index) => {
+            //         const selectedOption = questionData.questions[currentQuestionIndex].options[index];
+            //         return selectedOption.option_id;
+            //     }),
+            //     calculatorInputValue: calculatorInputValue,
+            //   },
+            // };
+   
+            // Mark the question as answered
+           
+            const responses = {
+              questionId: questionId,
+              hasAnswered: hasAnswered,
+              userId: userId,
+              testCreationTableId: testCreationTableId,
+              subjectId: subjectId,
+              sectionId: sectionId,
+              [questionId]: {
+                  optionIndexes1: optionIndexes1.map((index) => {
+                      const selectedOption = questionData.questions[currentQuestionIndex].options[index];
+                      return selectedOption.option_id;
+                  }),
+                  optionIndexes1CharCodes: optionIndexes1.map((index) => {
+                      return String.fromCharCode("a".charCodeAt(0) + index);
+                  }),
+                  optionIndexes2: optionIndexes2.map((index) => {
+                      const selectedOption = questionData.questions[currentQuestionIndex].options[index];
+                      return selectedOption.option_id;
+                  }),
+                  optionIndexes2CharCodes: optionIndexes2.map((index) => {
+                      return String.fromCharCode("a".charCodeAt(0) + index);
+                  }),
+                  calculatorInputValue: calculatorInputValue,
+              },
+          };
+          
+          
+            setAnsweredQuestionsMap((prevMap) => ({
+              ...prevMap,
+              [questionId]: true,
+            }));
+   
+            if (hasAnswered) {
+              // If the question has been answered before, update the existing response with a PUT request
+              console.log("Making API request to update the existing response...");
+  
+              const updatedResponse = {
+                optionIndexes1: optionIndexes1.map((index) =>
+                  String.fromCharCode("a".charCodeAt(0) + index)
+                ),
+                optionIndexes2: optionIndexes2.map((index) =>
+                  String.fromCharCode("a".charCodeAt(0) + index)
+                ),
+                calculatorInputValue: calculatorInputValue,
+              };
+  
+              await fetch(`http://localhost:5001/QuestionPaper/updateResponse/${questionId}`, {
+                method: "PUT",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  updatedResponse,
+                  userId,
+                  testCreationTableId,
+                  subjectId,
+                  sectionId,
+                }),
+              });
+  
+              console.log("Handling the response after updating...");
+            } else {
+              // If the question is being answered for the first time, save a new response with a POST request
+              console.log("Making API request to save a new response...");
+  
+              await fetch("http://localhost:5001/QuestionPaper/response", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify(responses),
+              });
+  
+              console.log("Handling the response after saving...");
+            }
+          }
+        }
+      }
+    } catch (error) {
+      console.error("Error handling next click:", error);
+    }
+  };
+  
+  const handleNextQuestion = async () => {
+    try {
+      const currentQuestion = questionData.questions[currentQuestionIndex];
 
+      // Check if the current question is answered
+      const calculatorInputValue = value;
+      const isCurrentQuestionAnswered =
+        selectedAnswersMap1[currentQuestion.question_id] !== undefined ||
+        (selectedAnswersMap2[currentQuestion.question_id] &&
+          selectedAnswersMap2[currentQuestion.question_id].length > 0) ||
+        calculatorInputValue !== "";
+
+      if (!isCurrentQuestionAnswered) {
+        // If the current question is not answered, update the status
+        const updatedQuestionStatus = [...questionStatus];
+        updatedQuestionStatus[currentQuestionIndex] = "notAnswered";
+        setQuestionStatus(updatedQuestionStatus);
+
+        // You may also show a message or perform other actions to indicate that the question is not answered
+        console.log("Question not answered!");
+      } else {
+        // Log a message indicating that the question is answered
+        console.log("Question answered!");
+      }
+
+      // Move to the next question index
+      setCurrentQuestionIndex((prevIndex) =>
+        prevIndex < questionData.questions.length - 1
+          ? prevIndex + 1
+          : prevIndex
+      );
+
+      // Fetch the next set of questions
+      // const response = await fetch(
+      //   `http://localhost:5001/QuestionPaper/questionOptions/${testCreationTableId}`
+      // );
+      // const result = await response.json();
+      // setQuestionData(result);
+
+      // Fetch user data using the token
+      const token = localStorage.getItem("token");
+      const response_user = await fetch(
+        "http://localhost:5001/ughomepage_banner_login/user",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Attach token to headers for authentication
+          },
+        }
+      );
+
+      if (response_user.ok) {
+        const userData = await response_user.json();
+        setUserData(userData);
+
+        // Ensure userId is defined
+        const userId = userData.id;
+
+        // Log relevant information
+        console.log("Test Creation Table ID:", testCreationTableId);
+        console.log("Current user_Id:", userId);
+
+        // Ensure questionData is not null or undefined
+        if (!questionData || !questionData.questions) {
+          console.error("Data or questions are null or undefined");
+          return;
+        }
+
+        // Extract information for the current question
+        const currentQuestion = questionData.questions[currentQuestionIndex];
+        const selectedOption1 =
+          selectedAnswersMap1[currentQuestion.question_id];
+        const selectedOption2 =
+          selectedAnswersMap2[currentQuestion.question_id];
+
+        // Map selected options to indexes
+        const optionIndexes1 =
+          selectedOption1 !== undefined ? [selectedOption1] : [];
+        const optionIndexes2 =
+          selectedOption2 !== undefined ? selectedOption2 : [];
+
+        // Prepare data to be sent in the response
+        const questionId = currentQuestion.question_id;
+        const responses = {
+          userId: userId,
+          testCreationTableId: testCreationTableId,
+          [questionId]: {
+            optionIndexes1: optionIndexes1.map((index) =>
+              String.fromCharCode("a".charCodeAt(0) + index)
+            ),
+            optionIndexes2: optionIndexes2.map((index) =>
+              String.fromCharCode("a".charCodeAt(0) + index)
+            ),
+          },
+        };
+
+        // Save the response to the server
+        const saveResponse = await axios.post(
+          "http://localhost:5001/QuestionPaper/response",
+          { responses }
+        );
+
+        // Log the response and update state
+        console.log(saveResponse.data);
+        console.log("Handle Next Click - New Response Saved");
+
+        setAnsweredQuestionsMap((prevMap) => ({
+          ...prevMap,
+          [questionId]: true,
+        }));
+
+        setClickCount((prevCount) => prevCount + 1);
+      } else {
+        // Handle errors, e.g., if user data fetch fails
+        console.error("Error fetching user data");
+      }
+
+      // Check if there are more questions, and if not, calculate the result
+      if (currentQuestionIndex === questionData.questions.length - 1) {
+        // setShowResult(true);
+        calculateResult();
+      }
+    } catch (error) {
+      console.error("Error handling next click:", error);
+    }
+  };
+
+  // const markForReview = async () => {
+  //   setCurrentQuestionIndex((prevIndex) => {
+  //     if (prevIndex < questionData.questions.length - 1) {
+  //       return prevIndex + 1;
+  //     }
+  //   });
   //   const calculatorInputValue = value;
-
   //   const currentQuestion = questionData.questions[currentQuestionIndex];
-
   //   const isCurrentQuestionAnswered =
   //     selectedAnswersMap1[currentQuestion.question_id] !== undefined ||
   //     (selectedAnswersMap2[currentQuestion.question_id] &&
-  //       selectedAnswersMap2[currentQuestion.question_id].length > 0)||
-  //       calculatorInputValue !== "";
+  //       selectedAnswersMap2[currentQuestion.question_id].length > 0) ||
+  //     calculatorInputValue !== "";
 
-  //   const isResponseCleared =
-  //     selectedAnswersMap1[currentQuestion.question_id] === null ||
-  //     selectedAnswersMap2[currentQuestion.question_id]?.length === 0;
-
-  //   if (!isCurrentQuestionAnswered) {
-  //     // updatedQuestionStatus[currentQuestionIndex] = "notAnswered";
-  //     // setQuestionStatus(updatedQuestionStatus);
-  //     window.alert("Please answer the question before proceeding.");
-  //   } else if (isCurrentQuestionAnswered) {
-  //     // If the current question is not answered, update the status
-  //     const updatedQuestionStatus = [...questionStatus];
-  //     updatedQuestionStatus[currentQuestionIndex] = "answered";
-  //     setQuestionStatus(updatedQuestionStatus);
-
-  //     setCurrentQuestionIndex((prevIndex) => {
-  //       if (prevIndex < questionData.questions.length - 1) {
-  //         return prevIndex + 1;
-  //       }
-  //     });
-  //     // updatedQuestionStatus[currentQuestionIndex] = "notAnswered"
-  //     // You may also show a message or perform other actions to indicate that the question is not answered
-  //     console.log("Question not answered!");
-  //   } else if (isCurrentQuestionAnswered === markForReview()) {
+  //   // Update questionStatus for the marked question
+  //   const updatedQuestionStatus = [...questionStatus];
+  //   if (isCurrentQuestionAnswered) {
   //     updatedQuestionStatus[currentQuestionIndex] =
   //       "Answered but marked for review";
-  //     updateCounters();
-
-  //     setCurrentQuestionIndex((prevIndex) => {
-  //       if (prevIndex < questionData.questions.length - 1) {
-  //         return prevIndex + 1;
-  //       }
-  //     });
+  //   } else {
+  //     updatedQuestionStatus[currentQuestionIndex] = "marked";
   //   }
 
-  //   try {
-  //     const response = await fetch(
-  //       `http://localhost:5001/QuestionPaper/questionOptions/${testCreationTableId}`
-  //     );
-  //     const result = await response.json();
+  //   setQuestionStatus(updatedQuestionStatus);
 
-  //     setQuestionData(result);
+  //   try {
+  //     // fetchData();
+  //     // const response = await fetch(
+  //     //   `http://localhost:5001/QuestionPaper/questionOptions/${testCreationTableId}`
+  //     // );
+  //     // const result = await response.json();
+
+  //     // setQuestionData(result);
 
   //     const token = localStorage.getItem("token");
   //     const response_user = await fetch(
@@ -540,14 +1012,14 @@ const QuestionPaper = () => {
 
   //       const userId = userData.id; // Move this line here to ensure userId is defined
 
-  //       console.log("Test Creation Table ID:", testCreationTableId);
-  //       console.log("Current user_Id:", userId); // Now userId should be defined
+  //       // console.log("Test Creation Table ID:", testCreationTableId);
+  //       // console.log("Current user_Id:", userId); // Now userId should be defined
 
   //       if (!questionData || !questionData.questions) {
   //         console.error("Data or questions are null or undefined");
   //         return;
   //       }
-  //       const calculatorInputValue = value;
+
   //       const currentQuestion = questionData.questions[currentQuestionIndex];
   //       const selectedOption1 =
   //         selectedAnswersMap1[currentQuestion.question_id];
@@ -560,28 +1032,9 @@ const QuestionPaper = () => {
   //         selectedOption2 !== undefined ? selectedOption2 : [];
 
   //       const questionId = currentQuestion.question_id;
+  //       // console.log("Responses to be sent:");
 
-  //       if(answeredQuestionsMap[questionId]){
-  //         const updatedResponse = {
-  //           optionIndexes1: optionIndexes1.map((index) =>
-  //             String.fromCharCode("a".charCodeAt(0) + index)
-  //           ),
-  //           optionIndexes2: optionIndexes2.map((index) =>
-  //             String.fromCharCode("a".charCodeAt(0) + index)
-  //           ),
-  //         };
-
-  //         const updateResponse = await axios.put(
-  //           `http://localhost:5001/QuestionPaper/updateResponse/${questionId}`,
-  //           {
-  //             updatedResponse,
-  //           }
-  //         );
-
-  //         console.log(updateResponse.data);
-  //         console.log("Handle Next Click - Response Updated");
-  //       }else{
-  //          // console.log("Responses to be sent:", responses);
+  //       // Move the 'responses' variable declaration here
   //       const responses = {
   //         userId: userId,
   //         testCreationTableId: testCreationTableId,
@@ -592,7 +1045,6 @@ const QuestionPaper = () => {
   //           optionIndexes2: optionIndexes2.map((index) =>
   //             String.fromCharCode("a".charCodeAt(0) + index)
   //           ),
-  //           calculatorInputValue: calculatorInputValue, // Add the calculator value to responses
   //         },
   //       };
 
@@ -605,845 +1057,365 @@ const QuestionPaper = () => {
   //         }
   //       );
 
-  //       console.log(saveResponse.data);
-  //       console.log("Handle Next Click - New Response Saved");
+  //       // console.log(saveResponse.data);
+  //       // console.log("Mark for Review - New Response Saved");
 
   //       setAnsweredQuestionsMap((prevMap) => ({
   //         ...prevMap,
   //         [questionId]: true,
   //       }));
 
-  //       }
-
-  //       setClickCount((prevCount) => prevCount + 1);
+  //       // setClickCount((prevCount) => prevCount + 1);
+  //     } else {
+  //       // Handle errors, e.g., if user data fetch fails
   //     }
   //   } catch (error) {
-  //     console.error("Error handling next click:", error);
+  //     console.error("Error handling mark for review:", error);
   //   }
 
-  //   // --------------------------------end of button functionality --------------------------------------------------
+  //   setCurrentQuestionIndex((prevIndex) => {
+  //     if (prevIndex < questionData.questions.length - 1) {
+  //       return prevIndex;
+  //     }
+  //   });
   // };
 
-  // const handleSaveNextQuestion = async () => {
-  //   // ------------------------------------ button functionality --------------------------------------------
-  //   // Update question status for the current question
-  //   const updatedQuestionStatus = [...questionStatus];
-
-  //   const calculatorInputValue = value;
-
-  //   const currentQuestion = questionData.questions[currentQuestionIndex];
-
-  //   const isCurrentQuestionAnswered =
-  //     selectedAnswersMap1[currentQuestion.question_id] !== undefined ||
-  //     (selectedAnswersMap2[currentQuestion.question_id] &&
-  //       selectedAnswersMap2[currentQuestion.question_id].length > 0)||
-  //       calculatorInputValue !== "";
-
-  //   const isResponseCleared =
-  //     selectedAnswersMap1[currentQuestion.question_id] === null ||
-  //     selectedAnswersMap2[currentQuestion.question_id]?.length === 0;
-
-  //   if (!isCurrentQuestionAnswered) {
-  //     // updatedQuestionStatus[currentQuestionIndex] = "notAnswered";
-  //     // setQuestionStatus(updatedQuestionStatus);
-  //     window.alert("Please answer the question before proceeding.");
-  //   } else if (isCurrentQuestionAnswered) {
-  //     // If the current question is not answered, update the status
-  //     const updatedQuestionStatus = [...questionStatus];
-  //     updatedQuestionStatus[currentQuestionIndex] = "answered";
-  //     setQuestionStatus(updatedQuestionStatus);
-
-  //     setCurrentQuestionIndex((prevIndex) => {
-  //       if (prevIndex < questionData.questions.length - 1) {
-  //         return prevIndex + 1;
-  //       }
-  //     });
-  //     // updatedQuestionStatus[currentQuestionIndex] = "notAnswered"
-  //     // You may also show a message or perform other actions to indicate that the question is not answered
-  //     console.log("Question not answered!");
-  //   } else if (isCurrentQuestionAnswered === markForReview()) {
-  //     updatedQuestionStatus[currentQuestionIndex] =
-  //       "Answered but marked for review";
-  //     updateCounters();
-
-  //     setCurrentQuestionIndex((prevIndex) => {
-  //       if (prevIndex < questionData.questions.length - 1) {
-  //         return prevIndex + 1;
-  //       }
-  //     });
-  //   }
-
+//  const markForReview = async () => {
+//   try {
+//     setCurrentQuestionIndex((prevIndex) => {
+//       if (prevIndex < questionData.questions.length - 1) {
+//         return prevIndex + 1;
+//       }
+//       return prevIndex; // Add a return statement for cases where the condition is not met
+//     });
+ 
+//     const calculatorInputValue = value;
+//     const currentQuestion = questionData.questions[currentQuestionIndex];
+//     const isCurrentQuestionAnswered =
+//       selectedAnswersMap1[currentQuestion.question_id] !== undefined ||
+//       (selectedAnswersMap2[currentQuestion.question_id] &&
+//         selectedAnswersMap2[currentQuestion.question_id].length > 0) ||
+//       calculatorInputValue !== "";
+ 
+//     // Update questionStatus for the marked question
+//     const updatedQuestionStatus = [...questionStatus];
+//     if (isCurrentQuestionAnswered) {
+//       updatedQuestionStatus[currentQuestionIndex] = "Answered but marked for review";
+ 
+//       if (userData.id) {
+//         const userId = userData.id;
+//         const subjectId = currentQuestion.subjectId;
+//         const sectionId = currentQuestion.sectionId;
+//         const questionId = currentQuestion.question_id.toString();
+ 
+//         const valueObject = {
+//           testCreationTableId: testCreationTableId,
+//           value: calculatorInputValue,
+//           question_id: questionId,
+//         };
+ 
+//         // Store the calculator value in local storage
+//         localStorage.setItem(`calculatorValue_${questionId}`, JSON.stringify(valueObject));
+ 
+//         // Introduce a small delay before retrieving the stored value
+//         // This ensures that the local storage has enough time to update
+//         await new Promise((resolve) => setTimeout(resolve, 100));
+ 
+//         // Retrieve the stored calculator value
+//         const storedValue = localStorage.getItem(`calculatorValue_${questionId}`);
+//         const storedCalculatorInputValue = storedValue ? JSON.parse(storedValue).value : null;
+ 
+//         if (calculatorInputValue === storedCalculatorInputValue) {
+//           const selectedOption1 = selectedAnswersMap1[currentQuestion.question_id];
+//           const selectedOption2 = selectedAnswersMap2[currentQuestion.question_id];
+ 
+//           const optionIndexes1 = selectedOption1 !== undefined ? [selectedOption1] : [];
+//           const optionIndexes2 = selectedOption2 !== undefined ? selectedOption2 : [];
+ 
+//           const hasAnswered = answeredQuestionsMap[questionId];
+ 
+//           // Construct the responses object
+//           const responses = {
+//             questionId: questionId,
+//             hasAnswered: hasAnswered,
+//             userId: userId,
+//             testCreationTableId: testCreationTableId,
+//             subjectId: subjectId,
+//             sectionId: sectionId,
+//             [questionId]: {
+//               optionIndexes1: optionIndexes1.map((index) => String.fromCharCode("a".charCodeAt(0) + index)),
+//               optionIndexes2: optionIndexes2.map((index) => String.fromCharCode("a".charCodeAt(0) + index)),
+//               calculatorInputValue: calculatorInputValue,
+//             },
+//           };
+ 
+//           // Mark the question as answered
+//           setAnsweredQuestionsMap((prevMap) => ({
+//             ...prevMap,
+//             [questionId]: true,
+//           }));
+ 
+//           // POST the responses to the server
+//           const response = await fetch("http://localhost:5001/QuestionPaper/response", {
+//             method: "POST",
+//             headers: {
+//               "Content-Type": "application/json",
+//               // Add any additional headers if needed
+//             },
+//             body: JSON.stringify(responses),
+//           });
+ 
+//           if (response.ok) {
+//             const responseData = await response.json(); // assuming the response is JSON
+//             console.log("Answers successfully submitted:", responseData);
+//           } else {
+//             console.error("Failed to submit answers");
+//           }
+//         }
+//       }
+//     } else {
+//       updatedQuestionStatus[currentQuestionIndex] = "marked";
+//     }
+ 
+//     setQuestionStatus(updatedQuestionStatus);
+//   } catch (error) {
+//     console.error("Error handling mark for review:", error);
+//   }
+// };
+ 
+  // const handleSubmit = async () => {
   //   try {
-  //     const response = await fetch(
-  //       `http://localhost:5001/QuestionPaper/questionOptions/${testCreationTableId}`
+  //     window.alert(
+  //       "Your Test has been Submitted!! Click Ok to See Result.",
+  //       calculateResult()
   //     );
-  //     const result = await response.json();
-
-  //     setQuestionData(result);
-
-  //     const token = localStorage.getItem("token");
-  //     const response_user = await fetch(
-  //       "http://localhost:5001/ughomepage_banner_login/user",
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${token}`, // Attach token to headers for authentication
-  //         },
-  //       }
-  //     );
-
-  //     if (response_user.ok) {
-  //       const userData = await response_user.json();
-  //       setUserData(userData);
-
-  //       const userId = userData.id; // Move this line here to ensure userId is defined
-
-  //       console.log("Test Creation Table ID:", testCreationTableId);
-  //       console.log("Current user_Id:", userId); // Now userId should be defined
-
-  //       if (!questionData || !questionData.questions) {
-  //         console.error("Data or questions are null or undefined");
-  //         return;
-  //       }
-  //       const calculatorInputValue = value;
-  //       const currentQuestion = questionData.questions[currentQuestionIndex];
-  //       const selectedOption1 =
-  //         selectedAnswersMap1[currentQuestion.question_id];
-  //       const selectedOption2 =
-  //         selectedAnswersMap2[currentQuestion.question_id];
-
-  //       const optionIndexes1 =
-  //         selectedOption1 !== undefined ? [selectedOption1] : [];
-  //       const optionIndexes2 =
-  //         selectedOption2 !== undefined ? selectedOption2 : [];
-
-  //       const questionId = currentQuestion.question_id;
-
-  //       const hasAnswered = answeredQuestionsMap[questionId];
-  //       // If the user has answered, update the existing response
-  //       if (hasAnswered) {
-  //         const updatedResponse = {
-  //           optionIndexes1: optionIndexes1.map((index) =>
-  //             String.fromCharCode("a".charCodeAt(0) + index)
-  //           ),
-  //           optionIndexes2: optionIndexes2.map((index) =>
-  //             String.fromCharCode("a".charCodeAt(0) + index)
-  //           ),
-  //           calculatorInputValue: calculatorInputValue,
-  //         };
-
-  //         const updateResponse = await axios.put(
-  //           `http://localhost:5001/QuestionPaper/updateResponse/${userId}/${testCreationTableId}/${questionId}`,
-  //           {
-  //             updatedResponse,
-  //             userId,
-  //             testCreationTableId,
-  //           }
-  //         );
-
-  //         console.log(updateResponse.data);
-  //         console.log("Existing Response Updated");
-  //       } else {
-  //         // Responses object
-  //         const responses = {
-  //           userId: userId,
-  //           testCreationTableId: testCreationTableId,
-  //           [questionId]: {
-  //             optionIndexes1: optionIndexes1.map((index) =>
-  //               String.fromCharCode("a".charCodeAt(0) + index)
-  //             ),
-  //             optionIndexes2: optionIndexes2.map((index) =>
-  //               String.fromCharCode("a".charCodeAt(0) + index)
-  //             ),
-  //             calculatorInputValue: calculatorInputValue,
+  //     setShowExamSumary(true);
+  //     calculateResult();
+  //     const counts = calculateQuestionCounts();
+  //     setAnsweredCount(counts.answered);
+  //     setNotAnsweredCount(counts.notAnswered);
+  //     setMarkedForReviewCount(counts.markedForReview);
+  //     setAnsweredmarkedForReviewCount(counts.answeredmarkedForReviewCount);
+  //     setVisitedCount(counts.VisitedCount);
+  //     const formattedTime = WformatTime(wtimer);
+  //     // Assuming you have these variables in your component's state
+  //     const currentQuestion = questionData.questions[currentQuestionIndex];
+  //     const questionId = currentQuestion.question_id;
+  
+  //     try {
+  //       // Make a POST request to your server to submit time left
+  //       const response = await fetch(
+  //         "http://localhost:5001/QuestionPaper/submitTimeLeft",
+  //         {
+  //           method: "POST",
+  //           headers: {
+  //             "Content-Type": "application/json",
   //           },
-  //         };
-
-  //         // If the user has not answered, save a new response
-  //         const saveResponse = await axios.post(
-  //           "http://localhost:5001/QuestionPaper/response",
-  //           {
-  //             responses,
-  //             userId,
-  //             testCreationTableId,
-  //           }
-  //         );
-
-  //         console.log(saveResponse.data);
-  //         console.log("New Response Saved");
-
-  //         // Update answeredQuestionsMap to indicate that the question has been answered
-  //         setAnsweredQuestionsMap((prevMap) => ({
-  //           ...prevMap,
-  //           [questionId]: true,
-  //         }));
+  //           body: JSON.stringify({
+  //             userId: userData.id,
+  //             testCreationTableId: testCreationTableId,
+  //             timeLeft: formattedTime,
+  //           }),
+  //         }
+  //       ); 
+  //       const result = await response.json();
+  //       // console.log(result);
+  //     } catch (error) {
+  //       console.error("Error submitting time left:", error);
+  //     } finally {
+  //       // Ensure that the questionId is correctly obtained
+  //       if (questionId) {
+  //         // Clear local storage data for the current question
+  //         localStorage.removeItem(`calculatorValue_${questionId}`);
   //       }
-
-  //       setClickCount((prevCount) => prevCount + 1);
   //     }
   //   } catch (error) {
-  //     console.error("Error handling next click:", error);
+  //     console.error("Error in handleSubmit:", error);
   //   }
-
-  //   // --------------------------------end of button functionality --------------------------------------------------
   // };
-
-  const handleSaveNextQuestion = async () => {
-    // ------------------------------------ button functionality --------------------------------------------
-    // Update question status for the current question
-    const updatedQuestionStatus = [...questionStatus];
-    const calculatorInputValue = value;
-    const currentQuestion = questionData.questions[currentQuestionIndex];
-
-    const isCurrentQuestionAnswered =
-      selectedAnswersMap1[currentQuestion.question_id] !== undefined ||
-      (selectedAnswersMap2[currentQuestion.question_id] &&
-        selectedAnswersMap2[currentQuestion.question_id].length > 0) ||
-      calculatorInputValue !== "";
-
-    const isResponseCleared =
-      selectedAnswersMap1[currentQuestion.question_id] === null ||
-      selectedAnswersMap2[currentQuestion.question_id]?.length === 0;
-
-    if (!isCurrentQuestionAnswered) {
-      window.alert("Please answer the question before proceeding.");
-    } else {
-      const updatedQuestionStatus = [...questionStatus];
-      updatedQuestionStatus[currentQuestionIndex] = "answered";
-      setQuestionStatus(updatedQuestionStatus);
-
+  const markForReview = async () => {
+    try {
       setCurrentQuestionIndex((prevIndex) => {
         if (prevIndex < questionData.questions.length - 1) {
           return prevIndex + 1;
         }
+        return prevIndex;
       });
-
-      try {
-        const currentQuestion = questionData.questions[currentQuestionIndex];
-        const subjectId = currentQuestion.subjectId;
-        const sectionId = currentQuestion.sectionId;
-
-        console.log("hello, hii");
-        console.log(" Current Test Creation Table ID:", testCreationTableId);
-        console.log("Current user_Id:", userData.id);
-        console.log("Current Subject Id:", subjectId);
-        console.log("Current Section Id:", sectionId);
-        // Fetch question options
-        const response = await fetch(
-          `http://localhost:5001/QuestionPaper/questionOptions/${testCreationTableId}`
-        );
-        const result = await response.json();
-        setQuestionData(result);
-
-        // Fetch user data
-        const token = localStorage.getItem("token");
-        const response_user = await fetch(
-          "http://localhost:5001/ughomepage_banner_login/user",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        if (response_user.ok) {
-          const userData = await response_user.json();
-          setUserData(userData);
-
+  
+      const calculatorInputValue = value;
+      const currentQuestion = questionData.questions[currentQuestionIndex];
+      const isCurrentQuestionAnswered =
+        selectedAnswersMap1[currentQuestion.question_id] !== undefined ||
+        (selectedAnswersMap2[currentQuestion.question_id] &&
+          selectedAnswersMap2[currentQuestion.question_id].length > 0) ||
+        calculatorInputValue !== "";
+  
+      const updatedQuestionStatus = [...questionStatus];
+      if (isCurrentQuestionAnswered) {
+        // If the question is answered
+        updatedQuestionStatus[currentQuestionIndex] = "Answered but marked for review";
+  
+        if (userData.id) {
           const userId = userData.id;
-          // const subjectId = questionData.subjectId;
-
-          if (!questionData || !questionData.questions) {
-            console.error("Data or questions are null or undefined");
-            return;
-          }
-
-          const calculatorInputValue = value;
-          const currentQuestion = questionData.questions[currentQuestionIndex];
-          const selectedOption1 =
-            selectedAnswersMap1[currentQuestion.question_id];
-          const selectedOption2 =
-            selectedAnswersMap2[currentQuestion.question_id];
-
-          const optionIndexes1 =
-            selectedOption1 !== undefined ? [selectedOption1] : [];
-          const optionIndexes2 =
-            selectedOption2 !== undefined ? selectedOption2 : [];
-
-          const questionId = currentQuestion.question_id;
-          const hasAnswered = answeredQuestionsMap[questionId];
-
-          if (hasAnswered) {
-            const updatedResponse = {
-              optionIndexes1: optionIndexes1.map((index) =>
-                String.fromCharCode("a".charCodeAt(0) + index)
-              ),
-              optionIndexes2: optionIndexes2.map((index) =>
-                String.fromCharCode("a".charCodeAt(0) + index)
-              ),
-              calculatorInputValue: calculatorInputValue,
-            };
-
-            const updateRespons = await axios.put(
-              `http://localhost:5001/QuestionPaper/updateResponse/${questionId}`,
-              {
-                updatedResponse,
-                userId,
-                testCreationTableId,
-                subjectId,
-                sectionId,
-              }
-            );
-            console.log("egrad", updateRespons);
-            console.log("updatedResponse", updatedResponse);
-            console.log("hiiii");
-            console.log("The question answer is  updated");
-            // You can perform additional actions if the question is already answered
-          } else {
+          const subjectId = currentQuestion.subjectId;
+          const sectionId = currentQuestion.sectionId;
+          const questionId = currentQuestion.question_id.toString();
+  
+          // Store the calculator value in local storage
+          localStorage.setItem(`calculatorValue_${questionId}`, JSON.stringify({ value: calculatorInputValue }));
+  
+          // Introduce a small delay before retrieving the stored value
+          // This ensures that the local storage has enough time to update
+          await new Promise((resolve) => setTimeout(resolve, 100));
+  
+          // Retrieve the stored calculator value
+          const storedValue = localStorage.getItem(`calculatorValue_${questionId}`);
+          const storedCalculatorInputValue = storedValue ? JSON.parse(storedValue).value : null;
+  
+          if (calculatorInputValue === storedCalculatorInputValue) {
+            const selectedOption1 = selectedAnswersMap1[currentQuestion.question_id];
+            const selectedOption2 = selectedAnswersMap2[currentQuestion.question_id];
+  
+            const optionIndexes1 = selectedOption1 !== undefined ? [selectedOption1] : [];
+            const optionIndexes2 = selectedOption2 !== undefined ? selectedOption2 : [];
+  
+            const hasAnswered = answeredQuestionsMap[questionId];
+  
+            // Construct the responses object
             const responses = {
+              questionId: questionId,
+              hasAnswered: hasAnswered,
               userId: userId,
               testCreationTableId: testCreationTableId,
               subjectId: subjectId,
               sectionId: sectionId,
               [questionId]: {
-                optionIndexes1: optionIndexes1.map((index) =>
-                  String.fromCharCode("a".charCodeAt(0) + index)
-                ),
-                optionIndexes2: optionIndexes2.map((index) =>
-                  String.fromCharCode("a".charCodeAt(0) + index)
-                ),
+                optionIndexes1: optionIndexes1.map((index) => String.fromCharCode("a".charCodeAt(0) + index)),
+                optionIndexes2: optionIndexes2.map((index) => String.fromCharCode("a".charCodeAt(0) + index)),
                 calculatorInputValue: calculatorInputValue,
               },
             };
-            console.log("hello");
-            console.log("The question is answered for the first time");
-            console.log("responses", responses);
-            // You can perform additional actions if the question is answered for the first time
-
-            // Update answeredQuestionsMap to indicate that the question has been answered
+  
+            // Mark the question as answered
             setAnsweredQuestionsMap((prevMap) => ({
               ...prevMap,
               [questionId]: true,
             }));
-
-            // If the user has answered, update the existing response
+  
+            // Check if the question has been answered before
             if (hasAnswered) {
-              console.log("Existing Response Updated");
-              console.log("updated reponse is saved");
-            } else {
-              // Responses object
-              const responses = {
-                userId: userId,
-                testCreationTableId: testCreationTableId,
-                subjectId: subjectId,
-                sectionId: sectionId,
-                [questionId]: {
-                  optionIndexes1: optionIndexes1.map((index) =>
-                    String.fromCharCode("a".charCodeAt(0) + index)
-                  ),
-                  optionIndexes2: optionIndexes2.map((index) =>
-                    String.fromCharCode("a".charCodeAt(0) + index)
-                  ),
-                  calculatorInputValue: calculatorInputValue,
-                },
+              // If the question has been answered before, update the existing response with a PUT request
+              console.log("Making API request to update the existing response...");
+  
+              const updatedResponse = {
+                optionIndexes1: optionIndexes1.map((index) => String.fromCharCode("a".charCodeAt(0) + index)),
+                optionIndexes2: optionIndexes2.map((index) => String.fromCharCode("a".charCodeAt(0) + index)),
+                calculatorInputValue: calculatorInputValue,
               };
-
-              // If the user has not answered, save a new response
-              const saveResponse = await axios.post(
-                "http://localhost:5001/QuestionPaper/response",
-                {
-                  responses,
+  
+              await fetch(`http://localhost:5001/QuestionPaper/updateResponse/${questionId}`, {
+                method: "PUT",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  updatedResponse,
                   userId,
                   testCreationTableId,
                   subjectId,
                   sectionId,
-                }
-              );
-
-              console.log(saveResponse.data);
-              console.log("New Response Saved");
-              console.log("reponse is saved");
+                }),
+              });
+  
+              console.log("Handling the response after updating...");
+            } else {
+              // If the question is being answered for the first time, save a new response with a POST request
+              console.log("Making API request to save a new response...");
+  
+              await fetch("http://localhost:5001/QuestionPaper/response", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify(responses),
+              });
+  
+              console.log("Handling the response after saving...");
             }
-
-            setClickCount((prevCount) => prevCount + 1);
           }
         }
-      } catch (error) {
-        console.error("Error handling next click:", error);
+      } else {
+        // If the question is not answered
+        updatedQuestionStatus[currentQuestionIndex] = "marked";
       }
-    }
-    // --------------------------------end of button functionality --------------------------------------------------
-  };
-
-  // const handleNextQuestion = async () => {
-  //   const currentQuestion = questionData.questions[currentQuestionIndex];
-  //   const isCurrentQuestionAnswered =
-  //     selectedAnswersMap1[currentQuestion.question_id] !== undefined ||
-  //     (selectedAnswersMap2[currentQuestion.question_id] &&
-  //       selectedAnswersMap2[currentQuestion.question_id].length > 0);
-
-  //   if (!isCurrentQuestionAnswered) {
-  //     // If the current question is not answered, update the status
-  //     const updatedQuestionStatus = [...questionStatus];
-  //     updatedQuestionStatus[currentQuestionIndex] = "notAnswered";
-  //     setQuestionStatus(updatedQuestionStatus);
-
-  //     // You may also show a message or perform other actions to indicate that the question is not answered
-  //     console.log("Question not answered!");
-  //   } else {
-  //     // You may also show a message or perform other actions to indicate that the question is not answered
-  //     console.log("Question not answered!");
-  //   }
-
-  //   const response = await fetch(
-  //     `http://localhost:5001/QuestionPaper/questionOptions/${testCreationTableId}`
-  //   );
-  //   const result = await response.json();
-  //   setQuestionData(result);
-
-  //   setCurrentQuestionIndex((prevIndex) => {
-  //     if (prevIndex < questionData.questions.length - 1) {
-  //       return prevIndex + 1;
-  //     }
-  //   });
-
-  //   try {
-  //     // Fetch question options
-  //     const response = await fetch(
-  //       `http://localhost:5001/QuestionPaper/questionOptions/${testCreationTableId}`
-  //     );
-  //     const result = await response.json();
-  //     setQuestionData(result);
-
-  //     // Fetch user data
-  //     const token = localStorage.getItem("token");
-  //     const response_user = await fetch(
-  //       "http://localhost:5001/ughomepage_banner_login/user",
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //       }
-  //     );
-
-  //     if (response_user.ok) {
-  //       const userData = await response_user.json();
-  //       setUserData(userData);
-
-  //       const userId = userData.id;
-
-  //       console.log("Test Creation Table ID:", testCreationTableId);
-  //       console.log("Current user_Id:", userId);
-
-  //       if (!questionData || !questionData.questions) {
-  //         console.error("Data or questions are null or undefined");
-  //         return;
-  //       }
-
-  //       const currentQuestion = questionData.questions[currentQuestionIndex];
-  //       const questionId = currentQuestion.question_id;
-  //       const calculatorInputValue = value;
-
-  //       const selectedOption1 = selectedAnswersMap1[questionId];
-  //       const selectedOption2 = selectedAnswersMap2[questionId];
-
-  //       const optionIndexes1 =
-  //         selectedOption1 !== undefined ? [selectedOption1] : [];
-  //       const optionIndexes2 =
-  //         selectedOption2 !== undefined ? selectedOption2 : [];
-
-  //       const hasAnswered = answeredQuestionsMap[questionId];
-
-  //       if (hasAnswered) {
-  //         const updatedResponse = {
-  //           optionIndexes1: optionIndexes1.map((index) =>
-  //             String.fromCharCode("a".charCodeAt(0) + index)
-  //           ),
-  //           optionIndexes2: optionIndexes2.map((index) =>
-  //             String.fromCharCode("a".charCodeAt(0) + index)
-  //           ),
-  //           calculatorInputValue: calculatorInputValue,
-  //         };
-
-  //         const updateRespons = await axios.put(
-  //           `http://localhost:5001/QuestionPaper/updateResponse/${questionId}`,
-  //           {
-  //             updatedResponse,
-  //             userId,
-  //             testCreationTableId,
-  //           }
-  //         );
-  //         console.log("egrad", updateRespons);
-  //         console.log("updatedResponse", updatedResponse);
-  //         console.log("hiiii");
-  //         console.log("The question answer is updated");
-  //         // You can perform additional actions if the question is already answered
-  //       } else {
-  //         const responses = {
-  //           userId: userId,
-  //           testCreationTableId: testCreationTableId,
-  //           [questionId]: {
-  //             optionIndexes1: optionIndexes1.map((index) =>
-  //               String.fromCharCode("a".charCodeAt(0) + index)
-  //             ),
-  //             optionIndexes2: optionIndexes2.map((index) =>
-  //               String.fromCharCode("a".charCodeAt(0) + index)
-  //             ),
-  //             calculatorInputValue: calculatorInputValue,
-  //           },
-  //         };
-  //         console.log("hello");
-  //         console.log("The question is answered for the first time");
-  //         console.log("responses", responses);
-  //         // You can perform additional actions if the question is answered for the first time
-
-  //         // Update answeredQuestionsMap to indicate that the question has been answered
-  //         setAnsweredQuestionsMap((prevMap) => ({
-  //           ...prevMap,
-  //           [questionId]: true,
-  //         }));
-
-  //         // If the user has answered, update the existing response
-  //         if (hasAnswered) {
-  //           console.log("Existing Response Updated 1");
-  //           console.log("updated response is saved");
-  //         } else {
-  //           // Responses object
-  //           const responses = {
-  //             userId: userId,
-  //             testCreationTableId: testCreationTableId,
-  //             [questionId]: {
-  //               optionIndexes1: optionIndexes1.map((index) =>
-  //                 String.fromCharCode("a".charCodeAt(0) + index)
-  //               ),
-  //               optionIndexes2: optionIndexes2.map((index) =>
-  //                 String.fromCharCode("a".charCodeAt(0) + index)
-  //               ),
-  //               calculatorInputValue: calculatorInputValue,
-  //             },
-  //           };
-
-  //           // If the user has not answered, save a new response
-  //           const saveResponse = await axios.post(
-  //             "http://localhost:5001/QuestionPaper/response",
-  //             {
-  //               responses,
-  //               userId,
-  //               testCreationTableId,
-  //             }
-  //           );
-
-  //           console.log(saveResponse.data);
-  //           console.log("New Response Saved");
-  //           console.log("response is saved");
-  //         }
-
-  //         setClickCount((prevCount) => prevCount + 1);
-  //       }
-  //     }
-  //   } catch (error) {
-  //     console.error("Error handling next click:", error);
-  //   }
-  //   // --------------------------------end of button functionality --------------------------------------------------
-  // };
-
-  const handleNextQuestion = async () => {
-    const currentQuestion = questionData.questions[currentQuestionIndex];
-    const isCurrentQuestionAnswered =
-      selectedAnswersMap1[currentQuestion.question_id] !== undefined ||
-      (selectedAnswersMap2[currentQuestion.question_id] &&
-        selectedAnswersMap2[currentQuestion.question_id].length > 0);
-
-    if (!isCurrentQuestionAnswered) {
-      // If the current question is not answered, update the status
-      const updatedQuestionStatus = [...questionStatus];
-      updatedQuestionStatus[currentQuestionIndex] = "notAnswered";
+  
       setQuestionStatus(updatedQuestionStatus);
-
-      // You may also show a message or perform other actions to indicate that the question is not answered
-      console.log("Question not answered!");
-    } else {
-      // You may also show a message or perform other actions to indicate that the question is not answered
-      console.log("Question not answered!");
-    }
-
-    const response = await fetch(
-      `http://localhost:5001/QuestionPaper/questionOptions/${testCreationTableId}`
-    );
-    const result = await response.json();
-    setQuestionData(result);
-
-    setCurrentQuestionIndex((prevIndex) => {
-      if (prevIndex < questionData.questions.length - 1) {
-        return prevIndex + 1;
-      }
-    });
-    try {
-      const response = await fetch(
-        `http://localhost:5001/QuestionPaper/questionOptions/${testCreationTableId}`
-      );
-      const result = await response.json();
-
-      setQuestionData(result);
-
-      const token = localStorage.getItem("token");
-      const response_user = await fetch(
-        "http://localhost:5001/ughomepage_banner_login/user",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, // Attach token to headers for authentication
-          },
-        }
-      );
-
-      if (response_user.ok) {
-        const userData = await response_user.json();
-        setUserData(userData);
-
-        const userId = userData.id; // Move this line here to ensure userId is defined
-
-        console.log("Test Creation Table ID:", testCreationTableId);
-        console.log("Current user_Id:", userId); // Now userId should be defined
-
-        if (!questionData || !questionData.questions) {
-          console.error("Data or questions are null or undefined");
-          return;
-        }
-
-        const currentQuestion = questionData.questions[currentQuestionIndex];
-        const selectedOption1 =
-          selectedAnswersMap1[currentQuestion.question_id];
-        const selectedOption2 =
-          selectedAnswersMap2[currentQuestion.question_id];
-
-        const optionIndexes1 =
-          selectedOption1 !== undefined ? [selectedOption1] : [];
-        const optionIndexes2 =
-          selectedOption2 !== undefined ? selectedOption2 : [];
-
-        const questionId = currentQuestion.question_id;
-        console.log("vanakam");
-        console.log("Responses to be sent:", responses);
-
-        const responses = {
-          userId: userId,
-          testCreationTableId: testCreationTableId,
-          [questionId]: {
-            optionIndexes1: optionIndexes1.map((index) =>
-              String.fromCharCode("a".charCodeAt(0) + index)
-            ),
-            optionIndexes2: optionIndexes2.map((index) =>
-              String.fromCharCode("a".charCodeAt(0) + index)
-            ),
-          },
-        };
-
-        const saveResponse = await axios.post(
-          "http://localhost:5001/QuestionPaper/response",
-          {
-            responses,
-          }
-        );
-
-        console.log(saveResponse.data);
-        console.log("Handle Next Click - New Response Saved");
-
-        setAnsweredQuestionsMap((prevMap) => ({
-          ...prevMap,
-          [questionId]: true,
-        }));
-
-        setClickCount((prevCount) => prevCount + 1);
-      } else {
-        // Handle errors, e.g., if user data fetch fails
-      }
-    } catch (error) {
-      console.error("Error handling next click:", error);
-    }
-
-    if (currentQuestionIndex < questionData.length - 1) {
-      // setCurrentQuestionIndex((prevActiveQuestion) => prevActiveQuestion + 1);
-    } else {
-      // setShowResult(true);
-      calculateResult();
-    }
-  };
-  const markForReview = async () => {
-    setCurrentQuestionIndex((prevIndex) => {
-      if (prevIndex < questionData.questions.length - 1) {
-        return prevIndex + 1;
-      }
-    });
-
-    const currentQuestion = questionData.questions[currentQuestionIndex];
-    const isCurrentQuestionAnswered =
-      selectedAnswersMap1[currentQuestion.question_id] !== undefined ||
-      (selectedAnswersMap2[currentQuestion.question_id] &&
-        selectedAnswersMap2[currentQuestion.question_id].length > 0);
-
-    // Update questionStatus for the marked question
-    const updatedQuestionStatus = [...questionStatus];
-    if (isCurrentQuestionAnswered) {
-      updatedQuestionStatus[currentQuestionIndex] =
-        "Answered but marked for review";
-    } else {
-      updatedQuestionStatus[currentQuestionIndex] = "marked";
-    }
-
-    setQuestionStatus(updatedQuestionStatus);
-
-    try {
-      const response = await fetch(
-        `http://localhost:5001/QuestionPaper/questionOptions/${testCreationTableId}`
-      );
-      const result = await response.json();
-
-      setQuestionData(result);
-
-      const token = localStorage.getItem("token");
-      const response_user = await fetch(
-        "http://localhost:5001/ughomepage_banner_login/user",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, // Attach token to headers for authentication
-          },
-        }
-      );
-
-      if (response_user.ok) {
-        const userData = await response_user.json();
-        setUserData(userData);
-
-        const userId = userData.id; // Move this line here to ensure userId is defined
-
-        console.log("Test Creation Table ID:", testCreationTableId);
-        console.log("Current user_Id:", userId); // Now userId should be defined
-
-        if (!questionData || !questionData.questions) {
-          console.error("Data or questions are null or undefined");
-          return;
-        }
-
-        const currentQuestion = questionData.questions[currentQuestionIndex];
-        const selectedOption1 =
-          selectedAnswersMap1[currentQuestion.question_id];
-        const selectedOption2 =
-          selectedAnswersMap2[currentQuestion.question_id];
-
-        const optionIndexes1 =
-          selectedOption1 !== undefined ? [selectedOption1] : [];
-        const optionIndexes2 =
-          selectedOption2 !== undefined ? selectedOption2 : [];
-
-        const questionId = currentQuestion.question_id;
-        console.log("Responses to be sent:");
-
-        // Move the 'responses' variable declaration here
-        const responses = {
-          userId: userId,
-          testCreationTableId: testCreationTableId,
-          [questionId]: {
-            optionIndexes1: optionIndexes1.map((index) =>
-              String.fromCharCode("a".charCodeAt(0) + index)
-            ),
-            optionIndexes2: optionIndexes2.map((index) =>
-              String.fromCharCode("a".charCodeAt(0) + index)
-            ),
-          },
-        };
-
-        const saveResponse = await axios.post(
-          "http://localhost:5001/QuestionPaper/response",
-          {
-            responses,
-            userId,
-            testCreationTableId,
-          }
-        );
-
-        console.log(saveResponse.data);
-        console.log("Mark for Review - New Response Saved");
-
-        setAnsweredQuestionsMap((prevMap) => ({
-          ...prevMap,
-          [questionId]: true,
-        }));
-
-        setClickCount((prevCount) => prevCount + 1);
-      } else {
-        // Handle errors, e.g., if user data fetch fails
-      }
     } catch (error) {
       console.error("Error handling mark for review:", error);
     }
-
-    setCurrentQuestionIndex((prevIndex) => {
-      if (prevIndex < questionData.questions.length - 1) {
-        return prevIndex + 1;
-      }
-    });
   };
-
-  // const handleSubmit = () => {
-  //   window.alert("Your Test has been Submitted!! Click Ok to See Result.");
-  //   setShowExamSumary(true);
-  //   calculateResult();
-  //   const counts = calculateQuestionCounts();
-  //   setAnsweredCount(counts.answered);
-  //   setNotAnsweredCount(counts.notAnswered);
-  //   setMarkedForReviewCount(counts.markedForReview);
-  //   setAnsweredmarkedForReviewCount(counts.answeredmarkedForReviewCount);
-  //   setVisitedCount(counts.VisitedCount);
-  //   setTimeLeftAtSubmission(wtimer);
-
-  //    // Log the time left at the moment of submission
-  // console.log("Time Left at Submission:", WformatTime(wtimer));
-
-  // };
-
+  
   const handleSubmit = async () => {
-    window.alert(
-      "Your Test has been Submitted!! Click Ok to See Result.",
-      calculateResult()
-    );
-    setShowExamSumary(true);
-    calculateResult();
-    const counts = calculateQuestionCounts();
-    setAnsweredCount(counts.answered);
-    setNotAnsweredCount(counts.notAnswered);
-    setMarkedForReviewCount(counts.markedForReview);
-    setAnsweredmarkedForReviewCount(counts.answeredmarkedForReviewCount);
-    setVisitedCount(counts.VisitedCount);
-
-    // const timeLeftInSeconds = wtimer;
-    const formattedTime = WformatTime(wtimer);
-
-    // Log the time left at the moment of submission
-    console.log("Time Left at Submission:", formattedTime);
-
     try {
-      // Make a POST request to your server to submit time left
-      const response = await fetch(
-        "http://localhost:5001/QuestionPaper/submitTimeLeft",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            userId: userData.id /* Replace with actual user ID */,
-            testCreationTableId:
-              testCreationTableId /* Replace with actual test creation table ID */,
-            timeLeft: formattedTime,
-          }),
-        }
+      window.alert(
+        "Your Test has been Submitted!! Click Ok to See Result.",
+        calculateResult()
       );
-
-      const result = await response.json();
-      console.log(result);
+      setShowExamSumary(true);
+      calculateResult();
+      const counts = calculateQuestionCounts();
+      setAnsweredCount(counts.answered);
+      setNotAnsweredCount(counts.notAnswered);
+      setMarkedForReviewCount(counts.markedForReview);
+      setAnsweredmarkedForReviewCount(counts.answeredmarkedForReviewCount);
+      setVisitedCount(counts.VisitedCount);
+  
+      // Assuming you have these variables in your component's state
+      const currentQuestion = questionData.questions[currentQuestionIndex];
+      const questionId = currentQuestion.question_id;
+  
+      // Format time
+      const formattedTime = WformatTime(wtimer);
+  
+      try {
+        // Make a POST request to your server to submit time left
+        const response = await fetch(
+          "http://localhost:5001/QuestionPaper/submitTimeLeft",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              userId: userData.id,
+              testCreationTableId: testCreationTableId,
+              timeLeft: formattedTime,
+            }),
+          }
+        );
+  
+        const result = await response.json();
+        console.log("Time left submission result:", result);
+      } catch (error) {
+        console.error("Error submitting time left:", error);
+      } finally {
+        // Ensure that the questionId is correctly obtained
+        if (questionId) {
+          // Clear local storage data for the current question
+          try {
+            console.log("Removing from local storage for questionId:", questionId);
+            localStorage.removeItem(`calculatorValue_${questionId}`);
+            console.log("Item removed successfully.");
+          } catch (error) {
+            console.error("Error removing item from local storage:", error);
+          }
+        }
+      }
     } catch (error) {
-      console.error("Error submitting time left:", error);
+      console.error("Error in handleSubmit:", error);
     }
   };
+  
 
   const handlePreviousClick = () => {
     setCurrentQuestionIndex((prevIndex) => {
@@ -1456,16 +1428,42 @@ const QuestionPaper = () => {
     });
 
     setActiveQuestion((prevActiveQuestion) => prevActiveQuestion - 1);
+    // Set the value to the previously selected answer if available
+    if (currentQuestionIndex > 0) {
+      const prevQuestion = questionData.questions[currentQuestionIndex - 1];
+      const prevQuestionId = prevQuestion.question_id;
+
+      // Retrieve the stored answer from local storage using the question ID
+      const value = localStorage.getItem(`calculatorValue_${prevQuestionId}`);
+      if (value) {
+        const parsedValue = JSON.parse(value).value;
+        setValue(parsedValue);
+        // console.log(
+        //   "Stored Value for previous question:",
+        //   prevQuestionId,
+        //   parsedValue
+        // );
+      } else {
+        // setValue(""); // Clear the input if there is no stored answer
+        // console.log("No stored value found for previous question.");
+      }
+    }
   };
 
+ 
+
+
   const clearResponse = async () => {
+   
     //-----------------buttons functionality--------------
     const currentQuestion = questionData.questions[currentQuestionIndex];
+    const calculatorInputValue = value;
     const isCurrentQuestionAnswered =
       selectedAnswersMap1[currentQuestion.question_id] !== undefined ||
       (selectedAnswersMap2[currentQuestion.question_id] &&
-        selectedAnswersMap2[currentQuestion.question_id].length > 0);
-
+        selectedAnswersMap2[currentQuestion.question_id].length > 0) ||
+      calculatorInputValue !== "";
+  
     if (isCurrentQuestionAnswered) {
       // If the current question is answered, update the status
       const updatedQuestionStatus = [...questionStatus];
@@ -1473,40 +1471,47 @@ const QuestionPaper = () => {
       setQuestionStatus(updatedQuestionStatus);
     }
     //-----------------buttons functionality end--------------
-
+  
     try {
       const questionId =
         questionData.questions[currentQuestionIndex].question_id;
-      console.log("Response cleared successfully ");
-
+  
       // Clear response for radio buttons (MCQ)
       const updatedSelectedAnswersMap1 = { ...selectedAnswersMap1 };
       updatedSelectedAnswersMap1[questionId] = undefined;
       setSelectedAnswersMap1(updatedSelectedAnswersMap1);
-
+  
       // Clear response for checkboxes (MSQ)
       const updatedSelectedAnswersMap2 = { ...selectedAnswersMap2 };
       updatedSelectedAnswersMap2[questionId] = [];
       setSelectedAnswersMap2(updatedSelectedAnswersMap2);
-
+  
+      // Clear response for input field
+      const updatedSelectedAnswersMap3 = { ...selectedAnswersMap3 };
+      updatedSelectedAnswersMap3[questionId] = undefined;
+      setSelectedAnswersMap3(updatedSelectedAnswersMap3);
+  
+      // Remove the stored calculator value in local storage
+      localStorage.removeItem(`calculatorValue_${questionId}`);
+  
       // Send a request to your server to clear the user's response for the current question
       const response = await axios.delete(
         `http://localhost:5001/QuestionPaper/clearResponse/${questionId}`
       );
-
+  
       if (response.status === 200) {
         console.log("Response cleared successfully");
         // Update any state or perform additional actions as needed
+        
       } else {
         console.error("Failed to clear response:", response.data);
       }
     } catch (error) {
       console.error("Error clearing response:", error);
-    }
+    } 
   };
-
-  // -------------------------------END OF BUTTONS FUNCTIONALITIES-----------------------------------
-
+  
+  
   const updateQuestionStatus = (index, status) => {
     // Update the question status in the QuestionPaper component
     const updatedQuestionStatus = [...questionStatus];
@@ -1525,10 +1530,7 @@ const QuestionPaper = () => {
     }));
   };
 
-  // Update local storage when the 'value' state changes
-  useEffect(() => {
-    localStorage.setItem("calculatorInputValue", value);
-  }, [value]);
+
 
   // Function to get the answer for the current question
   function getAnswerForCurrentQuestion() {
@@ -1551,10 +1553,16 @@ const QuestionPaper = () => {
     // Add more conditions or handle the case where the question type is not recognized
     return "Answer not available";
   }
-  // const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+
+  const currentQuestionType =
+    currentQuestion && currentQuestion.quesion_type
+      ? currentQuestion.quesion_type.typeofQuestion
+      : "";
+
+  // console.log("Current Question Type:", currentQuestionType);
+
   return (
     <div className="QuestionPaper_-container">
-
       <div className="quiz_exam_interface_header">
         <div className="quiz_exam_interface_header_LOGO">
           <img src={logo} alt="" />
@@ -1574,37 +1582,27 @@ const QuestionPaper = () => {
                     <h6>Time Left: {WformatTime(wtimer)}</h6>
                   </li>
                 </div>
-
                 <h3>
-                  Question Type:
-                  {questionTypes.map((type) => (
-                    <li key={type.quesionTypeId}>
-                      <p>{type.typeofQuestion}</p>
-                    </li>
-                  ))}
+                 
                 </h3>
               </div>
 
               <div class="right-header">
-                <div class="marks">
-                  Marks: <div class="plus-mark">+1</div>
-                  <div class="minus-mark">-1</div>
-                  <span>
-                    {" "}
-                    <p>Timer:</p>
-                    <p>{formatTime(timer)}</p>
-                  </span>
-                </div>
               </div>
             </div>
 
             {/* --------------- quiz question container -------------------- */}
-
             <div class="quiz_exam_interface_exam_CONTAINEr">
-              {questionData.questions && questionData.questions.length > 0 && (
+              {questionData.questions.length > 0 && (
                 <>
                   <div className="quiz_exam_interface_exam_subCONTAINEr">
                     <div className="quiz_exam_interface_exam_qN_Q">
+                      <div>
+                        Question Type:
+                        {currentQuestion.quesion_type && (
+                          <p>{currentQuestion.quesion_type.typeofQuestion}</p>
+                        )}
+                      </div>
                       {/* <h3>Question:{currentQuestion.sortid.sortid_text}</h3> */}
                       <h3>{currentQuestionIndex + 1}</h3>
 
@@ -1652,552 +1650,524 @@ const QuestionPaper = () => {
                           currentQuestion.options.map((option, optionIndex) => (
                             <div className="option" key={option.option_id}>
                               <li key={optionIndex}>
-                                {currentQuestionType &&
-                                  currentQuestionType.typeofQuestion &&
-                                  currentQuestionType.typeofQuestion.includes(
-                                    "MCQ4(MCQ with 4 Options)"
-                                  ) && (
-                                    <div>
-                                      <input
-                                        className="opt_btns"
-                                        type="radio"
-                                        name={`question-${currentQuestionIndex}-option`}
-                                        value={String.fromCharCode(
-                                          "A".charCodeAt(0) + optionIndex
-                                        )}
-                                        checked={
-                                          selectedAnswersMap1[
-                                            questionData.questions[
-                                              currentQuestionIndex
-                                            ]?.question_id
-                                          ] === optionIndex
-                                        }
-                                        onChange={() =>
-                                          onAnswerSelected1(optionIndex)
-                                        }
-                                      />
-                                      (
-                                      {String.fromCharCode(
-                                        "a".charCodeAt(0) + optionIndex
+                                {currentQuestionType.includes(
+                                  "MCQ4(MCQ with 4 Options)"
+                                ) && (
+                                  <div>
+                                  <h1 style={{background:'red'}}>{option.ans}</h1>
+                                    <input
+                                      className="opt_btns"
+                                      type="radio"
+                                      name={`question-${currentQuestionIndex}-option`}
+                                      value={option.ans}
+                                      checked={option.ans}
+                                      onChange={() =>
+                                        onAnswerSelected1(optionIndex)
+                                      }
+                                    />
+                                    (
+                                    {String.fromCharCode(
+                                      "a".charCodeAt(0) + optionIndex
+                                    )}
+                                    )
+                                    <img
+                                      src={`http://localhost:5001/uploads/${currentQuestion.documen_name}/${option.optionImgName}`}
+                                      alt={`Option ${option.option_id}`}
+                                    />
+                                  </div>
+                                )}
+                                {currentQuestionType.includes(
+                                  "MCQ5(MCQ with 5 Options)"
+                                ) && (
+                                  <div>
+                                    <input
+                                      className="opt_btns"
+                                      type="radio"
+                                      name={`question-${currentQuestionIndex}-option`}
+                                      value={String.fromCharCode(
+                                        "A".charCodeAt(0) + optionIndex
                                       )}
-                                      )
-                                      <img
-                                        src={`http://localhost:5001/uploads/${currentQuestion.documen_name}/${option.optionImgName}`}
-                                        alt={`Option ${option.option_id}`}
-                                      />
-                                    </div>
-                                  )}
-                                {currentQuestionType &&
-                                  currentQuestionType.typeofQuestion &&
-                                  currentQuestionType.typeofQuestion.includes(
-                                    "MCQ5(MCQ with 5 Options)"
-                                  ) && (
-                                    <div>
-                                      <input
-                                        className="opt_btns"
-                                        type="radio"
-                                        name={`question-${currentQuestionIndex}-option`}
-                                        value={String.fromCharCode(
-                                          "A".charCodeAt(0) + optionIndex
-                                        )}
-                                        checked={
-                                          selectedAnswersMap1[
-                                            questionData.questions[
-                                              currentQuestionIndex
-                                            ]?.question_id
-                                          ] === optionIndex
-                                        }
-                                        onChange={() =>
-                                          onAnswerSelected1(optionIndex)
-                                        }
-                                      />
-                                      (
-                                      {String.fromCharCode(
-                                        "a".charCodeAt(0) + optionIndex
+                                      checked={
+                                        selectedAnswersMap1[
+                                          questionData.questions[
+                                            currentQuestionIndex
+                                          ]?.question_id
+                                        ] === optionIndex
+                                      }
+                                      onChange={() =>
+                                        onAnswerSelected1(optionIndex)
+                                      }
+                                    />
+                                    (
+                                    {String.fromCharCode(
+                                      "a".charCodeAt(0) + optionIndex
+                                    )}
+                                    )
+                                    <img
+                                      src={`http://localhost:5001/uploads/${currentQuestion.documen_name}/${option.optionImgName}`}
+                                      alt={`Option ${option.option_id}`}
+                                    />
+                                  </div>
+                                )}
+                                {currentQuestionType.includes(
+                                  "MSQN(MSQ with -ve marking)"
+                                ) && (
+                                  <div>
+                                    <input
+                                      className="opt_btns"
+                                      type="checkbox"
+                                      name={`question-${currentQuestionIndex}-optionIndex`}
+                                      value={String.fromCharCode(
+                                        "A".charCodeAt(0) + optionIndex
                                       )}
-                                      )
-                                      <img
-                                        src={`http://localhost:5001/uploads/${currentQuestion.documen_name}/${option.optionImgName}`}
-                                        alt={`Option ${option.option_id}`}
-                                      />
-                                    </div>
-                                  )}
-                                {currentQuestionType &&
-                                  currentQuestionType.typeofQuestion &&
-                                  currentQuestionType.typeofQuestion.includes(
-                                    "MSQN(MSQ with -ve marking)"
-                                  ) && (
-                                    <div>
-                                      <input
-                                        className="opt_btns"
-                                        type="checkbox"
-                                        name={`question-${currentQuestionIndex}-optionIndex`}
-                                        value={String.fromCharCode(
-                                          "A".charCodeAt(0) + optionIndex
-                                        )}
-                                        checked={
-                                          selectedAnswersMap2[
-                                            questionData.questions[
-                                              currentQuestionIndex
-                                            ]?.question_id
-                                          ] &&
-                                          selectedAnswersMap2[
-                                            questionData.questions[
-                                              currentQuestionIndex
-                                            ]?.question_id
-                                          ].includes(optionIndex)
-                                        }
-                                        onChange={() =>
-                                          onAnswerSelected2(optionIndex)
-                                        }
-                                      />
-                                      (
-                                      {String.fromCharCode(
-                                        "a".charCodeAt(0) + optionIndex
+                                      checked={
+                                        selectedAnswersMap2[
+                                          questionData.questions[
+                                            currentQuestionIndex
+                                          ]?.question_id
+                                        ] &&
+                                        selectedAnswersMap2[
+                                          questionData.questions[
+                                            currentQuestionIndex
+                                          ]?.question_id
+                                        ].includes(optionIndex)
+                                      }
+                                      onChange={() =>
+                                        onAnswerSelected2(optionIndex)
+                                      }
+                                    />
+                                    (
+                                    {String.fromCharCode(
+                                      "a".charCodeAt(0) + optionIndex
+                                    )}
+                                    )
+                                    <img
+                                      src={`http://localhost:5001/uploads/${currentQuestion.documen_name}/${option.optionImgName}`}
+                                      alt={`Option ${option.option_id}`}
+                                    />
+                                  </div>
+                                )}
+                                {currentQuestionType.includes(
+                                  "MSQ(MSQ without -ve marking)"
+                                ) && (
+                                  <div>
+                                    <input
+                                      className="opt_btns"
+                                      type="checkbox"
+                                      name={`question-${currentQuestionIndex}-optionIndex`}
+                                      value={String.fromCharCode(
+                                        "A".charCodeAt(0) + optionIndex
                                       )}
-                                      )
-                                      <img
-                                        src={`http://localhost:5001/uploads/${currentQuestion.documen_name}/${option.optionImgName}`}
-                                        alt={`Option ${option.option_id}`}
-                                      />
-                                    </div>
-                                  )}
-                                {currentQuestionType &&
-                                  currentQuestionType.typeofQuestion &&
-                                  currentQuestionType.typeofQuestion.includes(
-                                    "MSQ(MSQ without -ve marking)"
-                                  ) && (
-                                    <div>
-                                      <input
-                                        className="opt_btns"
-                                        type="checkbox"
-                                        name={`question-${currentQuestionIndex}-optionIndex`}
-                                        value={String.fromCharCode(
-                                          "A".charCodeAt(0) + optionIndex
-                                        )}
-                                        checked={
-                                          selectedAnswersMap2[
-                                            questionData.questions[
-                                              currentQuestionIndex
-                                            ]?.question_id
-                                          ] &&
-                                          selectedAnswersMap2[
-                                            questionData.questions[
-                                              currentQuestionIndex
-                                            ]?.question_id
-                                          ].includes(optionIndex)
-                                        }
-                                        onChange={() =>
-                                          onAnswerSelected2(optionIndex)
-                                        }
-                                      />
-                                      (
-                                      {String.fromCharCode(
-                                        "a".charCodeAt(0) + optionIndex
-                                      )}
-                                      )
-                                      <img
-                                        src={`http://localhost:5001/uploads/${currentQuestion.documen_name}/${option.optionImgName}`}
-                                        alt={`Option ${option.option_id}`}
-                                      />{" "}
-                                    </div>
-                                  )}
+                                      checked={
+                                        selectedAnswersMap2[
+                                          questionData.questions[
+                                            currentQuestionIndex
+                                          ]?.question_id
+                                        ] &&
+                                        selectedAnswersMap2[
+                                          questionData.questions[
+                                            currentQuestionIndex
+                                          ]?.question_id
+                                        ].includes(optionIndex)
+                                      }
+                                      onChange={() =>
+                                        onAnswerSelected2(optionIndex)
+                                      }
+                                    />
+                                    (
+                                    {String.fromCharCode(
+                                      "a".charCodeAt(0) + optionIndex
+                                    )}
+                                    )
+                                    <img
+                                      src={`http://localhost:5001/uploads/${currentQuestion.documen_name}/${option.optionImgName}`}
+                                      alt={`Option ${option.option_id}`}
+                                    />{" "}
+                                  </div>
+                                )}
                                 {/* calculator ============ */}
-
-                                {currentQuestionType &&
-                                  currentQuestionType.typeofQuestion &&
-                                  currentQuestionType.typeofQuestion.includes(
-                                    "NATD( Numeric Answer type of questions with Decimal values)"
-                                  ) && (
-                                    <div className="calculator">
-                                      <div className="display">
-   
-                                        <label>Answer:</label>
-                                        <input
-                                          type="text"
-                                          name={`question-${currentQuestionIndex}`}
-                                          value={value}
-                                          onChange={(e) => onAnswerSelected3(e)}
-                                          placeholder="Enter your answer"
-                                          readOnly
-                                          defaultValue={answeredQuestionsMap[currentQuestion.question_id] || ''}
-                                        />
-                                      </div>
-                                      <div>
-                                        <input
-                                          type="button"
-                                          value="AC"
-                                          onClick={(e) => setValue("")}
-                                        />
-                                        <input
-                                          type="button"
-                                          value="DE"
-                                          onClick={(e) =>
-                                            setValue(value.slice(0, -1))
-                                          }
-                                        />
-                                        <input
-                                          type="button"
-                                          value="."
-                                          onClick={(e) =>
-                                            setValue(value + e.target.value)
-                                          }
-                                        />
-                                        <input
-                                          type="button"
-                                          value="/"
-                                          onClick={(e) =>
-                                            setValue(value + e.target.value)
-                                          }
-                                        />
-                                      </div>
-                                      <div>
-                                        <input
-                                          type="button"
-                                          value="7"
-                                          onClick={(e) =>
-                                            setValue(value + e.target.value)
-                                          }
-                                        />
-                                        <input
-                                          type="button"
-                                          value="8"
-                                          onClick={(e) =>
-                                            setValue(value + e.target.value)
-                                          }
-                                        />
-                                        <input
-                                          type="button"
-                                          value="9"
-                                          onClick={(e) =>
-                                            setValue(value + e.target.value)
-                                          }
-                                        />
-                                        <input
-                                          type="button"
-                                          value="*"
-                                          onClick={(e) =>
-                                            setValue(value + e.target.value)
-                                          }
-                                        />
-                                      </div>
-                                      <div>
-                                        <input
-                                          type="button"
-                                          value="4"
-                                          onClick={(e) =>
-                                            setValue(value + e.target.value)
-                                          }
-                                        />
-                                        <input
-                                          type="button"
-                                          value="5"
-                                          onClick={(e) =>
-                                            setValue(value + e.target.value)
-                                          }
-                                        />
-                                        <input
-                                          type="button"
-                                          value="6"
-                                          onClick={(e) =>
-                                            setValue(value + e.target.value)
-                                          }
-                                        />
-                                        <input
-                                          type="button"
-                                          value="+"
-                                          onClick={(e) =>
-                                            setValue(value + e.target.value)
-                                          }
-                                        />
-                                      </div>
-                                      <div>
-                                        <input
-                                          type="button"
-                                          value="1"
-                                          onClick={(e) =>
-                                            setValue(value + e.target.value)
-                                          }
-                                        />
-                                        <input
-                                          type="button"
-                                          value="2"
-                                          onClick={(e) =>
-                                            setValue(value + e.target.value)
-                                          }
-                                        />
-                                        <input
-                                          type="button"
-                                          value="3"
-                                          onClick={(e) =>
-                                            setValue(value + e.target.value)
-                                          }
-                                        />
-                                        <input
-                                          type="button"
-                                          value="-"
-                                          onClick={(e) =>
-                                            setValue(value + e.target.value)
-                                          }
-                                        />
-                                      </div>
-                                      <div>
-                                        <input
-                                          type="button"
-                                          value="00"
-                                          onClick={(e) =>
-                                            setValue(value + e.target.value)
-                                          }
-                                        />
-                                        <input
-                                          type="button"
-                                          value="0"
-                                          onClick={(e) =>
-                                            setValue(value + e.target.value)
-                                          }
-                                        />
-                                        <input
-                                          type="button"
-                                          value="="
-                                          className="equal"
-                                          onClick={(e) => setValue(eval(value))}
-                                        />
-                                      </div>
+                                {currentQuestionType.includes(
+                                  "NATD( Numeric Answer type of questions with Decimal values)"
+                                ) && (
+                                  <div className="calculator">
+                                    <div className="display">
+                                      <label>Answer:</label>
+                                      <input
+                                        type="text"
+                                        name={`question-${currentQuestionIndex}`}
+                                        value={value}
+                                        onChange={(e) => onAnswerSelected3(e)}
+                                        placeholder="Enter your answer"
+                                        readOnly
+                                      />
                                     </div>
-                                  )}
-
-                                {currentQuestionType &&
-                                  currentQuestionType.typeofQuestion &&
-                                  currentQuestionType.typeofQuestion.includes(
-                                    "NATI( Numeric Answer type of questions with integer values)"
-                                  ) && (
-                                    <div className="calculator">
-
-                                      <div className="display">
-                                        <label>Answer:</label>
-                                        <input
-                                          type="text"
-                                          name={`question-${currentQuestionIndex}`}
-                                          value={value}
-                                          onChange={(e) => onAnswerSelected3(e)}
-                                          placeholder="Enter your answer"
-                                          readOnly
-                                        />
-                                      </div>
-                                      <div>
-                                        <input
-                                          type="button"
-                                          value="AC"
-                                          onClick={(e) => setValue("")}
-                                        />
-                                        <input
-                                          type="button"
-                                          value="DE"
-                                          onClick={(e) =>
-                                            setValue(value.slice(0, -1))
-                                          }
-                                        />
-                                        <input
-                                          type="button"
-                                          value="."
-                                          onClick={(e) =>
-                                            setValue(value + e.target.value)
-                                          }
-                                        />
-                                        <input
-                                          type="button"
-                                          value="/"
-                                          onClick={(e) =>
-                                            setValue(value + e.target.value)
-                                          }
-                                        />
-                                      </div>
-                                      <div>
-                                        <input
-                                          type="button"
-                                          value="7"
-                                          onClick={(e) =>
-                                            setValue(value + e.target.value)
-                                          }
-                                        />
-                                        <input
-                                          type="button"
-                                          value="8"
-                                          onClick={(e) =>
-                                            setValue(value + e.target.value)
-                                          }
-                                        />
-                                        <input
-                                          type="button"
-                                          value="9"
-                                          onClick={(e) =>
-                                            setValue(value + e.target.value)
-                                          }
-                                        />
-                                        <input
-                                          type="button"
-                                          value="*"
-                                          onClick={(e) =>
-                                            setValue(value + e.target.value)
-                                          }
-                                        />
-                                      </div>
-                                      <div>
-                                        <input
-                                          type="button"
-                                          value="4"
-                                          onClick={(e) =>
-                                            setValue(value + e.target.value)
-                                          }
-                                        />
-                                        <input
-                                          type="button"
-                                          value="5"
-                                          onClick={(e) =>
-                                            setValue(value + e.target.value)
-                                          }
-                                        />
-                                        <input
-                                          type="button"
-                                          value="6"
-                                          onClick={(e) =>
-                                            setValue(value + e.target.value)
-                                          }
-                                        />
-                                        <input
-                                          type="button"
-                                          value="+"
-                                          onClick={(e) =>
-                                            setValue(value + e.target.value)
-                                          }
-                                        />
-                                      </div>
-                                      <div>
-                                        <input
-                                          type="button"
-                                          value="1"
-                                          onClick={(e) =>
-                                            setValue(value + e.target.value)
-                                          }
-                                        />
-                                        <input
-                                          type="button"
-                                          value="2"
-                                          onClick={(e) =>
-                                            setValue(value + e.target.value)
-                                          }
-                                        />
-                                        <input
-                                          type="button"
-                                          value="3"
-                                          onClick={(e) =>
-                                            setValue(value + e.target.value)
-                                          }
-                                        />
-                                        <input
-                                          type="button"
-                                          value="-"
-                                          onClick={(e) =>
-                                            setValue(value + e.target.value)
-                                          }
-                                        />
-                                      </div>
-                                      <div>
-                                        <input
-                                          type="button"
-                                          value="00"
-                                          onClick={(e) =>
-                                            setValue(value + e.target.value)
-                                          }
-                                        />
-                                        <input
-                                          type="button"
-                                          value="0"
-                                          onClick={(e) =>
-                                            setValue(value + e.target.value)
-                                          }
-                                        />
-                                        <input
-                                          type="button"
-                                          value="="
-                                          className="equal"
-                                          onClick={(e) => setValue(eval(value))}
-                                        />
-                                      </div>
+                                    <div>
+                                      <input
+                                        type="button"
+                                        value="AC"
+                                        onClick={(e) => setValue("")}
+                                      />
+                                      <input
+                                        type="button"
+                                        value="DE"
+                                        onClick={(e) =>
+                                          setValue(value.slice(0, -1))
+                                        }
+                                      />
+                                      <input
+                                        type="button"
+                                        value="."
+                                        onClick={(e) =>
+                                          setValue(value + e.target.value)
+                                        }
+                                      />
+                                      <input
+                                        type="button"
+                                        value="/"
+                                        onClick={(e) =>
+                                          setValue(value + e.target.value)
+                                        }
+                                      />
                                     </div>
-                                  )}
+                                    <div>
+                                      <input
+                                        type="button"
+                                        value="7"
+                                        onClick={(e) =>
+                                          setValue(value + e.target.value)
+                                        }
+                                      />
+                                      <input
+                                        type="button"
+                                        value="8"
+                                        onClick={(e) =>
+                                          setValue(value + e.target.value)
+                                        }
+                                      />
+                                      <input
+                                        type="button"
+                                        value="9"
+                                        onClick={(e) =>
+                                          setValue(value + e.target.value)
+                                        }
+                                      />
+                                      <input
+                                        type="button"
+                                        value="*"
+                                        onClick={(e) =>
+                                          setValue(value + e.target.value)
+                                        }
+                                      />
+                                    </div>
+                                    <div>
+                                      <input
+                                        type="button"
+                                        value="4"
+                                        onClick={(e) =>
+                                          setValue(value + e.target.value)
+                                        }
+                                      />
+                                      <input
+                                        type="button"
+                                        value="5"
+                                        onClick={(e) =>
+                                          setValue(value + e.target.value)
+                                        }
+                                      />
+                                      <input
+                                        type="button"
+                                        value="6"
+                                        onClick={(e) =>
+                                          setValue(value + e.target.value)
+                                        }
+                                      />
+                                      <input
+                                        type="button"
+                                        value="+"
+                                        onClick={(e) =>
+                                          setValue(value + e.target.value)
+                                        }
+                                      />
+                                    </div>
+                                    <div>
+                                      <input
+                                        type="button"
+                                        value="1"
+                                        onClick={(e) =>
+                                          setValue(value + e.target.value)
+                                        }
+                                      />
+                                      <input
+                                        type="button"
+                                        value="2"
+                                        onClick={(e) =>
+                                          setValue(value + e.target.value)
+                                        }
+                                      />
+                                      <input
+                                        type="button"
+                                        value="3"
+                                        onClick={(e) =>
+                                          setValue(value + e.target.value)
+                                        }
+                                      />
+                                      <input
+                                        type="button"
+                                        value="-"
+                                        onClick={(e) =>
+                                          setValue(value + e.target.value)
+                                        }
+                                      />
+                                    </div>
+                                    <div>
+                                      <input
+                                        type="button"
+                                        value="00"
+                                        onClick={(e) =>
+                                          setValue(value + e.target.value)
+                                        }
+                                      />
+                                      <input
+                                        type="button"
+                                        value="0"
+                                        onClick={(e) =>
+                                          setValue(value + e.target.value)
+                                        }
+                                      />
+                                      <input
+                                        type="button"
+                                        value="="
+                                        className="equal"
+                                        onClick={(e) => setValue(eval(value))}
+                                      />
+                                    </div>
+                                  </div>
+                                )}
+                                {currentQuestionType.includes(
+                                  "NATI( Numeric Answer type of questions with integer values)"
+                                ) && (
+                                  <div className="calculator">
+                                    <div className="display">
+                                      <label>Answer:</label>
+                                      <input
+                                        type="text"
+                                        name={`question-${currentQuestionIndex}`}
+                                        value={value}
+                                        onChange={(e) => onAnswerSelected3(e)}
+                                        placeholder="Enter your answer"
+                                        readOnly
+                                      />
+                                    </div>
+                                    <div>
+                                      <input
+                                        type="button"
+                                        value="AC"
+                                        onClick={(e) => setValue("")}
+                                      />
+                                      <input
+                                        type="button"
+                                        value="DE"
+                                        onClick={(e) =>
+                                          setValue(value.slice(0, -1))
+                                        }
+                                      />
+                                      <input
+                                        type="button"
+                                        value="."
+                                        onClick={(e) =>
+                                          setValue(value + e.target.value)
+                                        }
+                                      />
+                                      <input
+                                        type="button"
+                                        value="/"
+                                        onClick={(e) =>
+                                          setValue(value + e.target.value)
+                                        }
+                                      />
+                                    </div>
+                                    <div>
+                                      <input
+                                        type="button"
+                                        value="7"
+                                        onClick={(e) =>
+                                          setValue(value + e.target.value)
+                                        }
+                                      />
+                                      <input
+                                        type="button"
+                                        value="8"
+                                        onClick={(e) =>
+                                          setValue(value + e.target.value)
+                                        }
+                                      />
+                                      <input
+                                        type="button"
+                                        value="9"
+                                        onClick={(e) =>
+                                          setValue(value + e.target.value)
+                                        }
+                                      />
+                                      <input
+                                        type="button"
+                                        value="*"
+                                        onClick={(e) =>
+                                          setValue(value + e.target.value)
+                                        }
+                                      />
+                                    </div>
+                                    <div>
+                                      <input
+                                        type="button"
+                                        value="4"
+                                        onClick={(e) =>
+                                          setValue(value + e.target.value)
+                                        }
+                                      />
+                                      <input
+                                        type="button"
+                                        value="5"
+                                        onClick={(e) =>
+                                          setValue(value + e.target.value)
+                                        }
+                                      />
+                                      <input
+                                        type="button"
+                                        value="6"
+                                        onClick={(e) =>
+                                          setValue(value + e.target.value)
+                                        }
+                                      />
+                                      <input
+                                        type="button"
+                                        value="+"
+                                        onClick={(e) =>
+                                          setValue(value + e.target.value)
+                                        }
+                                      />
+                                    </div>
+                                    <div>
+                                      <input
+                                        type="button"
+                                        value="1"
+                                        onClick={(e) =>
+                                          setValue(value + e.target.value)
+                                        }
+                                      />
+                                      <input
+                                        type="button"
+                                        value="2"
+                                        onClick={(e) =>
+                                          setValue(value + e.target.value)
+                                        }
+                                      />
+                                      <input
+                                        type="button"
+                                        value="3"
+                                        onClick={(e) =>
+                                          setValue(value + e.target.value)
+                                        }
+                                      />
+                                      <input
+                                        type="button"
+                                        value="-"
+                                        onClick={(e) =>
+                                          setValue(value + e.target.value)
+                                        }
+                                      />
+                                    </div>
+                                    <div>
+                                      <input
+                                        type="button"
+                                        value="00"
+                                        onClick={(e) =>
+                                          setValue(value + e.target.value)
+                                        }
+                                      />
+                                      <input
+                                        type="button"
+                                        value="0"
+                                        onClick={(e) =>
+                                          setValue(value + e.target.value)
+                                        }
+                                      />
+                                      <input
+                                        type="button"
+                                        value="="
+                                        className="equal"
+                                        onClick={(e) => setValue(eval(value))}
+                                      />
+                                    </div>
+                                  </div>
+                                )}
                                 {/* calculator ============ */}
-                                {currentQuestionType &&
-                                  currentQuestionType.typeofQuestion &&
-                                  currentQuestionType.typeofQuestion.includes(
-                                    "TF(True or false)"
-                                  ) && (
-                                    <div>
-                                      <input
-                                        className="opt_btns"
-                                        type="radio"
-                                        name={`question-${currentQuestionIndex}-option`}
-                                        value={String.fromCharCode(
-                                          "A".charCodeAt(0) + optionIndex
-                                        )}
-                                        checked={
-                                          selectedAnswersMap1[
-                                            questionData.questions[
-                                              currentQuestionIndex
-                                            ]?.question_id
-                                          ] === optionIndex
-                                        }
-                                        onChange={() =>
-                                          onAnswerSelected1(optionIndex)
-                                        }
-                                      />
-                                      (
-                                      {String.fromCharCode(
-                                        "a".charCodeAt(0) + optionIndex
+                                {currentQuestionType.includes(
+                                  "TF(True or false)"
+                                ) && (
+                                  <div>
+                                    <input
+                                      className="opt_btns"
+                                      type="radio"
+                                      name={`question-${currentQuestionIndex}-option`}
+                                      value={String.fromCharCode(
+                                        "A".charCodeAt(0) + optionIndex
                                       )}
-                                      )
-                                      <img
-                                        src={`http://localhost:5001/uploads/${currentQuestion.documen_name}/${option.optionImgName}`}
-                                        alt={`Option ${option.option_id}`}
-                                      />
-                                    </div>
-                                  )}
+                                      checked={
+                                        selectedAnswersMap1[
+                                          questionData.questions[
+                                            currentQuestionIndex
+                                          ]?.question_id
+                                        ] === optionIndex
+                                      }
+                                      onChange={() =>
+                                        onAnswerSelected1(optionIndex)
+                                      }
+                                    />
+                                    (
+                                    {String.fromCharCode(
+                                      "a".charCodeAt(0) + optionIndex
+                                    )}
+                                    )
+                                    <img
+                                      src={`http://localhost:5001/uploads/${currentQuestion.documen_name}/${option.optionImgName}`}
+                                      alt={`Option ${option.option_id}`}
+                                    />
+                                  </div>
+                                )}
 
-                                {currentQuestionType &&
-                                  currentQuestionType.typeofQuestion &&
-                                  currentQuestionType.typeofQuestion.includes(
-                                    "CTQ(Comprehension type of questions )"
-                                  ) && (
-                                    <div>
-                                      <input
-                                        className="opt_btns"
-                                        type="radio"
-                                        name={`question-${currentQuestionIndex}-option`}
-                                        value={String.fromCharCode(
-                                          "A".charCodeAt(0) + optionIndex
-                                        )}
-                                        checked={
-                                          selectedAnswersMap1[
-                                            questionData.questions[
-                                              currentQuestionIndex
-                                            ]?.question_id
-                                          ] === optionIndex
-                                        }
-                                        onChange={() =>
-                                          onAnswerSelected1(optionIndex)
-                                        }
-                                      />
-                                      (
-                                      {String.fromCharCode(
-                                        "a".charCodeAt(0) + optionIndex
+                                {currentQuestionType.includes(
+                                  "CTQ(Comprehension type of questions )"
+                                ) && (
+                                  <div>
+                                    <input
+                                      className="opt_btns"
+                                      type="radio"
+                                      name={`question-${currentQuestionIndex}-option`}
+                                      value={String.fromCharCode(
+                                        "A".charCodeAt(0) + optionIndex
                                       )}
-                                      )
-                                      <img
-                                        src={`http://localhost:5001/uploads/${currentQuestion.documen_name}/${option.optionImgName}`}
-                                        alt={`Option ${option.option_id}`}
-                                      />
-                                    </div>
-                                  )}
+                                      checked={
+                                        selectedAnswersMap1[
+                                          questionData.questions[
+                                            currentQuestionIndex
+                                          ]?.question_id
+                                        ] === optionIndex
+                                      }
+                                      onChange={() =>
+                                        onAnswerSelected1(optionIndex)
+                                      }
+                                    />
+                                    (
+                                    {String.fromCharCode(
+                                      "a".charCodeAt(0) + optionIndex
+                                    )}
+                                    )
+                                    <img
+                                      src={`http://localhost:5001/uploads/${currentQuestion.documen_name}/${option.optionImgName}`}
+                                      alt={`Option ${option.option_id}`}
+                                    />
+                                  </div>
+                                )}
                               </li>
                             </div>
                           ))}
@@ -2225,7 +2195,6 @@ const QuestionPaper = () => {
                         Save & Next
                       </button>
                     </div>
-
                     <div className="quiz_Next_back">
                       <button
                         className="previous-btn"
@@ -2271,8 +2240,7 @@ const QuestionPaper = () => {
                 questionData={questionData}
                 updateQuestionStatus={updateQuestionStatus}
                 // seconds={seconds}
-                seconds={600}
-              />
+                seconds={600} />
 
               {/* <Link to={`/TestResultsPage/${testCreationTableId}`}>Yes FOr Link</Link> */}
             </div>
@@ -2293,6 +2261,9 @@ const QuestionPaper = () => {
               Not Answered Questions:
               <span> {notAnsweredCount}</span>
             </p>
+            <p>Not Visited Count:
+            {NotVisitedb}
+            </p>
             <p>
               Marked for Review Questions:
               <span> {markedForReviewCount}</span>
@@ -2307,17 +2278,13 @@ const QuestionPaper = () => {
               Are you sure you want to submit for final marking? <br />
               No changes will be allowed after submission.
             </h2>
-
             {/* <Link to='/SubmitPage'>YES</Link> */}
-
             {/* <button onClick={handleYes}>YES</button> */}
-            {/* <Link
+            <Link
               to={`/TestResultsPage/${testCreationTableId}`}
-              style={{ background: "red", fontWeight: "bold", padding: "10px" }}
-            >
+              style={{ background: "red", fontWeight: "bold", padding: "10px" }}>
               Yes
-            </Link> */}
-            <Link to='/InputValueDemo'>Yes</Link>
+            </Link>
             <button onClick={handleNo}>NO</button>
           </div>
         </div>
@@ -2326,4 +2293,4 @@ const QuestionPaper = () => {
   );
 };
 
-export default QuestionPaper;
+export default DemoDeleteItsNotImp;

@@ -213,6 +213,11 @@ const DemoDeleteItsNotImp = () => {
     };
   }, [wtimer]);
 
+
+  // const correctOptionId = questionData.questions[currentQuestionIndex].correct_option_id;
+  // console.log('correctOptionId',correctOptionId)
+  
+  // main
   const onAnswerSelected1 = (optionIndex) => {
     const questionId = questionData.questions[currentQuestionIndex].question_id;
     const charcodeatopt = String.fromCharCode("a".charCodeAt(0) + optionIndex);
@@ -221,7 +226,18 @@ const DemoDeleteItsNotImp = () => {
     const questionIndex = currentQuestionIndex + 1;
     // console.log(`Question Index: ${questionIndex}`);
     // console.log(`Clicked Option Index: ${charcodeatopt}`);
+    console.log('Selected option index:', optionIndex);
 
+
+    const selectedOption = questionData.questions[currentQuestionIndex].options[optionIndex];
+    // Retrieve the option ID
+    const optionId = selectedOption.option_id;
+
+    // Log the selected option index ID and option ID
+    console.log('Selected option index:', optionIndex);
+    console.log('Selected option ID:', optionId);
+
+    
     setSelectedAnswersMap1((prevMap) => ({
       ...prevMap,
       [questionId]: optionIndex,
@@ -235,35 +251,82 @@ const DemoDeleteItsNotImp = () => {
     //   updatedSelectedAnswers
     // );
   };
-
   const onAnswerSelected2 = (optionIndex) => {
     const questionId = questionData.questions[currentQuestionIndex].question_id;
     const charcodeatopt = String.fromCharCode("a".charCodeAt(0) + optionIndex);
-    // console.log("questionId from onAnswerSelected2 : ", questionId);
+    
+    // Retrieve the existing selected options for the current question
+    const existingSelection = selectedAnswersMap2[questionId] || [];
+    
+    // Check if the selected option is already in the existing selection
+    const isSelected = existingSelection.includes(optionIndex);
+    
+    // Update the selection based on whether the option was already selected or not
+    const updatedSelection = isSelected
+        ? existingSelection.filter((index) => index !== optionIndex) // Deselect the option if already selected
+        : [...existingSelection, optionIndex]; // Select the option if not already selected
 
-    const questionIndex = currentQuestionIndex + 1;
-    // console.log(`Question Index: ${questionIndex}`);
-    // console.log(`Clicked Option Index: ${charcodeatopt}`);
-    setSelectedAnswersMap2((prevMap) => {
-      const updatedSelection = [...(prevMap[questionId] || [])];
-      const index = updatedSelection.indexOf(optionIndex);
-
-      if (index !== -1) {
-        updatedSelection.splice(index, 1);
-      } else {
-        updatedSelection.push(optionIndex);
-      }
-
-      return {
+    // Update the selected answers map with the updated selection for the current question
+    setSelectedAnswersMap2((prevMap) => ({
         ...prevMap,
         [questionId]: updatedSelection,
-      };
-    });
+    }));
 
+    // Update the selected answers array for the active question
     const updatedSelectedAnswers = [...selectedAnswers];
-    updatedSelectedAnswers[activeQuestion] = optionIndex;
+    updatedSelectedAnswers[activeQuestion] = updatedSelection;
     setSelectedAnswers(updatedSelectedAnswers);
-  };
+};
+// main 
+//   const onAnswerSelected1 = (optionIndex) => {
+//     const questionId = questionData.questions[currentQuestionIndex].question_id;
+//     const charcodeatopt = String.fromCharCode("a".charCodeAt(0) + optionIndex);
+
+//     // Get the correct option ID from questionData
+//     const correctOptionId = questionData.questions[currentQuestionIndex].correct_option_id;
+
+//     // Store both the selected option index and the correct option ID
+//     setSelectedAnswersMap1((prevMap) => ({
+//         ...prevMap,
+//         [questionId]: {
+//             selectedOptionIndex: optionIndex,
+//             correctOptionId: correctOptionId
+//         },
+//     }));
+
+//     const updatedSelectedAnswers = [...selectedAnswers];
+//     updatedSelectedAnswers[activeQuestion] = optionIndex;
+//     setSelectedAnswers(updatedSelectedAnswers);
+// };
+
+  // const onAnswerSelected2 = (optionIndex) => {
+  //   const questionId = questionData.questions[currentQuestionIndex].question_id;
+  //   const charcodeatopt = String.fromCharCode("a".charCodeAt(0) + optionIndex);
+  //   // console.log("questionId from onAnswerSelected2 : ", questionId);
+
+  //   const questionIndex = currentQuestionIndex + 1;
+  //   // console.log(`Question Index: ${questionIndex}`);
+  //   // console.log(`Clicked Option Index: ${charcodeatopt}`);
+  //   setSelectedAnswersMap2((prevMap) => {
+  //     const updatedSelection = [...(prevMap[questionId] || [])];
+  //     const index = updatedSelection.indexOf(optionIndex);
+
+  //     if (index !== -1) {
+  //       updatedSelection.splice(index, 1);
+  //     } else {
+  //       updatedSelection.push(optionIndex);
+  //     }
+
+  //     return {
+  //       ...prevMap,
+  //       [questionId]: updatedSelection,
+  //     };
+  //   });
+
+  //   const updatedSelectedAnswers = [...selectedAnswers];
+  //   updatedSelectedAnswers[activeQuestion] = optionIndex;
+  //   setSelectedAnswers(updatedSelectedAnswers);
+  // };
 
   const onAnswerSelected3 = (e) => {
     const inputValue = e.target.value;
@@ -446,6 +509,155 @@ const DemoDeleteItsNotImp = () => {
     }
   }, [currentQuestionIndex, questionData]);
 
+  // const handleSaveNextQuestion = async () => {
+  //   try {
+  //     const updatedQuestionStatus = [...questionStatus];
+  //     const calculatorInputValue = value;
+   
+  //     console.log("Current Question Index:", currentQuestionIndex);
+  //     console.log("Current Question:", currentQuestion);
+   
+  //     const isCurrentQuestionAnswered =
+  //       selectedAnswersMap1[currentQuestion.question_id] !== undefined ||
+  //       (selectedAnswersMap2[currentQuestion.question_id] &&
+  //         selectedAnswersMap2[currentQuestion.question_id].length > 0) ||
+  //       calculatorInputValue !== "";
+   
+  //     console.log("Is Current Question Answered:", isCurrentQuestionAnswered);
+   
+  //     if (!isCurrentQuestionAnswered) {
+  //       window.alert("Please answer the question before proceeding.");
+  //     } else {
+  //       updatedQuestionStatus[currentQuestionIndex] = "answered";
+  //       setQuestionStatus(updatedQuestionStatus);
+   
+  //       setCurrentQuestionIndex((prevIndex) =>
+  //         prevIndex < questionData.questions.length - 1
+  //           ? prevIndex + 1
+  //           : prevIndex
+  //       );
+   
+  //       if (userData.id) {
+  //         const userId = userData.id;
+  //         const subjectId = currentQuestion.subjectId;
+  //         const sectionId = currentQuestion.sectionId;
+  //         const questionId = currentQuestion.question_id.toString();
+   
+  //         const valueObject = {
+  //           testCreationTableId: testCreationTableId,
+  //           value: calculatorInputValue,
+  //           question_id: questionId,
+  //         };
+   
+  //         // Store the calculator value in local storage
+  //         localStorage.setItem(
+  //           `calculatorValue_${questionId}`,
+  //           JSON.stringify(valueObject)
+  //         );
+   
+  //         // Introduce a small delay before retrieving the stored value
+  //         // This ensures that the local storage has enough time to update
+  //         await new Promise((resolve) => setTimeout(resolve, 100));
+   
+  //         // Retrieve the stored calculator value
+  //         const storedValue = localStorage.getItem(
+  //           `calculatorValue_${questionId}`
+  //         );
+  //         const storedCalculatorInputValue = storedValue
+  //           ? JSON.parse(storedValue).value
+  //           : null;
+   
+  //         if (calculatorInputValue === storedCalculatorInputValue) {
+  //           const selectedOption1 =
+  //             selectedAnswersMap1[currentQuestion.question_id];
+   
+  //           const selectedOption2 =
+  //             selectedAnswersMap2[currentQuestion.question_id];
+   
+  //           const optionIndexes1 =
+  //             selectedOption1 !== undefined ? [selectedOption1] : [];
+  //           const optionIndexes2 =
+  //             selectedOption2 !== undefined ? selectedOption2 : [];
+   
+  //           const hasAnswered = answeredQuestionsMap[questionId];
+   
+  //           // Construct the responses object
+  //           const responses = {
+  //             questionId: questionId,
+  //             hasAnswered: hasAnswered,
+  //             userId: userId,
+  //             testCreationTableId: testCreationTableId,
+  //             subjectId: subjectId,
+  //             sectionId: sectionId,
+  //             [questionId]: {
+  //               optionIndexes1: optionIndexes1.map((index) =>
+  //                 String.fromCharCode("a".charCodeAt(0) + index)
+  //               ),
+  //               optionIndexes2: optionIndexes2.map((index) =>
+  //                 String.fromCharCode("a".charCodeAt(0) + index)
+  //               ),
+  //               calculatorInputValue: calculatorInputValue,
+  //             },
+  //           };
+   
+  //           // Mark the question as answered
+  //           setAnsweredQuestionsMap((prevMap) => ({
+  //             ...prevMap,
+  //             [questionId]: true,
+  //           }));
+   
+  //           if (hasAnswered) {
+  //             // If the question has been answered before, update the existing response with a PUT request
+  //             console.log("Making API request to update the existing response...");
+  
+  //             const updatedResponse = {
+  //               optionIndexes1: optionIndexes1.map((index) =>
+  //                 String.fromCharCode("a".charCodeAt(0) + index)
+  //               ),
+  //               optionIndexes2: optionIndexes2.map((index) =>
+  //                 String.fromCharCode("a".charCodeAt(0) + index)
+  //               ),
+  //               calculatorInputValue: calculatorInputValue,
+  //             };
+  
+  //             await fetch(`http://localhost:5001/QuestionPaper/updateResponse/${questionId}`, {
+  //               method: "PUT",
+  //               headers: {
+  //                 "Content-Type": "application/json",
+  //               },
+  //               body: JSON.stringify({
+  //                 updatedResponse,
+  //                 userId,
+  //                 testCreationTableId,
+  //                 subjectId,
+  //                 sectionId,
+  //               }),
+  //             });
+  
+  //             console.log("Handling the response after updating...");
+  //           } else {
+  //             // If the question is being answered for the first time, save a new response with a POST request
+  //             console.log("Making API request to save a new response...");
+  
+  //             await fetch("http://localhost:5001/QuestionPaper/response", {
+  //               method: "POST",
+  //               headers: {
+  //                 "Content-Type": "application/json",
+  //               },
+  //               body: JSON.stringify(responses),
+  //             });
+  
+  //             console.log("Handling the response after saving...");
+  //           }
+  //         }
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.error("Error handling next click:", error);
+  //   }
+  // };
+  
+  const [responseCleared, setResponseCleared] = useState(false);
   const handleSaveNextQuestion = async () => {
     try {
       const updatedQuestionStatus = [...questionStatus];
@@ -519,6 +731,28 @@ const DemoDeleteItsNotImp = () => {
             const hasAnswered = answeredQuestionsMap[questionId];
    
             // Construct the responses object
+            // const responses = {
+            //   questionId: questionId,
+            //   hasAnswered: hasAnswered,
+            //   userId: userId,
+            //   testCreationTableId: testCreationTableId,
+            //   subjectId: subjectId,
+            //   sectionId: sectionId,
+            //   [questionId]: {
+            //     optionIndexes1: optionIndexes1.map((index) => {
+            //         const selectedOption = questionData.questions[currentQuestionIndex].options[index];
+            //         return selectedOption.option_id;
+            //     }),
+            //     optionIndexes2: optionIndexes2.map((index) => {
+            //         const selectedOption = questionData.questions[currentQuestionIndex].options[index];
+            //         return selectedOption.option_id;
+            //     }),
+            //     calculatorInputValue: calculatorInputValue,
+            //   },
+            // };
+   
+            // Mark the question as answered
+           
             const responses = {
               questionId: questionId,
               hasAnswered: hasAnswered,
@@ -527,17 +761,25 @@ const DemoDeleteItsNotImp = () => {
               subjectId: subjectId,
               sectionId: sectionId,
               [questionId]: {
-                optionIndexes1: optionIndexes1.map((index) =>
-                  String.fromCharCode("a".charCodeAt(0) + index)
-                ),
-                optionIndexes2: optionIndexes2.map((index) =>
-                  String.fromCharCode("a".charCodeAt(0) + index)
-                ),
-                calculatorInputValue: calculatorInputValue,
+                  optionIndexes1: optionIndexes1.map((index) => {
+                      const selectedOption = questionData.questions[currentQuestionIndex].options[index];
+                      return selectedOption.option_id;
+                  }),
+                  optionIndexes1CharCodes: optionIndexes1.map((index) => {
+                      return String.fromCharCode("a".charCodeAt(0) + index);
+                  }),
+                  optionIndexes2: optionIndexes2.map((index) => {
+                      const selectedOption = questionData.questions[currentQuestionIndex].options[index];
+                      return selectedOption.option_id;
+                  }),
+                  optionIndexes2CharCodes: optionIndexes2.map((index) => {
+                      return String.fromCharCode("a".charCodeAt(0) + index);
+                  }),
+                  calculatorInputValue: calculatorInputValue,
               },
-            };
-   
-            // Mark the question as answered
+          };
+          
+          
             setAnsweredQuestionsMap((prevMap) => ({
               ...prevMap,
               [questionId]: true,
@@ -593,7 +835,7 @@ const DemoDeleteItsNotImp = () => {
       console.error("Error handling next click:", error);
     }
   };
-
+  
   const handleNextQuestion = async () => {
     try {
       const currentQuestion = questionData.questions[currentQuestionIndex];
@@ -1209,10 +1451,10 @@ const DemoDeleteItsNotImp = () => {
   };
 
  
-  const [loading, setLoading] = useState(false);
+
 
   const clearResponse = async () => {
-    setLoading(true);
+   
     //-----------------buttons functionality--------------
     const currentQuestion = questionData.questions[currentQuestionIndex];
     const calculatorInputValue = value;
@@ -1260,14 +1502,13 @@ const DemoDeleteItsNotImp = () => {
       if (response.status === 200) {
         console.log("Response cleared successfully");
         // Update any state or perform additional actions as needed
+        
       } else {
         console.error("Failed to clear response:", response.data);
       }
     } catch (error) {
       console.error("Error clearing response:", error);
-    } finally {
-      setLoading(false); // Move setLoading(false) to the finally block
-    }
+    } 
   };
   
   
