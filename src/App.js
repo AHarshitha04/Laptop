@@ -1,9 +1,4 @@
 import React from "react";
-
-
-
-
-
 import {
   BrowserRouter as Router,
   Routes,
@@ -11,7 +6,8 @@ import {
   Navigate,
 } from "react-router-dom";
 import "./App.css";
-// import ScrollToTop from 'react-router-scroll-top';
+
+
 import Footer from "../src/components/UG/Footer";
 import GATE_OTS from "./components/PG/GATE_OTS";
 import { GateOts } from "./components/PG/GateOts";
