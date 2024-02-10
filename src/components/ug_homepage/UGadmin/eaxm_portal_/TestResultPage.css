@@ -1,18 +1,19 @@
+
 .customers {
     font-family: Arial, Helvetica, sans-serif;
     border-collapse: collapse;
     width: 100%;
   }
-  
+ 
   .customers td, #customers th {
     border: 1px solid #ddd;
     padding: 8px;
   }
-  
+ 
 .customers tr:nth-child(even){background-color: #f2f2f2;}
-  
+ 
 .customers tr:hover {background-color: #ddd;}
-  
+ 
 .customers th {
     padding-top: 12px;
     padding-bottom: 12px;
@@ -20,23 +21,23 @@
     background-color: #04AA6D;
     color: white;
   }
-
+ 
   .testResult_-container{
     margin:0 auto;
     width: 80%;
   }
-
+ 
   .testResultTable {
     width: 52%;
     /* background: red; */
     margin: 0 auto;
     display: flex;
 }
-
+ 
 .testResultTable #customers{
   width: 1000px;
 }
-
+ 
 .user_-infoFromResult{
   display: flex;
   gap: 4rem;
@@ -45,15 +46,37 @@
   align-items: center;
   margin: 2rem 0;
 }
-
+ 
 .testResultTable #customers tr td{
-padding: 10px 20px; 
+padding: 10px 20px;
  margin: 0px;
  font-weight: 700;
  font-size: 20px;
 }
 .testResultTable #customers tr td p{
-  padding: 5px 10px; 
+  padding: 5px 10px;
   margin: 0px;
   text-align: center;
   }
+ 
+.subject_score_card{
+   background-color: purple;
+   color: white;
+   width: 300px;
+   padding: 20px;
+  /* gap: 20px; */
+   /* display: flex; */
+   /* display: grid; */
+}
+ 
+.score_cards{
+   display: flex;
+   gap: 3rem;
+}
+
+ 
+.score_cards_div{
+  padding: 50px;
+  /* display: flex; */
+  /* gap: 200px; */
+}

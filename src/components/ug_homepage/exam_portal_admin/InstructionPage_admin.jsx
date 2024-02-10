@@ -34,8 +34,6 @@ const InstructionPage_admin = () => {
   //   return Object.keys(errors).length === 0;
   // };
 
-
-
   useEffect(() => {
     const fetchExams = async () => {
       try {

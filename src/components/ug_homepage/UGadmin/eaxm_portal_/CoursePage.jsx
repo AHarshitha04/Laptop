@@ -1,8 +1,10 @@
+
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import MockTest from "../../../../Images/mock_test.jpg";
 import { Link, useParams } from "react-router-dom";
-
+import logo from './asserts/logo.jpeg'
+ 
 const CoursePage = () => {
   const { examId } = useParams();
   const [courseCard, setCourseCard] = useState([]);
@@ -31,24 +33,27 @@ const CoursePage = () => {
         setLoading(false);
       }
     };
-
+ 
     fetchCourseDetails();
   }, [examId]);
-
+ 
   const currentDate = new Date(); // Get the current date
-
+ 
   // Filter exams based on start and end dates
   const filteredCourses = courseCard.filter(
     (courseDetails) =>
       new Date(courseDetails.courseStartDate) <= currentDate &&
       currentDate <= new Date(courseDetails.courseEndDate)
   );
-
+ 
   console.log("Exam ID:", examId); // Log the examId
   console.log("Course Card State:", courseCard); // Log the courseCard state
-
+ 
   return (
     <div>
+      <div className="header">
+        <img className="header_logo" src={logo} alt="logo" width={200} />
+      </div>
       {/* <div><Header/></div> */}
       <h1>Current Courses</h1>
       <ul className="card_container_ul">
@@ -90,7 +95,7 @@ const CoursePage = () => {
     </div>
   );
 };
-
+ 
 export default CoursePage;
 
 // export const Header = () => {

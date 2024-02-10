@@ -209,6 +209,7 @@ router.get("/questionType/:questionId", async (req, res) => {
     
 //   WHERE 
 //       doc.testCreationTableId = ? ORDER BY q.question_id ASC;
+
 router.get("/questionOptions/:testCreationTableId", async (req, res) => {
   const { testCreationTableId } = req.params;
   try {
@@ -226,7 +227,6 @@ router.get("/questionOptions/:testCreationTableId", async (req, res) => {
       doc.subjectId, doc.testCreationTableId,
       P.paragraphImg, p.paragraph_Id,
       pq.paragraphQNo_Id, pq.paragraphQNo, qts.quesionTypeId
-        
   FROM 
       questions q 
       LEFT OUTER JOIN options o ON q.question_id = o.question_id
@@ -240,14 +240,9 @@ router.get("/questionOptions/:testCreationTableId", async (req, res) => {
       LEFT OUTER JOIN paragraphqno pq ON p.paragraph_Id = pq.paragraph_Id AND q.question_id = pq.question_id
       LEFT OUTER JOIN ots_document doc ON q.document_Id = doc.document_Id
       LEFT OUTER JOIN user_responses ur ON q.question_id = ur.question_id and o.option_id = ur.option_id
-    
   WHERE 
       doc.testCreationTableId = ? 
-  
-  ORDER BY q.question_id ASC, o.option_index ASC;
-  
-  
-  `,
+  ORDER BY q.question_id ASC, o.option_index ASC;`,
       [testCreationTableId]
     );
 
@@ -607,6 +602,7 @@ router.get('/getTimeLeftSubmissions/:testCreationTableId/:userId', async (req, r
   }
 });
 
+//main
 // router.get("/score/:testCreationTableId/:user_Id", async (req, res) => {
 //   const { testCreationTableId, user_Id } = req.params;
  
@@ -810,6 +806,285 @@ router.get('/getTimeLeftSubmissions/:testCreationTableId/:userId', async (req, r
 //     res.status(500).json({ error: "Internal Server Error" });
 //   }
 // });
+
+
+
+router.get("/score/:testCreationTableId/:user_Id", async (req, res) => {
+  const { testCreationTableId, user_Id } = req.params;
+ 
+  try {
+    if (!testCreationTableId || !user_Id) {
+      return res.status(400).json({ error: "Missing required parameters" });
+    }
+ 
+    const [results, fields] = await db.execute(
+      `(
+        SELECT
+            ur.user_Sno,
+            ur.user_Id,
+            ur.testCreationTableId,
+            s.subjectId,
+            sub.subjectName,
+            s.sectionId,
+            s.sectionName,  
+            ur.question_id,
+            ur.user_answer,
+            a.answer_text,
+            m.marks_text,
+            0 AS nmarks_text,
+            s.QuestionLimit
+        FROM
+            user_responses ur
+        JOIN answer a ON
+            ur.question_id = a.question_id
+        JOIN marks m ON
+            ur.question_id = m.question_id
+        JOIN sections s ON
+            ur.sectionId = s.sectionId
+        JOIN subjects sub ON
+            sub.subjectId = s.subjectId
+        WHERE
+            TRIM(ur.user_answer) = TRIM(a.answer_text) AND ur.user_Id = 2 AND ur.testCreationTableId = 3 AND (
+                s.QuestionLimit IS NULL OR s.QuestionLimit = 0
+            )
+    )
+    UNION
+    (
+        SELECT
+            ur.user_Sno,
+            ur.user_Id,
+            ur.testCreationTableId,
+            s.subjectId,
+            sub.subjectName,
+            s.sectionId, -- Corrected sectionId selection here
+            s.sectionName,  
+            ur.question_id,
+            ur.user_answer,
+            a.answer_text,
+            0 AS marks_text,
+            m.nmarks_text,
+            s.QuestionLimit
+        FROM
+            user_responses ur
+        JOIN answer a ON
+            ur.question_id = a.question_id
+        JOIN marks m ON
+            ur.question_id = m.question_id
+        JOIN sections s ON
+            ur.sectionId = s.sectionId
+        JOIN subjects sub ON
+            sub.subjectId = s.subjectId
+        WHERE
+            TRIM(ur.user_answer) != TRIM(a.answer_text) AND ur.user_Id = 2 AND ur.testCreationTableId = 3 AND (
+                s.QuestionLimit IS NULL OR s.QuestionLimit = 0
+            )
+    )
+    UNION
+    (
+        SELECT
+            ur.user_Sno,
+            ur.user_Id,
+            ur.testCreationTableId,
+            s.subjectId,
+            sub.subjectName,
+            s.sectionId,
+            s.sectionName,  
+            ur.question_id,
+            ur.user_answer,
+            a.answer_text,
+            m.marks_text,
+            0 AS nmarks_text,
+            s.QuestionLimit
+        FROM
+            user_responses ur
+        JOIN answer a ON
+            ur.question_id = a.question_id
+        JOIN marks m ON
+            ur.question_id = m.question_id
+        JOIN sections s ON
+            ur.sectionId = s.sectionId
+        JOIN subjects sub ON
+            sub.subjectId = s.subjectId
+        WHERE
+            TRIM(ur.user_answer) = TRIM(a.answer_text) AND ur.user_Id = 2 AND ur.testCreationTableId = 3 AND s.QuestionLimit IS NOT NULL AND s.QuestionLimit > 0
+        LIMIT 25
+    )
+    UNION
+    (
+        SELECT
+            ur.user_Sno,
+            ur.user_Id,
+            ur.testCreationTableId,
+            s.subjectId,
+            sub.subjectName,
+            s.sectionId, -- Corrected sectionId selection here
+            s.sectionName,
+            ur.question_id,
+            ur.user_answer,
+            a.answer_text,
+            0 AS marks_text,
+            m.nmarks_text,
+            s.QuestionLimit
+        FROM
+            user_responses ur
+        JOIN answer a ON
+            ur.question_id = a.question_id
+        JOIN marks m ON
+            ur.question_id = m.question_id
+        JOIN sections s ON
+            ur.sectionId = s.sectionId
+        JOIN subjects sub ON
+            sub.subjectId = s.subjectId
+        WHERE
+            TRIM(ur.user_answer) != TRIM(a.answer_text) AND ur.user_Id = 2 AND ur.testCreationTableId = 3 AND s.QuestionLimit IS NOT NULL AND s.QuestionLimit > 0
+        LIMIT 25
+    );
+    `,
+      [
+        user_Id,
+        testCreationTableId,
+        user_Id,
+        testCreationTableId,
+        user_Id,
+        testCreationTableId,
+        user_Id,
+        testCreationTableId,
+      ]
+    );
+ 
+    // Initialize an object to hold subject-wise scores for sections with question limits
+    let subjectScoresWithLimit = {};
+ 
+    // Initialize an object to hold subject-wise scores for sections without question limits
+    let subjectScoresWithoutLimit = {};
+ 
+    // Iterate over the results and calculate subject-wise scores
+    results.forEach((row) => {
+      const {
+        subjectId,
+        subjectName,
+        sectionId,
+        sectionName,
+        marks_text,
+        nmarks_text,
+        QuestionLimit,
+      } = row;
+ 
+      // Check if the section has a question limit
+      if (QuestionLimit !== null && QuestionLimit > 0) {
+        // If subjectId doesn't exist in subjectScoresWithLimit, initialize it
+        if (!subjectScoresWithLimit[subjectId]) {
+          subjectScoresWithLimit[subjectId] = {
+            subjectId,
+            subjectName,
+            sectionName,
+            sectionId,
+            totalMarks: 0,
+            netMarks: 0,
+            correctAnswersCount: 0,
+            questionLimit: 0,
+          };
+        }
+ 
+        // Update subject-wise scores for sections with question limits
+        if (
+          subjectScoresWithLimit[subjectId].correctAnswersCount < QuestionLimit
+        ) {
+          subjectScoresWithLimit[subjectId].totalMarks += marks_text;
+          subjectScoresWithLimit[subjectId].netMarks +=
+            marks_text - nmarks_text;
+          subjectScoresWithLimit[subjectId].correctAnswersCount++;
+        }
+ 
+        // Set the question limit (assuming it's the same for all rows)
+        subjectScoresWithLimit[subjectId].questionLimit = QuestionLimit;
+      } else {
+        // If the section does not have a question limit
+        // If subjectId doesn't exist in subjectScoresWithoutLimit, initialize it
+        if (!subjectScoresWithoutLimit[subjectId]) {
+          subjectScoresWithoutLimit[subjectId] = {
+            subjectId,
+            subjectName,
+            sectionName,
+            // sectionId,
+            totalMarks: 0,
+            netMarks: 0,
+            correctAnswersCount: 0,
+          };
+        }
+ 
+        // Update subject-wise scores for sections without question limits
+        subjectScoresWithoutLimit[subjectId].totalMarks += marks_text;
+        subjectScoresWithoutLimit[subjectId].netMarks +=
+          marks_text - nmarks_text;
+        subjectScoresWithoutLimit[subjectId].correctAnswersCount++;
+      }
+    });
+ 
+    // Calculate overall total and net marks
+    let overallTotalMarks = 0;
+    let overallNetMarks = 0;
+ 
+    // Calculate total and net marks for sections with question limits
+    Object.values(subjectScoresWithLimit).forEach((subjectScore) => {
+      overallTotalMarks += subjectScore.totalMarks;
+      overallNetMarks += subjectScore.netMarks;
+    });
+   
+ 
+    // Calculate total and net marks for sections without question limits
+    Object.values(subjectScoresWithoutLimit).forEach((subjectScore) => {
+      overallTotalMarks += subjectScore.totalMarks;
+      overallNetMarks += subjectScore.netMarks;
+    });
+ 
+ 
+ 
+    // Ensure object properties are defined before iterating
+    const subjectsArray = [];
+ 
+    // Iterate over subjectScoresWithoutLimit
+    Object.entries(subjectScoresWithoutLimit).forEach(([subjectId, scores]) => {
+      const { sectionId, sectionName, subjectName } = scores; // Destructuring sectionId and sectionName from scores
+      subjectsArray.push({
+          subjectId,
+          subjectName,
+          sections: [{ sectionId, sectionName, Section: 'A', scores }] // Include both sectionId and sectionName here
+      });
+    });
+ 
+    // Iterate over subjectScoresWithLimit
+    Object.entries(subjectScoresWithLimit).forEach(([subjectId, scores]) => {
+      const { sectionId, sectionName, subjectName } = scores; // Destructuring sectionId and sectionName from scores
+      subjectsArray.push({
+          subjectId,
+          subjectName,
+          sections: [{ sectionId, sectionName, Section: 'B', scores }] // Include both sectionId and sectionName here
+      });
+    });
+ 
+    //  // Output the result
+     res.json({
+         overallTotalMarks,
+         overallNetMarks,
+         subjects: subjectsArray
+     });
+ 
+   
+  } catch (error) {
+    console.error("Error fetching scores:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+
+
+
+
+
+
+
+
 
 
 // ----------------------------end left time submission api's--------------
@@ -1470,248 +1745,248 @@ router.get('/getTimeLeftSubmissions/:testCreationTableId/:userId', async (req, r
 //   }
 // });  
 
-router.get("/score/:testCreationTableId/:user_Id", async (req, res) => {
-  const { testCreationTableId, user_Id } = req.params;
+// router.get("/score/:testCreationTableId/:user_Id", async (req, res) => {
+//   const { testCreationTableId, user_Id } = req.params;
  
-  try {
-    if (!testCreationTableId || !user_Id) {
-      return res.status(400).json({ error: "Missing required parameters" });
-    }
+//   try {
+//     if (!testCreationTableId || !user_Id) {
+//       return res.status(400).json({ error: "Missing required parameters" });
+//     }
  
-    const [results, fields] = await db.execute(
-      `
-     (
-    SELECT
-        ur.user_Sno,
-        ur.user_Id,
-        ur.testCreationTableId,
-        s.subjectId,
-        s.sectionName,
-        ur.sectionId,
-        ur.question_id,
-        ur.user_answer,
-        a.answer_text,
-        m.marks_text,
-        0 AS nmarks_text,
-        s.QuestionLimit
-    FROM
-        user_responses ur
-    JOIN answer a ON
-        ur.question_id = a.question_id
-    JOIN marks m ON
-        ur.question_id = m.question_id
-    JOIN sections s ON
-        ur.sectionId = s.sectionId
-    WHERE
-        TRIM(ur.user_answer) = TRIM(a.answer_text) AND ur.user_Id = 2 AND ur.testCreationTableId = 3 AND(
-            s.QuestionLimit IS NULL OR s.QuestionLimit = 0
-        )
-)
-UNION
-    (
-    SELECT
-        ur.user_Sno,
-        ur.user_Id,
-        ur.testCreationTableId,
-        s.subjectId,
-        ur.sectionId,
-        s.sectionName,
-        ur.question_id,
-        ur.user_answer,
-        a.answer_text,
-        0 AS marks_text,
-        m.nmarks_text,
-        s.QuestionLimit
-    FROM
-        user_responses ur
-    JOIN answer a ON
-        ur.question_id = a.question_id
-    JOIN marks m ON
-        ur.question_id = m.question_id
-    JOIN sections s ON
-        ur.sectionId = s.sectionId
-    WHERE
-        TRIM(ur.user_answer) != TRIM(a.answer_text) AND ur.user_Id = 2 AND ur.testCreationTableId = 3 AND(
-            s.QuestionLimit IS NULL OR s.QuestionLimit = 0
-        )
-)
-UNION
-    (
-    SELECT
-        ur.user_Sno,
-        ur.user_Id,
-        ur.testCreationTableId,
-        s.subjectId,
-        ur.sectionId,
-        s.sectionName,
-        ur.question_id,
-        ur.user_answer,
-        a.answer_text,
-        m.marks_text,
-        0 AS nmarks_text,
-        s.QuestionLimit
-    FROM
-        user_responses ur
-    JOIN answer a ON
-        ur.question_id = a.question_id
-    JOIN marks m ON
-        ur.question_id = m.question_id
-    JOIN sections s ON
-        ur.sectionId = s.sectionId
-    WHERE
-        TRIM(ur.user_answer) = TRIM(a.answer_text) AND ur.user_Id = 2 AND ur.testCreationTableId = 3 AND s.QuestionLimit IS NOT NULL AND s.QuestionLimit > 0
-    LIMIT 25
-)
-UNION
-    (
-    SELECT
-        ur.user_Sno,
-        ur.user_Id,
-        ur.testCreationTableId,
-        s.subjectId,
-        ur.sectionId,
-        s.sectionName,
-        ur.question_id,
-        ur.user_answer,
-        a.answer_text,
-        0 AS marks_text,
-        m.nmarks_text,
-        s.QuestionLimit
-    FROM
-        user_responses ur
-    JOIN answer a ON
-        ur.question_id = a.question_id
-    JOIN marks m ON
-        ur.question_id = m.question_id
-    JOIN sections s ON
-        ur.sectionId = s.sectionId
-    WHERE
-        TRIM(ur.user_answer) != TRIM(a.answer_text) AND ur.user_Id = 2 AND ur.testCreationTableId = 3 AND s.QuestionLimit IS NOT NULL AND s.QuestionLimit > 0
-    LIMIT 25
-);
-      `,
-      [user_Id, testCreationTableId, user_Id, testCreationTableId, user_Id, testCreationTableId, user_Id, testCreationTableId]
-    );
+//     const [results, fields] = await db.execute(
+//       `
+//      (
+//     SELECT
+//         ur.user_Sno,
+//         ur.user_Id,
+//         ur.testCreationTableId,
+//         s.subjectId,
+//         s.sectionName,
+//         ur.sectionId,
+//         ur.question_id,
+//         ur.user_answer,
+//         a.answer_text,
+//         m.marks_text,
+//         0 AS nmarks_text,
+//         s.QuestionLimit
+//     FROM
+//         user_responses ur
+//     JOIN answer a ON
+//         ur.question_id = a.question_id
+//     JOIN marks m ON
+//         ur.question_id = m.question_id
+//     JOIN sections s ON
+//         ur.sectionId = s.sectionId
+//     WHERE
+//         TRIM(ur.user_answer) = TRIM(a.answer_text) AND ur.user_Id = 2 AND ur.testCreationTableId = 3 AND(
+//             s.QuestionLimit IS NULL OR s.QuestionLimit = 0
+//         )
+// )
+// UNION
+//     (
+//     SELECT
+//         ur.user_Sno,
+//         ur.user_Id,
+//         ur.testCreationTableId,
+//         s.subjectId,
+//         ur.sectionId,
+//         s.sectionName,
+//         ur.question_id,
+//         ur.user_answer,
+//         a.answer_text,
+//         0 AS marks_text,
+//         m.nmarks_text,
+//         s.QuestionLimit
+//     FROM
+//         user_responses ur
+//     JOIN answer a ON
+//         ur.question_id = a.question_id
+//     JOIN marks m ON
+//         ur.question_id = m.question_id
+//     JOIN sections s ON
+//         ur.sectionId = s.sectionId
+//     WHERE
+//         TRIM(ur.user_answer) != TRIM(a.answer_text) AND ur.user_Id = 2 AND ur.testCreationTableId = 3 AND(
+//             s.QuestionLimit IS NULL OR s.QuestionLimit = 0
+//         )
+// )
+// UNION
+//     (
+//     SELECT
+//         ur.user_Sno,
+//         ur.user_Id,
+//         ur.testCreationTableId,
+//         s.subjectId,
+//         ur.sectionId,
+//         s.sectionName,
+//         ur.question_id,
+//         ur.user_answer,
+//         a.answer_text,
+//         m.marks_text,
+//         0 AS nmarks_text,
+//         s.QuestionLimit
+//     FROM
+//         user_responses ur
+//     JOIN answer a ON
+//         ur.question_id = a.question_id
+//     JOIN marks m ON
+//         ur.question_id = m.question_id
+//     JOIN sections s ON
+//         ur.sectionId = s.sectionId
+//     WHERE
+//         TRIM(ur.user_answer) = TRIM(a.answer_text) AND ur.user_Id = 2 AND ur.testCreationTableId = 3 AND s.QuestionLimit IS NOT NULL AND s.QuestionLimit > 0
+//     LIMIT 25
+// )
+// UNION
+//     (
+//     SELECT
+//         ur.user_Sno,
+//         ur.user_Id,
+//         ur.testCreationTableId,
+//         s.subjectId,
+//         ur.sectionId,
+//         s.sectionName,
+//         ur.question_id,
+//         ur.user_answer,
+//         a.answer_text,
+//         0 AS marks_text,
+//         m.nmarks_text,
+//         s.QuestionLimit
+//     FROM
+//         user_responses ur
+//     JOIN answer a ON
+//         ur.question_id = a.question_id
+//     JOIN marks m ON
+//         ur.question_id = m.question_id
+//     JOIN sections s ON
+//         ur.sectionId = s.sectionId
+//     WHERE
+//         TRIM(ur.user_answer) != TRIM(a.answer_text) AND ur.user_Id = 2 AND ur.testCreationTableId = 3 AND s.QuestionLimit IS NOT NULL AND s.QuestionLimit > 0
+//     LIMIT 25
+// );
+//       `,
+//       [user_Id, testCreationTableId, user_Id, testCreationTableId, user_Id, testCreationTableId, user_Id, testCreationTableId]
+//     );
  
- // Initialize an object to hold subject-wise scores for sections with question limits
- let subjectScoresWithLimit = {};
+//  // Initialize an object to hold subject-wise scores for sections with question limits
+//  let subjectScoresWithLimit = {};
  
- // Initialize an object to hold subject-wise scores for sections without question limits
- let subjectScoresWithoutLimit = {};
+//  // Initialize an object to hold subject-wise scores for sections without question limits
+//  let subjectScoresWithoutLimit = {};
  
- // Iterate over the results and calculate subject-wise scores
- results.forEach((row) => {
-     const { subjectId, marks_text, nmarks_text, QuestionLimit } = row;
+//  // Iterate over the results and calculate subject-wise scores
+//  results.forEach((row) => {
+//      const { subjectId, marks_text, nmarks_text, QuestionLimit } = row;
  
-     // Check if the section has a question limit
-     if (QuestionLimit !== null && QuestionLimit > 0) {
-         // If subjectId doesn't exist in subjectScoresWithLimit, initialize it
-         if (!subjectScoresWithLimit[subjectId]) {
-             subjectScoresWithLimit[subjectId] = {
-                 totalMarks: 0,
-                 netMarks: 0,
-                 correctAnswersCount: 0,
-                 questionLimit: 0
-             };
-         }
+//      // Check if the section has a question limit
+//      if (QuestionLimit !== null && QuestionLimit > 0) {
+//          // If subjectId doesn't exist in subjectScoresWithLimit, initialize it
+//          if (!subjectScoresWithLimit[subjectId]) {
+//              subjectScoresWithLimit[subjectId] = {
+//                  totalMarks: 0,
+//                  netMarks: 0,
+//                  correctAnswersCount: 0,
+//                  questionLimit: 0
+//              };
+//          }
  
-         // Update subject-wise scores for sections with question limits
-         if (subjectScoresWithLimit[subjectId].correctAnswersCount < QuestionLimit) {
-             subjectScoresWithLimit[subjectId].totalMarks += marks_text;
-             subjectScoresWithLimit[subjectId].netMarks += marks_text - nmarks_text;
-             subjectScoresWithLimit[subjectId].correctAnswersCount++;
-         }
+//          // Update subject-wise scores for sections with question limits
+//          if (subjectScoresWithLimit[subjectId].correctAnswersCount < QuestionLimit) {
+//              subjectScoresWithLimit[subjectId].totalMarks += marks_text;
+//              subjectScoresWithLimit[subjectId].netMarks += marks_text - nmarks_text;
+//              subjectScoresWithLimit[subjectId].correctAnswersCount++;
+//          }
  
-         // Set the question limit (assuming it's the same for all rows)
-         subjectScoresWithLimit[subjectId].questionLimit = QuestionLimit;
-     } else {
-         // If the section does not have a question limit
-         // If subjectId doesn't exist in subjectScoresWithoutLimit, initialize it
-         if (!subjectScoresWithoutLimit[subjectId]) {
-             subjectScoresWithoutLimit[subjectId] = {
-                 totalMarks: 0,
-                 netMarks: 0,
-                 correctAnswersCount: 0
-             };
-         }
+//          // Set the question limit (assuming it's the same for all rows)
+//          subjectScoresWithLimit[subjectId].questionLimit = QuestionLimit;
+//      } else {
+//          // If the section does not have a question limit
+//          // If subjectId doesn't exist in subjectScoresWithoutLimit, initialize it
+//          if (!subjectScoresWithoutLimit[subjectId]) {
+//              subjectScoresWithoutLimit[subjectId] = {
+//                  totalMarks: 0,
+//                  netMarks: 0,
+//                  correctAnswersCount: 0
+//              };
+//          }
  
-         // Update subject-wise scores for sections without question limits
-         subjectScoresWithoutLimit[subjectId].totalMarks += marks_text;
-         subjectScoresWithoutLimit[subjectId].netMarks += marks_text - nmarks_text;
-         subjectScoresWithoutLimit[subjectId].correctAnswersCount++;
-     }
- });
- 
- // Calculate overall total and net marks
- let overallTotalMarks = 0;
- let overallNetMarks = 0;
- 
- // Calculate total and net marks for sections with question limits
- Object.values(subjectScoresWithLimit).forEach((subjectScore) => {
-     overallTotalMarks += subjectScore.totalMarks;
-     overallNetMarks += subjectScore.netMarks;
- });
- 
- // Calculate total and net marks for sections without question limits
- Object.values(subjectScoresWithoutLimit).forEach((subjectScore) => {
-     overallTotalMarks += subjectScore.totalMarks;
-     overallNetMarks += subjectScore.netMarks;
- });
- 
- // Ensure object properties are defined before iterating
- const subjectsArray = [];
- 
-//  // Iterate over subjectScoresWithLimit and subjectScoresWithoutLimit
-//  Object.entries(subjectScoresWithLimit).forEach(([subjectId, scores]) => {
-//      subjectsArray.push({
-//          subjectId,
-//          sections: [{ sectionName: scores.sectionName, scores }]
-//      });
+//          // Update subject-wise scores for sections without question limits
+//          subjectScoresWithoutLimit[subjectId].totalMarks += marks_text;
+//          subjectScoresWithoutLimit[subjectId].netMarks += marks_text - nmarks_text;
+//          subjectScoresWithoutLimit[subjectId].correctAnswersCount++;
+//      }
 //  });
  
-//  Object.entries(subjectScoresWithoutLimit).forEach(([subjectId, scores]) => {
-//      subjectsArray.push({
-//          subjectId,
-//          sections: [{ sectionName: scores.sectionName, scores }]
-//      });
+//  // Calculate overall total and net marks
+//  let overallTotalMarks = 0;
+//  let overallNetMarks = 0;
+ 
+//  // Calculate total and net marks for sections with question limits
+//  Object.values(subjectScoresWithLimit).forEach((subjectScore) => {
+//      overallTotalMarks += subjectScore.totalMarks;
+//      overallNetMarks += subjectScore.netMarks;
+//  });
+ 
+//  // Calculate total and net marks for sections without question limits
+//  Object.values(subjectScoresWithoutLimit).forEach((subjectScore) => {
+//      overallTotalMarks += subjectScore.totalMarks;
+//      overallNetMarks += subjectScore.netMarks;
+//  });
+ 
+//  // Ensure object properties are defined before iterating
+//  const subjectsArray = [];
+ 
+// //  // Iterate over subjectScoresWithLimit and subjectScoresWithoutLimit
+// //  Object.entries(subjectScoresWithLimit).forEach(([subjectId, scores]) => {
+// //      subjectsArray.push({
+// //          subjectId,
+// //          sections: [{ sectionName: scores.sectionName, scores }]
+// //      });
+// //  });
+ 
+// //  Object.entries(subjectScoresWithoutLimit).forEach(([subjectId, scores]) => {
+// //      subjectsArray.push({
+// //          subjectId,
+// //          sections: [{ sectionName: scores.sectionName, scores }]
+// //      });
+// //  });
+ 
+ 
+// // Ensure object properties are defined before iterating
+// // const subjectsArray = [];
+ 
+// // Iterate over subjectScoresWithLimit and subjectScoresWithoutLimit
+// Object.entries(subjectScoresWithLimit).forEach(([subjectId, scores]) => {
+//     const { sectionId, sectionName } = scores; // Destructuring sectionId and sectionName from scores
+//     subjectsArray.push({
+//         subjectId,
+//         sections: [{ sectionId, sectionName, scores }] // Include both sectionId and sectionName here
+//     });
+// });
+ 
+// Object.entries(subjectScoresWithoutLimit).forEach(([subjectId, scores]) => {
+//     const { sectionId, sectionName } = scores; // Destructuring sectionId and sectionName from scores
+//     subjectsArray.push({
+//         subjectId,
+//         sections: [{ sectionId, sectionName, scores }] // Include both sectionId and sectionName here
+//     });
+// });
+ 
+ 
+ 
+//  // Output the result
+//  res.json({
+//      overallTotalMarks,
+//      overallNetMarks,
+//      subjects: subjectsArray
 //  });
  
  
-// Ensure object properties are defined before iterating
-// const subjectsArray = [];
- 
-// Iterate over subjectScoresWithLimit and subjectScoresWithoutLimit
-Object.entries(subjectScoresWithLimit).forEach(([subjectId, scores]) => {
-    const { sectionId, sectionName } = scores; // Destructuring sectionId and sectionName from scores
-    subjectsArray.push({
-        subjectId,
-        sections: [{ sectionId, sectionName, scores }] // Include both sectionId and sectionName here
-    });
-});
- 
-Object.entries(subjectScoresWithoutLimit).forEach(([subjectId, scores]) => {
-    const { sectionId, sectionName } = scores; // Destructuring sectionId and sectionName from scores
-    subjectsArray.push({
-        subjectId,
-        sections: [{ sectionId, sectionName, scores }] // Include both sectionId and sectionName here
-    });
-});
- 
- 
- 
- // Output the result
- res.json({
-     overallTotalMarks,
-     overallNetMarks,
-     subjects: subjectsArray
- });
- 
- 
-  } catch (error) {
-    console.error("Error fetching scores:", error);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-});
+//   } catch (error) {
+//     console.error("Error fetching scores:", error);
+//     res.status(500).json({ error: "Internal Server Error" });
+//   }
+// });
 
 
 router.post("/response", async (req, res) => {

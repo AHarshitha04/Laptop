@@ -1,16 +1,15 @@
 
-
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import "./styles/SubjectTest.css";
 import { useRef } from "react";
-
+import logo from './asserts/logo.jpeg'
+ 
 const FullTest = () => {
-  
   const [testData, setTestData] = useState([]);
   const [typeOfTest, setTypeOfTest] = useState([]);
   const { courseCreationId } = useParams();
-
+ 
   useEffect(() => {
     const fetchTestData = async () => {
       try {
@@ -19,7 +18,7 @@ const FullTest = () => {
         );
         const testData = await responseTest.json();
         setTestData(testData);
-
+ 
         const responseTypeOfTest = await fetch(
           "http://localhost:5001/Cards/feachingtypeoftest"
         );
@@ -29,10 +28,10 @@ const FullTest = () => {
         console.error(error);
       }
     };
-
+ 
     fetchTestData();
   }, [courseCreationId]);
-
+ 
   const handleTypeOfTestClick = async (typeOfTestId) => {
     try {
       // Fetch tests based on both courseCreationId and typeOfTestId
@@ -46,7 +45,7 @@ const FullTest = () => {
       console.error(error);
     }
   };
-
+ 
   const { subjectId } = useParams();
   const [SubjectData, setSubjectData] = useState([]);
   const [minsubjectid, setminsubjectid] = useState("");
@@ -56,93 +55,73 @@ const FullTest = () => {
         const response = await fetch(
           `http://localhost:5001/Cards/subjectData1/${courseCreationId}`
         );
-
+ 
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
-
+ 
         const data = await response.json();
         setSubjectData(data);
         console.log();
-
+ 
         if (data && data.length > 0) {
           // Find the minimum value of subjectId in the array
           const minSubjectId = Math.min(...data.map((item) => item.subjectId));
-
+ 
           // Log the minimum value to the console
           console.log("Minimum subjectId:", minSubjectId);
-
+ 
           setminsubjectid(minSubjectId);
         }
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
-
+ 
     fetchSubjects();
   }, [subjectId]);
-
  
   const newWinRef = useRef(null);
-  // http://localhost:3000/Instructions/1/Instructions/3
-const openPopup = () => {
-  newWinRef.current = window.open(
-    testData.map((test) => `/Instructions/${test.testCreationTableId}`).join('\n'),
-    '_blank', // Use '_blank' to open in a new window or tab
-    'width=1000,height=1000'
-  );
-
-  document.onmousedown = focusPopup;
-  document.onkeyup = focusPopup;
-  document.onmousemove = focusPopup;
-};
-
-const focusPopup = () => {
-  if (newWinRef.current && !newWinRef.current.closed) {
-    newWinRef.current.focus();
-  }
-};
-
-
+  const openPopup = () => {
+    newWinRef.current = window.open(
+      testData
+        .map((test) => `/Instructions/${test.testCreationTableId}`)
+        .join("\n"),
+      "_blank", // Use '_blank' to open in a new window or tab
+      "width=1000,height=1000"
+    );
+ 
+    document.onmousedown = focusPopup;
+    document.onkeyup = focusPopup;
+    document.onmousemove = focusPopup;
+  };
+ 
+  const focusPopup = () => {
+    if (newWinRef.current && !newWinRef.current.closed) {
+      newWinRef.current.focus();
+    }
+  };
+ 
+  const [active, setActive] = useState(null)
+ 
   return (
     <div>
-      hello
-      
-
-
-      
-      {/* <div>
-        hi
+      <div className="header">
+        <img className="header_logo" src={logo} alt="logo" width={200} />
+      </div>
+      <div className="Types_of_Tests">
+      <div>
         {SubjectData.map((data, i) => {
           let minSubjectId; // Declare minSubjectId outside the if block
-
+ 
           if (data && data.length > 0) {
             // Find the minimum value of subjectId in the array
             minSubjectId = Math.min(...data.map((item) => item.subjectId));
-
+ 
             // Log the minimum value to the console
             console.log("Minimum subjectId:", minSubjectId);
           }
-
-          return (
-            <div key={i}>
-              <p>{minSubjectId}</p>
-            </div>
-          );
-        })}
-      </div> */}
-       <div>
-        {SubjectData.map((data, i) => {
-          let minSubjectId; // Declare minSubjectId outside the if block
-
-          if (data && data.length > 0) {
-            // Find the minimum value of subjectId in the array
-            minSubjectId = Math.min(...data.map((item) => item.subjectId));
-
-            // Log the minimum value to the console
-            console.log("Minimum subjectId:", minSubjectId);
-          }
-
+ 
           return (
             <div key={i}>
               <p>{minSubjectId}</p>
@@ -156,9 +135,11 @@ const focusPopup = () => {
             {typeOfTest.map((type) => (
               <li key={type.typeOfTestId}>
                 <Link
-                  className="content-link"
+                  className={`content-link ${active == type && 'active'}`}
                   to="#"
-                  onClick={() => handleTypeOfTestClick(type.typeOfTestId)}
+                  onClick={() => [handleTypeOfTestClick(type.typeOfTestId),setActive(type)]}
+                 
+                 
                 >
                   {type.typeOfTestName}
                 </Link>
@@ -181,7 +162,7 @@ const focusPopup = () => {
                 <span className="material-symbols-outlined">schedule</span>{" "}
                 <p>{test.Duration} Minutes</p>
               </div>
-              <div  className="test-contents2">
+              <div className="test-contents2">
                 <span
                   // style={myComponentStyle1}
                   class="material-symbols-outlined"
@@ -190,7 +171,7 @@ const focusPopup = () => {
                 </span>
                 <p>{test.TotalQuestions} Questions</p>
               </div>
-              <div  className="test-contents2">
+              <div className="test-contents2">
                 <span
                   // style={myComponentStyle1}
                   class="material-symbols-outlined"
@@ -203,8 +184,7 @@ const focusPopup = () => {
                 <li>
                   {/* <Link to={`/Instructions/${test.testCreationTableId}`}  onClick={openPopup}> */}
                   {/* <Link to={`/Instructions/${test.testCreationTableId}`}> */}
-                  <Link to='#' onClick={openPopup}>
-         
+                  <Link to="#" onClick={openPopup}>
                     Start Test
                   </Link>
                 </li>
@@ -213,9 +193,12 @@ const focusPopup = () => {
           </div>
         ))}
       </ul>
-      
+    </div>
     </div>
   );
 };
-
+ 
 export default FullTest;
+ 
+
+ 

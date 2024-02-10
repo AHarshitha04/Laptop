@@ -12,6 +12,7 @@ import "./styles/Paper.css";
 
 import logo from "./asserts/egradtutor_logo.png";
 import { index } from "d3-array";
+import { convertLength } from "@mui/material/styles/cssUtils";
 
 const DemoDeleteItsNotImp = () => {
   // --------------------------------------CONST VARIABLES DECLARATIONS--------------------------
@@ -130,8 +131,6 @@ const DemoDeleteItsNotImp = () => {
     setActiveQuestion(updatedIndex); // Set the active question to the updated index
   };
   
-
-
   const [clickCount, setClickCount] = useState(0);
 
   const [answeredQuestionsMap, setAnsweredQuestionsMap] = useState({});
@@ -238,11 +237,21 @@ const DemoDeleteItsNotImp = () => {
     console.log('Selected option ID:', optionId);
 
     
-    setSelectedAnswersMap1((prevMap) => ({
+    // setSelectedAnswersMap1((prevMap) => ({
+    //   ...prevMap,
+    //   [questionId]: optionIndex,
+    // }));
+
+      setSelectedAnswersMap1((prevMap) => ({
       ...prevMap,
-      [questionId]: optionIndex,
+      [currentQuestion.question_id]: optionIndex,
     }));
 
+
+// setSelectedAnswersMap1({
+//     ...selectedAnswersMap1,
+//     [currentQuestion.question_id]: optionIndex,
+//   });
     const updatedSelectedAnswers = [...selectedAnswers];
     updatedSelectedAnswers[activeQuestion] = optionIndex;
     setSelectedAnswers(updatedSelectedAnswers);
@@ -1416,7 +1425,6 @@ const DemoDeleteItsNotImp = () => {
     }
   };
   
-
   const handlePreviousClick = () => {
     setCurrentQuestionIndex((prevIndex) => {
       // Save the current timer value for the question
@@ -1427,6 +1435,8 @@ const DemoDeleteItsNotImp = () => {
       return prevIndex - 1;
     });
 
+     fetchData();
+    console.log('fetchDataf',fetchData());
     setActiveQuestion((prevActiveQuestion) => prevActiveQuestion - 1);
     // Set the value to the previously selected answer if available
     if (currentQuestionIndex > 0) {
@@ -1449,12 +1459,7 @@ const DemoDeleteItsNotImp = () => {
       }
     }
   };
-
- 
-
-
   const clearResponse = async () => {
-   
     //-----------------buttons functionality--------------
     const currentQuestion = questionData.questions[currentQuestionIndex];
     const calculatorInputValue = value;
@@ -1510,8 +1515,7 @@ const DemoDeleteItsNotImp = () => {
       console.error("Error clearing response:", error);
     } 
   };
-  
-  
+ 
   const updateQuestionStatus = (index, status) => {
     // Update the question status in the QuestionPaper component
     const updatedQuestionStatus = [...questionStatus];
@@ -1582,9 +1586,7 @@ const DemoDeleteItsNotImp = () => {
                     <h6>Time Left: {WformatTime(wtimer)}</h6>
                   </li>
                 </div>
-                <h3>
-                 
-                </h3>
+                    
               </div>
 
               <div class="right-header">
@@ -1654,29 +1656,20 @@ const DemoDeleteItsNotImp = () => {
                                   "MCQ4(MCQ with 4 Options)"
                                 ) && (
                                   <div>
+                                      <p>{option.ans} {optionIndex}</p>
                                     <input
                                       className="opt_btns"
                                       type="radio"
                                       name={`question-${currentQuestionIndex}-option`}
-                                      value={String.fromCharCode(
-                                        "A".charCodeAt(0) + optionIndex
-                                      )}
+                                      value={option.ans}
                                       checked={
-                                        selectedAnswersMap1[
-                                          questionData.questions[
-                                            currentQuestionIndex
-                                          ]?.question_id
-                                        ] === optionIndex
+                                        selectedAnswersMap1[currentQuestion.question_id] === optionIndex
                                       }
                                       onChange={() =>
                                         onAnswerSelected1(optionIndex)
                                       }
                                     />
-                                    (
-                                    {String.fromCharCode(
-                                      "a".charCodeAt(0) + optionIndex
-                                    )}
-                                    )
+                               <label htmlFor="">({option.option_index})</label>
                                     <img
                                       src={`http://localhost:5001/uploads/${currentQuestion.documen_name}/${option.optionImgName}`}
                                       alt={`Option ${option.option_id}`}
