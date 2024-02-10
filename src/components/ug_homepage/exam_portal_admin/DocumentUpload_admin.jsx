@@ -96,7 +96,7 @@ const {testCreationTableId,sectionId}= useParams()
       .then((result) => {
         console.log(result);
         alert("Successfully uploaded Document");
-        // window.location.reload();
+        window.location.reload();
 
       })
       .catch((error) => {

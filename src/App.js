@@ -303,7 +303,7 @@ const App = () => {
           element={<PrivateRoute element={<SubmitPage />} />}
         /> */}
         <Route
-          path="/TestResultsPage/:testCreationTableId"
+          path="/TestResultsPage/:testCreationTableId/:id"
           element={<PrivateRoute element={<TestResultsPage />} />}
         />
         <Route path="/InputValueDemo"

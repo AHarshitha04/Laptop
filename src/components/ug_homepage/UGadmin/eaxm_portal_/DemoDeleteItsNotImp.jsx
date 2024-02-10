@@ -2281,7 +2281,7 @@ const DemoDeleteItsNotImp = () => {
             {/* <Link to='/SubmitPage'>YES</Link> */}
             {/* <button onClick={handleYes}>YES</button> */}
             <Link
-              to={`/TestResultsPage/${testCreationTableId}`}
+              to={`/TestResultsPage/${testCreationTableId}/${userData.id}`}
               style={{ background: "red", fontWeight: "bold", padding: "10px" }}>
               Yes
             </Link>

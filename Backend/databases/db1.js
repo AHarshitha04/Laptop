@@ -12,7 +12,7 @@ const mysql = require("mysql");
     // database: 'adminnew',
     database: 'adminnew',
 
-    database: 'admin_project',
+    // database: 'admin_project',
 
 
 

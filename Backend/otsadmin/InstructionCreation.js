@@ -41,85 +41,86 @@ const upload = multer({ storage });
     next();
   });
   // kevin ---------
-  router.post("/instructionupload", upload.single("file"), async (req, res) => {
-    try {
-      const { file } = req;
-      const fileName = file.originalname;
+  // router.post("/instructionupload", upload.single("file"), async (req, res) => {
+  //   try {
+  //     const { file } = req;
+  //     const fileName = file.originalname;
   
-      // Read the content of the Word document
-      const { value: fileContent } = await mammoth.extractRawText({
-        path: file.path,
-      });
+  //     // Read the content of the Word document
+  //     const { value: fileContent } = await mammoth.extractRawText({
+  //       path: file.path,
+  //     });
   
-      // Split the text into points based on a specific delimiter (e.g., dot)
-      const pointsArray = fileContent.split("/").map((point) => point.trim());
+  //     // Split the text into points based on a specific delimiter (e.g., dot)
+  //     const pointsArray = fileContent.split("/").map((point) => point.trim());
   
-      // Filter out empty points
-      const filteredPointsArray = pointsArray.filter((point) => point !== "");
+  //     // Filter out empty points
+  //     const filteredPointsArray = pointsArray.filter((point) => point !== "");
   
-      // Join the array of points with a separator (e.g., comma)
-      const pointsText = filteredPointsArray.join(", ");
+  //     // Join the array of points with a separator (e.g., comma)
+  //     const pointsText = filteredPointsArray.join(", ");
   
-      // Insert data into the instruction table
-      const queryInstruction =
-        "INSERT INTO instruction (examId, instructionHeading, documentName) VALUES (?, ?,  ?)";
-      const valuesInstruction = [
-        req.body.examId,
-        req.body.instructionHeading,
-        fileName,
-      ];
+  //     // Insert data into the instruction table
+  //     const queryInstruction =
+  //       "INSERT INTO instruction (examId, instructionHeading, documentName) VALUES (?, ?,  ?)";
+  //     const valuesInstruction = [
+  //       req.body.examId,
+  //       req.body.instructionHeading,
+  //       fileName,
+  //     ];
   
-      const resultInstruction = await db.query(
-        queryInstruction,
-        valuesInstruction
-      );
+  //     const resultInstruction = await db.query(
+  //       queryInstruction,
+  //       valuesInstruction
+  //     );
   
-      if (!resultInstruction || resultInstruction[0].affectedRows !== 1) {
-        // Handle the case where the query did not succeed
-        console.error(
-          "Error uploading file: Failed to insert into instruction table.",
-          resultInstruction
-        );
-        res.status(500).send("Failed to upload file.");
-        return;
-      }
+  //     if (!resultInstruction || resultInstruction[0].affectedRows !== 1) {
+  //       // Handle the case where the query did not succeed
+  //       console.error(
+  //         "Error uploading file: Failed to insert into instruction table.",
+  //         resultInstruction
+  //       );
+  //       res.status(500).send("Failed to upload file.");
+  //       return;
+  //     }
   
-      const instructionId = resultInstruction[0].insertId;
+  //     const instructionId = resultInstruction[0].insertId;
   
-      // Log the obtained instructionId
-      console.log("Obtained instructionId:", instructionId);
+  //     // Log the obtained instructionId
+  //     console.log("Obtained instructionId:", instructionId);
   
-      // Insert each point into the instructions_points table with the correct instructionId
-      const queryPoints =
-        "INSERT INTO instructions_points (examId, points, instructionId) VALUES (?, ?, ?)";
-      for (const point of filteredPointsArray) {
-        // Log each point and instructionId before the insertion
-        console.log(
-          "Inserting point:",
-          point,
-          "with instructionId:",
-          instructionId
-        );
-        await db.query(queryPoints, [req.body.examId, point, instructionId]);
-      }
+  //     // Insert each point into the instructions_points table with the correct instructionId
+  //     const queryPoints =
+  //       "INSERT INTO instructions_points (examId, points, instructionId) VALUES (?, ?, ?)";
+  //     for (const point of filteredPointsArray) {
+  //       // Log each point and instructionId before the insertion
+  //       console.log(
+  //         "Inserting point:",
+  //         point,
+  //         "with instructionId:",
+  //         instructionId
+  //       );
+  //       await db.query(queryPoints, [req.body.examId, point, instructionId]);
+  //     }
   
-      // Log data to the console
-      console.log("File uploaded successfully:", {
-        success: true,
-        instructionId,
-        message: "File uploaded successfully.",
-      });
+  //     // Log data to the console
+  //     console.log("File uploaded successfully:", {
+  //       success: true,
+  //       instructionId,
+  //       message: "File uploaded successfully.",
+  //     });
   
-      // Respond with a simple success message
-      res.send("File uploaded successfully");
-    } catch (error) {
-      // Log error to the console
-      console.error("Error uploading file:", error);
+  //     // Respond with a simple success message
+  //     res.send("File uploaded successfully");
+  //   } catch (error) {
+  //     // Log error to the console
+  //     console.error("Error uploading file:", error);
   
-      // Respond with a simple error message
-      res.status(500).send("Failed to upload file.");
-    }
-  }); //______________________INSTRUCTION page __________________________
+  //     // Respond with a simple error message
+  //     res.status(500).send("Failed to upload file.");
+  //   }
+  // }); //______________________INSTRUCTION page __________________________
+  
   router.get("/exams", async (req, res) => {
     try {
       const query = "SELECT examId,examName FROM exams";
@@ -130,10 +131,12 @@ const upload = multer({ storage });
       res.status(500).json({ error: "Internal Server Error" });
     }
   });
+
   router.use((req, res, next) => {
     res.setHeader("Content-Type", "text/html; charset=utf-8");
     next();
   });
+
   // kevin ---------
   // router.post("/upload", upload.single("file"), async (req, res) => {
   //   try {
@@ -500,9 +503,7 @@ const upload = multer({ storage });
       return null;
     }
   }
-  
-  
-  
+
   
   router.get("/getInstructionData/:instructionId", async (req, res) => {
     try {
@@ -558,10 +559,6 @@ const upload = multer({ storage });
       throw error;
     }
   }
-  
-  
-  
-  
   
   router.get("/instructionData", async (req, res) => {
     try {

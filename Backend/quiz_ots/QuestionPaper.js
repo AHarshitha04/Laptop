@@ -7,8 +7,6 @@ const db = require("../databases/db2");
 const jwt = require("jsonwebtoken");
 const { useParams } = require("react-router-dom");
 
-
-
 router.get("/subjects/:testCreationTableId", async (req, res) => {
   const { testCreationTableId } = req.params;
   try {
@@ -578,7 +576,6 @@ router.post('/submitTimeLeft', async (req, res) => {
   }
 });
 
-
 // Add a new route to fetch time left
 router.get('/getTimeLeftSubmissions/:testCreationTableId/:userId', async (req, res) => {
   try {
@@ -807,8 +804,6 @@ router.get('/getTimeLeftSubmissions/:testCreationTableId/:userId', async (req, r
 //   }
 // });
 
-
-
 router.get("/score/:testCreationTableId/:user_Id", async (req, res) => {
   const { testCreationTableId, user_Id } = req.params;
  
@@ -844,7 +839,7 @@ router.get("/score/:testCreationTableId/:user_Id", async (req, res) => {
         JOIN subjects sub ON
             sub.subjectId = s.subjectId
         WHERE
-            TRIM(ur.user_answer) = TRIM(a.answer_text) AND ur.user_Id = 2 AND ur.testCreationTableId = 3 AND (
+            TRIM(ur.user_answer) = TRIM(a.answer_text) AND ur.user_Id = ? AND ur.testCreationTableId = ? AND (
                 s.QuestionLimit IS NULL OR s.QuestionLimit = 0
             )
     )
@@ -875,7 +870,7 @@ router.get("/score/:testCreationTableId/:user_Id", async (req, res) => {
         JOIN subjects sub ON
             sub.subjectId = s.subjectId
         WHERE
-            TRIM(ur.user_answer) != TRIM(a.answer_text) AND ur.user_Id = 2 AND ur.testCreationTableId = 3 AND (
+            TRIM(ur.user_answer) != TRIM(a.answer_text) AND ur.user_Id = ? AND ur.testCreationTableId = ? AND (
                 s.QuestionLimit IS NULL OR s.QuestionLimit = 0
             )
     )
@@ -906,7 +901,7 @@ router.get("/score/:testCreationTableId/:user_Id", async (req, res) => {
         JOIN subjects sub ON
             sub.subjectId = s.subjectId
         WHERE
-            TRIM(ur.user_answer) = TRIM(a.answer_text) AND ur.user_Id = 2 AND ur.testCreationTableId = 3 AND s.QuestionLimit IS NOT NULL AND s.QuestionLimit > 0
+            TRIM(ur.user_answer) = TRIM(a.answer_text) AND ur.user_Id = ? AND ur.testCreationTableId = ? AND s.QuestionLimit IS NOT NULL AND s.QuestionLimit > 0
         LIMIT 25
     )
     UNION
@@ -936,7 +931,7 @@ router.get("/score/:testCreationTableId/:user_Id", async (req, res) => {
         JOIN subjects sub ON
             sub.subjectId = s.subjectId
         WHERE
-            TRIM(ur.user_answer) != TRIM(a.answer_text) AND ur.user_Id = 2 AND ur.testCreationTableId = 3 AND s.QuestionLimit IS NOT NULL AND s.QuestionLimit > 0
+            TRIM(ur.user_answer) != TRIM(a.answer_text) AND ur.user_Id = ? AND ur.testCreationTableId = ? AND s.QuestionLimit IS NOT NULL AND s.QuestionLimit > 0
         LIMIT 25
     );
     `,
@@ -1076,16 +1071,6 @@ router.get("/score/:testCreationTableId/:user_Id", async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
-
-
-
-
-
-
-
-
-
-
 
 // ----------------------------end left time submission api's--------------
 
@@ -1988,7 +1973,6 @@ router.get("/score/:testCreationTableId/:user_Id", async (req, res) => {
 //   }
 // });
 
-
 router.post("/response", async (req, res) => {
   try {
       console.log("Request Body:", req.body);
@@ -2064,8 +2048,6 @@ router.post("/response", async (req, res) => {
       res.status(500).json({ success: false, message: "Internal server error" });
   }
 });
-
-
 
 // router.post("/response", async (req, res) => {
 //   try {
@@ -2209,7 +2191,6 @@ router.post("/response", async (req, res) => {
 //   }
 // });
 
-
 router.put('/updateResponse/:user_Id/:testCreationTableId/:question_id', async (req, res) => {
   try {
     const { user_Id, testCreationTableId, question_id } = req.params;
@@ -2309,7 +2290,6 @@ router.put('/updateResponse/:user_Id/:testCreationTableId/:question_id', async (
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 });
-
 
 router.put('/updateResponse/:user_Id/:testCreationTableId/:question_id', async (req, res) => {
   try {
@@ -2494,7 +2474,6 @@ router.delete('/clearResponse/:questionId', async (req, res) => {
   }
 });
 
-
 // router.get("/answer", async (req, res) => {
 //   try {
 //     // const { questionId } = req.params;
@@ -2512,20 +2491,13 @@ router.delete('/clearResponse/:questionId', async (req, res) => {
 router.get("/answer", async (req, res) => {
   try {
     // const { questionId } = req.params;
-    const [results] = await db.query(`
-SELECT a.question_id, a.answer_text, ur.user_answer, TRIM(COALESCE(ur.user_answer, '--')) AS trimmed_user_answer, TRIM(a.answer_text) AS trimmed_answer_text, LENGTH(TRIM(COALESCE(ur.user_answer, '--'))) AS user_answer_length, LENGTH(TRIM(a.answer_text)) AS answer_text_length, CASE WHEN TRIM(BINARY ur.user_answer) = TRIM(BINARY a.answer_text) AND ur.user_answer IS NOT NULL AND ur.user_answer != '' THEN 'correct' WHEN ur.user_answer IS NULL THEN 'N/A' ELSE 'incorrect' END AS status FROM answer a LEFT JOIN user_responses ur ON a.question_id = ur.question_id;
-
-
-
-    `);
-
+    const [results] = await db.query(`SELECT a.question_id, a.answer_text, ur.user_answer, TRIM(COALESCE(ur.user_answer, '--')) AS trimmed_user_answer, TRIM(a.answer_text) AS trimmed_answer_text, LENGTH(TRIM(COALESCE(ur.user_answer, '--'))) AS user_answer_length, LENGTH(TRIM(a.answer_text)) AS answer_text_length, CASE WHEN TRIM(BINARY ur.user_answer) = TRIM(BINARY a.answer_text) AND ur.user_answer IS NOT NULL AND ur.user_answer != '' THEN 'correct' WHEN ur.user_answer IS NULL THEN 'N/A' ELSE 'incorrect' END AS status FROM answer a LEFT JOIN user_responses ur ON a.question_id = ur.question_id;`);
     res.json(results);
   } catch (error) {
     console.error("Error:", error.message);
     res.status(500).send("Internal Server Error");
   }
 });
-
 
 router.get("/questionCount", async (req, res) => {
   const { testCreationTableId, subjectId, sectionId } = req.params;
@@ -2535,7 +2507,7 @@ router.get("/questionCount", async (req, res) => {
       FROM 
       test_creation_table t 
       LEFT JOIN questions q ON t.testCreationTableId = q.testCreationTableId 
-      WHERE t.testCreationTableId = 2;`
+      WHERE t.testCreationTableId = ?;`
     );
     res.json(results);
   } catch (error) {
@@ -2543,6 +2515,7 @@ router.get("/questionCount", async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
+
 router.get("/questionCount/:testCreationTableId", async (req, res) => {
   const { testCreationTableId } = req.params;
   try {
@@ -2560,6 +2533,7 @@ router.get("/questionCount/:testCreationTableId", async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
+
 // router.get('/attemptCount/:testCreationTableId/:user_Id', async (req, res) => {
 //   const { testCreationTableId, user_Id} = req.params;
 //     try {
@@ -3002,9 +2976,6 @@ router.get("/:userId", async (req, res) => {
     res.status(200).json(sanitizedUserResponses);
   });
 });
-
-
-
 
 // Example route to get test details and responses
 router.get("/getTestDetails/:userId/:testCreationTableId", async (req, res) => {

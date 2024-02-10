@@ -62,7 +62,7 @@ const InstructionPage_admin = () => {
         formData.append("examId", selectedExam);
         formData.append("instructionHeading", instructionHeading);
        
-        await axios.post("http://localhost:5001//InstructionCreation/InstructionsUpdate", formData, {
+        await axios.post("http://localhost:5001/InstructionCreation/InstructionsUpdate", formData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },

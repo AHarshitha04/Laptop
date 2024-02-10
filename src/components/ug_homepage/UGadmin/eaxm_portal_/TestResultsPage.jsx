@@ -42,7 +42,8 @@ const TestResultsPage = () => {
     const fetchAnswer = async () => {
       try {
         const responseAnswer = await fetch(
-          `http://localhost:5001/QuestionPaper/answer`
+          // `http://localhost:5001/QuestionPaper/answer/${testCreationTableId}/${userData.id}`
+            // `http://localhost:5001/QuestionPaper/answer/${testCreationTableId}/${userData.id}`
         );
         const answer = await responseAnswer.json();
         setAnswer(answer);
@@ -110,21 +111,6 @@ const TestResultsPage = () => {
  
   const [questionCount, setQuestionCount] = useState(null);
  
-  // useEffect(() => {
-  //   const fetchQuestionCount = async () => {
-  //     try {
-  //       const response = await fetch(
-  //         `http://localhost:5001/QuestionPaper/questionCount`
-  //       ); // Update the URL based on your backend API endpoint
-  //       const data = await response.json();
-  //       setQuestionCount(data);
-  //     } catch (error) {
-  //       console.error("Error fetching question count:", error);
-  //     }
-  //   };
- 
-  //   fetchQuestionCount();
-  // }, []);
  
   useEffect(() => {
     const fetchQuestionCount = async () => {
@@ -197,23 +183,7 @@ const TestResultsPage = () => {
     fetchQuestionCount();
   }, [testCreationTableId, user_Id]);
  
-  // const [score, setScoreCount] = useState(null);
-  // useEffect(() => {
-  //   const fetchQuestionCount = async () => {
-  //     try {
-  //       const response = await fetch(
-  //         `http://localhost:5001/QuestionPaper/score/2/2`
-  //       );
-  //       const data = await response.json();
-  //       setScoreCount(data);
-  //       console.log(setAttemptCount, data);
-  //     } catch (error) {
-  //       console.error("Error fetching question count:", error);
-  //     }
-  //   };
- 
-  //   fetchQuestionCount();
-  // }, [testCreationTableId, user_Id]);
+
  
   const [score, setScoreCount] = useState({ totalMarks: 0, netMarks: 0 });
  
@@ -221,8 +191,8 @@ const TestResultsPage = () => {
     const fetchQuestionCount = async () => {
       try {
         const response = await fetch(
-          // `http://localhost:5001/QuestionPaper/score/${testCreationTableId}/${userData.id}`
-          `http://localhost:5001/QuestionPaper/score/3/2`
+          `http://localhost:5001/QuestionPaper/score/${testCreationTableId}/${userData.id}`
+          // `http://localhost:5001/QuestionPaper/score/3/2`
         );
         const data = await response.json();
         setScoreCount(data);
@@ -276,9 +246,9 @@ const TestResultsPage = () => {
     const fetchQuestionCount = async () => {
       try {
         const response = await fetch(
-          // `http://localhost:5001/QuestionPaper/getTimeLeftSubmissions/${testCreationTableId}/${userData.id}`
+          `http://localhost:5001/QuestionPaper/getTimeLeftSubmissions/${testCreationTableId}/${userData.id}`
           // `http://localhost:5001/QuestionPaper/score/${testCreationTableId}/${userData.id}`
-          `http://localhost:5001/QuestionPaper/getTimeLeftSubmissions/3/2`
+          // `http://localhost:5001/QuestionPaper/getTimeLeftSubmissions/3/2`
         );
         const data = await response.json();
         setTimeSpent(data);
