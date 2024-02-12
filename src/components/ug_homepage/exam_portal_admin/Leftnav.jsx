@@ -21,8 +21,7 @@ import Image_Upload_for_Ac_ADMIN from "./Image_Upload_for_Ac_ADMIN";
 import { StudentDashborddountsection } from "../UGadmin/eaxm_portal_/StudentDashboard/Student_dashboard";
 import TestActivation_admin from "./TestActivation_admin";
 
-// import logo2 from './logo2.jpeg'
-// import HomeLandingPage from "../Frontend/Pages/HomeLandingPage/HomeLandingPage";
+
 
 const Leftnav = () => {
   const [showMenu, setshowMenu] = useState(0);
@@ -69,9 +68,8 @@ const Leftnav = () => {
     setShowregisteredstudent(false);
     setShowImage_Upload_for_Ac(false)
     setShowTestActivation_admin(false);
-
-
   };
+  
   const handleshowCoursecreation_admin = () => {
     setShowdashboard(false);
     setShowExamcreation_admin(false);
@@ -83,8 +81,8 @@ const Leftnav = () => {
     setShowImage_Upload_for_Ac(false)
     setshowStudent_Doubt_Section(false);
     setShowTestActivation_admin(false);
-
   };
+
   const handleInstructionPage_admin = () => {
     setShowdashboard(false);
     setShowExamcreation_admin(false);
@@ -96,7 +94,6 @@ const Leftnav = () => {
     setShowImage_Upload_for_Ac(false)
     setshowStudent_Doubt_Section(false);
     setShowTestActivation_admin(false);
-
   };
 
   const handleTestcreationadmin = () => {

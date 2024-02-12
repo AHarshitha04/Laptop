@@ -67,7 +67,7 @@ const HomeBackend = () => {
   const [imageDataList1, setImageDataList1] = useState([]);
   useEffect(() => {
     axios
-      .get("http://localhost:5001/HomeImages")
+      .get("http://localhost:5001/ughomepage_banner_login/HomeImages")
       .then((response) => {
         setImageDataList1(response.data);
       })
