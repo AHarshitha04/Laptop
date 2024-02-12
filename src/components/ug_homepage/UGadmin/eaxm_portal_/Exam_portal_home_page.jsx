@@ -194,7 +194,7 @@ export const Header = () => {
                       className="courses_btn"
                       onClick={toggleCoursesBtnContainer}
                     >
-                      ourses
+                      Courses
                     </button>
                     {coursesBtnContainerVisible ? (
                       <div className="courses">

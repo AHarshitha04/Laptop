@@ -1,4 +1,3 @@
-
 // main working
 import React, { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
@@ -6,8 +5,16 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import "./TestResultPage.css";
 import DemoDeleteItsNotImp from "./DemoDeleteItsNotImp";
 import axios from "axios";
- 
+
 const TestResultsPage = () => {
+
+  const { testCreationTableId, user_Id, userId } = useParams();
+
+
+
+
+
+
   const [userData, setUserData] = useState({});
   useEffect(() => {
     const fetchUserData = async () => {
@@ -21,7 +28,7 @@ const TestResultsPage = () => {
             },
           }
         );
- 
+
         if (response.ok) {
           const userData = await response.json();
           setUserData(userData);
@@ -33,28 +40,51 @@ const TestResultsPage = () => {
         // Handle other errors
       }
     };
- 
+
     fetchUserData();
   }, []);
+
+  // const [answer, setAnswer] = useState([]);
+  // useEffect(() => {
+  //   const fetchAnswer = async () => {
+  //     try {
+  //       const responseAnswer = await fetch();
+  //       `http://localhost:5001/QuestionPaper/answer/${testCreationTableId}/${userData.id}`
+  //       // `http://localhost:5001/QuestionPaper/answer/${testCreationTableId}/${userData.id}`
+  //       const answer = await responseAnswer.json();
+  //       setAnswer(answer);
+  //     } catch (error) {
+  //       console.error("Error fetching question types:", error);
+  //     }
+  //   };
+
+  //   fetchAnswer();
+  // });
+
+
   const [answer, setAnswer] = useState([]);
- 
-  useEffect(() => {
-    const fetchAnswer = async () => {
-      try {
-        const responseAnswer = await fetch(
-          // `http://localhost:5001/QuestionPaper/answer/${testCreationTableId}/${userData.id}`
-            // `http://localhost:5001/QuestionPaper/answer/${testCreationTableId}/${userData.id}`
-        );
-        const answer = await responseAnswer.json();
-        setAnswer(answer);
-      } catch (error) {
-        console.error("Error fetching question types:", error);
-      }
-    };
- 
-    fetchAnswer();
-  });
- 
+
+useEffect(() => {
+  const fetchAnswer = async () => {
+    try {
+      const responseAnswer = await fetch(`http://localhost:5001/QuestionPaper/answer/${testCreationTableId}/${userData.id}`);
+      // const responseAnswer = await fetch(`http://localhost:5001/QuestionPaper/answer`);
+
+      const answerData = await responseAnswer.json();
+      setAnswer(answerData);
+    } catch (error) {
+      console.error("Error fetching question types:", error);
+    }
+  };
+
+  fetchAnswer();
+// }, ); // Include dependencies in the dependency array
+
+}, [testCreationTableId, userData.id]); // Include dependencies in the dependency array
+
+
+
+
   // const [answer, setAnswer] = useState([]);
   const [questionData, setQuestionData] = useState({});
   const [questionStatus, setQuestionStatus] = useState([]);
@@ -62,7 +92,7 @@ const TestResultsPage = () => {
   // const { testCreationTableId } = useParams();
   const [answeredCount, setAnsweredCount] = useState(0);
   const [notAnsweredCount, setNotAnsweredCount] = useState(0);
- 
+
   // const data = [
   //   {
   //     name: 'Page A',
@@ -107,11 +137,11 @@ const TestResultsPage = () => {
   //     amt: 2100,
   //   },
   // ];
-  const { testCreationTableId, user_Id, userId } = useParams();
- 
+
+
+
   const [questionCount, setQuestionCount] = useState(null);
- 
- 
+
   useEffect(() => {
     const fetchQuestionCount = async () => {
       try {
@@ -124,10 +154,10 @@ const TestResultsPage = () => {
         console.error("Error fetching question count:", error);
       }
     };
- 
+
     fetchQuestionCount();
   }, [testCreationTableId]);
- 
+
   const [attemptCount, setAttemptCount] = useState(null);
   useEffect(() => {
     const fetchQuestionCount = async () => {
@@ -137,15 +167,15 @@ const TestResultsPage = () => {
         );
         const data = await response.json();
         setAttemptCount(data);
-        console.log(setAttemptCount, data);
+        // console.log(setAttemptCount, data);
       } catch (error) {
         console.error("Error fetching question count:", error);
       }
     };
- 
+
     fetchQuestionCount();
   }, [testCreationTableId, user_Id]);
- 
+
   const [correctAnswers, setCorrectAnswersCount] = useState(null);
   useEffect(() => {
     const fetchQuestionCount = async () => {
@@ -156,15 +186,14 @@ const TestResultsPage = () => {
         );
         const data = await response.json();
         setCorrectAnswersCount(data);
-        console.log(setAttemptCount, data);
+        // console.log(setAttemptCount, data);
       } catch (error) {
         console.error("Error fetching question count:", error);
       }
     };
- 
     fetchQuestionCount();
   }, [testCreationTableId, user_Id]);
- 
+
   const [incorrectAnswers, setIncorrectAnswersCount] = useState(null);
   useEffect(() => {
     const fetchQuestionCount = async () => {
@@ -174,40 +203,40 @@ const TestResultsPage = () => {
         );
         const data = await response.json();
         setIncorrectAnswersCount(data);
-        console.log(setAttemptCount, data);
+        // console.log(setAttemptCount, data);
       } catch (error) {
         console.error("Error fetching question count:", error);
       }
     };
- 
+
     fetchQuestionCount();
   }, [testCreationTableId, user_Id]);
- 
 
- 
   const [score, setScoreCount] = useState({ totalMarks: 0, netMarks: 0 });
- 
+
   useEffect(() => {
     const fetchQuestionCount = async () => {
       try {
         const response = await fetch(
           `http://localhost:5001/QuestionPaper/score/${testCreationTableId}/${userData.id}`
-          // `http://localhost:5001/QuestionPaper/score/3/2`
+          // `http://localhost:5001/QuestionPaper/score/4/3`
         );
         const data = await response.json();
         setScoreCount(data);
-        console.log(setScoreCount, data);
+        // console.log("score")
+        // console.log(setScoreCount, data);
       } catch (error) {
         console.error("Error fetching question count:", error);
       }
     };
- 
+
     fetchQuestionCount();
   }, [testCreationTableId, user_Id]);
- 
+
+console.log(score);
   console.log("hiiiiiiiiiiiii");
-  console.log("subject:", score.subjectName);
- 
+  // console.log("subject:", score.subjectName);
+
   useEffect(() => {
     const fetchEmployeeData = async () => {
       try {
@@ -220,7 +249,7 @@ const TestResultsPage = () => {
             },
           }
         );
- 
+
         if (response.ok) {
           const employeeData = await response.json();
           console.log("Employee Data:", employeeData);
@@ -235,12 +264,12 @@ const TestResultsPage = () => {
         console.error("Error during request:", error);
       }
     };
- 
+
     fetchEmployeeData();
   }, []);
- 
+
   // /getTimeLeftSubmissions/:userId/:testCreationTableId
- 
+
   const [TimeSpent, setTimeSpent] = useState(null);
   useEffect(() => {
     const fetchQuestionCount = async () => {
@@ -252,19 +281,21 @@ const TestResultsPage = () => {
         );
         const data = await response.json();
         setTimeSpent(data);
-        console.log(data);
-        console.log(testCreationTableId);
- 
-        console.log(setAttemptCount, data);
+        
+
+        // console.log(setAttemptCount, data);
       } catch (error) {
         console.error("Error fetching question count:", error);
       }
     };
- 
+
     fetchQuestionCount();
   }, [testCreationTableId, userId]);
-  // console.log("hello")
-  // console.log(TimeSpent);
+
+
+  console.log("hello")
+  console.log("hello time",TimeSpent);
+
   const [userResponse, setUserResponse] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
@@ -277,18 +308,16 @@ const TestResultsPage = () => {
         console.error("Error fetching user response:", error.message);
       }
     };
- 
+
     fetchData();
   }, []);
- 
- 
- 
+
   // Function to group sections by subject ID and combine scores of sections A and B
   const groupSectionsBySubjectId = () => {
     if (!score || !score.subjects) return [];
- 
+
     const subjectScores = {}; // Object to store aggregated scores for each subject
- 
+
     score.subjects.forEach((subject) => {
       if (!subjectScores[subject.subjectId]) {
         subjectScores[subject.subjectId] = {
@@ -300,7 +329,7 @@ const TestResultsPage = () => {
           sections: {}, // Object to store scores for each section
         };
       }
- 
+
       subject.sections.forEach((section) => {
         // Accumulate scores for sections A and B
         subjectScores[subject.subjectId].totalMarks += parseFloat(
@@ -312,7 +341,7 @@ const TestResultsPage = () => {
         subjectScores[subject.subjectId].correctAnswersCount += parseFloat(
           section.scores.correctAnswersCount
         );
- 
+
         // Store section-wise scores within the subject object
         if (!subjectScores[subject.subjectId].sections[section.sectionName]) {
           subjectScores[subject.subjectId].sections[section.sectionName] = {
@@ -320,7 +349,7 @@ const TestResultsPage = () => {
             netMarks: 0,
           };
         }
- 
+
         subjectScores[subject.subjectId].sections[
           section.sectionName
         ].totalMarks += parseFloat(section.scores.totalMarks);
@@ -329,13 +358,13 @@ const TestResultsPage = () => {
         ].netMarks += parseFloat(section.scores.netMarks);
       });
     });
- 
+
     // Convert subjectScores object into an array of subject scores
     return Object.values(subjectScores);
   };
- 
+
   // console.log("subject:",score.subjects.subjectName);
- 
+
   return (
     <div className="testResult_-container">
       <h1>Scrore Card</h1>
@@ -353,7 +382,7 @@ const TestResultsPage = () => {
           <p>Email: {userData.email}</p>
         </div>
       </div>
- 
+
       <div className="testResultTable">
         <table id="customers">
           <tr>
@@ -400,6 +429,7 @@ const TestResultsPage = () => {
             <td>{score.overallNetMarks}</td>
             {TimeSpent ? (
               TimeSpent.map((time, index) => {
+                console.log('hiiiiiiiiiii')
                 console.log("Time:", time); // Add this line for debugging
                 return (
                   <tr key={index}>
@@ -412,23 +442,6 @@ const TestResultsPage = () => {
                 <td colSpan="6">Loading...</td>
               </tr>
             )}
-            {/* {
-              TimeSpent.map((time, index) => (
-                <tr key={index}>
-                  <td>{time.time_left}</td>
-                </tr>
-              ))} */}
-            {/* {TimeSpent ? (
-              TimeSpent.map((time, index) => (
-                <tr key={index}>
-                  <td>{time.time_left}</td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="6">Loading...</td>
-              </tr>
-            )} */}
           </tr>
         </table>
       </div>
@@ -444,7 +457,6 @@ const TestResultsPage = () => {
           {answer.map((answerData, index) => (
             <tr key={index}>
               <td>Question: {answerData.question_id}</td>
- 
               <td>{answerData.trimmed_user_answer}</td>
               <td>{answerData.status}</td>
               <td>{answerData.answer_text}</td>
@@ -452,34 +464,33 @@ const TestResultsPage = () => {
           ))}
         </table>
       </div>
- 
-   
- 
+
+
+      {/* main working code for subject wise score */}
       <div className="score_cards_div">
         <h3 className="Total_score">Total Score: {score.overallNetMarks}</h3>
-        <div className="score_cards">{groupSectionsBySubjectId().map((subject) => (
-          <div key={subject.subjectId} className="subject_score_card">
-            <h4>{subject.subjectName}</h4>
-            {/* <p>Total Marks: {subject.totalMarks}</p> */}
-            <p>Total Marks: {subject.netMarks}</p>
-            {/* <p>Correct Answers Count: {subject.correctAnswersCount}</p> */}
-            <div>
-              {Object.entries(subject.sections).map(
-                ([sectionName, sectionScores]) => (
-                  <div key={sectionName}>
-                    <p>{sectionName}</p>
-                    {/* <p>Total Marks: {sectionScores.totalMarks}</p> */}
-                    <p>Marks: {sectionScores.netMarks}</p>
-                  </div>
-                )
-              )}
+        <div className="score_cards">
+          {groupSectionsBySubjectId().map((subject) => (
+            <div key={subject.subjectId} className="subject_score_card">
+              <h4>{subject.subjectName}</h4>
+              <p>Total Marks: {subject.netMarks}</p>
+              <div>
+                {Object.entries(subject.sections).map(
+                  ([sectionName, sectionScores]) => (
+                    <div key={sectionName}>
+                      <p>{sectionName}</p>
+                      <p>Marks: {sectionScores.netMarks}</p>
+                    </div>
+                  )
+                )}
+              </div>
             </div>
-          </div>
-        ))}</div>
-       
+          ))}
+        </div>
       </div>
+      {/* main working code for subject wise score */}
     </div>
   );
 };
- 
+
 export default TestResultsPage;

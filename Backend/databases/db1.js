@@ -9,8 +9,8 @@ const mysql = require("mysql");
     password: '',
 
 
-    // database: 'adminnew',
     database: 'adminnew',
+    // database: 'quiz_app_admin',
 
     // database: 'admin_project',
 

@@ -5,7 +5,7 @@ const router = express.Router();
 const db = require("../databases/db2");
 // const db1= require("../databases/db1");
 const jwt = require("jsonwebtoken");
-const { useParams } = require("react-router-dom");
+// const { useParams } = require("react-router-dom");
 
 router.get("/subjects/:testCreationTableId", async (req, res) => {
   const { testCreationTableId } = req.params;
@@ -536,6 +536,7 @@ router.get("/questionOptions/:testCreationTableId", async (req, res) => {
 //   }
 // });
 
+
 // ----------------------------left time submission api's--------------
 router.post('/submitTimeLeft', async (req, res) => {
   try {
@@ -577,20 +578,43 @@ router.post('/submitTimeLeft', async (req, res) => {
 });
 
 // Add a new route to fetch time left
+// router.get('/getTimeLeftSubmissions/:testCreationTableId/:userId', async (req, res) => {
+//   try {
+//     // Your SQL query
+//     const query = `
+//       SELECT *
+//       FROM time_left_submission_of_test ts
+//       JOIN user_responses ur ON ts.user_Id = ur.user_Id AND ts.testCreationTableId = ur.testCreationTableId
+//       WHERE ur.user_Id = ? AND ts.testCreationTableId = ?
+//       LIMIT 1;
+//     `;
+ 
+//     // Execute the query using promises
+//     const [rows, fields] = await db.execute(query);
+ 
+//     // Send the result as JSON
+//     res.json(rows);
+//   } catch (error) {
+//     console.error('Error executing query:', error);
+//     res.status(500).json({ error: 'Internal Server Error' });
+//   }
+// });
 router.get('/getTimeLeftSubmissions/:testCreationTableId/:userId', async (req, res) => {
   try {
+    const { testCreationTableId, userId } = req.params;
+
     // Your SQL query
     const query = `
       SELECT *
       FROM time_left_submission_of_test ts
       JOIN user_responses ur ON ts.user_Id = ur.user_Id AND ts.testCreationTableId = ur.testCreationTableId
-      WHERE ur.user_Id = 2 AND ts.testCreationTableId = 3
+      WHERE ur.user_Id = ? AND ts.testCreationTableId = ?
       LIMIT 1;
     `;
- 
+
     // Execute the query using promises
-    const [rows, fields] = await db.execute(query);
- 
+    const [rows, fields] = await db.execute(query, [userId, testCreationTableId]);
+
     // Send the result as JSON
     res.json(rows);
   } catch (error) {
@@ -598,6 +622,7 @@ router.get('/getTimeLeftSubmissions/:testCreationTableId/:userId', async (req, r
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
 
 //main
 // router.get("/score/:testCreationTableId/:user_Id", async (req, res) => {
@@ -2348,6 +2373,8 @@ router.put('/updateResponse/:user_Id/:testCreationTableId/:question_id', async (
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 });
+
+
 // UPDATE user_responses
 //       SET user_answer = CONCAT(?, ',', ?, ' ', ?)
 //       WHERE user_Id = ? AND testCreationTableId = ? AND question_id = ?
@@ -2488,16 +2515,49 @@ router.delete('/clearResponse/:questionId', async (req, res) => {
 //   }
 // });
 
-router.get("/answer", async (req, res) => {
+// router.get("/answer", async (req, res) => {
+//   try {
+//     // const { questionId } = req.params;
+//     const [results] = await db.query(`SELECT a.question_id, a.answer_text, ur.user_answer, TRIM(COALESCE(ur.user_answer, '--')) AS trimmed_user_answer, TRIM(a.answer_text) AS trimmed_answer_text, LENGTH(TRIM(COALESCE(ur.user_answer, '--'))) AS user_answer_length, LENGTH(TRIM(a.answer_text)) AS answer_text_length, CASE WHEN TRIM(BINARY ur.user_answer) = TRIM(BINARY a.answer_text) AND ur.user_answer IS NOT NULL AND ur.user_answer != '' THEN 'correct' WHEN ur.user_answer IS NULL THEN 'N/A' ELSE 'incorrect' END AS status FROM answer a LEFT JOIN user_responses ur ON a.question_id = ur.question_id;`);
+//     res.json(results);
+//   } catch (error) {
+//     console.error("Error:", error.message);
+//     res.status(500).send("Internal Server Error");
+//   }
+// });
+
+router.get("/answer/:testCreationTableId/:user_Id", async (req, res) => {
   try {
-    // const { questionId } = req.params;
-    const [results] = await db.query(`SELECT a.question_id, a.answer_text, ur.user_answer, TRIM(COALESCE(ur.user_answer, '--')) AS trimmed_user_answer, TRIM(a.answer_text) AS trimmed_answer_text, LENGTH(TRIM(COALESCE(ur.user_answer, '--'))) AS user_answer_length, LENGTH(TRIM(a.answer_text)) AS answer_text_length, CASE WHEN TRIM(BINARY ur.user_answer) = TRIM(BINARY a.answer_text) AND ur.user_answer IS NOT NULL AND ur.user_answer != '' THEN 'correct' WHEN ur.user_answer IS NULL THEN 'N/A' ELSE 'incorrect' END AS status FROM answer a LEFT JOIN user_responses ur ON a.question_id = ur.question_id;`);
+    const { testCreationTableId, user_Id } = req.params;
+    const [results] = await db.query(`
+    SELECT
+    a.question_id,
+    a.answer_text,
+    ur.user_answer,
+    TRIM(COALESCE(ur.user_answer, '--')) AS trimmed_user_answer,
+    TRIM(a.answer_text) AS trimmed_answer_text,
+    LENGTH(TRIM(COALESCE(ur.user_answer, '--'))) AS user_answer_length,
+    LENGTH(TRIM(a.answer_text)) AS answer_text_length,
+    CASE 
+        WHEN ur.user_answer IS NULL THEN 'N/A' 
+        WHEN TRIM(BINARY ur.user_answer) = TRIM(BINARY a.answer_text) AND ur.user_answer != '' THEN 'correct' 
+        ELSE 'incorrect'
+    END AS status
+FROM
+    answer a
+LEFT JOIN 
+    user_responses ur ON a.question_id = ur.question_id AND ur.testCreationTableId = ?
+    `, [testCreationTableId, user_Id]);
+ 
+    console.log(results); // Log the results to see if STATUS is populated correctly
+ 
     res.json(results);
   } catch (error) {
     console.error("Error:", error.message);
     res.status(500).send("Internal Server Error");
   }
 });
+
 
 router.get("/questionCount", async (req, res) => {
   const { testCreationTableId, subjectId, sectionId } = req.params;
@@ -2534,6 +2594,7 @@ router.get("/questionCount/:testCreationTableId", async (req, res) => {
   }
 });
 
+
 // router.get('/attemptCount/:testCreationTableId/:user_Id', async (req, res) => {
 //   const { testCreationTableId, user_Id} = req.params;
 //     try {
@@ -2558,6 +2619,7 @@ router.get("/questionCount/:testCreationTableId", async (req, res) => {
 // FROM user_responses ur
 // JOIN answer a ON ur.question_id = a.question_id
 // WHERE TRIM(ur.user_answer) = TRIM(a.answer_text);
+
 
 router.get("/attemptCount/:testCreationTableId/:user_Id", async (req, res) => {
   const { testCreationTableId, user_Id } = req.params;
@@ -2609,6 +2671,7 @@ router.get("/correctAnswers/:testCreationTableId/:user_Id",
   }
 );
 
+
 router.get("/incorrectAnswers/:testCreationTableId/:user_Id",
   async (req, res) => {
     const { testCreationTableId, user_Id } = req.params;
@@ -2635,6 +2698,11 @@ router.get("/incorrectAnswers/:testCreationTableId/:user_Id",
     }
   }
 );
+
+
+
+
+
 //main
 // router.get("/score/:testCreationTableId/:user_Id",
 //   async (req, res) => {
