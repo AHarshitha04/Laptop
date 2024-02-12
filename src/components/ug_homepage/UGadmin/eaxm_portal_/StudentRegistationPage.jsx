@@ -600,7 +600,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from 'react-router-dom';
 import axios from "axios";
 import noimg from "./NoImages.jpg";
-
+import './styles/StudentRegistationPage.css'
 const DisplayFormData = ({ formData,getGenderName,getCategoryName,getStateName,getDistrictName,getBatchName,getQualification, onSubmit, onBack }) => {
   console.log(formData)
   console.log("edStatusId in DisplayFormData:", formData.edStatusId);
@@ -610,7 +610,7 @@ const DisplayFormData = ({ formData,getGenderName,getCategoryName,getStateName,g
   return (
     <div>
       {/* Display the entered data */}
-      <h1>Entered Data</h1>
+      <h2 className="srp_heading">Entered Data</h2>
     <div>
       <p></p>
       <p>CANDIDATE NAME(accoding to 10th memo): {formData.candidateName}</p>
@@ -1044,12 +1044,13 @@ const StudentRegistrationPage = () => {
   }
 
   return (
-    <div>
+    <div className="srp-container">
      <form onSubmit={handleFormSubmit}>
-
+     <h2 className="page_heading">STUDENT REGISTRATION PAGE</h2>
       <section>
-           <h1>Student Registration Page</h1>
-           <div>
+           <h2 className="srp_heading">PERSONAL DETAILS</h2>
+           <div className="content_reg">
+           <div className="inputContent">
            <label htmlFor="candidateName">CANDIDATE NAME(accoding to 10th memo):</label>
              <input
               type="text"
@@ -1059,9 +1060,11 @@ const StudentRegistrationPage = () => {
               onChange={handleInputChange}
             />
           </div>
-          <div>
+
+          <div className="inputContent">
             <label htmlFor="dateOfBirth">DATE OF BIRTH:</label>
             <input
+          
               type="date"
               id="dateOfBirth"
               name="dateOfBirth"
@@ -1070,7 +1073,7 @@ const StudentRegistrationPage = () => {
             />
           </div>
 
-          <div>
+          <div className="inputContent">
             <label>GENDER:</label>
             {genders.map((gender) => (
               <div key={gender.GenderId}>
@@ -1088,7 +1091,7 @@ const StudentRegistrationPage = () => {
           </div>
 
           {/* CATEGORY: */}
-          <div>
+          <div className="inputContent"> 
             <label>CATEGORY:</label>
             {categories.map((category) => (
               <div key={category.CategoryId}>
@@ -1104,9 +1107,11 @@ const StudentRegistrationPage = () => {
               </div>
             ))}
           </div>
-          <div>
+
+          <div className="inputContent">
             <label htmlFor="emailId">EMAIL ID:</label>
             <input
+              className="inputContent_input"
               type="email"
               id="emailId"
               name="emailId"
@@ -1114,9 +1119,11 @@ const StudentRegistrationPage = () => {
               onChange={handleInputChange}
             />
           </div>
-          <div>
+
+          <div className="inputContent">
             <label htmlFor="confirmEmailId">CONFIRM EMAIL ID:</label>
             <input
+              className="inputContent_input"
               type="email"
               id="confirmEmailId"
               name="confirmEmailId"
@@ -1124,7 +1131,7 @@ const StudentRegistrationPage = () => {
               onChange={handleInputChange}
             />
           </div>
-          <div>
+          <div className="inputContent">
             <label htmlFor="contactNo">CONTACT NO:</label>
             <input
               type="number"
@@ -1134,10 +1141,13 @@ const StudentRegistrationPage = () => {
               onChange={handleInputChange}
             />
           </div>
+          </div>
         </section>
+
         <section>
-          <h2>FATHER'S/GUARDIAN'S DETAILS</h2>
-          <div>
+          <h2 className="srp_heading">FATHER'S/GUARDIAN'S DETAILS</h2>
+          <div className="content_reg">
+          <div className="inputContent">
             <label htmlFor="fatherName">FATHER'S NAME:</label>
             <input
               type="text"
@@ -1148,7 +1158,7 @@ const StudentRegistrationPage = () => {
             />
           </div>
 
-          <div>
+          <div className="inputContent">
             <label htmlFor="occupation">OCCUPATION:</label>
             <input
               type="text"
@@ -1160,7 +1170,7 @@ const StudentRegistrationPage = () => {
           </div>
 
 
-          <div>
+          <div className="inputContent">
             <label htmlFor="mobileNo">MOBILE NO:</label>
             <input
               type="number"
@@ -1170,11 +1180,13 @@ const StudentRegistrationPage = () => {
               onChange={handleInputChange}
             />
           </div>
+          </div>
         </section>
 
         <section>
-          <h2>COMMUNICATION ADDRESS</h2>
-          <div>
+          <h2 className="srp_heading">COMMUNICATION ADDRESS</h2>
+          <div className="content_reg">
+          <div className="inputContent">
             <label htmlFor="line1">LINE1:</label>
             <input
               type="text"
@@ -1186,7 +1198,7 @@ const StudentRegistrationPage = () => {
           </div>
 
           <div className="inputContent">
-          <h2>Select a State</h2>
+          <h2>SELECT A STATE</h2>
       <select onChange={handleStateChange} value={selectedState}>
         <option value="" disabled>
           Choose a state
@@ -1201,8 +1213,8 @@ const StudentRegistrationPage = () => {
       </div>
       <div >
 {selectedState && (
-        <div>
-          <h2>Select a District</h2>
+        <div className="inputContent">
+          <h2>SELECT A DISTRICT</h2>
           <select onChange={handledistrictChange}  value={selecteddistrict} >
             <option value="" disabled>
               Choose a district
@@ -1216,7 +1228,7 @@ const StudentRegistrationPage = () => {
         </div>
       )}</div>
 
-<div>
+<div className="inputContent">
             <label htmlFor="pincode">PINCODE:</label>
             <input
               type="number"
@@ -1226,21 +1238,24 @@ const StudentRegistrationPage = () => {
               onChange={handleInputChange}
             />
           </div>
-
+          </div>
         </section>
-        <h2>COURSE DETAILS</h2>
-        <div className="inputContent">
+        <section>
+        <h2 className="srp_heading">COURSE DETAILS</h2>
+        <div className="content_reg">
+        
           {courseData.map((course) => (
-            <div key={course.courseCreationId}>
+            <div className="inputContent_courseData" key={course.courseCreationId}>
               <p>EXAM: {course.examName}</p>
               <p>SESSION: {course.courseYear}</p>
               <p>COURSE: {course.courseName}</p>
               <p>SUBJECTS :{course.subjects.join(', ')}</p>
             </div>
           ))}
-          </div>
-        <section>
+          
 
+        
+        <div className="inputContent">
         <h2>BATCH</h2>
       <select onChange={handleBatchChange} value={selectedBatch}>
         <option value="" disabled>
@@ -1252,10 +1267,13 @@ const StudentRegistrationPage = () => {
           </option>
         ))}
       </select> 
+      </div>
+      </div>
         </section>
 <section>
-  <h1>EDUCATION DETAILS</h1>
-
+  <h2 className="srp_heading">EDUCATION DETAILS</h2>
+  <div className="content_reg">
+<div className="inputContent">
 <h2>QUALIFICATION</h2>
 <select onChange={handleQualificationChange} value={selectedQualification}>
 <option value="" disabled>
@@ -1266,9 +1284,9 @@ const StudentRegistrationPage = () => {
     {Qualification.educationStatus}
   </option>
 ))}
-</select> 
+</select> </div>
 
-<div>
+<div className="inputContent">
             <label htmlFor="NameOfCollege">NAME OF COLLEGE (WITH CITY):</label>
             <input
               type="text"
@@ -1279,7 +1297,7 @@ const StudentRegistrationPage = () => {
             />
           </div>
           
-<div>
+<div className="inputContent">
             <label htmlFor="passingYear">PASSING YEAR:</label>
             <input
               type="text"
@@ -1291,7 +1309,7 @@ const StudentRegistrationPage = () => {
           </div>
 
 
-          <div>
+          <div className="inputContent">
             <label htmlFor="marks">MARKS IN %:</label>
             <input
               type="text"
@@ -1301,10 +1319,12 @@ const StudentRegistrationPage = () => {
               onChange={handleInputChange}
             />
           </div>
-
+          </div>
 </section>
-<div className="content_reg ">
 
+<section>
+<h2 className="srp_heading">UPLOAD IMAGE / DOCUMENTS</h2>
+<div className="content_reg">
 {/* UPLOAD PHOTO  -----------*/}
            <div className="imgSection">
              <h3>UPLOAD PHOTO <span>*</span> </h3>
@@ -1345,11 +1365,15 @@ const StudentRegistrationPage = () => {
                {/* <span className="errorText">{formErrors.filess3}</span> */}
              </div>
            </div> 
-         </div>
-<section>
-</section>
-        <div>
-          <button type="button" onClick={handleDisplayData}>
+         </div></section>
+
+
+
+       
+
+
+        <div className="submitBTn">
+          <button type="button" className="btnSubmit" onClick={handleDisplayData}>
             Submit
           </button>
         </div>

@@ -3,36 +3,74 @@ const router = express.Router();
 const db= require("../databases/db2");
 
 
-
 router.get("/examData", async (req, res) => {
-    // FetchData
-    try {
-      const [rows] = await db.query("SELECT * FROM exams");
-      res.json(rows);
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: "Internal Server Error" });
+  try {
+    const [rows] = await db.query("SELECT e.examName, e.startDate, e.endDate, e.examId, ci.cardimeage FROM exams AS e JOIN cardimeageuploadtable AS ci ON e.examId=ci.examId");
+
+    if (rows.length === 0) {
+      // If no data is found
+      return res.status(404).json({ error: "No data found" });
     }
-  });
+
+    // Loop through each row and convert cardimeage to base64
+    rows.forEach((row) => {
+      const base64CardImage = row.cardimeage.toString("base64");
+      row.cardimeage = `data:image/png;base64,${base64CardImage}`;
+    });
+
+    // Return the response
+    res.json(rows);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+  // router.get("/feachingcourse/:examId", async (req, res) => {
+  //   const { examId } = req.params;
+  //   try {
+  //     // Fetch exams from the database
+  //     const [rows] = await db.query(
+  //       "SELECT * FROM course_creation_table WHERE examId = ?",
+  //       [examId]
+  //     );
+  
+  
+  //     res.json(rows);
+  //   } catch (error) {
+  //     console.error(error);
+  //     res.status(500).json({ error: "Internal Server Error" });
+  //   }
+  // });
+
 
   router.get("/feachingcourse/:examId", async (req, res) => {
     const { examId } = req.params;
     try {
-      // Fetch exams from the database
       const [rows] = await db.query(
-        "SELECT * FROM course_creation_table WHERE examId = ?",
+        "SELECT c.courseName, c.courseYear, c.courseStartDate, c.courseEndDate, ci.cardimeage, c.examId, c.courseCreationId, c.cost, c.Discount, c.totalPrice FROM course_creation_table AS c JOIN cardimeageuploadtable AS ci ON c.courseCreationId = ci.courseCreationId WHERE c.examId = ?",
         [examId]
       );
   
+      if (rows.length === 0) {
+        // If no data is found
+        return res.status(404).json({ error: "No data found" });
+      }
   
+      // Loop through each row and convert cardimeage to base64
+      rows.forEach((row) => {
+        const base64CardImage = row.cardimeage.toString("base64");
+        row.cardimeage = `data:image/png;base64,${base64CardImage}`;
+      });
+  
+      // Return the response
       res.json(rows);
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: "Internal Server Error" });
     }
   });
-
-
+  
 
   router.get('/courses/count', async (req, res) => {
     try {

@@ -132,7 +132,7 @@ router.get('/subjects', async (req, res) => {
       const examId = req.params.examId;
     
       try {
-        await db.query('DELETE FROM exams WHERE examId = ?', [examId]);
+        await db.query('DELETE e, ci FROM exams AS e JOIN cardimeageuploadtable AS ci ON e.examId = ci.examId WHERE e.examId = ?', [examId]);
         // You might also want to delete related data in other tables (e.g., exam_creation) if necessary.
     
         res.json({ message: `Exam with ID ${examId} deleted from the database` });

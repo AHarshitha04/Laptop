@@ -1,0 +1,79 @@
+body {
+    font-family: "Anek Malayalam", sans-serif;
+    /* background: linear-gradient(90.04deg, #800080 0.03%, #ffc0cb 99.96%); */
+    color: #11052c;
+    /* display: flex; */
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+  }
+
+  .page_heading{
+    font-weight: 150px;
+    font-size: 20px;
+    text-align: center;
+    padding: 1rem;
+  }
+  .srp-container{
+    background-color: aliceblue;
+    padding: 1rem;
+    margin: 0.5rem;
+  }
+
+  .srp_heading{
+    background: #96aad0;
+    color: white;
+    font-size: 25px;
+    padding: 5px;
+  }
+
+  .content_reg{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  .content_reg .inputContent{
+    padding: 8px 8px;
+  }
+  .inputContent{
+    display: flex;
+    /* justify-content: space-between; */
+    gap:40px
+  }
+
+  .inputContent_courseData {
+    display: flex;
+    gap: 3rem;
+  }
+  .inputContent_courseData p{
+    font-weight: bold;
+  }
+
+  .inputContent_input{
+    width: 350px;
+    padding: 6px;
+    border: none;
+    box-shadow: 1px 4px 11px 0px #1a374d;
+  }
+
+  .btnSubmit{
+    background: #d9534f;
+        width: 83.8px;
+    height: 38px;
+    border: none;
+    color: white;
+    font-weight: 400;
+    line-height: 1.25;
+    font-size: 1rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border-radius: 9px;
+    float: right;
+  }
+  .submitBTn {
+    display: flex;
+    justify-content: right;
+}
+
+ 
