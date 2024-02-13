@@ -59,7 +59,7 @@ body {
 
   .btnSubmit{
     background: #d9534f;
-        width: 83.8px;
+    /* width: 83.8px; */
     height: 38px;
     border: none;
     color: white;
@@ -70,10 +70,42 @@ body {
     text-transform: uppercase;
     border-radius: 9px;
     float: right;
+    
   }
   .submitBTn {
     display: flex;
     justify-content: right;
 }
+.btnSubmit_payNow{
+    background: #0a852f;
+}
 
- 
+.btnSubmit_back{
+    background-color:  #a3e2ee;
+}
+.preview_continwer p{
+    font-weight: 10px;
+   background-color: rgb(239, 245, 250);
+    padding: 10px;
+}
+.preview_continwer{
+    margin: 1rem;
+}
+
+.preview_page_Buttons{
+  display: flex;  
+  gap: 10px;
+  margin: 10px;
+  text-transform: uppercase;
+}
+
+input::placeholder {
+    color: #999; /* Replace with your desired color code */
+  }
+
+  /* Add this class for styling the placeholder text */
+.inputContent.missing-field input::placeholder {
+    color: red; /* You can adjust the color as needed */
+  }
+  
+  
