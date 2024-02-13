@@ -59,7 +59,6 @@
 //   const [answeredCount, setAnsweredCount] = useState(0);
 //   const [notAnsweredCount, setNotAnsweredCount] = useState(0);
 
-
 //   // const data = [
 //   //   {
 //   //     name: 'Page A',
@@ -302,7 +301,7 @@
 //           <p>Name: {userData.username}</p>
 //           <p>Email: {userData.email}</p>
 //         </div>
- 
+
 //       </div>
 
 //       <div className="testResultTable">
@@ -387,7 +386,7 @@
 //       </div>
 
 //       <br />
-      
+
 //       <div className="testResultTable">
 //         <table id="customers" >
 //           <tr>
@@ -411,7 +410,6 @@
 // };
 
 // export default TestResultsPage;
-
 
 import React, { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
@@ -475,7 +473,6 @@ const TestResultsPage = () => {
   const [answeredCount, setAnsweredCount] = useState(0);
   const [notAnsweredCount, setNotAnsweredCount] = useState(0);
 
-
   // const data = [
   //   {
   //     name: 'Page A',
@@ -520,7 +517,7 @@ const TestResultsPage = () => {
   //     amt: 2100,
   //   },
   // ];
-  const { testCreationTableId, user_Id,userId } = useParams();
+  const { testCreationTableId, user_Id, userId } = useParams();
 
   const [questionCount, setQuestionCount] = useState(null);
 
@@ -555,7 +552,7 @@ const TestResultsPage = () => {
 
     fetchQuestionCount();
   }, [testCreationTableId]);
-
+console.log(testCreationTableId);
   const [attemptCount, setAttemptCount] = useState(null);
   useEffect(() => {
     const fetchQuestionCount = async () => {
@@ -708,45 +705,10 @@ const TestResultsPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-]
         const response = await axios.get(
           "http://localhost:5001/QuestionPaper/user_answer"
         );
         setUserResponse(response.data);
-        
-
-        const response = await fetch(
-          `http://localhost:5001/QuestionPaper/getTimeLeftSubmissions/${testCreationTableId}/${userData.id}`
-          // `http://localhost:5001/QuestionPaper/score/${testCreationTableId}/${userData.id}`
-          // `http://localhost:5001/QuestionPaper/getTimeLeftSubmissions/2/1`
-        );
-        const data = await response.json();
-        setTimeSpent(data);
-        console.log(data);
-        console.log(testCreationTableId);
-
-        console.log(setAttemptCount, data);
-
-      } catch (error) {
-        console.error("Error fetching user response:", error.message);
-      }
-    };
-
-
-
-    fetchQuestionCount();
-  }, [testCreationTableId, userId]);
-  // console.log("hello")
-  // console.log(TimeSpent);
-  const [userResponse, setUserResponse] = useState([]);
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          "http://localhost:5001/QuestionPaper/user_answer"
-        );
-        setUserResponse(response.data);
-        
       } catch (error) {
         console.error("Error fetching user response:", error.message);
       }
@@ -755,9 +717,6 @@ const TestResultsPage = () => {
     fetchData();
   }, []);
 
-
-
-  
   return (
     <div className="testResult_-container">
       <h1>Scrore Card</h1>

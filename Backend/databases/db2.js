@@ -10,9 +10,9 @@ const pool = mysql.createPool({
 
 
   // database: 'adminnew',
-  database: 'adminnew',
-]
-]
+  // database: 'adminnew',
+
+
 
   waitForConnections: true,
   connectionLimit: 1000,
