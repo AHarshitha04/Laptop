@@ -56,6 +56,7 @@ const Leftnav = () => {
     setShowregisteredstudent(false);
     setShowImage_Upload_for_Ac(false)
     setshowStudent_Doubt_Section(false);
+    setShowTestActivation_admin(false);
   };
 
   const handleshowExamcreation_admin = () => {
@@ -81,7 +82,7 @@ const Leftnav = () => {
     setShowregisteredstudent(false);
     setShowImage_Upload_for_Ac(false)
     setshowStudent_Doubt_Section(false);
-
+    setShowTestActivation_admin(false);
 
   };
   const handleInstructionPage_admin = () => {
@@ -94,7 +95,7 @@ const Leftnav = () => {
     setShowregisteredstudent(false);
     setShowImage_Upload_for_Ac(false)
     setshowStudent_Doubt_Section(false);
-
+    setShowTestActivation_admin(false);
 
   };
 
@@ -108,7 +109,7 @@ const Leftnav = () => {
     setShowregisteredstudent(false);
     setShowImage_Upload_for_Ac(false)
     setshowStudent_Doubt_Section(false);
-
+    setShowTestActivation_admin(false);
 
   };
 
@@ -122,7 +123,7 @@ const Leftnav = () => {
     setShowregisteredstudent(false);
     setShowImage_Upload_for_Ac(false)
     setshowStudent_Doubt_Section(false);
-
+    setShowTestActivation_admin(false);
 
   };
 
@@ -148,7 +149,7 @@ const  handleTestActivation_admin =()=>{
     setShowregisteredstudent(true);
     setShowImage_Upload_for_Ac(false)
     setshowStudent_Doubt_Section(false);
-
+    setShowTestActivation_admin(false);
 
   };
 
@@ -162,7 +163,7 @@ const  handleTestActivation_admin =()=>{
     setShowregisteredstudent(false);
     setShowImage_Upload_for_Ac(true)
     setshowStudent_Doubt_Section(false);
-
+    setShowTestActivation_admin(false);
   }
 
     const handleStudent_Doubt_Section = () => {
@@ -175,7 +176,7 @@ const  handleTestActivation_admin =()=>{
       setShowregisteredstudent(false);
       setShowImage_Upload_for_Ac(false);
     setshowStudent_Doubt_Section(true);
-
+    setShowTestActivation_admin(false);
     };
 
   return (
@@ -286,7 +287,7 @@ const  handleTestActivation_admin =()=>{
               >
                 {/* <img width={40} src={dashboard} alt="" /> */}
                 <p>
-                  <i class="fa-solid fa-folder-open logo_-clr"></i>
+                <i class="fa-solid fa-arrow-up-from-bracket"></i>
                Test Activation
                 </p>
               </Link>
@@ -294,14 +295,14 @@ const  handleTestActivation_admin =()=>{
           
 
 
-            <li>
+            {/* <li>
               <Link className="LeftnavLinks" to="/HomeLandingPage">
                 <p>
                   <i class="fa-brands fa-quora"></i>
                   Quiz App
                 </p>
               </Link>
-            </li>
+            </li> */}
 
             <li>
               <Link className="LeftnavLinks" onClick={handleregisteredstudent}>
@@ -319,9 +320,7 @@ const  handleTestActivation_admin =()=>{
                 onClick={handleImage_Upload_for_Ac}
               >
                 <p>
-                  <i>
-                    <FaUserAlt />
-                  </i>
+                <i class="fa-regular fa-image"></i>
                   Image Upload
                 </p>
               </Link>
@@ -333,7 +332,7 @@ const  handleTestActivation_admin =()=>{
                 onClick={handleStudent_Doubt_Section}
               >
                 <p>
-                  <i>{/* <FaUserAlt /> */}</i>
+                <i class="fa-solid fa-question"></i>
                   Student-Doubt-Section
                 </p>
               </Link>

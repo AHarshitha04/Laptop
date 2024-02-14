@@ -265,6 +265,9 @@ const ButtonsFunctionality = ({
             alt={`Image ${userData.user_Id}`}
           />
           <p>Name of the person : {userData.username}</p>
+          <p>{
+            
+            }</p>
 
           {/* <p>Time Left: {WformatTime(wtimer)}</p> */}
         </div>

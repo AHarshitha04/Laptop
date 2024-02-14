@@ -337,51 +337,91 @@ const DemoDeleteItsNotImp = () => {
   //   setSelectedAnswers(updatedSelectedAnswers);
   // };
 
+  //old main
+  // const onAnswerSelected3 = (e) => {
+  //   const inputValue = e.target.value;
+  //   const parsedValue = parseFloat(inputValue);
+
+  //   setValue(parsedValue);
+
+  //   if (
+  //     !questionData.questions ||
+  //     !questionData.questions[currentQuestionIndex]
+  //   ) {
+  //     console.error("Invalid question data or index");
+  //     return;
+  //   }
+
+  //   const currentQuestion = questionData.questions[currentQuestionIndex];
+  //   const questionId = currentQuestion.question_id;
+
+  //   setSelectedAnswersMap3((prevMap) => ({
+  //     ...prevMap,
+  //     [questionId]: parsedValue,
+  //   }));
+
+  //   // Directly set the value attribute of the input field
+  //   const inputField = document.getElementById(
+  //     `question-${currentQuestionIndex}`
+  //   );
+  //   if (inputField) {
+  //     inputField.value = parsedValue.toString();
+  //   }
+
+  //   console.log("Calculator Value:", parsedValue);
+  //   console.log("Calculator Input Text Box Value:", inputValue);
+
+  //   // Debugging statements
+  //   console.log("Attempting to store in local storage...");
+
+  //   try {
+  //     localStorage.setItem(
+  //       `calculatorValue_${questionId}`,
+  //       JSON.stringify({ value: parsedValue })
+  //     );
+  //     console.log("Value stored in local storage:", parsedValue);
+  //   } catch (error) {
+  //     console.error("Error storing in local storage:", error);
+  //   }
+  // };
   const onAnswerSelected3 = (e) => {
     const inputValue = e.target.value;
     const parsedValue = parseFloat(inputValue);
-
+ 
+    // Set the value state
     setValue(parsedValue);
-
-    if (
-      !questionData.questions ||
-      !questionData.questions[currentQuestionIndex]
-    ) {
+ 
+    if (!questionData.questions || !questionData.questions[currentQuestionIndex]) {
       console.error("Invalid question data or index");
       return;
     }
-
+ 
     const currentQuestion = questionData.questions[currentQuestionIndex];
     const questionId = currentQuestion.question_id;
-
+ 
+    // Extract the answerNumber from the current question
+    const answerNumber = currentQuestion.answerNumber;
+ 
+    // Update the selected answers map with the answer value
     setSelectedAnswersMap3((prevMap) => ({
       ...prevMap,
-      [questionId]: parsedValue,
+      [questionId]: answerNumber,
     }));
-
+ 
     // Directly set the value attribute of the input field
-    const inputField = document.getElementById(
-      `question-${currentQuestionIndex}`
-    );
+    const inputField = document.getElementById(`question-${currentQuestionIndex}`);
     if (inputField) {
-      inputField.value = parsedValue.toString();
+      inputField.value = answerNumber ? answerNumber.toString() : ''; // Set the value if answerNumber is not null
     }
-
+ 
     console.log("Calculator Value:", parsedValue);
     console.log("Calculator Input Text Box Value:", inputValue);
-
-    // Debugging statements
-    console.log("Attempting to store in local storage...");
-
-    try {
-      localStorage.setItem(
-        `calculatorValue_${questionId}`,
-        JSON.stringify({ value: parsedValue })
-      );
-      console.log("Value stored in local storage:", parsedValue);
-    } catch (error) {
-      console.error("Error storing in local storage:", error);
-    }
+    console.log("Answer Number:", answerNumber);
+ 
+    // Update the question status based on the answer
+    const updatedQuestionStatus = [...questionStatus];
+    updatedQuestionStatus[currentQuestionIndex] = "answered";
+    setQuestionStatus(updatedQuestionStatus);
   };
 
   //end Subjects fetching use effect code
@@ -665,8 +705,200 @@ const DemoDeleteItsNotImp = () => {
   //     console.error("Error handling next click:", error);
   //   }
   // };
+
+
+//   const isResponseCleared = async (testCreationTableId, questionId) => {
+//     try {
+//         // Fetch question options data for the given testCreationTableId
+//         const response = await fetch(`http://localhost:5001/QuestionPaper/questionOptions/${testCreationTableId}`);
+//         const questionOptionsData = await response.json();
+
+//         // Ensure that questionOptionsData is an array before proceeding
+//         if (!Array.isArray(questionOptionsData)) {
+//             throw new Error("Invalid response format: expected an array");
+//         }
+
+//         // Find the question data by questionId
+//         const questionData = questionOptionsData.find(question => question.question_id === questionId);
+
+//         // If questionData is found and its ans attribute is null, the response is cleared
+//         if (questionData && questionData.ans === null) {
+//             return true;
+//         } else {
+//             return false;
+//         }
+//     } catch (error) {
+//         console.error("Error checking if response is cleared:", error);
+//         throw error; // Re-throw the error to handle it further up the call stack
+//     }
+// };
+
+
+
+// const handleSaveNextQuestion = async () => {
+//   try {
+//       const updatedQuestionStatus = [...questionStatus];
+//       const calculatorInputValue = value;
+
+//       console.log("Current Question Index:", currentQuestionIndex);
+//       console.log("Current Question:", currentQuestion);
+
+//       const isCurrentQuestionAnswered =
+//           selectedAnswersMap1[currentQuestion.question_id] !== undefined ||
+//           (selectedAnswersMap2[currentQuestion.question_id] &&
+//               selectedAnswersMap2[currentQuestion.question_id].length > 0) ||
+//           calculatorInputValue !== "";
+
+//       console.log("Is Current Question Answered:", isCurrentQuestionAnswered);
+
+//       if (!isCurrentQuestionAnswered) {
+//           window.alert("Please answer the question before proceeding.");
+//       } else {
+//           updatedQuestionStatus[currentQuestionIndex] = "answered";
+//           setQuestionStatus(updatedQuestionStatus);
+
+//           setCurrentQuestionIndex((prevIndex) =>
+//               prevIndex < questionData.questions.length - 1
+//                   ? prevIndex + 1
+//                   : prevIndex
+//           );
+
+//           if (userData.id) {
+//               const userId = userData.id;
+//               const subjectId = currentQuestion.subjectId;
+//               const sectionId = currentQuestion.sectionId;
+//               const questionId = currentQuestion.question_id.toString();
+
+//               const valueObject = {
+//                   testCreationTableId: testCreationTableId,
+//                   value: calculatorInputValue,
+//                   question_id: questionId,
+//               };
+
+//               // Store the calculator value in local storage
+//               localStorage.setItem(
+//                   `calculatorValue_${questionId}`,
+//                   JSON.stringify(valueObject)
+//               );
+
+//               // Introduce a small delay before retrieving the stored value
+//               // This ensures that the local storage has enough time to update
+//               await new Promise((resolve) => setTimeout(resolve, 100));
+
+//               // Retrieve the stored calculator value
+//               const storedValue = localStorage.getItem(
+//                   `calculatorValue_${questionId}`
+//               );
+//               const storedCalculatorInputValue = storedValue
+//                   ? JSON.parse(storedValue).value
+//                   : null;
+
+//               if (calculatorInputValue === storedCalculatorInputValue) {
+//                   const selectedOption1 =
+//                       selectedAnswersMap1[currentQuestion.question_id];
+
+//                   const selectedOption2 =
+//                       selectedAnswersMap2[currentQuestion.question_id];
+
+//                   const optionIndexes1 =
+//                       selectedOption1 !== undefined ? [selectedOption1] : [];
+//                   const optionIndexes2 =
+//                       selectedOption2 !== undefined ? selectedOption2 : [];
+
+//                   const hasAnswered = answeredQuestionsMap[questionId];
+
+//                   // Construct the responses object
+//                   const responses = {
+//                       questionId: questionId,
+//                       hasAnswered: hasAnswered,
+//                       userId: userId,
+//                       testCreationTableId: testCreationTableId,
+//                       subjectId: subjectId,
+//                       sectionId: sectionId,
+//                       [questionId]: {
+//                           optionIndexes1: optionIndexes1.map((index) => {
+//                               const selectedOption = questionData.questions[currentQuestionIndex].options[index];
+//                               return selectedOption.option_id;
+//                           }),
+//                           optionIndexes1CharCodes: optionIndexes1.map((index) => {
+//                               return String.fromCharCode("a".charCodeAt(0) + index);
+//                           }),
+//                           optionIndexes2: optionIndexes2.map((index) => {
+//                               const selectedOption = questionData.questions[currentQuestionIndex].options[index];
+//                               return selectedOption.option_id;
+//                           }),
+//                           optionIndexes2CharCodes: optionIndexes2.map((index) => {
+//                               return String.fromCharCode("a".charCodeAt(0) + index);
+//                           }),
+//                           calculatorInputValue: calculatorInputValue,
+//                       },
+//                   };
+
+//                   // Mark the question as answered
+//                   setAnsweredQuestionsMap((prevMap) => ({
+//                       ...prevMap,
+//                       [questionId]: true,
+//                   }));
+
+//                   // Check if the response is cleared for the current question
+//                   const responseCleared = await isResponseCleared(testCreationTableId, questionId);
+//                   if (responseCleared) {
+//                       if (hasAnswered) {
+//                           // If the question has been answered before, update the existing response with a PUT request
+//                           console.log("Making API request to update the existing response...");
+
+//                           const updatedResponse = {
+//                               optionIndexes1: optionIndexes1.map((index) =>
+//                                   String.fromCharCode("a".charCodeAt(0) + index)
+//                               ),
+//                               optionIndexes2: optionIndexes2.map((index) =>
+//                                   String.fromCharCode("a".charCodeAt(0) + index)
+//                               ),
+//                               calculatorInputValue: calculatorInputValue,
+//                           };
+
+//                           await fetch(`http://localhost:5001/QuestionPaper/updateResponse/${questionId}`, {
+//                               method: "PUT",
+//                               headers: {
+//                                   "Content-Type": "application/json",
+//                               },
+//                               body: JSON.stringify({
+//                                   updatedResponse,
+//                                   userId,
+//                                   testCreationTableId,
+//                                   subjectId,
+//                                   sectionId,
+//                               }),
+//                           });
+
+//                           console.log("Handling the response after updating...");
+//                       } else {
+//                           // If the question is being answered for the first time, save a new response with a POST request
+//                           console.log("Making API request to save a new response...");
+
+//                           await fetch("http://localhost:5001/QuestionPaper/response", {
+//                               method: "POST",
+//                               headers: {
+//                                   "Content-Type": "application/json",
+//                               },
+//                               body: JSON.stringify(responses),
+//                           });
+
+//                           console.log("Handling the response after saving...");
+//                       }
+//                   }
+//               }
+//           }
+//       }
+//   } catch (error) {
+//       console.error("Error handling next click:", error);
+//   }
+// };
+
+
   
   const [responseCleared, setResponseCleared] = useState(false);
+  //main working
   const handleSaveNextQuestion = async () => {
     try {
       const updatedQuestionStatus = [...questionStatus];
@@ -793,6 +1025,8 @@ const DemoDeleteItsNotImp = () => {
               ...prevMap,
               [questionId]: true,
             }));
+            // Check if the response is cleared for the current question
+          
    
             if (hasAnswered) {
               // If the question has been answered before, update the existing response with a PUT request
@@ -1242,6 +1476,7 @@ const DemoDeleteItsNotImp = () => {
   //     console.error("Error in handleSubmit:", error);
   //   }
   // };
+
   const markForReview = async () => {
     try {
       setCurrentQuestionIndex((prevIndex) => {
@@ -1299,8 +1534,21 @@ const DemoDeleteItsNotImp = () => {
               subjectId: subjectId,
               sectionId: sectionId,
               [questionId]: {
-                optionIndexes1: optionIndexes1.map((index) => String.fromCharCode("a".charCodeAt(0) + index)),
-                optionIndexes2: optionIndexes2.map((index) => String.fromCharCode("a".charCodeAt(0) + index)),
+                optionIndexes1: optionIndexes1.map((index) => {
+                  const selectedOption = questionData.questions[currentQuestionIndex].options[index];
+                  return selectedOption.option_id;
+              }),
+              optionIndexes1CharCodes: optionIndexes1.map((index) => {
+                return String.fromCharCode("a".charCodeAt(0) + index);
+            }),
+            optionIndexes2: optionIndexes2.map((index) => {
+                const selectedOption = questionData.questions[currentQuestionIndex].options[index];
+                return selectedOption.option_id;
+            }),
+            optionIndexes2CharCodes: optionIndexes2.map((index) => {
+                return String.fromCharCode("a".charCodeAt(0) + index);
+            }),
+               
                 calculatorInputValue: calculatorInputValue,
               },
             };
@@ -1469,6 +1717,7 @@ const DemoDeleteItsNotImp = () => {
         selectedAnswersMap2[currentQuestion.question_id].length > 0) ||
       calculatorInputValue !== "";
   
+      fetchData();
     if (isCurrentQuestionAnswered) {
       // If the current question is answered, update the status
       const updatedQuestionStatus = [...questionStatus];
@@ -1656,7 +1905,7 @@ const DemoDeleteItsNotImp = () => {
                                   "MCQ4(MCQ with 4 Options)"
                                 ) && (
                                   <div>
-                                      <p>{option.ans} {optionIndex}</p>
+                                      {/* <p>{option.ans} {optionIndex}</p> */}
                                     <input
                                       className="opt_btns"
                                       type="radio"

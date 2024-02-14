@@ -671,11 +671,10 @@ export const Quiz_Courses = () => {
                                 filteredExams.map((cardItem) => (
                                   <React.Fragment key={cardItem.examId}>
                                     <div className="first_card">
-                                      <img
-                                        src={iitjee}
-                                        alt="card"
-                                        width={350}
-                                      />
+                                    <img
+                                      src={cardItem.cardimeage}
+                                      alt={cardItem.examName}
+                                    />
                                       <h3>{cardItem.examName}</h3>
                                       <li>
                                         Validity: ({cardItem.startDate}) to (
