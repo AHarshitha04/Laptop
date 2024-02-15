@@ -103,9 +103,16 @@ input::placeholder {
     color: #999; /* Replace with your desired color code */
   }
 
-  /* Add this class for styling the placeholder text */
-.inputContent.missing-field input::placeholder {
-    color: red; /* You can adjust the color as needed */
+  .inputContent.missing-field input,
+  .inputContent.missing-field input::placeholder {
+    color: red; /* Adjust the color as needed */
   }
   
+  /* Styling for the gender label when not selected */
+.inputContent.missing-field input[type="radio"]:not(:checked) + label.missing-label {
+  color: red; /* Change the color as needed */
+}
+
+
+
   
