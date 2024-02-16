@@ -194,7 +194,7 @@ export const Header = () => {
                       className="courses_btn"
                       onClick={toggleCoursesBtnContainer}
                     >
-                      ourses
+                      Courses
                     </button>
                     {coursesBtnContainerVisible ? (
                       <div className="courses">
@@ -664,50 +664,46 @@ export const Quiz_Courses = () => {
                       ) : (
                         <>
                           <div className="card_container">
-                           
-                              {loading ? (
-                                <p>Loading...</p>
-                              ) : (
-                                filteredExams.map((cardItem) => (
-                                  <React.Fragment key={cardItem.examId}>
-                                    <div className="first_card">
-                                      <img
-                                        src={iitjee}
-                                        alt="card"
-                                        width={350}
-                                      />
-                                      <h3>{cardItem.examName}</h3>
-                                      <li>
-                                        Validity: ({cardItem.startDate}) to (
-                                        {cardItem.endDate})
-                                      </li>
-                                      <li>
-                                        {noOfCourses.map(
-                                          (count) =>
-                                            count.examId ===
-                                              cardItem.examId && (
-                                              <li key={count.examId}>
-                                                No of Courses:{" "}
-                                                {count.numberOfCourses}
-                                              </li>
-                                            )
-                                        )}
-                                      </li>
-                                      <li>
-                                        <br />
-                                        <div className="start_now">
-                                          <Link
-                                            to={`/feachingcourse/${cardItem.examId}`}
-                                          >
-                                            Start Now
-                                          </Link>
-                                        </div>
-                                      </li>
-                                    </div>
-                                  </React.Fragment>
-                                ))
-                              )}
-                            
+                            {loading ? (
+                              <p>Loading...</p>
+                            ) : (
+                              filteredExams.map((cardItem) => (
+                                <React.Fragment key={cardItem.examId}>
+                                  <div className="first_card">
+                                    <img
+                                      src={cardItem.cardimeage}
+                                      alt={cardItem.examName}
+                                    />
+                                    <h3>{cardItem.examName}</h3>
+                                    <li>
+                                      Validity: ({cardItem.startDate}) to (
+                                      {cardItem.endDate})
+                                    </li>
+                                    <li>
+                                      {noOfCourses.map(
+                                        (count) =>
+                                          count.examId === cardItem.examId && (
+                                            <li key={count.examId}>
+                                              No of Courses:{" "}
+                                              {count.numberOfCourses}
+                                            </li>
+                                          )
+                                      )}
+                                    </li>
+                                    <li>
+                                      <br />
+                                      <div className="start_now">
+                                        <Link
+                                          to={`/feachingcourse/${cardItem.examId}`}
+                                        >
+                                          Start Now
+                                        </Link>
+                                      </div>
+                                    </li>
+                                  </div>
+                                </React.Fragment>
+                              ))
+                            )}
                           </div>
                         </>
                       )}

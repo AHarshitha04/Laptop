@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import "./styles/RightSidebar.css";
 import axios from "axios";
 
+
 const ButtonsFunctionality = ({
   onQuestionSelect,
   questionStatus,
@@ -18,10 +19,8 @@ const ButtonsFunctionality = ({
   updateQuestionStatus,
 }) => {
   const [wtimer, setWTimer] = useState(0);
-
-  const [activeQuestion, setActiveQuestion] = useState(0);
-  const [answeredQuestions, setAnsweredQuestions] = useState([]);
-  const [isPaused, setIsPaused] = useState(false);
+  const [activeQuestion, setActiveQuestion] = useState(0); // State to track active question
+  const [firstButtonClicked, setFirstButtonClicked] = useState(false); // State to track if the first button is clicked
 
   const renderQuestionButtons = Array.isArray(questionData.questions)
     ? questionData.questions.map((question, index) => {
@@ -29,22 +28,31 @@ const ButtonsFunctionality = ({
         const questionKey = question.id || index;
         const questionStatusAtIndex = questionStatus && questionStatus[index];
 
-        if (questionStatusAtIndex === "answered") {
-          className += " instruction-btn1";
-        } else if (questionStatusAtIndex === "notAnswered") {
-          className += " instruction-btn2";
-        } else if (questionStatusAtIndex === "marked") {
-          className += " instruction-btn3";
-        } else if (questionStatusAtIndex === "Answered but marked for review") {
-          className += " instruction-btn4";
-        } else if (questionStatusAtIndex === "notVisited") {
-          className += " instruction-btn5";
+        // Check if it's the first index and if the button is clicked
+        if (index === 0 && firstButtonClicked) {
+          className += "instruction-btn2"; // Apply the class for the first index
+        } else {
+          // Apply the appropriate class based on the status
+          if (questionStatusAtIndex === "answered") {
+            className += "instruction-btn1";
+          } else if (questionStatusAtIndex === "notAnswered") {
+            className += "instruction-btn2";
+          } else if (questionStatusAtIndex === "marked") {
+            className += "instruction-btn3";
+          } else if (
+            questionStatusAtIndex === "Answered but marked for review"
+          ) {
+            className += "instruction-btn4";
+          } else if (questionStatusAtIndex === "notVisited") {
+            className += "instruction-btn5";
+          }
         }
 
         // Highlight the current question being displayed
         if (index === activeQuestion) {
           className += " active-question";
         }
+
         // Different tooltip text for each button
         let tooltipText = "";
         if (questionStatusAtIndex === "answered") {
@@ -72,59 +80,63 @@ const ButtonsFunctionality = ({
         );
       })
     : null;
+const [isPaused, setIsPaused] = useState(false);
 
-  const handleButtonClick = useCallback(
-    (questionNumber) => {
-      const questionIndex = questionNumber - 1;
+ const handleButtonClick = useCallback(
+   (questionNumber) => {
+     const questionIndex = questionNumber - 1;
 
-      if (questionStatus[questionIndex] === "answered") {
-        // If answered, navigate to the selected question
-        onQuestionSelect(questionNumber);
-      } else if (
-        questionStatus[questionIndex] === "notAnswered" ||
-        questionStatus[questionIndex] === "notVisited"
-      ) {
-        setQuestionStatus((prevQuestionStatus) => [
-          ...prevQuestionStatus.slice(0, questionIndex),
-          "notAnswered",
-          ...prevQuestionStatus.slice(questionIndex + 1),
-        ]);
+     if (questionIndex <= 0) {
+       // If the first button is clicked, set the state to true
+       setFirstButtonClicked(true);
+     }
 
-        // Update other necessary state or perform additional logic
-        onQuestionSelect(questionNumber, "notAnswered");
-        setAnsweredQuestions((prevAnsweredQuestions) => [
-          ...prevAnsweredQuestions,
-          questionNumber,
-        ]);
-        setIsPaused(false);
-      } else {
-        // If the button was clicked, mark it as answered
-        setQuestionStatus((prevQuestionStatus) => [
-          ...prevQuestionStatus.slice(0, questionIndex),
-          "answered",
-          ...prevQuestionStatus.slice(questionIndex + 1),
-        ]);
+     // Set the active question index
+     setActiveQuestion(questionIndex);
 
-        // Update other necessary state or perform additional logic
-        onQuestionSelect(questionNumber);
-        setAnsweredQuestions((prevAnsweredQuestions) => [
-          ...prevAnsweredQuestions,
-          questionNumber,
-        ]);
-        setIsPaused(false);
-      }
+     if (questionStatus[questionIndex] === "answered") {
+       // If answered, navigate to the selected question
+       onQuestionSelect(questionNumber);
+     } else if (
+       questionStatus[questionIndex] === "notAnswered" ||
+       questionStatus[questionIndex] === "notVisited"
+     ) {
+       setQuestionStatus((prevQuestionStatus) => [
+         ...prevQuestionStatus.slice(0, questionIndex),
+         "notAnswered",
+         ...prevQuestionStatus.slice(questionIndex + 1),
+       ]);
 
-      // Update the question status in the QuestionPaper component
-      updateQuestionStatus(questionStatus[questionIndex]);
-    },
-    [
-      questionStatus,
-      setQuestionStatus,
-      onQuestionSelect,
-      answeredQuestions,
-      updateQuestionStatus,
-    ]
-  );
+       // Update other necessary state or perform additional logic
+       onQuestionSelect(questionNumber, "notAnswered");
+       setIsPaused(false);
+     } else {
+       // If the button was clicked, mark it as answered
+       setQuestionStatus((prevQuestionStatus) => [
+         ...prevQuestionStatus.slice(0, questionIndex),
+         "answered",
+         ...prevQuestionStatus.slice(questionIndex + 1),
+       ]);
+
+       // Update other necessary state or perform additional logic
+       onQuestionSelect(questionNumber);
+       setIsPaused(false);
+     }
+
+     // Update the question status in the QuestionPaper component
+     updateQuestionStatus(questionStatus[questionIndex]);
+   },
+   [
+     questionStatus,
+     setQuestionStatus,
+     onQuestionSelect,
+     updateQuestionStatus,
+     setActiveQuestion,
+     setFirstButtonClicked,
+     setIsPaused,
+   ]
+ );
+
 
   ButtonsFunctionality.propTypes = {
     onQuestionSelect: PropTypes.func.isRequired,

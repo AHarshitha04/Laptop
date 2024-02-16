@@ -29,6 +29,8 @@ const DemoDeleteItsNotImp = () => {
       ? Array(questionData.questions.length).fill("notAnswered")
       : []
   );
+  const [isPaused, setIsPaused] = useState(0);
+
   const [sections, setSections] = useState([]);
 
   const vl = value;
@@ -107,7 +109,7 @@ const DemoDeleteItsNotImp = () => {
         Visited++;
       }
     });
-
+    setIsPaused(answered);
     setAnsweredCount(answered);
     setNotAnsweredCount(notAnswered);
     setAnsweredmarkedForReviewCount(marked);
@@ -124,15 +126,25 @@ const DemoDeleteItsNotImp = () => {
   //   setCurrentQuestionIndex(questionNumber - 1);
   //   updatedQuestionStatus[currentQuestionIndex] = "answered";
   //   setActiveQuestion(questionNumber - 1);
-  // };
-  const handleQuestionSelect = (questionNumber) => {
-    const updatedQuestionStatus = [...questionStatus];
-    const updatedIndex = questionNumber - 1; // Calculate the updated index
 
-    setCurrentQuestionIndex(updatedIndex); // Update the current question index
-    updatedQuestionStatus[updatedIndex] = "notAnswered"; // Update the question status at the updated index
-    setActiveQuestion(updatedIndex); // Set the active question to the updated index
-  };
+  const [firstButtonClicked, setFirstButtonClicked] = useState(false); // State to track if the first button is clicked
+
+  // };
+ const handleQuestionSelect = (questionNumber) => {
+   let className = "right_bar_Buttons ";
+   const updatedQuestionStatus = [...questionStatus];
+   const updatedIndex = questionNumber - 1; // Calculate the updated index
+
+if (updatedIndex <= 0 || firstButtonClicked) {
+  setFirstButtonClicked(true)
+  className += "instruction-btn2"; // Apply the class for the first index
+}
+
+
+   setCurrentQuestionIndex(updatedIndex); // Update the current question index
+   updatedQuestionStatus[updatedIndex] = "notAnswered"; // Update the question status at the updated index
+   setActiveQuestion(updatedIndex); // Set the active question to the updated index
+ };
 
   const [clickCount, setClickCount] = useState(0);
 
@@ -143,7 +155,7 @@ const DemoDeleteItsNotImp = () => {
   const [selectedAnswersMap3, setSelectedAnswersMap3] = useState({});
 
   const [answeredQuestions, setAnsweredQuestions] = useState([]);
-  const [isPaused, setIsPaused] = useState(false);
+
   // const [showExamSumary, setShowExamSumary] = useState(false);
   const calculateResult = () => {};
 
@@ -214,6 +226,7 @@ const DemoDeleteItsNotImp = () => {
       clearInterval(interval);
     };
   }, [wtimer]);
+//  console.log(questions.options);
 
   // const correctOptionId = questionData.questions[currentQuestionIndex].correct_option_id;
   // console.log('correctOptionId',correctOptionId)
@@ -246,6 +259,9 @@ const DemoDeleteItsNotImp = () => {
     setSelectedAnswersMap1((prevMap) => ({
       ...prevMap,
       [currentQuestion.question_id]: optionIndex,
+      
+
+     
     }));
 
     // setSelectedAnswersMap1({
@@ -665,189 +681,140 @@ const DemoDeleteItsNotImp = () => {
   // };
 
   const [responseCleared, setResponseCleared] = useState(false);
-  const handleSaveNextQuestion = async () => {
-    try {
-      const updatedQuestionStatus = [...questionStatus];
-      const calculatorInputValue = value;
+const handleSaveNextQuestion = async () => {
+  try {
+    const updatedQuestionStatus = [...questionStatus];
+    const calculatorInputValue = value;
 
-      console.log("Current Question Index:", currentQuestionIndex);
-      console.log("Current Question:", currentQuestion);
+    console.log("Current Question Index:", currentQuestionIndex);
+    console.log("Current Question:", currentQuestion);
 
-      const isCurrentQuestionAnswered =
-        selectedAnswersMap1[currentQuestion.question_id] !== undefined ||
-        (selectedAnswersMap2[currentQuestion.question_id] &&
-          selectedAnswersMap2[currentQuestion.question_id].length > 0) ||
-        calculatorInputValue !== "";
+    const isCurrentQuestionAnswered =
+      selectedAnswersMap1[currentQuestion.question_id] !== undefined ||
+      (selectedAnswersMap2[currentQuestion.question_id] &&
+        selectedAnswersMap2[currentQuestion.question_id].length > 0) ||
+      calculatorInputValue !== "";
 
-      console.log("Is Current Question Answered:", isCurrentQuestionAnswered);
+    console.log("Is Current Question Answered:", isCurrentQuestionAnswered);
 
-      if (!isCurrentQuestionAnswered) {
-        window.alert("Please answer the question before proceeding.");
-      } else {
-        updatedQuestionStatus[currentQuestionIndex] = "answered";
-        setQuestionStatus(updatedQuestionStatus);
+    if (!isCurrentQuestionAnswered) {
+      window.alert("Please answer the question before proceeding.");
+    } else {
+      updatedQuestionStatus[currentQuestionIndex] = "answered";
+      setQuestionStatus(updatedQuestionStatus);
 
-        setCurrentQuestionIndex((prevIndex) =>
-          prevIndex < questionData.questions.length - 1
-            ? prevIndex + 1
-            : prevIndex
-        );
+      setCurrentQuestionIndex((prevIndex) =>
+        prevIndex < questionData.questions.length - 1
+          ? prevIndex + 1
+          : prevIndex
+      );
 
-        if (userData.id) {
-          const userId = userData.id;
-          const subjectId = currentQuestion.subjectId;
-          const sectionId = currentQuestion.sectionId;
-          const questionId = currentQuestion.question_id.toString();
+      if (userData.id) {
+        const userId = userData.id;
+        const subjectId = currentQuestion.subjectId;
+        const sectionId = currentQuestion.sectionId;
+        const questionId = currentQuestion.question_id.toString();
 
-          const valueObject = {
-            testCreationTableId: testCreationTableId,
-            value: calculatorInputValue,
-            question_id: questionId,
+        const selectedOption1 =
+          selectedAnswersMap1[currentQuestion.question_id];
+
+        const selectedOption2 =
+          selectedAnswersMap2[currentQuestion.question_id];
+
+        const optionIndexes1 =
+          selectedOption1 !== undefined ? [selectedOption1] : [];
+        const optionIndexes2 =
+          selectedOption2 !== undefined ? selectedOption2 : [];
+
+        const hasAnswered = answeredQuestionsMap[questionId];
+
+        // Construct the responses object
+        const responses = {
+          questionId: questionId,
+          hasAnswered: hasAnswered,
+          userId: userId,
+          testCreationTableId: testCreationTableId,
+          subjectId: subjectId,
+          sectionId: sectionId,
+          [questionId]: {
+            optionIndexes1: optionIndexes1.map((index) => {
+              const selectedOption =
+                questionData.questions[currentQuestionIndex].options[index];
+              return selectedOption.option_id;
+            }),
+            optionIndexes1CharCodes: optionIndexes1.map((index) => {
+              return String.fromCharCode("a".charCodeAt(0) + index);
+            }),
+            optionIndexes2: optionIndexes2.map((index) => {
+              const selectedOption =
+                questionData.questions[currentQuestionIndex].options[index];
+              return selectedOption.option_id;
+            }),
+            optionIndexes2CharCodes: optionIndexes2.map((index) => {
+              return String.fromCharCode("a".charCodeAt(0) + index);
+            }),
+            calculatorInputValue: calculatorInputValue,
+          },
+        };
+
+        setAnsweredQuestionsMap((prevMap) => ({
+          ...prevMap,
+          [questionId]: true,
+        }));
+
+        if (hasAnswered) {
+          // If the question has been answered before, update the existing response with a PUT request
+          console.log("Making API request to update the existing response...");
+
+          const updatedResponse = {
+            optionIndexes1: optionIndexes1.map((index) =>
+              String.fromCharCode("a".charCodeAt(0) + index)
+            ),
+            optionIndexes2: optionIndexes2.map((index) =>
+              String.fromCharCode("a".charCodeAt(0) + index)
+            ),
+            calculatorInputValue: calculatorInputValue,
           };
 
-          // Store the calculator value in local storage
-          localStorage.setItem(
-            `calculatorValue_${questionId}`,
-            JSON.stringify(valueObject)
-          );
-
-          // Introduce a small delay before retrieving the stored value
-          // This ensures that the local storage has enough time to update
-          await new Promise((resolve) => setTimeout(resolve, 100));
-
-          // Retrieve the stored calculator value
-          const storedValue = localStorage.getItem(
-            `calculatorValue_${questionId}`
-          );
-          const storedCalculatorInputValue = storedValue
-            ? JSON.parse(storedValue).value
-            : null;
-
-          if (calculatorInputValue === storedCalculatorInputValue) {
-            const selectedOption1 =
-              selectedAnswersMap1[currentQuestion.question_id];
-
-            const selectedOption2 =
-              selectedAnswersMap2[currentQuestion.question_id];
-
-            const optionIndexes1 =
-              selectedOption1 !== undefined ? [selectedOption1] : [];
-            const optionIndexes2 =
-              selectedOption2 !== undefined ? selectedOption2 : [];
-
-            const hasAnswered = answeredQuestionsMap[questionId];
-
-            // Construct the responses object
-            // const responses = {
-            //   questionId: questionId,
-            //   hasAnswered: hasAnswered,
-            //   userId: userId,
-            //   testCreationTableId: testCreationTableId,
-            //   subjectId: subjectId,
-            //   sectionId: sectionId,
-            //   [questionId]: {
-            //     optionIndexes1: optionIndexes1.map((index) => {
-            //         const selectedOption = questionData.questions[currentQuestionIndex].options[index];
-            //         return selectedOption.option_id;
-            //     }),
-            //     optionIndexes2: optionIndexes2.map((index) => {
-            //         const selectedOption = questionData.questions[currentQuestionIndex].options[index];
-            //         return selectedOption.option_id;
-            //     }),
-            //     calculatorInputValue: calculatorInputValue,
-            //   },
-            // };
-
-            // Mark the question as answered
-
-            const responses = {
-              questionId: questionId,
-              hasAnswered: hasAnswered,
-              userId: userId,
-              testCreationTableId: testCreationTableId,
-              subjectId: subjectId,
-              sectionId: sectionId,
-              [questionId]: {
-                optionIndexes1: optionIndexes1.map((index) => {
-                  const selectedOption =
-                    questionData.questions[currentQuestionIndex].options[index];
-                  return selectedOption.option_id;
-                }),
-                optionIndexes1CharCodes: optionIndexes1.map((index) => {
-                  return String.fromCharCode("a".charCodeAt(0) + index);
-                }),
-                optionIndexes2: optionIndexes2.map((index) => {
-                  const selectedOption =
-                    questionData.questions[currentQuestionIndex].options[index];
-                  return selectedOption.option_id;
-                }),
-                optionIndexes2CharCodes: optionIndexes2.map((index) => {
-                  return String.fromCharCode("a".charCodeAt(0) + index);
-                }),
-                calculatorInputValue: calculatorInputValue,
+          await fetch(
+            `http://localhost:5001/QuestionPaper/updateResponse/${questionId}`,
+            {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
               },
-            };
-
-            setAnsweredQuestionsMap((prevMap) => ({
-              ...prevMap,
-              [questionId]: true,
-            }));
-
-            if (hasAnswered) {
-              // If the question has been answered before, update the existing response with a PUT request
-              console.log(
-                "Making API request to update the existing response..."
-              );
-
-              const updatedResponse = {
-                optionIndexes1: optionIndexes1.map((index) =>
-                  String.fromCharCode("a".charCodeAt(0) + index)
-                ),
-                optionIndexes2: optionIndexes2.map((index) =>
-                  String.fromCharCode("a".charCodeAt(0) + index)
-                ),
-                calculatorInputValue: calculatorInputValue,
-              };
-
-              await fetch(
-                `http://localhost:5001/QuestionPaper/updateResponse/${questionId}`,
-                {
-                  method: "PUT",
-                  headers: {
-                    "Content-Type": "application/json",
-                  },
-                  body: JSON.stringify({
-                    updatedResponse,
-                    userId,
-                    testCreationTableId,
-                    subjectId,
-                    sectionId,
-                  }),
-                }
-              );
-
-              console.log("Handling the response after updating...");
-            } else {
-              // If the question is being answered for the first time, save a new response with a POST request
-              console.log("Making API request to save a new response...");
-
-              await fetch("http://localhost:5001/QuestionPaper/response", {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify(responses),
-              });
-
-              console.log("Handling the response after saving...");
+              body: JSON.stringify({
+                updatedResponse,
+                userId,
+                testCreationTableId,
+                subjectId,
+                sectionId,
+              }),
             }
-          }
+          );
+
+          console.log("Handling the response after updating...");
+        } else {
+          // If the question is being answered for the first time, save a new response with a POST request
+          console.log("Making API request to save a new response...");
+
+          await fetch("http://localhost:5001/QuestionPaper/response", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(responses),
+          });
+
+          console.log("Handling the response after saving...");
         }
       }
-    } catch (error) {
-      console.error("Error handling next click:", error);
     }
-  };
+  } catch (error) {
+    console.error("Error handling next click:", error);
+  }
+};
+
 
   const handleNextQuestion = async () => {
     try {
@@ -1250,7 +1217,7 @@ const DemoDeleteItsNotImp = () => {
     try {
       setCurrentQuestionIndex((prevIndex) => {
         if (prevIndex < questionData.questions.length - 1) {
-          return prevIndex + 1;
+          return prevIndex;
         }
         return prevIndex;
       });
@@ -1268,18 +1235,33 @@ const DemoDeleteItsNotImp = () => {
         // If the question is answered
         updatedQuestionStatus[currentQuestionIndex] =
           "Answered but marked for review";
-
+        setQuestionStatus(updatedQuestionStatus);
+        setCurrentQuestionIndex((prevIndex) =>
+          prevIndex < questionData.questions.length - 1
+            ? prevIndex + 1
+            : prevIndex
+        );
         if (userData.id) {
           const userId = userData.id;
           const subjectId = currentQuestion.subjectId;
           const sectionId = currentQuestion.sectionId;
           const questionId = currentQuestion.question_id.toString();
 
-          // Store the calculator value in local storage
+          const valueObject = {
+            testCreationTableId: testCreationTableId,
+            value: calculatorInputValue,
+            question_id: questionId,
+          };
+
           localStorage.setItem(
             `calculatorValue_${questionId}`,
-            JSON.stringify({ value: calculatorInputValue })
+            JSON.stringify(valueObject)
           );
+          // Store the calculator value in local storage
+          // localStorage.setItem(
+          //   `calculatorValue_${questionId}`,
+          //   JSON.stringify({ value: calculatorInputValue })
+          // );
 
           // Introduce a small delay before retrieving the stored value
           // This ensures that the local storage has enough time to update
@@ -1292,10 +1274,10 @@ const DemoDeleteItsNotImp = () => {
           const storedCalculatorInputValue = storedValue
             ? JSON.parse(storedValue).value
             : null;
-
           if (calculatorInputValue === storedCalculatorInputValue) {
             const selectedOption1 =
               selectedAnswersMap1[currentQuestion.question_id];
+
             const selectedOption2 =
               selectedAnswersMap2[currentQuestion.question_id];
 
@@ -1307,6 +1289,28 @@ const DemoDeleteItsNotImp = () => {
             const hasAnswered = answeredQuestionsMap[questionId];
 
             // Construct the responses object
+            // const responses = {
+            //   questionId: questionId,
+            //   hasAnswered: hasAnswered,
+            //   userId: userId,
+            //   testCreationTableId: testCreationTableId,
+            //   subjectId: subjectId,
+            //   sectionId: sectionId,
+            //   [questionId]: {
+            //     optionIndexes1: optionIndexes1.map((index) => {
+            //         const selectedOption = questionData.questions[currentQuestionIndex].options[index];
+            //         return selectedOption.option_id;
+            //     }),
+            //     optionIndexes2: optionIndexes2.map((index) => {
+            //         const selectedOption = questionData.questions[currentQuestionIndex].options[index];
+            //         return selectedOption.option_id;
+            //     }),
+            //     calculatorInputValue: calculatorInputValue,
+            //   },
+            // };
+
+            // Mark the question as answered
+
             const responses = {
               questionId: questionId,
               hasAnswered: hasAnswered,
@@ -1315,23 +1319,31 @@ const DemoDeleteItsNotImp = () => {
               subjectId: subjectId,
               sectionId: sectionId,
               [questionId]: {
-                optionIndexes1: optionIndexes1.map((index) =>
-                  String.fromCharCode("a".charCodeAt(0) + index)
-                ),
-                optionIndexes2: optionIndexes2.map((index) =>
-                  String.fromCharCode("a".charCodeAt(0) + index)
-                ),
+                optionIndexes1: optionIndexes1.map((index) => {
+                  const selectedOption =
+                    questionData.questions[currentQuestionIndex].options[index];
+                  return selectedOption.option_id;
+                }),
+                optionIndexes1CharCodes: optionIndexes1.map((index) => {
+                  return String.fromCharCode("a".charCodeAt(0) + index);
+                }),
+                optionIndexes2: optionIndexes2.map((index) => {
+                  const selectedOption =
+                    questionData.questions[currentQuestionIndex].options[index];
+                  return selectedOption.option_id;
+                }),
+                optionIndexes2CharCodes: optionIndexes2.map((index) => {
+                  return String.fromCharCode("a".charCodeAt(0) + index);
+                }),
                 calculatorInputValue: calculatorInputValue,
               },
             };
 
-            // Mark the question as answered
             setAnsweredQuestionsMap((prevMap) => ({
               ...prevMap,
               [questionId]: true,
             }));
 
-            // Check if the question has been answered before
             if (hasAnswered) {
               // If the question has been answered before, update the existing response with a PUT request
               console.log(
@@ -1510,8 +1522,7 @@ const DemoDeleteItsNotImp = () => {
     //-----------------buttons functionality end--------------
 
     try {
-      const questionId =
-        questionData.questions[currentQuestionIndex].question_id;
+      const questionId = currentQuestion.question_id;
 
       // Clear response for radio buttons (MCQ)
       const updatedSelectedAnswersMap1 = { ...selectedAnswersMap1 };
@@ -1532,7 +1543,7 @@ const DemoDeleteItsNotImp = () => {
       localStorage.removeItem(`calculatorValue_${questionId}`);
 
       // Send a request to your server to clear the user's response for the current question
-      const response = await axios.delete(
+      const response = await axios.put(
         `http://localhost:5001/QuestionPaper/clearResponse/${questionId}`
       );
 
@@ -1593,6 +1604,13 @@ const DemoDeleteItsNotImp = () => {
       : "";
 
   // console.log("Current Question Type:", currentQuestionType);
+// const charCode = questionData.ans.charCodeAt(0) - "a".charCodeAt(0) + 1;
+console.log("dskgpvfklkds[lg")
+// console.log(charCode)
+
+
+
+
 
   return (
     <div className="QuestionPaper_-container">
@@ -1677,6 +1695,8 @@ const DemoDeleteItsNotImp = () => {
                                 ?.question_id
                           ) &&
                           currentQuestion.options.map((option, optionIndex) => (
+                            
+                            
                             <div className="option" key={option.option_id}>
                               <li key={optionIndex}>
                                 {currentQuestionType.includes(
@@ -1684,24 +1704,43 @@ const DemoDeleteItsNotImp = () => {
                                 ) && (
                                   <div>
                                     <p>
-                                      {option.ans} {optionIndex}
+                                      {option.ans}
+                                      {option.optionIndex}
+
+                                      {/* {optionIndex} */}
                                     </p>
+                                    {/* //working */}
                                     <input
                                       className="opt_btns"
                                       type="radio"
                                       name={`question-${currentQuestionIndex}-option`}
-                                      value={option.ans}
+                                      value={optionIndex}
+                                      // checked={
+                                      //   selectedAnswersMap1[
+                                      //     currentQuestion.question_id
+                                      //   ] === optionIndex
+                                      // }
                                       checked={
                                         selectedAnswersMap1[
                                           currentQuestion.question_id
-                                        ] === optionIndex
+                                        ] === optionIndex ||
+                                        (selectedAnswersMap1[
+                                          currentQuestion.question_id
+                                        ] &&
+                                          selectedAnswersMap1[
+                                            currentQuestion.question_id
+                                          ] === option.option_id)
                                       }
                                       onChange={() =>
                                         onAnswerSelected1(optionIndex)
                                       }
                                     />
+
                                     <label htmlFor="">
                                       ({option.option_index})
+                                    </label>
+                                    <label htmlFor="">
+                                      ({option.option_id})
                                     </label>
                                     <img
                                       src={`http://localhost:5001/uploads/${currentQuestion.documen_name}/${option.optionImgName}`}
