@@ -26,13 +26,32 @@ const General_intructions_page = () => {
 export default General_intructions_page;
 
 export const General_intructions_page_header = () => {
+  
+  const [testName, setTestName] = useState('');
+  const { testCreationTableId } = useParams();
+  useEffect(() => {
+    fetchTestName();
+  }, [testCreationTableId]); // Re-fetch test name when testCreationTableId changes
+
+  const fetchTestName = async () => {
+    try {
+      const response = await fetch(`http://localhost:5001/QuestionPaper/questionOptions/${testCreationTableId}`);
+      const data = await response.json();
+      const testName = data.questions[0].TestName;
+      setTestName(testName);
+    } catch (error) {
+      console.error('Error fetching test name:', error);
+    }
+  };
+
   return (
     <>
       {Navbar.map((nav, index) => {
         return (
           <div className="Quiz_General_header" key={index}>
-            <h1>{nav.Q_page_title}</h1>
+            {/* <h1>{nav.Q_page_title}</h1> */}
             <div className="Q_title">{/* <p>{nav.time_limt}</p> */}</div>
+            <h1 key={testName.testCreationTableId}>{testName}</h1>
           </div>
         );
       })}
@@ -100,7 +119,6 @@ export const General_intructions_page_container = ({ seconds }) => {
         console.error(error);
       }
     };
-
     fetchInstructions();
   }, [testCreationTableId, subjectId]);
 

@@ -1,6 +1,3 @@
-
-
-
 import React, { useEffect, useRef, useState } from "react";
 import { AiOutlineArrowRight } from "react-icons/ai";
 import { Link, useParams } from "react-router-dom";
@@ -23,6 +20,23 @@ const Introduction_page = () => {
 export default Introduction_page;
 
 export const Header = () => {
+  const [testName, setTestName] = useState('');
+  const { testCreationTableId } = useParams();
+  useEffect(() => {
+    fetchTestName();
+  }, [testCreationTableId]); // Re-fetch test name when testCreationTableId changes
+
+  const fetchTestName = async () => {
+    try {
+      const response = await fetch(`http://localhost:5001/QuestionPaper/questionOptions/${testCreationTableId}`);
+      const data = await response.json();
+      const testName = data.questions[0].TestName;
+      setTestName(testName);
+    } catch (error) {
+      console.error('Error fetching test name:', error);
+    }
+  };
+
   return (
     <>
       {Navbar.map((nav, index) => {
@@ -32,7 +46,8 @@ export const Header = () => {
               <img src={nav.Q_logo} alt="" />
             </div>
             <div className="Q_title">
-              <h1>{nav.Q_page_title}</h1>
+              {/* <h1>{nav.Q_page_title}</h1> */}
+              <h1 key={testName.testCreationTableId}>{testName}</h1>
             </div>
           </div>
         );
@@ -43,7 +58,6 @@ export const Header = () => {
 export const Intro_container = () => {
   const { testCreationTableId, subjectId } = useParams();
   const [SubjectData, setSubjectData] = useState([]);
-
 
   const [minsubjectid, setminsubjectid] = useState("");
   useEffect(() => {
@@ -69,7 +83,7 @@ export const Intro_container = () => {
 
           // Log the minimum value to the console
           console.log("Minimum subjectId:", minSubjectId);
-          
+
           setminsubjectid(minSubjectId);
         }
       } catch (error) {
@@ -79,7 +93,6 @@ export const Intro_container = () => {
 
     fetchSubjects();
   }, [subjectId]);
-
 
   const [SectionData, setSectionData] = useState([]);
   useEffect(() => {
@@ -98,7 +111,6 @@ export const Intro_container = () => {
     fetchSections();
   }, [subjectId]);
 
-  
   const [testData, setTestData] = useState([]);
   const { courseCreationId } = useParams();
   useEffect(() => {
@@ -117,14 +129,8 @@ export const Intro_container = () => {
     fetchTestData();
   }, [courseCreationId]);
 
-
-
-  
-
   return (
     <>
-     
-
       {Intro_content.map((Intro_content, index) => {
         return (
           <div key={index} className="Q_container">
@@ -218,7 +224,6 @@ return(
 })
         } */}
 
-        
         {/* <Link
          to={`/General_intructions_page/${testCreationTableId}/${minsubjectid}`}
         
@@ -228,16 +233,15 @@ return(
           {minsubjectid}
         </Link> */}
         <Link
-        //  to={`/General_intructions_page/${testCreationTableId}/${minsubjectid}`}
-       
-        // onClick={openPopup}
-        to={`/General_intructions_page/${testCreationTableId}`}
-         className="intro_next_btn"
+          //  to={`/General_intructions_page/${testCreationTableId}/${minsubjectid}`}
+
+          // onClick={openPopup}
+          to={`/General_intructions_page/${testCreationTableId}`}
+          className="intro_next_btn"
         >
-           {/* to={`/General_intructions_page/${testCreationTableId}`} */}
+          {/* to={`/General_intructions_page/${testCreationTableId}`} */}
           {/* <Link to='#' onClick={openPopup} className="intro_next_btn"> */}
           NEXT <AiOutlineArrowRight />
-        
         </Link>
 
         {/* <Link

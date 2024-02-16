@@ -320,9 +320,13 @@
      padding: 5px;
  }
  
- .header{
+ .header {
     background-color: #000;
- }
+    DISPLAY: flex;
+    ALIGN-ITEMS: center;
+    JUSTIFY-CONTENT: SPACE-BETWEEN;
+    PADDING: 0 2REM;
+}
  .header_logo{
     padding: 10px;
  }
@@ -333,7 +337,14 @@
  
  
  /********************starting testcard code styling *****************/
- 
+ .test-card_conatiner{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    margin-top:3rem ;
+ }
  .play-btn {
      display: flex;
      text-align: center;
@@ -358,6 +369,11 @@
     flex-direction: column;
     align-items: baseline;
  }
+
+ .test-card-header h3{
+    font-size: 1rem;
+    font-weight: bold;
+ }
  
  .free-title {
      background-color: rgb(75, 216, 157);
@@ -376,7 +392,8 @@
  }
  
  .testCard-second-header {
-     font-weight: 200;
+    font-size: 0.9rem;
+     font-weight: 500;
      /* color: white; */
  }
  
@@ -397,7 +414,7 @@
  
  .test-card {
      text-align: center;
-     margin: 90px auto;
+    
      border: 1px solid whitesmoke;
      background-color: rgba(242, 246, 248, 0.911);
      /* width: 300px; */
@@ -428,6 +445,50 @@
         /* text-decoration: underline; */
     }
  }
+
+ .header-links li{
+    &:hover {
+        width: fit-content;
+        height: fit-content;
+        padding: 0.5rem;
+        animation: header-links 3s linear alternate backwards ;
+        /* animation: header-links 3s linear; */
+        background: #000;
+    }
+ }
+ .header-links li a {
+    font-size: 1rem;
+
+}
+ 
+@keyframes header-links {
+    0% {
+        border-radius: 8px;
+        /* width: 10%; */
+        background: #000;
+    }
+    25% {
+        border-radius: 25px;
+        /* width: 25%; */
+        background: #000;
+    }
+    50% { border-radius: 50px;
+        /* width: 50%; */
+        background: #000;
+    }
+    75% {
+        border-radius: 75px;
+        /* width: 75%; */
+        background: #000;
+    }
+    100% {
+        border-radius: 100px;
+        /* width: 100%; */
+        background: #000;
+    }
+}
+
+has context menu
  
  /********************End testcard code styling *****************/
  
@@ -466,4 +527,36 @@
  
      }
  
+ }
+
+ @media (max-width:600px) {
+    .header {
+      
+        PADDING: 0 0.3rem;
+    }
+    .header h2 {
+        font-size: 0.5rem;
+    }
+    .header_logo {
+       width: 150px;
+    }
+    .container_H100 {
+        display: grid;
+        place-items: center;
+    }
+    .card_container {
+        margin: 0.9rem auto;
+    }
+    ol, ul {
+        padding: 0;
+    }
+    p{
+        margin: 0;
+    }.first_card {
+        gap: 0;
+        transform: scale(0.9);
+        &:hover{
+            transform: scale(0.95);
+        }
+    }
  }

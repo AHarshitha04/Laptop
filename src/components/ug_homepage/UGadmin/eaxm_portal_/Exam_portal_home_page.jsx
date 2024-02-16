@@ -671,9 +671,10 @@ export const Quiz_Courses = () => {
                                 filteredExams.map((cardItem) => (
                                   <React.Fragment key={cardItem.examId}>
                                     <div className="first_card">
-                                    <img
+                                       <img
                                       src={cardItem.cardimeage}
                                       alt={cardItem.examName}
+                                     
                                     />
                                       <h3>{cardItem.examName}</h3>
                                       <li>
@@ -695,11 +696,31 @@ export const Quiz_Courses = () => {
                                       <li>
                                         <br />
                                         <div className="start_now">
-                                          <Link
+                                        {/* <Link
+  to={`/feachingcourse/${cardItem.examId}?examName=${encodeURIComponent(cardItem.examName)}`}
+>
+  Start Now
+</Link> */}
+<Link
+  to={{
+    pathname: `/feachingcourse/${cardItem.examId}`,
+    state: { examName: cardItem.examName }
+  }}
+>
+  Start Now
+</Link>
+
+{/* {console.log("hiiiiiiiiiiii")}
+{console.log("Card Item Exam Name:", cardItem.examName)} // Log the value of cardItem.examName */}
+
+
+
+
+                                          {/* <Link
                                             to={`/feachingcourse/${cardItem.examId}`}
                                           >
                                             Start Now
-                                          </Link>
+                                          </Link> */}
                                         </div>
                                       </li>
                                     </div>

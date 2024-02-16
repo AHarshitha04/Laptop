@@ -15,6 +15,24 @@ import { index } from "d3-array";
 import { convertLength } from "@mui/material/styles/cssUtils";
 
 const DemoDeleteItsNotImp = () => {
+
+  useEffect(() => {
+    
+    const handleKeyDown = (event) => {
+      event.preventDefault(); // Prevent default keyboard action
+      event.stopPropagation(); // Stop event propagation
+      // Optionally, you can add custom logic here to handle keydown events.
+    };
+
+    // Attach event listener to intercept keydown events
+    document.addEventListener('keydown', handleKeyDown);
+
+    // Cleanup function to remove event listener when component unmounts
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []); // Empty dependency array ensures the effect runs only once
+
   // --------------------------------------CONST VARIABLES DECLARATIONS--------------------------
   const [questionData, setQuestionData] = useState({ questions: [] });
   const [value, setValue] = useState("");
@@ -26,9 +44,10 @@ const DemoDeleteItsNotImp = () => {
   const [selectedSubject, setSelectedSubject] = useState(null);
   const [questionStatus, setQuestionStatus] = useState(
     Array.isArray(questionData)
-      ? Array(questionData.questions.length).fill("notAnswered")
+      ? [Array(questionData.questions.length).fill("notAnswered")[0], ...Array(questionData.questions.length - 1).fill("notAnswered")]
       : []
   );
+  
   const [sections, setSections] = useState([]);
 
   const vl = value;
@@ -1814,11 +1833,41 @@ const DemoDeleteItsNotImp = () => {
 
   // console.log("Current Question Type:", currentQuestionType);
 
+
+  const [testData, setTestData] = useState([]);
+  const { courseCreationId } = useParams();
+
+  useEffect(() => {
+    const fetchTestData = async () => {
+      try {
+        const responseTest = await fetch(
+          `http://localhost:5001/Cards/feachingtest/${courseCreationId}`
+        );
+        const testData = await responseTest.json();
+        setTestData(testData);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchTestData();
+  }, [courseCreationId]);
+
+
   return (
     <div className="QuestionPaper_-container">
       <div className="quiz_exam_interface_header">
         <div className="quiz_exam_interface_header_LOGO">
           <img src={logo} alt="" />
+          {testData.map((test) => (
+                <div className="test-card" key={test.testCreationTableId}>
+                  <li>
+                    <p className="test-card-header">
+                      <h3>{test.TestName}</h3>
+                    </p>
+                  </li>
+                </div>
+              ))}
         </div>
       </div>
 
@@ -2499,8 +2548,28 @@ const DemoDeleteItsNotImp = () => {
         <div className="result">
           <h3 id="result_header">Exam Summary</h3>
           <div className="result_page_links"></div>
-          <div className="result_contents">
-            <p>
+          {/* <div className="result_contents"> */}
+            <div className="Exam_summary_table">
+            <table id="customers">
+              <tr>
+                <td>Total Questions</td>
+                <td>Answered Questions</td>
+                <td>Not Answered Questions</td>
+                <td>Not Visited Count</td>
+                <td>Marked for Review Questions</td>
+                <td>Answered & Marked for Review Questions</td>
+              </tr>
+              <tr>
+                <td>{questionData.questions.length}</td>
+                <td>{answeredCount}</td>
+                <td>{notAnsweredCount}</td>
+                <td>{NotVisitedb}</td>
+                <td>{markedForReviewCount}</td>
+                <td>{answeredmarkedForReviewCount}</td>
+              </tr>
+            </table>
+            </div>
+            {/* <p>
               Total Questions: <span>{questionData.questions.length}</span>
             </p>
             <p>
@@ -2520,21 +2589,23 @@ const DemoDeleteItsNotImp = () => {
             <p>
               Answered & Marked for Review Questions:
               <span> {answeredmarkedForReviewCount}</span>
-            </p>
-          </div>
-          <div>
-            <h2>
+            </p> */}
+          {/* </div> */}
+          <div >
+            <h2 className="Exam_summary_question_tag">
               Are you sure you want to submit for final marking? <br />
               No changes will be allowed after submission.
             </h2>
-            {/* <Link to='/SubmitPage'>YES</Link> */}
-            {/* <button onClick={handleYes}>YES</button> */}
-            <Link
+         
+            <div className="Exam_summary_btns">
+            {/* style={{ background: "blue", fontWeight: "bold", padding: "10px" }} */}
+            <Link className="es_btn"
               to={`/TestResultsPage/${testCreationTableId}/${userData.id}`}
-              style={{ background: "red", fontWeight: "bold", padding: "10px" }}>
+             >
               Yes
             </Link>
-            <button onClick={handleNo}>NO</button>
+            <button className="es_btn" onClick={handleNo}>NO</button>
+            </div>
           </div>
         </div>
       )}

@@ -43,15 +43,14 @@ router.get('/testcourses', async (req, res) => {
       totalQuestions,
       totalMarks,
       calculator,
-      status,
       sectionsData,
       selectedInstruction,
     } = req.body;
    
     try {
       const [result] = await db.query(
-        'INSERT INTO test_creation_table (TestName, courseCreationId, courseTypeOfTestId, testStartDate, testEndDate, testStartTime, testEndTime, Duration, TotalQuestions, totalMarks, calculator, status, instructionId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-        [testName, selectedCourse, selectedtypeOfTest, startDate, endDate, startTime, endTime, duration, totalQuestions, totalMarks, calculator, status, selectedInstruction]
+        'INSERT INTO test_creation_table (TestName, courseCreationId, courseTypeOfTestId, testStartDate, testEndDate, testStartTime, testEndTime, Duration, TotalQuestions, totalMarks, calculator, instructionId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        [testName, selectedCourse, selectedtypeOfTest, startDate, endDate, startTime, endTime, duration, totalQuestions, totalMarks, calculator, selectedInstruction]
       );
    
       if (result && result.insertId) {
@@ -150,7 +149,7 @@ router.get('/testcourses', async (req, res) => {
       tc.TotalQuestions,
       tc.totalMarks,
       tc.calculator,
-      tc.status,
+    
       cc.courseCreationId,
       cc.courseName,
       ctt.courseTypeOfTestId,
@@ -192,6 +191,7 @@ router.get('/testcourses', async (req, res) => {
   });
    
    
+   
   router.put('/test-update/:testCreationTableId', async (req, res) => {
     const testCreationTableId = req.params.testCreationTableId;
     const {
@@ -206,7 +206,7 @@ router.get('/testcourses', async (req, res) => {
       TotalQuestions,
       totalMarks,
       calculator,
-      status,
+     
       sectionId,
       sectionName,
       noOfQuestions,
@@ -218,7 +218,7 @@ router.get('/testcourses', async (req, res) => {
                          SET TestName=?, courseCreationId=?, courseTypeOfTestId=?,
                              testStartDate=?, testEndDate=?, testStartTime=?,
                              testEndTime=?, Duration=?, TotalQuestions=?,
-                             totalMarks=?, calculator=?, status=?, instructionId=?
+                             totalMarks=?, calculator=?, instructionId=?
                          WHERE testCreationTableId=?`;
    
     try {
@@ -234,7 +234,6 @@ router.get('/testcourses', async (req, res) => {
         TotalQuestions,
         totalMarks,
         calculator,
-        status,
         selectedInstruction,
         testCreationTableId,
       ]);
@@ -264,6 +263,57 @@ router.get('/testcourses', async (req, res) => {
   });
 
   
+
+  // router.get('/TestActivation', async (req, res) => {
+  //   // Fetch subjects
+  //   try {
+  //     const [rows] = await db.query(`SELECT
+  //     t.testCreationTableId,
+  //     t.TestName,
+  //     t.TotalQuestions,
+  //     s.subjectId,
+  //     s.subjectName,
+  //     sc.sectionId,
+  //     sc.sectionName,
+  //     sc.noOfQuestions AS numberOfQuestionsInSection,
+  //     subquery.numberOfQuestionsInSubject
+  // FROM
+  //     test_creation_table AS t
+  // LEFT JOIN course_subjects AS cs ON t.courseCreationId = cs.courseCreationId
+  // LEFT JOIN subjects AS s ON s.subjectId = cs.subjectId
+  // LEFT JOIN sections AS sc ON sc.subjectId = s.subjectId
+  // LEFT JOIN (
+  //     SELECT
+  //         q.subjectId,
+  //         COUNT(q.question_id) AS numberOfQuestionsInSubject
+  //     FROM
+  //         questions AS q
+  //     GROUP BY
+  //         q.subjectId
+  // ) AS subquery ON s.subjectId = subquery.subjectId
+  // LEFT JOIN questions AS q ON t.testCreationTableId = q.testCreationTableId
+  //                       AND sc.sectionId = q.sectionId
+  //                       AND s.subjectId = q.subjectId
+  // WHERE
+  //     t.testCreationTableId = ?
+  // GROUP BY
+  //     t.testCreationTableId,
+  //     t.TestName,
+  //     t.TotalQuestions,
+  //     s.subjectId,
+  //     s.subjectName,
+  //     sc.sectionId,
+  //     sc.sectionName,
+  //     sc.noOfQuestions,
+  //     subquery.numberOfQuestionsInSubject`);
+  //     res.json(rows);
+  //   } catch (error) {
+  //     console.error(error);
+  //     res.status(500).json({ error: 'Internal Server Error' });
+  //   }
+  // });
+
+
   router.get('/TestActivation', async (req, res) => {
     try {
       const [rows] = await db.query(`
@@ -358,8 +408,7 @@ router.get('/testcourses', async (req, res) => {
       res.status(500).json({ error: 'Internal Server Error' });
     }
   });
-
-
+  // In your server code
   router.get('/getQuestionCountForTest/:testId', async (req, res) => {
     const { testId } = req.params;
   
@@ -379,5 +428,6 @@ router.get('/testcourses', async (req, res) => {
     }
   });
 
-
+  
+  
   module.exports = router;

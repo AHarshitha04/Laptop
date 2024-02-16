@@ -159,9 +159,7 @@ const TestActivation_admin = ({ testCreationTableId }) => {
 
   const fetchData = async () => {
     try {
-      const response = await fetch(`http://localhost:5001/TestCreation/TestActivation/${testCreationTableId}`);
-      // const response = await fetch(`http://localhost:5001/TestCreation/TestActivation/1`);
-
+      const response = await fetch(`http://localhost:5001/TestActivation/${testCreationTableId}`);
       const data = await response.json();
       console.log('Fetched Data:', data);
   

@@ -64,23 +64,45 @@ const TestResultsPage = () => {
 
   const [answer, setAnswer] = useState([]);
 
-useEffect(() => {
-  const fetchAnswer = async () => {
-    try {
-      const responseAnswer = await fetch(`http://localhost:5001/QuestionPaper/answer/${testCreationTableId}/${userData.id}`);
-      // const responseAnswer = await fetch(`http://localhost:5001/QuestionPaper/answer`);
-
-      const answerData = await responseAnswer.json();
-      setAnswer(answerData);
-    } catch (error) {
-      console.error("Error fetching question types:", error);
-    }
-  };
-
-  fetchAnswer();
-// }, ); // Include dependencies in the dependency array
-
-}, [testCreationTableId, userData.id]); // Include dependencies in the dependency array
+  console.log(userData.id)
+  useEffect(() => {
+    const fetchAnswer = async () => {
+      try {
+        const responseAnswer = await fetch(`http://localhost:5001/QuestionPaper/answer/${testCreationTableId}/${userData.id}`);
+        const answerData = await responseAnswer.json();
+        setAnswer(answerData);
+      } catch (error) {
+        console.error("Error fetching answers:", error);
+      }
+    };
+  
+    const fetchUserData = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const response = await fetch(
+          "http://localhost:5001/ughomepage_banner_login/user",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+  
+        if (response.ok) {
+          const userData = await response.json();
+          setUserData(userData);
+        } else {
+          // Handle errors, e.g., if user data fetch fails
+        }
+      } catch (error) {
+        // Handle other errors
+      }
+    };
+  
+    fetchAnswer();
+    fetchUserData();
+  }, [testCreationTableId, userData.id]); // Include dependencies in the dependency array
+  // Include dependencies in the dependency array
 
 
 
@@ -174,7 +196,7 @@ useEffect(() => {
     };
 
     fetchQuestionCount();
-  }, [testCreationTableId, user_Id]);
+  }, [testCreationTableId, userData.id]);
 
   const [correctAnswers, setCorrectAnswersCount] = useState(null);
   useEffect(() => {
@@ -210,7 +232,7 @@ useEffect(() => {
     };
 
     fetchQuestionCount();
-  }, [testCreationTableId, user_Id]);
+  }, [testCreationTableId,  userData.id]);
 
   const [score, setScoreCount] = useState({ totalMarks: 0, netMarks: 0 });
 
@@ -231,7 +253,7 @@ useEffect(() => {
     };
 
     fetchQuestionCount();
-  }, [testCreationTableId, user_Id]);
+  }, [testCreationTableId,  userData.id]);
 
 console.log(score);
   console.log("hiiiiiiiiiiiii");
@@ -290,7 +312,7 @@ console.log(score);
     };
 
     fetchQuestionCount();
-  }, [testCreationTableId, userId]);
+  }, [testCreationTableId,  userData.id]);
 
 
   console.log("hello")
@@ -378,6 +400,7 @@ console.log(score);
           />
         </div>
         <div>
+          <p>id:{userData.id}</p>
           <p>Name: {userData.username}</p>
           <p>Email: {userData.email}</p>
         </div>

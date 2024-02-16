@@ -7,7 +7,9 @@
 }
 
 /* ------------------------------------------------------------------------- header --------------------------------------------- */
-
+.container_H100{
+ min-height:  54vh;
+}
 .Quiz_main_page_header {
   width: 100%;
   /* height: 30px; */
@@ -407,7 +409,7 @@ right:0.2rem;
 .Quiz_cards_cantainer_contain {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(370px, 1fr));
-  padding: 3rem;
+  padding: 1.5rem;
   text-align: left;
   font-size: 0.8rem;
   gap: 2rem;
@@ -427,12 +429,11 @@ right:0.2rem;
       
   color: #000000;
   padding: 0.5rem;
+ 
 }
 .Quiz_cards_cantainer_contain > div a {
-  color: #000;
-  &:hover {
-    color: #00a3ff;
-  }
+  color: #ffffff;  
+
 }
 .Quiz_cards_cantainer_contain > div h1 {
   font-size: 0.9rem;
@@ -514,7 +515,14 @@ right:0.2rem;
 .card_container {
   margin: 30px;
   display: flex;
-  gap: 80px;
+  gap: 3rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  /* display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(280px,10fr)); */
+  /* justify-content: start; */
+  /* place-items: start; */
 }
 
 .card_container_ul {
@@ -535,6 +543,7 @@ right:0.2rem;
   } */
 .first_card {
   /* display: flex; */
+  height: fit-content;
   text-align: center;
   width: 300px;
   /* margin-left: 40px; */
@@ -543,20 +552,39 @@ right:0.2rem;
   padding: 0.5rem;
   border: 1px solid rgba(0,0,0,0.5);
   border-radius: 18px;
+  transition: 0.5s all;
+  &:hover{
+    transform: scale(1.01);
+  }
 }
 
 .first_card img {
   width: 100%;
+  height: 200px;
+  object-fit:inherit;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom:0.5rem ;
 }
-.first_card > h4 {
-  font-size: 25px;
+.first_card > h3 {
+  font-size: 16px;
+  text-align: left;
+  /* letter-spacing: 0.5px; */
+  /* line-height: 1; */
 }
 
+.first_card li {
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.first_card {}
 #buy_now_btn {
   /* border-top: 2px solid rgb(179, 179, 137); */
   background: rgb(105, 179, 240);
   cursor: pointer;
-  border-radius: 10px;
+  border-radius: 6px;
 }
 #buy_now_btn:hover {
   /* border-color: #00a3ff; */
@@ -573,9 +601,19 @@ right:0.2rem;
 }
 
 .start_now {
-  padding: 15px;
+  width: 100px;
+  padding:  8px;
+  margin: 0 auto;
+ 
   text-align: center;
-  background-color: #00a3ff;
+  background: rgb(0, 153, 255);
+  border-radius: 12px;
+  transition: 0.5s all;
+  &:hover{
+    cursor: pointer;
+    background: rgba(0, 153, 255, 0.685);
+  }
+ 
 }
 
 /* ---------------------------------------------------------course-cards endz------------------------------------------------------------------------------ */
@@ -842,7 +880,7 @@ font-size: 0.8rem;
 }
 .Quiz_cards_page {
   width: 90%;
-  margin: 0 auto;
+  margin: 1rem auto;
 
 }
 .showcardactive {
@@ -868,7 +906,7 @@ font-size: 0.8rem;
   text-align: center;
 }
 .first_card li{
-  font-size: 0.68rem;
+  /* font-size: 0.68rem; */
     text-align: left;
 
 }

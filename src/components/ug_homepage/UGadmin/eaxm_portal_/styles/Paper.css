@@ -1,6 +1,8 @@
 @import url("https://fonts.googleapis.com/css2?family=Anek+Malayalam:wght@100;200;300;400;500;600;700;800&display=swap");
 
-
+.active-question{
+  background: url(../asserts/orangeBox.png) cover;
+}
 body {
   font-family: "Anek Malayalam", sans-serif;
   /* background: linear-gradient(90.04deg, #800080 0.03%, #ffc0cb 99.96%); */
@@ -429,6 +431,36 @@ height: 950px; */
   padding-top: 15rem;
 
   
+}
+
+.Exam_summary_table{
+   margin: 0px 300px 0px;
+}
+
+.Exam_summary_btns{
+  margin: 0px 850px 0px;
+  display: flex;
+  gap: 3rem;
+}
+.es_btn{
+  background-color: #0394fc;
+  padding: 10px;
+  color: white;
+  border-radius: 2px;
+  font-weight: 700;
+  /* background: "blue",  */
+  /* fontWeight: "bold",  */
+  /* padding: "10px" */
+}
+.es_btn:hover{
+  background-color: #62b6f3;
+}
+
+.Exam_summary_question_tag{
+  text-align: center;
+  font-size: larger;
+  /* margin: 0px 300px 0px; */
+  /* justify-content: center; */
 }
 
 .opt_btns{

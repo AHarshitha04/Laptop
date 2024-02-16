@@ -255,6 +255,24 @@ const ButtonsFunctionality = ({
     fetchUserData();
   }, []);
 
+
+  const [testName, setTestName] = useState('');
+  const { testCreationTableId } = useParams();
+  useEffect(() => {
+    fetchTestName();
+  }, [testCreationTableId]); // Re-fetch test name when testCreationTableId changes
+
+  const fetchTestName = async () => {
+    try {
+      const response = await fetch(`http://localhost:5001/QuestionPaper/questionOptions/${testCreationTableId}`);
+      const data = await response.json();
+      const testName = data.questions[0].TestName;
+      setTestName(testName);
+    } catch (error) {
+      console.error('Error fetching test name:', error);
+    }
+  };
+
   return (
     <>
       <div className="right-side-bar">
@@ -265,9 +283,7 @@ const ButtonsFunctionality = ({
             alt={`Image ${userData.user_Id}`}
           />
           <p>Name of the person : {userData.username}</p>
-          <p>{
-            
-            }</p>
+          <p key={testName.testCreationTableId}>Test Name:{testName}</p>
 
           {/* <p>Time Left: {WformatTime(wtimer)}</p> */}
         </div>

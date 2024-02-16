@@ -5,7 +5,7 @@ const pool = mysql.createPool({
   user: 'root',
   password: '',
 
-  database: 'quizapp_sindhu',
+  database: 'adminnew',
   // database: 'quiz_app_admin',
 
   waitForConnections: true,

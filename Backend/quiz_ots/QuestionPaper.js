@@ -224,7 +224,8 @@ router.get("/questionOptions/:testCreationTableId", async (req, res) => {
       doc.documen_name, doc.sectionId, 
       doc.subjectId, doc.testCreationTableId,
       P.paragraphImg, p.paragraph_Id,
-      pq.paragraphQNo_Id, pq.paragraphQNo, qts.quesionTypeId
+      pq.paragraphQNo_Id, pq.paragraphQNo, qts.quesionTypeId,
+      tct.TestName  -- New column from testcreationtable
   FROM 
       questions q 
       LEFT OUTER JOIN options o ON q.question_id = o.question_id
@@ -238,9 +239,11 @@ router.get("/questionOptions/:testCreationTableId", async (req, res) => {
       LEFT OUTER JOIN paragraphqno pq ON p.paragraph_Id = pq.paragraph_Id AND q.question_id = pq.question_id
       LEFT OUTER JOIN ots_document doc ON q.document_Id = doc.document_Id
       LEFT OUTER JOIN user_responses ur ON q.question_id = ur.question_id and o.option_id = ur.option_id
+      LEFT OUTER JOIN test_creation_table tct ON doc.testCreationTableId = tct.testCreationTableId  -- Joining with testcreationtable
   WHERE 
-      doc.testCreationTableId = ? 
-  ORDER BY q.question_id ASC, o.option_index ASC;`,
+      doc.testCreationTableId = ?
+  ORDER BY q.question_id ASC, o.option_index ASC; 
+`,
       [testCreationTableId]
     );
 
@@ -272,6 +275,7 @@ router.get("/questionOptions/:testCreationTableId", async (req, res) => {
         } else {
           // Question doesn't exist, create a new question
           const newQuestion = {
+            TestName:row.TestName,
             question_id: row.question_id,
             questionImgName: row.questionImgName,
             documen_name: row.documen_name,

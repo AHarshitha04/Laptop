@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
+import axios from "axios";
 import "./styles/SubjectTest.css";
 import { useRef } from "react";
 import logo from "./asserts/logo.jpeg";
@@ -7,7 +8,7 @@ import logo from "./asserts/logo.jpeg";
 const FullTest = () => {
   const [testData, setTestData] = useState([]);
   const [typeOfTest, setTypeOfTest] = useState([]);
-  const { courseCreationId } = useParams();
+  const { courseCreationId, examId } = useParams();
 
   useEffect(() => {
     const fetchTestData = async () => {
@@ -32,6 +33,33 @@ const FullTest = () => {
   }, [courseCreationId]);
 
   const handleTypeOfTestClick = async (typeOfTestId) => {
+
+
+    // try {
+    //   const responseTest = await fetch(
+    //     `http://localhost:5001/Cards/feachingtest/${courseCreationId}`
+    //   );
+    //   // const testData = await responseTest.json();
+    //   // setTestData(testData);
+
+    //   const responseTypeOfTest = await fetch(
+    //     `http://localhost:5001/Cards/feachingtest/${courseCreationId}/${typeOfTestId}`
+    //   );
+    //   const typeOfTestData = await responseTypeOfTest.json();
+    //    //   const testData = await response.json();
+    //   setTestData(testData);
+    //   console.log(testData);
+    //   setTypeOfTest(typeOfTestData);
+
+    //        // Fetch tests based on both courseCreationId and typeOfTestId
+    //   const response = await fetch(
+    //     `http://localhost:5001/Cards/feachingtest/${courseCreationId}/${typeOfTestId}`
+    //   );
+    //   const testData = await response.json();
+    //   setTestData(testData);
+    //   console.log(testData);
+    // } 
+    
     try {
       // Fetch tests based on both courseCreationId and typeOfTestId
       const response = await fetch(
@@ -40,7 +68,9 @@ const FullTest = () => {
       const testData = await response.json();
       setTestData(testData);
       console.log(testData);
-    } catch (error) {
+    } 
+    
+    catch (error) {
       console.error(error);
     }
   };
@@ -81,7 +111,7 @@ const FullTest = () => {
   }, [subjectId]);
 
   const newWinRef = useRef(null);
- 
+
   const openPopup = (testCreationTableId) => {
     const newWinRef = window.open(
       `/Instructions/${testCreationTableId}`,
@@ -102,11 +132,44 @@ const FullTest = () => {
   };
 
   const [active, setActive] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [courseCard, setCourseCard] = useState([]);
+  useEffect(() => {
+    const fetchCourseDetails = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:5001/Cards/feachingcourse/${examId}`
+        );
+        setCourseCard(response.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchCourseDetails();
+  }, [examId]);
+
+  const currentDate = new Date();
+  const filteredCourses = courseCard.filter(
+    (courseDetails) =>
+      new Date(courseDetails.courseStartDate) <= currentDate &&
+      currentDate <= new Date(courseDetails.courseEndDate)
+  );
 
   return (
     <div>
       <div className="header">
         <img className="header_logo" src={logo} alt="logo" width={200} />
+        {testData.length > 0 && (
+  <h3>{testData[0].courseName}</h3>
+)}
+
+
+        {/* {testData.length > 0 && (
+          <h2 style={{ color: "white" }}>{testData[0].courseName}</h2>
+        )} */}
+        {/* <h2>helloooo</h2> */}
       </div>
       <div className="Types_of_Tests">
         <div>
@@ -148,10 +211,13 @@ const FullTest = () => {
             </div>
           </div>
         </ul>
-        <ul>
+        <ul className="test-card_conatiner">
+        
           {testData.map((test) => (
             <div className="test-card" key={test.testCreationTableId}>
+              
               <li>
+                
                 <p className="test-card-header">
                   <h3>{test.TestName}</h3>
                   <div className="testCard-second-header">
