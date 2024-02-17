@@ -2210,8 +2210,7 @@ router.get("/score/:testCreationTableId/:user_Id", async (req, res) => {
 router.post("/response", async (req, res) => {
   try {
     console.log("Request Body:", req.body);
-    const { userId, questionId, testCreationTableId, subjectId, sectionId } =
-      req.body;
+    const { userId, questionId, testCreationTableId, subjectId, sectionId } = req.body;
     console.log(`Response for question ${questionId} saved to the database`);
 
     // Validate data types
@@ -2226,20 +2225,81 @@ router.post("/response", async (req, res) => {
       isNaN(subjectIdNumber) ||
       isNaN(sectionIdNumber)
     ) {
-      console.error(
-        "Invalid integer value for userId, testCreationTableId, or questionId"
-      );
-      return res
-        .status(400)
-        .json({ success: false, message: "Invalid data types" });
+      console.error("Invalid integer value for userId, testCreationTableId, or questionId");
+      return res.status(400).json({ success: false, message: "Invalid data types" });
     }
 
+    // Check if the values already exist in the database
+    const checkQuery =
+      "SELECT * FROM user_responses WHERE question_id = ?";
+
+    const checkValues = [
+      parseInt(questionId, 10),
+    ];
+
+    const existingResponse = await db.query(checkQuery, checkValues);
+
+    if (existingResponse.length > 0 && existingResponse[0].length > 0) {
+      console.log("Response already exists in the database");
+
+      // Map existing response values to variables
+      const existingUserResponse = existingResponse[0][0];
+      const existingUserId = existingUserResponse.user_Id;
+      const existingTestCreationTableId =
+        existingUserResponse.testCreationTableId;
+      const existingSubjectId = existingUserResponse.subjectId;
+      const existingSectionId = existingUserResponse.sectionId;
+      const existingQuestionId = existingUserResponse.question_id;
+
+      // Update the user's answer
+      const updateQuery =
+        "UPDATE user_responses SET user_answer = ?, option_id = ? WHERE question_id = ?";
+
+      const response = req.body[questionId];
+      const optionIndexes1CharCodes = response.optionIndexes1CharCodes.join(",");
+      const optionIndexes2CharCodes = response.optionIndexes2CharCodes.join(",");
+      const calculatorInputValue = response.calculatorInputValue;
+
+      const updateValues = [
+        optionIndexes1CharCodes + optionIndexes2CharCodes + calculatorInputValue,
+        response.optionIndexes1.join(",") + response.optionIndexes2.join(","),
+        existingQuestionId,
+      ];
+
+      console.log("Executing SQL query:", updateQuery, updateValues);
+
+      try {
+        const result = await db.query(updateQuery, updateValues);
+
+        if (!result) {
+          console.error("Error updating user's answer in the database");
+          res
+            .status(500)
+            .json({ success: false, message: "Internal server error" });
+          return;
+        }
+
+        console.log(`User's answer for question ${existingQuestionId} updated successfully`);
+        return res.status(200).json({
+          success: true,
+          message: "User's answer updated successfully",
+        });
+      } catch (dbError) {
+        console.error("Database query error:", dbError);
+        res.status(500).json({
+          success: false,
+          message: "Error updating user's answer in the database",
+          dbError: dbError.message,
+        });
+      }
+    }
+
+    // If the response does not already exist, proceed with insertion
     const sql =
-      "INSERT INTO user_responses (user_Id, testCreationTableId, subjectId, sectionId, question_id, user_answer,option_id) " +
-      "VALUES (?, ?, ?, ?, ?, ?,?) ";
+      "INSERT INTO user_responses (user_Id, testCreationTableId, subjectId, sectionId, question_id, user_answer, option_id) " +
+      "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
     const response = req.body[questionId];
-
     const questionIdNumber = parseInt(questionId, 10);
 
     if (isNaN(questionIdNumber)) {
@@ -2251,7 +2311,6 @@ router.post("/response", async (req, res) => {
 
     const optionIndexes1 = response.optionIndexes1.join(",");
     const optionIndexes2 = response.optionIndexes2.join(",");
-
     const optionIndexes1CharCodes = response.optionIndexes1CharCodes.join(",");
     const optionIndexes2CharCodes = response.optionIndexes2CharCodes.join(",");
     const calculatorInputValue = response.calculatorInputValue;
@@ -2265,7 +2324,7 @@ router.post("/response", async (req, res) => {
       optionIndexes1CharCodes + optionIndexes2CharCodes + calculatorInputValue,
       optionIndexes1 + optionIndexes2,
     ];
-    console.log("optionIndexes2---:", optionIndexes2);
+
     console.log("Executing SQL query:", sql, queryValues);
 
     try {
@@ -2279,9 +2338,7 @@ router.post("/response", async (req, res) => {
         return;
       }
 
-      console.log(
-        `Response for question ${questionIdNumber} saved to the database`
-      );
+      console.log(`Response for question ${questionIdNumber} saved to the database`);
       res.json({ success: true, message: "Response saved successfully" });
     } catch (dbError) {
       console.error("Database query error:", dbError);
@@ -2358,36 +2415,21 @@ router.put("/updateResponse/:questionId", async (req, res) => {
   }
 });
 
-router.delete("/clearResponse/:questionId", async (req, res) => {
+
+router.put("/clearResponse/:questionId", async (req, res) => {
   try {
     const { questionId } = req.params;
 
-    // Validate that questionId is a valid integer
-    const questionIdNumber = parseInt(questionId, 10);
-    if (isNaN(questionIdNumber)) {
-      console.error(`Invalid integer value for questionId: ${questionId}`);
-      return res
-        .status(400)
-        .json({ success: false, message: "Invalid questionId" });
-    }
-
-    // Execute SQL query to delete the user's response for the specified question
-    const deleteQuery = "DELETE FROM user_responses WHERE question_id = ?";
-    await new Promise((resolve, reject) => {
-      db.query(deleteQuery, [questionIdNumber], (err, result) => {
-        if (err) {
-          console.error("Error deleting user response:", err);
-          reject(err);
-        } else {
-          console.log(`User response for question ${questionIdNumber} deleted`);
-          resolve(result);
-        }
-      });
+    const updateQuery = "UPDATE user_responses SET user_answer = NULL WHERE question_id = ?";
+    db.query(updateQuery, [questionId], (err, result) => {
+      if (err) {
+        console.error("Error clearing user response:", err);
+        res.status(500).json({ success: false, message: "Internal server error" });
+      } else {
+        console.log(`User response for question ${questionId} cleared`);
+        res.status(200).json({ success: true, message: "User response cleared successfully" });
+      }
     });
-
-    res
-      .status(200)
-      .json({ success: true, message: "User response cleared successfully" });
   } catch (error) {
     console.error("Error clearing user response:", error);
     res.status(500).json({ success: false, message: "Internal server error" });

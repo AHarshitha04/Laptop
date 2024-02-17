@@ -214,7 +214,7 @@ const TestResultsPage = () => {
       }
     };
     fetchQuestionCount();
-  }, [testCreationTableId, user_Id]);
+  }, [testCreationTableId, userData.id]);
 
   const [incorrectAnswers, setIncorrectAnswersCount] = useState(null);
   useEffect(() => {

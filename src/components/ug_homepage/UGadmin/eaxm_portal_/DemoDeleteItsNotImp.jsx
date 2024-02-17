@@ -1735,8 +1735,7 @@ const DemoDeleteItsNotImp = () => {
       (selectedAnswersMap2[currentQuestion.question_id] &&
         selectedAnswersMap2[currentQuestion.question_id].length > 0) ||
       calculatorInputValue !== "";
-  
-      fetchData();
+
     if (isCurrentQuestionAnswered) {
       // If the current question is answered, update the status
       const updatedQuestionStatus = [...questionStatus];
@@ -1744,44 +1743,42 @@ const DemoDeleteItsNotImp = () => {
       setQuestionStatus(updatedQuestionStatus);
     }
     //-----------------buttons functionality end--------------
-  
+
     try {
-      const questionId =
-        questionData.questions[currentQuestionIndex].question_id;
-  
+      const questionId = currentQuestion.question_id;
+
       // Clear response for radio buttons (MCQ)
       const updatedSelectedAnswersMap1 = { ...selectedAnswersMap1 };
       updatedSelectedAnswersMap1[questionId] = undefined;
       setSelectedAnswersMap1(updatedSelectedAnswersMap1);
-  
+
       // Clear response for checkboxes (MSQ)
       const updatedSelectedAnswersMap2 = { ...selectedAnswersMap2 };
       updatedSelectedAnswersMap2[questionId] = [];
       setSelectedAnswersMap2(updatedSelectedAnswersMap2);
-  
+
       // Clear response for input field
       const updatedSelectedAnswersMap3 = { ...selectedAnswersMap3 };
       updatedSelectedAnswersMap3[questionId] = undefined;
       setSelectedAnswersMap3(updatedSelectedAnswersMap3);
-  
+
       // Remove the stored calculator value in local storage
       localStorage.removeItem(`calculatorValue_${questionId}`);
-  
+
       // Send a request to your server to clear the user's response for the current question
-      const response = await axios.delete(
+      const response = await axios.put(
         `http://localhost:5001/QuestionPaper/clearResponse/${questionId}`
       );
-  
+
       if (response.status === 200) {
         console.log("Response cleared successfully");
         // Update any state or perform additional actions as needed
-        
       } else {
         console.error("Failed to clear response:", response.data);
       }
     } catch (error) {
       console.error("Error clearing response:", error);
-    } 
+    }
   };
  
   const updateQuestionStatus = (index, status) => {
