@@ -1,13 +1,24 @@
 .Quiz_main_page_container {
-  width: 80%;
+  width: 100%;
+  background: #f8f9fa;
+  /* height: 100vh; */
+  padding: 0.5rem 0; 
+}
+
+.Quiz_main_page_subcontainer {
+  width: 92%;
   margin: 1rem auto;
   /* border: 1px solid red; */
   border-radius: 18px;
 }
 
 .Quiz_main_page_container_btns {
-  display: flex;
-  gap: 3rem;
+  position: relative;
+  z-index: 1;
+    display: flex;
+    gap: 3rem;
+    /* width: 80%; */
+    /* margin: 0 auto; */
 }
 .Quiz_admin_page_container {
   display: flex;
@@ -27,6 +38,7 @@
   font-weight: 600;
   border: none;
   cursor: pointer;
+  margin: 0 0.5rem;
   transition: 0.2s ease-in-out;
   background: #f0f0f0;
   color: #000000;
@@ -36,12 +48,16 @@
   }
 }
 .UGhomepageadmin {
+  
+  background: #ffffff;
+
   box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
   margin: 2rem auto;
-  margin-left: 1rem;
+margin-left: 4rem;
   border-radius: 18px;
   padding: 2rem 2rem;
-  width: fit-content;
+  width: 500px;
+  height: auto;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -50,20 +66,22 @@
 .UGhomepageadmin_inputs {
   display: flex;
   gap: 1rem;
+  align-items: center;
+
 }
 
 .UGhomepageadmin_inputs label {
-  font-size: 1.2rem;
+  font-size: 1.5rem;
 }
 
 .UGhomepageadmin_inputs select {
   width: 100%;
-  font-size: 1rem;
+  font-size: 1.5rem;
 }
 
 input[type="file"] {
   /* color: red; */
-  font-size: 1rem;
+  font-size: 1.5rem;
 }
 
 .UGhomepageadmin_Uploaded_Files_header {
@@ -109,4 +127,41 @@ input[type="file"] {
 .UGhomepageadmin_Uploaded_Files_img_container_img {
   width: 70%;
   margin: 1rem auto;
+}
+@media (max-width:600px) {
+  
+  .UGhomepageadmin {
+
+    width: 100%;   
+    text-align: center;
+    padding: 0.2rem;
+    margin:  1rem auto ;
+    
+}
+.Quiz_admin_page_container {
+  
+   
+    width: 90%;
+   padding: 0.8rem 0;
+}
+
+.UGhomepageadmin_inputs select {
+    width: 100%;
+    font-size: 0.8rem;
+}
+
+.UGhomepageadmin_inputs label {
+    font-size: 0.8rem;
+}
+.Quiz_admin_page_container a {
+    padding: 0.5rem ;
+  
+    font-size: 0.7rem;
+   
+}
+
+.UGhomepageadmin_inputs input[type="file"] {
+    /* color: red; */
+    font-size: 0.8rem;
+}
 }

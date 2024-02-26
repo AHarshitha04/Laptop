@@ -39,40 +39,38 @@ const Exam_portal_admin_Dashboard = () => {
 
 
   return (
-    
     <div className="Dashboard_container">
       {/* <h1>Dashboard</h1> */}
-  <h1 className="textColor">Dashboard</h1>
-      <div style={{display:'flex',flexDirection:'column'}}>
-       
-      <div style={{display:'flex',gap:'1rem'}}>
-      <div className="Dashboard_contant">
-        <i  className="fa-solid fa-user-pen"></i>
-        {/* <img width={150} src={TotalExam} alt="" /> */}
-        <h2>Total Exams </h2>
-        <h2 className="examCount"> {examCount}</h2>
-      </div>
-      <div className="Dashboard_contant">
-        <i className="fa-solid fa-pen-nib"></i>
-        <h2>Total Courses</h2>
-        <h2> {courseCount}</h2>
-      </div>
-      <div className="Dashboard_contant">
-        <i className="fa-solid fa-person-chalkboard"></i>
-        <h2>Total Tests</h2>
-        <h2 className="examCount"> {testCount}</h2>
-      </div>
-      <div className="Dashboard_contant">
-      <i class="fa-solid fa-users"></i>
-        <h2>user Registrations </h2>
-        <h2 className="examCount">{userCount}</h2>
-      </div>
-      <div className="Dashboard_contant">
-        <i className="fa-solid fa-file-lines"></i>
-        <h2>Total Questions </h2>
-        <h2 className="examCount">{questionCount}</h2>
-      </div>
-      </div>
+      <h1 className="textColor">Dashboard</h1>
+      <div style={{ display: "flex", flexDirection: "column" }}>
+        <div className="Dashboard_subcontainer">
+          <div className="Dashboard_contant">
+            <i className="fa-solid fa-user-pen"></i>
+            {/* <img width={150} src={TotalExam} alt="" /> */}
+            <h2>Total Exams </h2>
+            <h2 className="examCount"> {examCount}</h2>
+          </div>
+          <div className="Dashboard_contant">
+            <i className="fa-solid fa-pen-nib"></i>
+            <h2>Total Courses</h2>
+            <h2> {courseCount}</h2>
+          </div>
+          <div className="Dashboard_contant">
+            <i className="fa-solid fa-person-chalkboard"></i>
+            <h2>Total Tests</h2>
+            <h2 className="examCount"> {testCount}</h2>
+          </div>
+          <div className="Dashboard_contant">
+            <i class="fa-solid fa-users"></i>
+            <h2>user Registrations </h2>
+            <h2 className="examCount">{userCount}</h2>
+          </div>
+          <div className="Dashboard_contant">
+            <i className="fa-solid fa-file-lines"></i>
+            <h2>Total Questions </h2>
+            <h2 className="examCount">{questionCount}</h2>
+          </div>
+        </div>
       </div>
     </div>
   );

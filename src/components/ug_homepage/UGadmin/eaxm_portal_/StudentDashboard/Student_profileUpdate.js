@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { nav } from "../DATA/Data";
-import "./StudentDashbord.css";
+import "./styles/StudentDashbord.css";
 
 // import { nav } from "../eaxm_portal_/DATA/Data";
 const Student_profileUpdate = () => {

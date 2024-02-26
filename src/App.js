@@ -1,9 +1,4 @@
 import React from "react";
-
-
-
-
-
 import {
   BrowserRouter as Router,
   Routes,
@@ -84,17 +79,13 @@ import Exam_portal_home_page from "./components/ug_homepage/UGadmin/eaxm_portal_
 // ========================================================= ugquiz exam imports ===========================================================
 
 import QuestionPaper from "./components/ug_homepage/UGadmin/eaxm_portal_/QuestionPaper.jsx";
-
-import DemoDeleteItsNotImp from "./components/ug_homepage/UGadmin/eaxm_portal_/DemoDeleteItsNotImp.jsx";
-
-
 import FullTest from "./components/ug_homepage/UGadmin/eaxm_portal_/FullTest.jsx";
 import Instructions from "./components/ug_homepage/UGadmin/eaxm_portal_/Instructions.jsx";
 
 import General_intructions_page from "./components/ug_homepage/UGadmin/eaxm_portal_/General_intructions_page.jsx";
 
 import CoursePage from "./components/ug_homepage/UGadmin/eaxm_portal_/CoursePage.jsx";
-
+import StudentRegistationPage from "./components/ug_homepage/UGadmin/eaxm_portal_/StudentRegistationPage.jsx"
 // import ExamSummary from './components/ug_homepage/UGadmin/eaxm_portal_/Exam_Summary';
 import SubmitPage from "./components/ug_homepage/UGadmin/eaxm_portal_/Submit_Page";
 import TestResultsPage from "./components/ug_homepage/UGadmin/eaxm_portal_/TestResultsPage";
@@ -122,6 +113,22 @@ import Student_profileUpdate from "./components/ug_homepage/UGadmin/eaxm_portal_
 
 import EmployeePortal from "./components/EmployeePortal/EmployeePortal.js";
 import EmployeeDashboard from "./components/EmployeePortal/EmployeeDashboard.js";
+
+
+import QUiZ_ForgotPassword from "./components/ug_homepage/UGadmin/login/QUiZ_ForgotPassword.js";
+import QUIZ_ResetPassword from "./components/ug_homepage/UGadmin/login/QUIZ_ResetPassword.js";
+import EmployeeLOGIN_differentation from "./components/EmployeePortal/EmployeeLOGIN_differentation.js";
+import { Read } from "./components/ug_homepage/UGadmin/eaxm_portal_/Read.jsx";
+import Payu from "./components/ug_homepage/UGadmin/eaxm_portal_/Payu.jsx";
+
+
+// import QUiZ_ForgotPassword from "./components/ug_homepage/UGadmin/login/QUiZ_ForgotPassword.js";
+// import QUIZ_ResetPassword from "./components/ug_homepage/UGadmin/login/QUIZ_ResetPassword.js";
+
+// import EmployeeLOGIN_differentation from "./components/EmployeePortal/EmployeeLOGIN_differentation.js";
+
+
+
 
 const PrivateRoute = ({ element }) => {
   const isAuthenticated = localStorage.getItem("isLoggedIn");
@@ -248,8 +255,14 @@ const App = () => {
         {/* ========================================================= quiz exam routes ====================================================================== */}
         <Route
           path="/feachingcourse/:examId"
-          element={<PrivateRoute element={<CoursePage />} />}
+          element={<CoursePage />}
         />
+
+        <Route
+          path="/coursedataSRP/:courseCreationId"
+          element={<StudentRegistationPage />}
+        />
+        <Route path='/login_UserData' element={<Read />} />
         <Route
           path="/Test_List/:courseCreationId"
           element={<PrivateRoute element={<FullTest />} />}
@@ -262,34 +275,16 @@ const App = () => {
           path="/General_intructions_page/:testCreationTableId"
           element={<PrivateRoute element={<General_intructions_page />} />}
         />
-     {/* <Route
+        <Route
           path="/QuestionPaper/questionOptions/:testCreationTableId"
           element={<PrivateRoute element={<QuestionPaper />} />}
-        />  */}
-{/* ----------------demo------------------------------------------------------------------ */}
-
-       <Route
-          path="/QuestionPaper/questionOptions/:testCreationTableId"
-          element={<PrivateRoute element={<DemoDeleteItsNotImp />} />}
-        /> 
-
-{/* ----------------demo------------------------------------------------------------------ */}
-
-<Route
+        />
+        <Route
           path="/SubmitPage"
           element={<PrivateRoute element={<SubmitPage />} />}
         />
-{/* 
-<Route
-          path="/OTS_reset_password/:id/:token"
-          element={<QUIZ_ResetPassword />}
-        ></Route> */}
-        {/* <Route
-          path="/SubmitPage"
-          element={<PrivateRoute element={<SubmitPage />} />}
-        /> */}
         <Route
-          path="/TestResultsPage/:testCreationTableId"
+          path="/TestResultsPage"
           element={<PrivateRoute element={<TestResultsPage />} />}
         />
         {/* <Route path='/ExamSummary'  element={<ExamSummary />} /> */}
@@ -329,11 +324,23 @@ const App = () => {
           element={<PrivateRoute element={<Student_profileUpdate />} />}
         />
         <Route path="/Score" element={<PrivateRoute element={<Score />} />} />
+        <Route path="/OTS_ForgotPassword" element={<QUiZ_ForgotPassword />} />
+        <Route
+          path="/OTS_reset_password/:id/:token"
+          element={<QUIZ_ResetPassword />}
+        ></Route>{" "}
         {/* ---------------------------EmployeePortalHomepage----------------------- */}
         {/* ---------- EmployeePortal_login ------------- */}
         <Route path="/EmployeePortal" element={<EmployeePortal />} />
         {/* ---------- EmployeeDashboard ------------- */}
+        <Route
+          path="/EmployeeLOGIN_differentation"
+          element={<EmployeeLOGIN_differentation />}
+        />
+        {/* ---------- EmployeeDashboard ------------- */}
         <Route path="/Employee_dashboard" element={<EmployeeDashboard />} />
+
+        <Route path="/Payu" element={<Payu/>}/>
       </Routes>
 
       {/* <Footer /> */}

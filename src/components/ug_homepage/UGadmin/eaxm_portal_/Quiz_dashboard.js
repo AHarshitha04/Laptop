@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Adimheader from "../login/Adimheader";
 import { nav } from "./DATA/Data";
-import { Link } from "react-router-dom";
+import { Link, Navigate, useParams } from "react-router-dom";
 import axios from "axios";
 import Tooltip from "@mui/material/Tooltip";
 import Button from "@mui/material/Button";
@@ -9,6 +9,8 @@ import Button from "@mui/material/Button";
 import Exam_portal_admin_integration from "../../exam_portal_admin/Exam_portal_admin_integration"
 import UG_HOME from "../../UG_HOME";
 import "./Quiz_amain_page.css"
+ 
+
 
 const Quiz_dashboard = () => {
   const [showQuizmobilemenu, setShowQuizmobilemenu] = useState(false);
@@ -21,33 +23,52 @@ const Quiz_dashboard = () => {
     localStorage.removeItem("userRole");
     window.location.href = "/uglogin";
   };
-   const userRole = localStorage.getItem("userRole");
+    const userRole = localStorage.getItem("userRole");
    const [isLoggedIn, setIsLoggedIn] = useState(false);
-   const [userData, setUserData] = useState({});
-    const fetchUserData = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        const response = await fetch(
-          "http://localhost:5001/ughomepage_banner_login/user",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        if (response.ok) {
-          const userData = await response.json();
-          setUserData(userData);
-        } else {
-          setIsLoggedIn(false);
-
-          // Handle errors if needed
-        }
-      } catch (error) {
-        // Handle other errors if needed
+  const [userData, setUserData] = useState({});
+  useEffect(() => {
+    const checkLoggedIn = () => {
+      const loggedIn = localStorage.getItem("isLoggedIn");
+      if (loggedIn === "true") {
+        setIsLoggedIn(true);
+        fetchUserData();
       }
     };
+    checkLoggedIn();
+  }, []);
+
+  const fetchUserData = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(
+        "http://localhost:5001/ughomepage_banner_login/user",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        // Token is expired or invalid, redirect to login page
+        localStorage.removeItem("isLoggedIn");
+        localStorage.removeItem("token");
+        setIsLoggedIn(false);
+        Navigate("/uglogin"); // Assuming you have the 'navigate' function available
+
+        return;
+      }
+
+      if (response.ok) {
+        // Token is valid, continue processing user data
+     const userData = await response.json();
+     setUserData(userData);
+        // ... process userData
+      }
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  };
 
     // const [courses, setCourses] = useState([]);
     const [examsug, setExamsug] = useState([0]);
@@ -100,7 +121,20 @@ const Quiz_dashboard = () => {
                   </button></Link> */}
                   </div>
                   <div>
-                    <button onClick={handleLogout}>Logout</button>
+                    <button id="dropdownmenu_foradim_page_btn">
+                      <img
+                        title={userData.username}
+                        src={userData.imageData}
+                        alt={`Image ${userData.user_Id}`}
+                      />
+                      <div className="dropdownmenu_foradim_page">
+                        {/* <Link to={`/userread/${user.id}`} className="btn btn-success mx-2">Read</Link> */}
+                        {/* <Link to={`/userdeatailspage/${user.id}`} >Account-info</Link> */}
+                        <Link to="/student_dashboard">My profile</Link>
+                        <Link onClick={handleLogout}>Logout</Link>
+                      </div>
+                    </button>
+                   
                   </div>
                 </ul>
               </div>
@@ -125,86 +159,97 @@ export default Quiz_dashboard;
 export const Quiz_main_page_container = () => {
   const [showcardactive2, setshowcardactive2] = useState(true);
   const [showcardactive1, setshowcardactive1] = useState(false);
+  
+
 const [showcard1, setshowcard1] = useState(true);
 const [showcard2, setshowcard2] = useState(false);
+
+
 
   const UG_HOMEadim_btn = () => {
     setshowcardactive2(true);
     setshowcardactive1(false);
+  
+
     setshowcard1(true)
 // console.log("hello");
     setshowcard2(false)
+   
+
 
   };
 
   const UG_HOMEQuiz_btn = () => {
+  
     setshowcardactive2(false);
     setshowcardactive1(true);
     setshowcard1(false)
     setshowcard2(true)
+   
+
 
   };
+ 
+ 
 
     const userRole = localStorage.getItem("userRole");
   return (
     <>
       <div className="Quiz_main_page_container">
-        <div className="Quiz_main_page_container_btns">
-          {/*-----------------  admin login ---------------------------------  */}
+        <div className="Quiz_main_page_subcontainer">
+          <div className="Quiz_main_page_container_btns">
+            {/*-----------------  admin login ---------------------------------  */}
+            {userRole === "admin" && (
+              <>
+                <button
+                  className={
+                    showcardactive2 ? "showcardactive" : "showcardactivenone"
+                  }
+                  onClick={UG_HOMEadim_btn}
+                >
+                  UG Page Admin
+                </button>
+
+                <button
+                  className={
+                    showcardactive1 ? "showcardactive" : "showcardactivenone"
+                  }
+                  onClick={UG_HOMEQuiz_btn}
+                >
+                  UG Quiz Admin
+                </button>
+              </>
+            )}
+          </div>
+
           {userRole === "admin" && (
             <>
-              <button
-                className={
-                  showcardactive2 ? "showcardactive" : "showcardactivenone"
-                }
-                onClick={UG_HOMEadim_btn}
-              >
-                UG Page Admin
-              </button>
-              
-          <button
-            className={
-              showcardactive1 ? "showcardactive" : "showcardactivenone"
-            }
-            onClick={UG_HOMEQuiz_btn}
-          >
-            UG Quiz Admin
-          </button>
-        
+              {showcard1 ? (
+                <div className="UGhomepageadmin">
+                  <UploadPage />
+                </div>
+              ) : null}
+              {showcard2 ? (
+                <div className="UGQUizadmin">
+                  <Exam_portal_admin_integration />
+                </div>
+              ) : null}
             </>
           )}
 
+          {userRole === "ugadmin" && (
+            <>
+              <UploadPage />
+            </>
+          )}
+          {/* --------------------- ugotsadmin ------------------------------- */}
+          {userRole === "ugotsadmin" && (
+            <>
+              <h3>Online Test Creation Admin</h3>
+              <Exam_portal_admin_integration />
+            </>
+          )}
         </div>
-
-        {userRole === "admin" && (
-          <>
-            {showcard1 ? (
-              <div className="UGhomepageadmin">
-                <UploadPage />
-              </div>
-            ) : null}
-            {showcard2 ? (
-              <div className="UGQUizadmin">
-                <Exam_portal_admin_integration />
-              </div>
-            ) : null}
-          </>
-        )}
-
-        {userRole === "ugadmin" && (
-          <>
-         
-
-            <UploadPage />
-          </>
-        )}
-        {/* --------------------- ugotsadmin ------------------------------- */}
-        {userRole === "ugotsadmin" && (
-          <>
-            <h3>Online Test Creation Admin</h3>
-            <Exam_portal_admin_integration />
-          </>
-        )}
       </div>
     </>
   );
@@ -463,20 +508,20 @@ export const UploadPage = () => {
 
   return (
     <div className="Quiz_admin_page_container">
-
-<div>
+      <div>
         {uploadStatus === "success" && (
-          <p style={{ color: "green", fontSize:"20px"}}>Successfully uploaded!</p>
+          <p style={{ color: "green", fontSize: "20px" }}>
+            Successfully uploaded!
+          </p>
         )}
         {uploadStatus === "error" && (
-          <p style={{ color: "red", fontSize:"20px"}}>
+          <p style={{ color: "red", fontSize: "20px" }}>
             Error uploading image. Please try again.
           </p>
         )}
       </div>
-      <div>
-        <h3>Upload Images</h3>
-      </div>
+
+      <h3>Upload Images</h3>
 
       <div className="UGhomepageadmin_inputs">
         <label htmlFor="Course">Course: </label>
@@ -508,14 +553,11 @@ export const UploadPage = () => {
             </option>
           ))}
         </select>
-       
-
- 
       </div>
 
       <div>
-      {show1 ? (
-            <div className="UGhomepageadmin_inputs">
+        {show1 ? (
+          <div className="UGhomepageadmin_inputs">
             <label htmlFor="state">Exam: </label>
             <select id="state" onChange={handleExamChange} value={selectedExam}>
               <option value="">Select Exam</option>
@@ -530,24 +572,14 @@ export const UploadPage = () => {
         ) : null}
       </div>
 
-
-      <div>
-      <input type="file" onChange={handleFileChange} />
+      <div className="UGhomepageadmin_inputs">
+        <input type="file" onChange={handleFileChange} />
       </div>
       <div>
-      <button onClick={handleUpload}>Upload Image</button>    
+        <Link onClick={handleUpload}>Upload Image</Link>
 
-
-
-
-  <Link 
-        to={"/ImageFetching"}
-      >
-        Show Uploaded Files
-      </Link>
-  
-</div>
-   
+        <Link to={"/ImageFetching"}>Show Uploaded Files</Link>
+      </div>
     </div>
   );
 };
@@ -666,3 +698,6 @@ export const ImageFetching = () => {
     </div>
   );
 };
+
+
+

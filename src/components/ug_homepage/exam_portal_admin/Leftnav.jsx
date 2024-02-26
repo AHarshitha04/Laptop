@@ -16,6 +16,11 @@ import Examcreation from "./Examcreation";
 import Coursecreation from "./Coursecreation";
 import Account_info from "../UGadmin/login/Account_info";
 
+import { FaLock, FaUserAlt, FaImage } from "react-icons/fa";
+import Image_Upload_for_Ac_ADMIN from "./Image_Upload_for_Ac_ADMIN";
+import { StudentDashborddountsection } from "../UGadmin/eaxm_portal_/StudentDashboard/Student_dashboard";
+import TestActivation_admin from "./TestActivation_admin";
+
 // import logo2 from './logo2.jpeg'
 // import HomeLandingPage from "../Frontend/Pages/HomeLandingPage/HomeLandingPage";
 
@@ -32,7 +37,14 @@ const Leftnav = () => {
   const [showTestcreationadmin, setTestcreationadmin] = useState(false);
   const [showDocumentUpload_admin, setDocumentUpload_admin] = useState(false);
 
+  const [showTestActivation_admin, setShowTestActivation_admin] =
+    useState(false);
+
+
   const [showregisteredstudent, setShowregisteredstudent] = useState(false);
+  const [showImage_Upload_for_Ac, setShowImage_Upload_for_Ac] = useState(false);
+    const [showStudent_Doubt_Section, setshowStudent_Doubt_Section] =
+      useState(false);
 
   const handledisplaydashboard = () => {
     setShowdashboard(true);
@@ -42,6 +54,9 @@ const Leftnav = () => {
     setTestcreationadmin(false);
     setDocumentUpload_admin(false);
     setShowregisteredstudent(false);
+    setShowImage_Upload_for_Ac(false)
+    setshowStudent_Doubt_Section(false);
+    setShowTestActivation_admin(false);
   };
 
   const handleshowExamcreation_admin = () => {
@@ -52,6 +67,10 @@ const Leftnav = () => {
     setTestcreationadmin(false);
     setDocumentUpload_admin(false);
     setShowregisteredstudent(false);
+    setShowImage_Upload_for_Ac(false)
+    setShowTestActivation_admin(false);
+
+
   };
   const handleshowCoursecreation_admin = () => {
     setShowdashboard(false);
@@ -61,6 +80,10 @@ const Leftnav = () => {
     setTestcreationadmin(false);
     setDocumentUpload_admin(false);
     setShowregisteredstudent(false);
+    setShowImage_Upload_for_Ac(false)
+    setshowStudent_Doubt_Section(false);
+    setShowTestActivation_admin(false);
+
   };
   const handleInstructionPage_admin = () => {
     setShowdashboard(false);
@@ -70,6 +93,10 @@ const Leftnav = () => {
     setTestcreationadmin(false);
     setDocumentUpload_admin(false);
     setShowregisteredstudent(false);
+    setShowImage_Upload_for_Ac(false)
+    setshowStudent_Doubt_Section(false);
+    setShowTestActivation_admin(false);
+
   };
 
   const handleTestcreationadmin = () => {
@@ -80,6 +107,10 @@ const Leftnav = () => {
     setTestcreationadmin(true);
     setDocumentUpload_admin(false);
     setShowregisteredstudent(false);
+    setShowImage_Upload_for_Ac(false)
+    setshowStudent_Doubt_Section(false);
+    setShowTestActivation_admin(false);
+
   };
 
   const handleshowDocumentUpload_admin = () => {
@@ -90,7 +121,23 @@ const Leftnav = () => {
     setTestcreationadmin(false);
     setDocumentUpload_admin(true);
     setShowregisteredstudent(false);
+    setShowImage_Upload_for_Ac(false)
+    setshowStudent_Doubt_Section(false);
+    setShowTestActivation_admin(false);
+
   };
+
+const  handleTestActivation_admin =()=>{
+  setShowdashboard(false);
+  setShowExamcreation_admin(false);
+  setshowCoursecreation_admin(false);
+  setInstructionPage_admin(false);
+  setTestcreationadmin(false);
+  setDocumentUpload_admin(false);
+  setShowregisteredstudent(false);
+  setShowImage_Upload_for_Ac(false)
+  setShowTestActivation_admin(true);
+}
 
   const handleregisteredstudent = () => {
     setShowdashboard(false);
@@ -100,7 +147,38 @@ const Leftnav = () => {
     setTestcreationadmin(false);
     setDocumentUpload_admin(false);
     setShowregisteredstudent(true);
+    setShowImage_Upload_for_Ac(false)
+    setshowStudent_Doubt_Section(false);
+    setShowTestActivation_admin(false);
+
   };
+
+  const handleImage_Upload_for_Ac=()=>{
+    setShowdashboard(false);
+    setShowExamcreation_admin(false);
+    setshowCoursecreation_admin(false);
+    setInstructionPage_admin(false);
+    setTestcreationadmin(false);
+    setDocumentUpload_admin(false);
+    setShowregisteredstudent(false);
+    setShowImage_Upload_for_Ac(true)
+    setshowStudent_Doubt_Section(false);
+    setShowTestActivation_admin(false);
+  }
+
+    const handleStudent_Doubt_Section = () => {
+      setShowdashboard(false);
+      setShowExamcreation_admin(false);
+      setshowCoursecreation_admin(false);
+      setInstructionPage_admin(false);
+      setTestcreationadmin(false);
+      setDocumentUpload_admin(false);
+      setShowregisteredstudent(false);
+      setShowImage_Upload_for_Ac(false);
+    setshowStudent_Doubt_Section(true);
+    setShowTestActivation_admin(false);
+    };
+
   return (
     <>
       <div className="left_nav_bar_container">
@@ -112,8 +190,11 @@ const Leftnav = () => {
           }
           onClick={() => setshowMenu(!showMenu)}
         >
-          <div className={showMenu ? "rotate_right  " : "lines Line_one"}></div>
-          <div className={showMenu ? "rotate_left  " : "lines Line_two "}></div>
+          <div class="quz_menu">
+            <div class="lines"></div>
+            <div class="lines"></div>
+            <div class="lines"></div>
+          </div>
         </div>
         <div
           className={showMenu ? "left-nav-bar left-nav-bar_" : "left-nav-bar"}
@@ -125,11 +206,11 @@ const Leftnav = () => {
                */}
 
               <Link onClick={handledisplaydashboard} className="LeftnavLinks">
-                <div className="">
-                  {/* <img width={40} src={dashboard} alt="" /> */}
-                  <i class="fa-solid fa-database logo_-clr"></i>
-                </div>
-                <p> Dashboard</p>
+                {/* <img width={40} src={dashboard} alt="" /> */}
+
+                <p>
+                  <i class="fa-solid fa-database logo_-clr"></i> Dashboard
+                </p>
               </Link>
             </li>
             <li>
@@ -139,10 +220,10 @@ const Leftnav = () => {
                 onClick={handleshowExamcreation_admin}
                 className="LeftnavLinks"
               >
-                <div className="">
+                <p>
                   <i class="fa-solid fa-user-pen logo_-clr"></i>
-                </div>
-                <p>Exam Creation</p>
+                  Exam Creation
+                </p>
               </Link>
             </li>
             <li>
@@ -151,11 +232,12 @@ const Leftnav = () => {
                 onClick={handleshowCoursecreation_admin}
                 className="LeftnavLinks"
               >
-                <div className="">
-                  {/* <img width={40} src={dashboard} alt="" /> */}
+                {/* <img width={40} src={dashboard} alt="" /> */}
+
+                <p>
                   <i class="fa-solid fa-pen-nib logo_-clr"></i>
-                </div>
-                <p> Course Creation</p>
+                  Course Creation
+                </p>
               </Link>
             </li>
             <li>
@@ -164,21 +246,23 @@ const Leftnav = () => {
                 onClick={handleInstructionPage_admin}
                 className="LeftnavLinks"
               >
-                <div className="">
-                  {/* <img width={40} src={dashboard} alt="" /> */}
+                {/* <img width={40} src={dashboard} alt="" /> */}
+
+                <p>
                   <i class="fa-solid fa-person-chalkboard logo_-clr"></i>
-                </div>
-                <p> Instruction</p>
+                  Instruction
+                </p>
               </Link>
             </li>
             <li>
               {/* <Link  onClick={handleTestcreationadmin} to="/Testcreation" className="LeftnavLinks"> */}
               <Link onClick={handleTestcreationadmin} className="LeftnavLinks">
-                <div className="">
-                  {/* <img width={40} src={dashboard} alt="" /> */}
+                {/* <img width={40} src={dashboard} alt="" /> */}
+
+                <p>
                   <i class="fa-solid fa-file-lines logo_-clr"></i>
-                </div>
-                <p> Test Creation</p>
+                  Test Creation
+                </p>
               </Link>
             </li>
             <li>
@@ -187,26 +271,71 @@ const Leftnav = () => {
                 onClick={handleshowDocumentUpload_admin}
                 className="LeftnavLinks"
               >
-                <div className="">
-                  {/* <img width={40} src={dashboard} alt="" /> */}
+                {/* <img width={40} src={dashboard} alt="" /> */}
+                <p>
                   <i class="fa-solid fa-folder-open logo_-clr"></i>
-                </div>
-                <p> Document Upload</p>
-              </Link>
-            </li>
-            <li>
-              <Link className="LeftnavLinks" to="/HomeLandingPage">
-                <i class="fa-brands fa-quora"></i>
-                <p>Quiz App</p>
+                  Document Upload
+                </p>
               </Link>
             </li>
 
             <li>
-              <Link className="LeftnavLinks" onClick={handleregisteredstudent}>
-                <i class="fa-brands fa-quora"></i>
-                <p>Regestered student info</p>
+              {/* <Link to="/DocumentUpload" onClick={handleshowDocumentUpload_admin} className="LeftnavLinks"> */}
+              <Link
+                onClick={handleTestActivation_admin}
+                className="LeftnavLinks"
+              >
+                {/* <img width={40} src={dashboard} alt="" /> */}
+                <p>
+                <i class="fa-solid fa-arrow-up-from-bracket"></i>
+               Test Activation
+                </p>
               </Link>
-            
+            </li>
+          
+
+
+            {/* <li>
+              <Link className="LeftnavLinks" to="/HomeLandingPage">
+                <p>
+                  <i class="fa-brands fa-quora"></i>
+                  Quiz App
+                </p>
+              </Link>
+            </li> */}
+
+            <li>
+              <Link className="LeftnavLinks" onClick={handleregisteredstudent}>
+                <p>
+                  <i>
+                    <FaUserAlt />
+                  </i>
+                  Regestered-students-info
+                </p>
+              </Link>
+            </li>
+            <li>
+              <Link
+                className="LeftnavLinks"
+                onClick={handleImage_Upload_for_Ac}
+              >
+                <p>
+                <i class="fa-regular fa-image"></i>
+                  Image Upload
+                </p>
+              </Link>
+            </li>
+
+            <li>
+              <Link
+                className="LeftnavLinks"
+                onClick={handleStudent_Doubt_Section}
+              >
+                <p>
+                <i class="fa-solid fa-question"></i>
+                  Student-Doubt-Section
+                </p>
+              </Link>
             </li>
           </ul>
         </div>
@@ -250,11 +379,22 @@ const Leftnav = () => {
         </>
       ) : null}
 
+
+{showTestActivation_admin ? (
+        <>
+     <TestActivation_admin />
+        </>
+      ) : null}
+
       {showregisteredstudent ? (
         <div className="admin_S_R_INfo">
           <Account_info />
         </div>
       ) : null}
+
+      {showImage_Upload_for_Ac ? <Image_Upload_for_Ac_ADMIN /> : null}
+
+      {showStudent_Doubt_Section ? <StudentDashborddountsection /> : null}
     </>
   );
 };

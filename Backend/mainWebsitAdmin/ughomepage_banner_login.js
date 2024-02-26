@@ -13,6 +13,8 @@ const multer = require("multer");
 const { register } = require("module");
 const nodemailer = require("nodemailer");
 const logoPath = path.resolve(__dirname, "../logo/logo.png");
+const cors = require("cors");
+app.use(cors());
 
 app.use(bodyParser.json());
 
@@ -946,7 +948,7 @@ router.post("/login", async (req, res) => {
       }
 
       const token = jwt.sign({ id: user.user_Id }, "your_secret_key", {
-        expiresIn: "24h", // 24 hours
+        expiresIn: "1hr",
       });
       const { user_Id, email, role } = user;
       res.status(200).json({ token, user: { user_Id, email, role } });
@@ -1456,42 +1458,132 @@ router.delete("/users/:id", (req, res) => {
   });
 });
 
-//------------------- user to get and all  register  user detail by admin
 
+
+router.post("/QUiZ_ForgotPassword", async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    // Check if the user exists in the MySQL database
+    const checkUserSql = "SELECT * FROM log WHERE email = ?";
+    db1.query(checkUserSql, [email], async (error, results) => {
+      if (error) {
+        console.error("Error checking user existence:", error);
+        return res.status(500).json({ Status: "Internal server error" });
+      }
+
+      if (results.length === 0) {
+        return res.status(404).json({ Status: "User not existed" });
+      }
+
+      const user = results[0];
+
+      const token = jwt.sign({ id: user.user_Id }, "jwt_secret_key", {
+        expiresIn: "1d",
+      });
+
+      const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: "webdriveegate@gmail.com",
+          pass: "qftimcrkpkbjugav",
+        },
+      });
+
+      const mailOptions = {
+        from: "webdriveegate@gmail.com",
+        to: email,
+        subject: "Reset Password Link",
+        text: `http://localhost:3000/OTS_reset_password/${user.user_Id}/${token}`,
+      };
+
+      transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+          console.error("Error sending email:", error);
+          return res.status(500).json({ Status: "Internal server error" });
+        } else {
+          return res.json({ Status: "Success" });
+        }
+      });
+    });
+  } catch (error) {
+    console.error("Error during forgot password:", error);
+    return res.status(500).json({ Status: "Internal server error" });
+  }
+});
+
+router.post("/OTS_reset_password/:id/:token", (req, res) => {
+  const { id, token } = req.params;
+  const { password } = req.body;
+
+  jwt.verify(token, "jwt_secret_key", (err, decoded) => {
+    if (err) {
+      return res.json({ Status: "Error with token" });
+    } else {
+      // Update the password in the MySQL database
+      const updatePasswordSql = "UPDATE log SET password = ? WHERE user_Id = ?";
+      db1.query(
+        updatePasswordSql,
+        [password, id],
+        (updateError, updateResults) => {
+          if (updateError) {
+            console.error("Error updating password:", updateError);
+            return res.json({ Status: "Error updating password" });
+          }
+
+          return res.json({ Status: "Success" });
+        }
+      );
+    }
+  });
+});
+// ------------------- user to get and all  register  user detail by admin
 // router.get("/act_info", (req, res) => {
-//   // const query = 'SELECT course_name,course_id FROM 1egquiz_courses';
-//   const query = "SELECT  * FROM log ";
+//   const query = "SELECT * FROM log ";
 
 //   db1.query(query, (error, results) => {
 //     if (error) {
 //       console.error("Error executing query: " + error.stack);
-//       res.status(500).send("Error retrieving data from database.");
-//       return;
+//       // Send an error response as JSON
+//       return res
+//         .status(500)
+//         .json({ error: "Error retrieving data from the database." });
 //     }
-//     // const imageArray = results.map((result) => {
-//     //     const base64 = result.image_data.toString("base64");
-//     //     return {
-//     //       id: result.images_id,
-//     //       imageData: `data:image/png;base64,${base64}`,
-//     //     };
 
-//     else{
-//        const imageArray = results.map((result) => {
-//          const base64 = result.image_data.toString("base64");
-//          return {
-//            id: result.user_Id,
-//            imageData: `data:image/png;base64,${base64}`,
-//          };
-//        });
+//     try {
+//       // Process the results and send the response
+//       const imageArray = results
+//         .map((result, index) => {
+//           if (result.image_data !== undefined) {
+//             const base64 = result.image_data.toString("base64");
+//             return {
+//               id: result.user_Id,
+//               imageData: `data:image/png;base64,${base64}`,
+//             };
+//           } else {
+//             console.warn(
+//               `Image data is undefined for row ${index + 1}.`,
+//               result
+//             );
+//             return null; // Skip this entry or handle it accordingly
+//           }
+//         })
+//         .filter((item) => item !== null); // Remove null entries
 
+//       console.log("Retrieved data from test table:");
+//       console.log(results);
+
+//       // Send the retrieved data as JSON response
 //       res.json(imageArray);
+//     } catch (e) {
+//       console.error("Error processing results: " + e.message);
+//       // Send an error response as JSON if there's an issue during processing
+//       res.status(500).json({ error: "Error processing results." });
 //     }
-//     console.log("Retrieved data from test table:");
-//     console.log(results);
-//     // Send the retrieved data as JSON response
-//     res.json(results);
 //   });
 // });
+
+
 
 router.get("/act_info", (req, res) => {
   const query = "SELECT * FROM log WHERE role = 'viewer' ";
@@ -1533,6 +1625,50 @@ router.get("/act_info", (req, res) => {
     res.json(dataWithImages); // Sending the processed data with images as a response
   });
 });
+
+
+
+
+// router.get("/act_info", (req, res) => {
+//   const query = "SELECT * FROM log WHERE role = 'viewer' ";
+
+//   db1.query(query, (error, results) => {
+//     if (error) {
+//       console.error("Error executing query: " + error.stack);
+//       return res.status(500).send("Error retrieving data from database.");
+//     }
+
+//     if (!results || results.length === 0) {
+//       console.log("No data found.");
+//       return res.status(404).send("No data found.");
+//     }
+
+//     const dataWithImages = results
+//       .map((result) => {
+//         if (!result.profile_image) {
+//           console.log("Image data is missing for a row.");
+//           return null; // Skip this entry or handle it accordingly
+//         }
+
+//         const base64 = result.profile_image.toString("base64");
+//         // Add all the fields along with the profile_image in the response
+//         return {
+//           id: result.user_Id,
+//           username: result.username,
+//           email: result.email,
+//           role: result.role,
+//           // Add other fields as needed
+//           profile_image: `data:image/png;base64,${base64}`,
+//         };
+//       })
+//       .filter((item) => item !== null); // Remove null entries
+
+//     // console.log("Retrieved data from log table:");
+//     // console.log(dataWithImages);
+
+//     res.json(dataWithImages); // Sending the processed data with images as a response
+//   });
+// });
 
 // --------------------------------------login end ----------------------------------------------------
 

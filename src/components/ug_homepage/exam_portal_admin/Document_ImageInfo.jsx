@@ -6,7 +6,7 @@ import { Link, useParams } from "react-router-dom";
 function Document_ImageInfo() {
   const [questionData, setQuestionData] = useState({});
   const  { testCreationTableId, subjectId, sectionId } = useParams();
- 
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -14,21 +14,21 @@ function Document_ImageInfo() {
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
- 
+
         const data = await response.json();
         setQuestionData(data);
       } catch (error) {
         console.error('Error fetching question data:', error);
       }
     };
- 
+
     fetchData();
   }, [testCreationTableId, subjectId, sectionId]);  // Update the dependency array
- 
+
   if (!questionData.questions) {
     return <div>Loading...</div>;
   }
- 
+
   return (
     <div className="otsMainPages">
       {/* Map over questions and render them */}
@@ -39,12 +39,12 @@ function Document_ImageInfo() {
             src={`http://localhost:5001/uploads/${question.documen_name}/${question.questionImgName}`}
             alt={`Question ${question.question_id}`}
           />
- 
+  
           {/* Display options */}
           <div >
             {question.options.map((option, optionIndex) => (
               <div key={optionIndex}>
-             
+              
                  {String.fromCharCode('a'.charCodeAt(0) + optionIndex)}
                 <img
                   src={`http://localhost:5001/uploads/${question.documen_name}/${option.optionImgName}`}
@@ -53,7 +53,7 @@ function Document_ImageInfo() {
               </div>
             ))}
           </div>
- 
+  
           {/* Display solution */}
           {question.solution && (
             <div >
@@ -64,17 +64,9 @@ function Document_ImageInfo() {
               />
             </div>
           )}
-          {question.paragraph && (
-            <div >
-              <h3>paragraph</h3>
-              <img
-                src={`http://localhost:5001/uploads/${question.documen_name}/${question.paragraph.paragraphImg}`}
-                alt={`paragraph ${question.paragraph.paragraph_Id }`}
-              />
-            </div>
-          )}
+         
             <div>
- 
+
            {question.qtype && (
             <div>
               <h3>qtype</h3>
@@ -105,16 +97,7 @@ function Document_ImageInfo() {
               {question.sortid.sortid_text}
             </div>
           )}
-         
-          </div>
-          <div>
-           {question.paragraphqno && (
-            <div>
-              <h3>PQNo</h3>
-              {question.paragraphqno.paragraphQNo}
-            </div>
-          )}
-         
+          
           </div>
           <p>_____________________________________________________________________________________________________________</p>
         </div>
@@ -122,7 +105,7 @@ function Document_ImageInfo() {
     </div>
   );
   }
- 
+  
   export default Document_ImageInfo;
   
   

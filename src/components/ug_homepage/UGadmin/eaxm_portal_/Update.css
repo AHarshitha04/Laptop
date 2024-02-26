@@ -1,0 +1,394 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  .regForm {
+    background-color: rgb(86, 136, 165);
+    padding: 1rem;
+    color: rgb(255, 255, 255);
+  }
+  table{
+    border-collapse: collapse;
+  }
+
+  .reg_form_section form {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+  
+  .inputContent{
+    display: flex;
+    justify-content: space-between;
+    
+  }
+  
+  
+  input{
+    width: 270px;
+    height: 30px;
+    border: none;
+    padding: 10px;
+  }
+  select{
+    width: 270px;
+    height: 30px;
+    border: none;
+  }
+  input[type="radio"] {
+    width: 250px;
+    height: 20px;
+  }
+  
+  .inputContent label{
+    text-transform: uppercase;
+    font-weight: bold;
+    
+  }
+  
+  .regForm {
+  
+    margin: 0 auto;
+    padding: 2% 10%;
+  }
+  
+  @media screen and (max-width: 1024px) {
+    body {
+      background-color: rgb(204, 255, 204);
+    }
+    form {
+  
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+  }
+
+ */
+
+
+ span{
+  color: red;
+ }
+
+.input-filde span{
+  color: red;
+  display: flex;
+  flex-direction: column;
+  font-weight: 600;
+}
+ *{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  body{
+    background: white;
+  }
+
+  .reg_form_section section {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding-bottom: 1.5rem;
+}
+  input{
+    width: 490px;
+    height: 30px;
+    border: none;
+    /* padding: 10px; */
+    box-shadow: -6px 8px 10px rgba(81,41,10,0.1),0px 2px 2px rgba(81,41,10,0.2);
+
+  }
+  select{
+    width: 490px;
+    height: 30px;
+    border: none;
+  }
+  select{
+    box-shadow: -6px 8px 10px rgba(81,41,10,0.1),0px 2px 2px rgba(81,41,10,0.2);
+
+  }
+  option{
+     width: 490px;
+    height: 30px;
+    border: none;
+    
+  }
+  input[type="radio"] {
+    width: 50px;
+    height: 20px;
+    box-shadow:0px 0px 0px 0px;
+
+  }
+  label {
+    font-size: 13px;
+}
+  .radioo{
+    /* padding-right: 50px; */
+    width: 490px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .regForm {
+    background-color: rgb(255, 255, 255);
+    padding: 1rem;
+    color: black;
+  }
+
+/* button style */
+
+
+/* CSS */
+/* .headTitles {
+  appearance: button;
+  background-color: transparent;
+  background-image: linear-gradient(to bottom, #fff, #97acff);
+  border: 0 solid #e5e7eb;
+  border-radius: .5rem;
+  box-sizing: border-box;
+  color: #482307;
+  column-gap: 1rem;
+  cursor: pointer;
+  display: flex;
+  font-family: ui-sans-serif,system-ui,-apple-system,system-ui,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+  font-size: 100%;
+  font-weight: 700;
+  line-height: 24px;
+  margin: 0;
+  outline: 2px solid transparent;
+  padding: 1rem 1.5rem;
+  text-align: center;
+  text-transform: none;
+  transition: all .1s cubic-bezier(.4, 0, .2, 1);
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  box-shadow: -6px 8px 10px rgba(81,41,10,0.1),0px 2px 2px rgba(81,41,10,0.2);
+}
+
+.headTitles:active {
+  background-color: #000000;
+  box-shadow: -1px 2px 5px rgba(81,41,10,0.15),0px 1px 1px rgba(81,41,10,0.15);
+  transform: translateY(0.125rem);
+}
+
+.headTitles:focus {
+  box-shadow: rgba(72, 35, 7, .46) 0 0 0 4px, -6px 8px 10px rgba(81,41,10,0.1), 0px 2px 2px rgba(81,41,10,0.2);
+} */
+
+
+/* end */
+
+
+
+
+
+
+
+
+
+
+
+
+  .headTitles{
+    background: #96aad0;
+    color: white;
+    font-size: 15px;
+  }
+  .headTitles h2{
+    font-size: 15px;
+    padding: 5px;
+  }
+  table{
+    border-collapse: collapse;
+  }
+  
+  tr, td {
+    border: 1px solid;
+    padding: 10px;
+  }
+  
+  /* form {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  } */
+  
+  .content_reg{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  .content_reg .inputContent{
+    padding: 8px 8px;
+  }
+  .inputContent{
+    display: flex;
+    justify-content: space-between;
+    
+  }
+  
+  /* input{
+    width: 270px;
+    height: 30px;
+    border: none;
+    padding: 10px;
+  }
+  select{
+    width: 270px;
+    height: 30px;
+    border: none;
+  }
+  input[type="radio"] {
+    width: 250px;
+    height: 20px;
+  } */
+  
+  .inputContent label{
+    text-transform: uppercase;
+    font-weight: bold;
+    
+  }
+  
+  .regForm {
+    width: 80%;
+    margin: 0 auto;
+    /* padding: 2% 10%; */
+    background: #edeff0ff;
+  }
+  
+  .imgSection{
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+  .submitBTn {
+    display: flex;
+    justify-content: right;
+}
+  .btnSubmit{
+    background: #d9534f;
+        width: 83.8px;
+    height: 38px;
+    border: none;
+    color: white;
+    font-weight: 400;
+    line-height: 1.25;
+    font-size: 1rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border-radius: 9px;
+    float: right;
+  }
+
+/* rding css ==================== */
+
+.student_list {
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: 20% 1fr;
+}
+.reding_data {
+  width: 70%;
+  margin: 0 auto;
+}
+
+
+  @media only screen and (min-width:1023px) and (max-width: 1280px) {
+  
+    .inputContent {
+      display: flex;
+      justify-content: flex-start;
+  }
+    .input-filde input, select {
+      width: 293px;
+     
+  }
+    .regForm {
+      width: 86%;
+      margin: 0 auto;
+  }
+  .inputContent label {
+    width: 8rem;
+
+
+}
+  }
+
+  @media screen and (max-width: 1024px) {
+    body {
+      background-color: rgb(255, 255, 255);
+    }
+    .reg_form_section form {
+     
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+
+    }
+    .content_reg{
+        display: flex;
+        flex-direction: column;
+      }
+      .imgSection{
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+        justify-content: center;
+        align-items: center;
+      }
+  }
+
+
+
+
+
+
+  @media only screen and (max-width: 400px) {
+     body {
+      background-color: rgb(255, 255, 255);
+    }
+    .regForm {
+      width: 95%;
+      margin: 0 auto;
+      /* padding: 2% 10%; */
+      background: #edeff0ff;
+  }
+  .inputContent {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+  }
+  input, select {
+    width: 324px;
+    height: 30px;
+}
+    .reg_form_section form {
+     
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+
+    }
+    .content_reg{
+        display: flex;
+        flex-direction: column;
+      }
+      .imgSection{
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+        justify-content: center;
+        align-items: center;
+      }
+  }
+
+
+  
+
+  

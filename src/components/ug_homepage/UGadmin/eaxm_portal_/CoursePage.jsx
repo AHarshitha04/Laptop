@@ -57,7 +57,10 @@ const CoursePage = () => {
             key={courseDetails.courseCreationId}
             className="card_container_li"
           >
-            <img src={MockTest} alt="card" width={350} />
+                       <img
+                    src={courseDetails.cardimeage}
+                    alt={courseDetails.examName}
+                  />
             <li>
               <h3>{courseDetails.courseName}</h3>
             </li>
@@ -80,9 +83,10 @@ const CoursePage = () => {
             </li>
             <br />
             <div className="start_now">
-              <Link to={`/Test_List/${courseDetails.courseCreationId}`}>
+              {/* <Link to={`/Test_List/${courseDetails.courseCreationId}`}>
                 Test Page
-              </Link>
+              </Link> */}
+              <Link to={`/coursedataSRP/${courseDetails.courseCreationId}`} > Buy Now</Link>
             </div>
           </div>
         ))}
