@@ -119,6 +119,7 @@ import QUiZ_ForgotPassword from "./components/ug_homepage/UGadmin/login/QUiZ_For
 import QUIZ_ResetPassword from "./components/ug_homepage/UGadmin/login/QUIZ_ResetPassword.js";
 import EmployeeLOGIN_differentation from "./components/EmployeePortal/EmployeeLOGIN_differentation.js";
 import { Read } from "./components/ug_homepage/UGadmin/eaxm_portal_/Read.jsx";
+import Payu from "./components/ug_homepage/UGadmin/eaxm_portal_/Payu.jsx";
 
 
 // import QUiZ_ForgotPassword from "./components/ug_homepage/UGadmin/login/QUiZ_ForgotPassword.js";
@@ -338,6 +339,8 @@ const App = () => {
         />
         {/* ---------- EmployeeDashboard ------------- */}
         <Route path="/Employee_dashboard" element={<EmployeeDashboard />} />
+
+        <Route path="/Payu" element={<Payu/>}/>
       </Routes>
 
       {/* <Footer /> */}

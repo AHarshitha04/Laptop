@@ -83,6 +83,10 @@ const Doubtsection = require("./StudentDashboard/Doubtsection");
 app.use("/BuyCourses", BuyCourses);
 app.use("/Doubtsection", Doubtsection);
 
+const PayU =require('./PayU/PayU')
+ 
+app.use("/PayU",PayU)
+
 app.get('/buynow', (req, res) => {
  /// if student already exist with that email 
   //insert data into database for student student 

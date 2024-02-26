@@ -289,17 +289,17 @@ try {
   res.status(500).json({ message: 'Internal server error' });
 }
 
-  //   const [result] = await db.query('SELECT LAST_INSERT_ID() AS studentregistationId');
-  //   const insertId = result[0].studentregistationId;
+    // const [result] = await db.query('SELECT LAST_INSERT_ID() AS studentregistationId');
+    // const insertId = result[0].studentregistationId;
     
-  //   const generatedPassword = generateRandomPassword();
+    // const generatedPassword = generateRandomPassword();
 
-  //   const loginQuery = `
-  //   INSERT INTO studentlogins (studentregistationId, emailId, password)
-  //   VALUES (?, ?, ?)
-  // `;
-  // const loginValues = [insertId, formData.emailId, generatedPassword];
-  // await db.query(loginQuery, loginValues);
+    const loginQuery = `
+    INSERT INTO log (studentregistationId, username, email, password, role)
+    VALUES (?, ?, ?, ?, ?)
+  `;
+  const loginValues = [insertId,formData.candidateName, formData.emailId, generatedPassword,'viewer',];
+  await db.query(loginQuery, loginValues);
 
     const loginMailOptions = {
       from: 'egradtutorweb@gmail.com',
@@ -313,6 +313,7 @@ try {
         </ul>
       `,
     };
+   
     transporter.sendMail(loginMailOptions, (error, info) => {
       if (error) {
         console.error('Error sending login email:', error);

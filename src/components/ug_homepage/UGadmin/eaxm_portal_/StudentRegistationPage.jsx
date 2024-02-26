@@ -594,6 +594,7 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import noimg from "./NoImages.jpg";
 import "./styles/StudentRegistationPage.css";
+import { useNavigate } from 'react-router-dom';
 const DisplayFormData = ({
   formData,
   getGenderName,
@@ -664,8 +665,9 @@ const DisplayFormData = ({
         <p>MARKS IN %:{formData.marks}</p>
       </div>
       <div className="preview_page_Buttons">
-        <button className="btnSubmit_payNow" onClick={onSubmit}>
-          Pay Now
+        <button className="btnSubmit_payNow"   onClick={onSubmit}>
+        Pay Now 
+         
         </button>
         <button className="btnSubmit_back" onClick={onBack}>
           Back
@@ -676,6 +678,7 @@ const DisplayFormData = ({
 };
 
 const StudentRegistrationPage = () => {
+  const navigate = useNavigate();
   const { courseCreationId } = useParams();
   const [courseData, setCourseData] = useState([]);
   const [genders, setGenders] = useState([]);
@@ -937,10 +940,10 @@ const StudentRegistrationPage = () => {
     console.log("Selected District:", selecteddistrict);
 
     const contactNo = parseInt(formData.contactNo, 10);
-    if (isNaN(contactNo)) {
-      alert("Contact No must be a valid number");
-      return;
-    }
+    // if (isNaN(contactNo)) {
+    //   alert("Contact No must be a valid number");
+    //   return;
+    // }
     // Compare email and confirm email
     if (formData.emailId !== formData.confirmEmailId) {
       alert("Email and Confirm Email must match");
@@ -1027,6 +1030,7 @@ const StudentRegistrationPage = () => {
         passingYear: "",
         marks: "",
       });
+      navigate('/Payu'); 
     } catch (error) {
       console.error("Error saving form data:", error);
       alert("Failed to submit form. Please try again later.");
